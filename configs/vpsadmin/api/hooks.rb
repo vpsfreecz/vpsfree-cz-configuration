@@ -46,6 +46,10 @@ end
 
 User.connect_hook(:create) do |ret, user|
 
+  # Set expiration_date to now - 4 days. The grace period for suspending
+  # users is 14 days, so new users will be suspended after 10 days.
+  user.update!(expiration_date: Time.now - 4 * 24 * 60 * 60)
+
   # Create NAS dataset
   ds = ::Dataset.new(
       name: user.id.to_s,
