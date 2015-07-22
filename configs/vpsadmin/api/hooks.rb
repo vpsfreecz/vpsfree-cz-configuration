@@ -6,6 +6,11 @@ DatasetInPool.connect_hook(:create) do |ret, dataset_in_pool|
 
     backup_pool = Pool.backup.take!
 
+    dataset_in_pool.update!(
+        min_snapshots: 1,
+        max_snapshots: 1
+    )
+
     begin
       backup = DatasetInPool.create(
           dataset: dataset_in_pool.dataset,
