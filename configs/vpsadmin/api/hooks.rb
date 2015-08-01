@@ -35,7 +35,6 @@ DatasetInPool.connect_hook(:create) do |ret, dataset_in_pool|
 
     if dataset_in_pool.pool.node.environment_id == production.id
       VpsAdmin::API::DatasetPlans.plans[:daily_backup].register(dataset_in_pool)
-      VpsAdmin::API::DatasetPlans.confirm
     end
   end
 
