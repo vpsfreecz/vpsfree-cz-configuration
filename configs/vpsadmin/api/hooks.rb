@@ -41,6 +41,26 @@ DatasetInPool.connect_hook(:create) do |ret, dataset_in_pool|
   ret
 end
 
+DatasetInPool.connect_hook(:migrated) do |ret, from, to|
+
+  # When migrating dataset from playground to production and the dataset
+  # does not already have plan daily_backup, add it.
+  if from.pool.node.environment.label == 'Playground' \
+     && to.pool.node.environment.label == 'Production' \
+     && !from.dataset_in_pool_plans.joins(
+             environment_dataset_plan: [:dataset_plan]
+         ).exists?(dataset_plans: {name: :daily_backup})
+    append(Transactions::Utils::NoOp, args: find_node_id) do
+      VpsAdmin::API::DatasetPlans.plans[:daily_backup].register(
+          to,
+          confirmation: self
+      )
+    end
+  end
+
+  ret
+end
+
 Vps.connect_hook(:create) do |ret, vps|
 
   # Nothing to do here as of yet
