@@ -80,7 +80,7 @@ User.connect_hook(:create) do |ret, user|
       user: user,
       user_editable: false,
       user_create: true,
-      user_destroy: true,
+      user_destroy: false,
       confirmed: ::Dataset.confirmed(:confirm_create)
   )
 
