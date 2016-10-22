@@ -33,7 +33,7 @@ DatasetInPool.connect_hook(:create) do |ret, dataset_in_pool|
     # Add backup plan only for datasets in production environment
     production = ::Environment.find_by!(label: 'Production')
 
-    if dataset_in_pool.pool.node.environment_id == production.id
+    if dataset_in_pool.pool.node.location.environment_id == production.id
       VpsAdmin::API::DatasetPlans.plans[:daily_backup].register(dataset_in_pool)
     end
   end
