@@ -45,8 +45,8 @@ DatasetInPool.connect_hook(:migrated) do |ret, from, to|
 
   # When migrating dataset from playground to production and the dataset
   # does not already have plan daily_backup, add it.
-  if from.pool.node.environment.label == 'Playground' \
-     && to.pool.node.environment.label == 'Production' \
+  if from.pool.node.location.environment.label == 'Playground' \
+     && to.pool.node.location.environment.label == 'Production' \
      && !from.dataset_in_pool_plans.joins(
              environment_dataset_plan: [:dataset_plan]
          ).exists?(dataset_plans: {name: :daily_backup})
