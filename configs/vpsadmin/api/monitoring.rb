@@ -71,7 +71,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
             dip: dip,
             ds: event.object,
             vps: dip.pool.role == 'hypervisor' ? ::Vps.find_by!(
-                dataset_in_pool: dip,
+              dataset_in_pool: dip.dataset.root.primary_dataset_in_pool!,
             ) : nil,
             user: event.user,
             base_url: ::SysConfig.get('webui', 'base_url'),
