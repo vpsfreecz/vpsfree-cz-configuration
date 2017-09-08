@@ -199,7 +199,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
     object { |dip| dip.dataset }
     value do |dip|
-      dip.avail.to_f / (dip.pool.refquota_check ? dip.refquota : dip.quota) * 100
+      dip.avail.to_f / (dip.pool.refquota_check ? dip.refquota : dip.dataset.effective_quota) * 100
     end
 
     check { |dip, v| v > 10 }
