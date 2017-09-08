@@ -140,7 +140,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
           users: {object_state: ::User.object_states[:active]},
           user_accounts: {paid_until: nil},
           vpses: {object_state: ::Vps.object_states[:active]},
-          vps_current_statuses: {status: true},
+          vps_current_statuses: {status: true, is_running: true},
       )
     end
 
@@ -165,7 +165,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
           users: {object_state: ::User.object_states[:active]},
           user_accounts: {paid_until: nil},
           vpses: {object_state: ::Vps.object_states[:active]},
-          vps_current_statuses: {status: true},
+          vps_current_statuses: {status: true, is_running: true},
       ).group('vpses.id')
     end
 
@@ -218,7 +218,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       ::Vps.joins(:vps_current_status, user: :user_account).where(
           users: {object_state: ::User.object_states[:active]},
           vpses: {object_state: ::Vps.object_states[:active]},
-          vps_current_statuses: {status: true},
+          vps_current_statuses: {status: true, is_running: true},
       ).includes(
           :vps_current_status
       ).where.not(
