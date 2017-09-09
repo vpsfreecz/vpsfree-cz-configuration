@@ -216,8 +216,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
     label 'VPS CPU time'
     desc 'The VPS used more than 300% CPU for the last 3 or more days'
     period 3*24*60*60
-    #repeat 1*24*60*60
-    repeat 30
+    repeat 1*24*60*60
 
     query do
       ::Vps.joins(:vps_current_status, user: :user_account).where(
