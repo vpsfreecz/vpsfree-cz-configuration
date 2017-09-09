@@ -126,7 +126,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
   ## Unpaid users
   monitor :unpaid_cpu do
     label 'VPS CPU time of unpaid users'
-    desc 'The VPS used more than 50% CPU for the last 30 or more minutes'
+    desc 'The VPS used more than 200% CPU for the last 30 or more minutes'
     period 30*60
     repeat 10*60
     access_level 90
@@ -144,8 +144,10 @@ VpsAdmin::API::Plugins::Monitoring.config do
       )
     end
 
-    value { |vps| vps.vps_current_status.cpu_idle }
-    check { |vps, v| v.nil? || vps.cpu <= 2 || v >= 50 }
+    value do |vps|
+      (vps.vps_current_status.cpus * 100) - (vps.vps_current_status.cpu_idle * vps.vps_current_status.cpus)
+    end
+    check { |vps, v| v.nil? || v < 200 }
     action :alert_admins
   end
 
