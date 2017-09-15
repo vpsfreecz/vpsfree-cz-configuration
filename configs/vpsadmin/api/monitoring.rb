@@ -172,8 +172,8 @@ VpsAdmin::API::Plugins::Monitoring.config do
     end
 
     object { |mon| mon.ip_address.vps }
-    value { |mon| mon.bytes_all }
-    check { |mon, v| (v * 8) < 200*1024*1024 }
+    value { |mon| mon.bytes_all * 8 }
+    check { |mon, v| v < 200*1024*1024 }
     action :alert_admins
   end
 
