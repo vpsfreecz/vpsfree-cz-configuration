@@ -188,6 +188,8 @@ VpsAdmin::API::Plugins::Monitoring.config do
     query do
       ::DatasetInPool.joins(
           :pool, dataset: [:user]
+      ).joins(
+          'LEFT JOIN vpses ON vpses.dataset_in_pool_id = dataset_in_pools.id'
       ).includes(
           :pool, :dataset_properties, dataset: :user
       ).where(
@@ -196,6 +198,9 @@ VpsAdmin::API::Plugins::Monitoring.config do
               ::Pool.roles[:primary],
               ::Pool.roles[:hypervisor],
           ]},
+      ).where(
+          'vpses.id IS NULL OR vpses.object_state  = ?',
+          ::Vps.object_states[:active]
       )
     end
 
