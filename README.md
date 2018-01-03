@@ -20,29 +20,28 @@ vpsfree.cz configuration
 4. Create the deployment:
 
     ~~~~~ bash
-    $ nixops create network.nix network-prod.nix
+    nixops create network.nix network-prod.nix
     ~~~~~
 
 5. Deploy!
 
     ~~~~~ bash
-    $ nixops deploy
+    nixops deploy
     ~~~~~
 
 Virtualized deployment
 ----------------------
 
-    ~~~~~ bash
-    $ nixops create -d virt network.nix network-libvirt.nix
-    $ nixops deploy -d virt
-    ~~~~~
-
+```bash
+nixops create -d virt network.nix network-libvirt.nix
+nixops deploy -d virt
+```
 
 Hydra specific
 --------------
 
 Ensure that the main server knows the binary cache for `nixos`:
 
-    ~~~~~ bash
-    nixops ssh hydra -- nix-channel --update
-    ~~~~~
+```bash
+nixops ssh hydra -- nix-channel --update
+```
