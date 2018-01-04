@@ -6,16 +6,16 @@ let
   nixpkgsSorki = (import (pkgs.fetchFromGitHub {
     owner = "sorki";
     repo = "nixpkgs";
-    rev = "6ecdea467f97aa274bbaaa4944240ffd79f166c3";
-    sha256 = "0b5764h1xksf13f4zkvd3ycbi72x4qhvm3sszziq650zxwcilkak";
+    rev = "0acf57c45cee013652edb3dd1db9c76d42c2f858";
+    sha256 = "1x9m05ng52hd7haiy8n5rl5h1504afh8nqxv0959y1csi117g0bm";
   }) {});
 
   vpsadminosBuild = {modules ? []}:
     (import (pkgs.fetchFromGitHub {
       owner = "vpsfreecz";
       repo = "vpsadminos";
-      rev = "a6809c0c94d81fe36ae798d998313494d6efa028";
-      sha256 = "1p61pgi7rj1izwscx0398s907cgv71xq74ajc7k26gxjlmgqsf5l";
+      rev = "29a1bdf61f364a7cfb4a292353bd780c6b3e90ac";
+      sha256 = "0mi09bqyfriqcxmda5d0c19qywm68kpx4avcv28ckw24b7smqcam";
     } + "/os/" )  {
       nixpkgs = nixpkgsSorki.path;
       system = "x86_64-linux";
@@ -103,8 +103,14 @@ in {
       nginx = {
         enable = true;
         virtualHosts = {
-          "192.168.3.1" = {
+          "boot.vpsfree.cz" = {
+            default = true;
             root = nginx_root;
+            locations = {
+              "/" = {
+                extraConfig = "autoindex on;";
+              };
+            };
           };
         };
       };

@@ -8,7 +8,7 @@
         ../build-vpsfree-templates/files/configuration.nix
       ];
 
-      deployment.targetHost = "172.17.4.99";
+      deployment.targetHost = "172.16.8.1";
     };
   hydra =
     { config, lib, pkgs, ... }:
