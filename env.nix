@@ -12,6 +12,6 @@
   ];
 
   users.extraUsers.root.openssh.authorizedKeys.keys =
-    with import ./ssh-keys.nix; [ srk snajpa ];
+    with import ./ssh-keys.nix; [ aither srk snajpa ];
 
 }
