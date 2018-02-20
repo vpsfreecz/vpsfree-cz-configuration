@@ -1,0 +1,31 @@
+[ ca ]
+default_ca             = ca_default
+
+[ ca_default ]
+certificate            = static/ca/root.pem
+private_key            = static/ca/root.key
+serial                 = static/ca/ca.srl
+database               = static/ca/ca.idx
+new_certs_dir          = static/ca/signed
+default_md             = default
+policy                 = policy_anything
+preserve               = yes
+default_days           = 90
+unique_subject         = no
+
+[ policy_anything ]
+countryName            = optional
+stateOrProvinceName    = optional
+localityName           = optional
+organizationName       = optional
+organizationalUnitName = optional
+commonName             = optional
+emailAddress           = optional
+
+[ cross ]
+basicConstraints       = critical,CA:true
+keyUsage               = critical,cRLSign,keyCertSign
+
+[ codesigning ]
+keyUsage                = digitalSignature
+extendedKeyUsage        = codeSigning
