@@ -1,0 +1,2 @@
+nix-prefetch-git --quiet https://github.com/vpsfreecz/vpsadminos $1 > vpsadminos-docs-deps.json
+cat vpsadminos.json

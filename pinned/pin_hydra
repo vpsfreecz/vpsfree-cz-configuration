@@ -1,0 +1,2 @@
+nix-prefetch-git --quiet https://github.com/NixOS/hydra/ > hydra.json
+cat hydra.json

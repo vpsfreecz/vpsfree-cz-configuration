@@ -9,6 +9,11 @@
       ];
 
       deployment.targetHost = "172.16.8.1";
+
+      netboot.host = "boot.vpsadminos.org";
+      netboot.acmeSSL = true;
+
+      web.acmeSSL = true;
     };
   hydra =
     { config, lib, pkgs, ... }:

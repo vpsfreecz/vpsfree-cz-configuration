@@ -1,0 +1,2 @@
+nix-prefetch-git --quiet https://github.com/NixOS/nixpkgs > nixpkgs.json
+cat nixpkgs.json

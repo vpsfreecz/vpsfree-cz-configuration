@@ -1,4 +1,4 @@
 { config, ...}:
 {
-      networking.hostname = "node2";
+      networking.hostName = "node2";
 }
