@@ -206,7 +206,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
     object { |dip| dip.dataset }
     value do |dip|
-      if dip.used > 0
+      if dip.used && dip.used > 0
         dip.avail.to_f / (dip.pool.refquota_check ? dip.refquota : dip.dataset.effective_quota) * 100
 
       else
