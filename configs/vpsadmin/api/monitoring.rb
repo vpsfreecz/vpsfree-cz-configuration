@@ -8,7 +8,7 @@ MailTemplate.register :alert_role_event_state,
         object: 'object associated with this event',
         user: ::User,
         base_url: 'URL to the web UI',
-    }
+    }, roles: %i(admin)
 
 MailTemplate.register :alert_role_diskspace_state_pool,
     name: "alert_%{role}_diskspace_%{state}_%{pool}", params: {
@@ -22,7 +22,7 @@ MailTemplate.register :alert_role_diskspace_state_pool,
         vps: '::Vps or nil',
         user: ::User,
         base_url: 'URL to the web UI',
-    }
+    }, roles: %i(admin)
 
 VpsAdmin::API::Plugins::Monitoring.config do
   # Action definitions
