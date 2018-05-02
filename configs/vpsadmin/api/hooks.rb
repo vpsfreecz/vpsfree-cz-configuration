@@ -93,6 +93,9 @@ User.connect_hook(:create) do |ret, user|
       user,
       'nas'
   ]).last
+
+  # Assign user namespace block 8 * 65k uids
+  use_chain(UserNamespace::Allocate, args: [user, 8])
  
   ret
 end
