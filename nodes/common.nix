@@ -3,6 +3,9 @@
   networking.dhcp = true;
   networking.bird.enable = true;
 
+  # XXX: include devel keys for now
+  users.users.root.openssh.authorizedKeys.keys = with import ../ssh-keys.nix; [ aither snajpa snajpa_devel srk srk_devel ];
+
   vpsadminos.nix = true;
   environment.systemPackages = with pkgs; [
     nvi
