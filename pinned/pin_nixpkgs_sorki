@@ -1,2 +1,0 @@
-nix-prefetch-git --quiet https://github.com/sorki/nixpkgs $1 > nixpkgs-sorki.json
-cat nixpkgs-sorki.json

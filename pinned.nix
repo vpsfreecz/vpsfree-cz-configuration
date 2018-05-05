@@ -7,16 +7,17 @@ rec {
     leaveDotGit = true;
   };
 
-  nixpkgsSorki_spec = builtins.fromJSON (builtins.readFile ./pinned/nixpkgs-sorki.json);
+  nixpkgsVpsFree_spec = builtins.fromJSON (builtins.readFile ./pinned/nixpkgs-vpsfreecz.json);
 
-  nixpkgsSorkiGit = pkgs.fetchgit {
-    inherit (nixpkgsSorki_spec) url rev sha256;
+  nixpkgsVpsFreeGit = pkgs.fetchgit {
+    inherit (nixpkgsVpsFree_spec) url rev sha256;
+    leaveDotGit = true;
   };
 
-  nixpkgsSorki = import nixpkgsSorkiGit {};
+  nixpkgsVpsFree = import nixpkgsVpsFreeGit {};
 
   vpsadminos = {modules ? []}: (import (vpsadminosGit + "/os/") {
-    nixpkgs = nixpkgsSorki.path;
+    nixpkgs = nixpkgsVpsFree.path;
     system = "x86_64-linux";
     extraModules = modules;
   });
@@ -32,7 +33,7 @@ rec {
   vpsadminosGitDocsDeps = pkgs.fetchgit {
     inherit (vpsadminos_docs_deps_spec) url rev sha256;
   };
-  vpsadminosDocsPkgs = import nixpkgsSorkiGit {
+  vpsadminosDocsPkgs = import nixpkgsVpsFreeGit {
     overlays = [
       (import (vpsadminosGitDocsDeps + "/os/overlays/osctl.nix"))
     ];

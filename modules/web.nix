@@ -7,7 +7,7 @@ let
   domain = cfg.domain;
   pinned = import ../pinned.nix { inherit lib pkgs; };
 
-  docs = pkgs.runCommand "docsroot" { buildInputs = [ pinned.nixpkgsSorki.mkdocs ]; } ''
+  docs = pkgs.runCommand "docsroot" { buildInputs = [ pinned.nixpkgsVpsFree.mkdocs ]; } ''
     mkdir -p $out
     pushd ${pinned.vpsadminosGit}
     mkdocs build --site-dir $out
