@@ -29,6 +29,7 @@ let
       build = pinned.vpsadminosBuild { inherit modules; };
     in {
       toplevel = build.toplevel;
+      kernelParams = build.kernelParams;
       dir = pkgs.symlinkJoin {
         name = "vpsadminos_netboot";
         paths = with build; [ dist ];

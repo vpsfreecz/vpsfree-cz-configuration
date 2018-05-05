@@ -20,7 +20,7 @@ let
   ipxe_item_vpsadminos = name: item: ''
     :${name}
     imgfree
-    imgfetch http://${server}/${name}/kernel root=/root.squashfs systemConfig=${item.toplevel} console=tty0 console=ttyS0,115200 console=ttyS1,115200 panic=-1 loglevel=4 || goto normal
+    imgfetch http://${server}/${name}/kernel root=/root.squashfs ${toString item.kernelParams} || goto normal
     imgfetch http://${server}/${name}/initrd || goto normal
     imgfetch http://${server}/${name}/root.squashfs root.squashfs || goto normal
     imgverify kernel http://${server}/${name}/kernel.sig
