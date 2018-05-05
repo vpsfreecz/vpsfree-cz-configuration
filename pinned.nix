@@ -16,11 +16,21 @@ rec {
 
   nixpkgsVpsFree = import nixpkgsVpsFreeGit {};
 
-  vpsadminos = {modules ? []}: (import (vpsadminosGit + "/os/") {
-    nixpkgs = nixpkgsVpsFree.path;
-    system = "x86_64-linux";
-    extraModules = modules;
-  });
+  vpsadminos = {modules ? []}:
+    let
+      # this is fed into scopedImport so vpsadminos sees correct <nixpkgs> everywhere
+      overrides = {
+        __nixPath = [ { prefix = "nixpkgs"; path = nixpkgsVpsFree.path; } ] ++ builtins.nixPath;
+        import = fn: scopedImport overrides fn;
+        scopedImport = attrs: fn: scopedImport (overrides // attrs) fn;
+        builtins = builtins // overrides;
+      };
+    in
+      builtins.scopedImport overrides (vpsadminosGit + "/os/") {
+        nixpkgs = nixpkgsVpsFree.path;
+        system = "x86_64-linux";
+        extraModules = modules;
+      };
   vpsadminosBuild = {modules ? []}: (vpsadminos { inherit modules; }).config.system.build;
 
 
