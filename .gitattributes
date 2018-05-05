@@ -1,0 +1,1 @@
+*.nixops binary filter=git-crypt

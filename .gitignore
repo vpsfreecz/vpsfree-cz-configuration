@@ -1,6 +1,4 @@
 # .gitignore
 
 /attic
-/static
-/id_buildfarm
-/id_buildfarm.pub
+*.nixops-*

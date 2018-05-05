@@ -1,40 +1,51 @@
 vpsfree.cz configuration
 ========================
 
-1. Install NixOps - https://nixos.org/nixops/manual/#chap-installation
+This project uses harness from https://github.com/grafted-in/nixops-manager.
+nixops command is wrapped with `./deploy/manage` script with pinned nixpkgs.
 
-2. Configure environment
+
+1. Install Nix - https://nixos.org/nix/
+
+2. Clone this repository
 
     ~~~~~ bash
-    source activate
+    git clone https://github.com/vpsfreecz/vpsfree-cz-configuration/
     ~~~~~
 
-    This configures `NIX_PATH`, `NIXOPS_DEPLOYMENT` variables and configures prompt.
+3. Geneate certificate authority for IPXE
 
-3. Generate keys for Hydra
+    ~~~~~ bash
+    ./gen-ca
+    ~~~~~
+
+4. Generate keys for Hydra
 
     ~~~~~ bash
     ssh-keygen -C "hydra@hydra.example.org" -N "" -f id_buildfarm
     ~~~~~
 
-4. Create the deployment:
+5. Create the deployment:
 
     ~~~~~ bash
-    nixops create network.nix network-prod.nix
+    ./deploy/manage virt create '<network.nix>' '<network-libvirt.nix>'
     ~~~~~
 
-5. Deploy!
+6. Deploy!
 
     ~~~~~ bash
-    nixops deploy
+    ./deploy/manage virt deploy
     ~~~~~
 
-Virtualized deployment
-----------------------
+Production/staging deployment
+-----------------------------
+
+Requires `git-crypt`:
 
 ```bash
-nixops create -d virt network.nix network-libvirt.nix
-nixops deploy -d virt
+nix-env -iA git-crypt
+git-crypt unlock
+./deploy/manage prod deploy
 ```
 
 Hydra specific
@@ -43,5 +54,13 @@ Hydra specific
 Ensure that the main server knows the binary cache for `nixos`:
 
 ```bash
-nixops ssh hydra -- nix-channel --update
+./deploy/manage prod ssh hydra -- nix-channel --update
 ```
+
+Testing builds
+--------------
+
+```bash
+./deploy/manage prod deploy --build-only
+```
+

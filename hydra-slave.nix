@@ -9,13 +9,13 @@
   };
 
   users.extraUsers.root.openssh.authorizedKeys.keys = pkgs.lib.singleton ''
-    command="nice -n20 nix-store --serve --write" ${pkgs.lib.readFile ./id_buildfarm.pub}
+    command="nice -n20 nix-store --serve --write" ${pkgs.lib.readFile ./static/id_buildfarm.pub}
   '';
 
   #users.extraUsers.hydra.uid = config.ids.uids.hydra;
   users.extraUsers.hydra.group = "hydra";
   users.extraUsers.hydra.openssh.authorizedKeys.keys = pkgs.lib.singleton ''
-    command="nice -n20 nix-store --serve --write" ${pkgs.lib.readFile ./id_buildfarm.pub}
+    command="nice -n20 nix-store --serve --write" ${pkgs.lib.readFile ./static/id_buildfarm.pub}
   '';
 
 }

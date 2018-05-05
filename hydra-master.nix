@@ -16,7 +16,7 @@ in
 
   environment.etc = pkgs.lib.singleton {
     target = "nix/id_buildfarm";
-    source = ./id_buildfarm;
+    source = ./static/id_buildfarm;
     uid = config.ids.uids.hydra;
     gid = config.ids.gids.hydra;
     mode = "0440";
