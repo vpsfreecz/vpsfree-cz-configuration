@@ -1,6 +1,13 @@
 { lib, pkgs, ... }:
 with builtins;
 rec {
+
+  vpsadmin_spec = builtins.fromJSON (builtins.readFile ./pinned/vpsadmin.json);
+  vpsadminGit = trace vpsadmin_spec pkgs.fetchgit {
+    inherit (vpsadmin_spec) url rev sha256;
+    leaveDotGit = true;
+  };
+
   vpsadminos_spec = builtins.fromJSON (builtins.readFile ./pinned/vpsadminos.json);
   vpsadminosGit = trace vpsadminos_spec pkgs.fetchgit {
     inherit (vpsadminos_spec) url rev sha256;
@@ -39,6 +46,7 @@ rec {
         nixpkgs = nixpkgsVpsFree.path;
         system = "x86_64-linux";
         extraModules = modules;
+        vpsadmin = vpsadminGit;
       };
   vpsadminosBuild = {modules ? []}: (vpsadminos { inherit modules; }).config.system.build;
 

@@ -1,0 +1,2 @@
+nix-prefetch-git --quiet --leave-dotGit https://github.com/vpsfreecz/vpsadmin $1 > vpsadmin.json
+cat vpsadmin.json
