@@ -21,7 +21,7 @@
 
     # debug stuff
     config.boot.kernelPackages.bcc
-    dstat
+    # dstat # broken..
     strace
   ];
 
