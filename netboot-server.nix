@@ -70,6 +70,22 @@ let
     } ];
   };
 
+  macMap = {
+    node4_prg = [
+      "0c:c4:7a:ab:b4:43"
+      "0c:c4:7a:ab:b4:42"
+    ];
+    node16_prg = [
+      "0c:c4:7a:30:76:18"
+      "0c:c4:7a:30:76:19"
+      "0c:c4:7a:30:76:1a"
+      "0c:c4:7a:30:76:1b"
+    ];
+  };
+
+  # netboot.mappings is in form { "MAC1" = "nodeX"; "MAC2" = "nodeX"; }
+  macToItems = lib.listToAttrs (lib.flatten (lib.mapAttrsToList (x: y: map (mac: lib.nameValuePair mac x) y) macMap));
+
 in {
   imports = [
     ./modules/network-wide.nix
@@ -92,8 +108,5 @@ in {
     inherit node4_brq;
   };
 
-  netboot.mapping = {
-    "0c:c4:7a:ab:b4:43" = "node4_brq";
-    "0c:c4:7a:ab:b4:42" = "node4_brq";
-  };
+  netboot.mapping = macToItems;
 }
