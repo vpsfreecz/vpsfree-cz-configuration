@@ -95,7 +95,7 @@ User.connect_hook(:create) do |ret, user|
   ]).last
 
   # Assign user namespace block 8 * 65k uids
-  use_chain(UserNamespace::Allocate, args: [user, 8])
+  use_chain(TransactionChains::UserNamespace::Allocate, args: [user, 8])
  
   ret
 end
