@@ -95,7 +95,20 @@ User.connect_hook(:create) do |ret, user|
   ]).last
 
   # Assign user namespace block 8 * 65k uids
-  use_chain(TransactionChains::UserNamespace::Allocate, args: [user, 8])
+  uns = use_chain(TransactionChains::UserNamespace::Allocate, args: [user, 8])
+
+  # Create default user namespace mapping
+  uns_map = UserNamespaceMap.create!(uns, 'Default map')
+
+  UserNamespaceMapEntry.kinds.each_value do |kind|
+    UserNamespaceMapEntry.create!(
+      user_namespace_map: uns_map,
+      kind: kind,
+      ns_id: 0,
+      host_id: 0,
+      count: uns.size,
+    )
+  end
  
   ret
 end
