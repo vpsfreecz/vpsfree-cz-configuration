@@ -145,7 +145,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
     end
 
     value do |vps|
-      (vps.vps_current_status.cpus * 100) - (vps.vps_current_status.cpu_idle * vps.vps_current_status.cpus)
+      (vps.cpu * 100) - (vps.vps_current_status.cpu_idle * vps.cpu)
     end
     check { |vps, v| v.nil? || v < 200 }
     action :alert_admins
@@ -238,7 +238,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
     end
 
     value do |vps|
-      (vps.vps_current_status.cpus * 100) - (vps.vps_current_status.cpu_idle * vps.vps_current_status.cpus)
+      (vps.cpu * 100) - (vps.vps_current_status.cpu_idle * vps.cpu)
     end
     check { |vps, v| v.nil? || v < 300 }
     action :alert_user
