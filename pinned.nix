@@ -16,11 +16,11 @@ rec {
   # if you need to build directly from git for testing
   # - uses filterSource to get rid of .git and a custom filter to exclude possible disk images
   /*
-  vpsadminosGit = builtins.filterSource (p: t:
+  vpsadminosGit = builtins.trace "[vpsadminos] Building from local git" (builtins.filterSource (p: t:
     lib.cleanSourceFilter p t
     && (!lib.hasSuffix "img" (baseNameOf p))
     && (baseNameOf p != "local.nix")
-    ) ../../git/vpsadminos;
+    ) ../../git/vpsadminos);
   */
 
   nixpkgsVpsFree_spec = builtins.fromJSON (builtins.readFile ./pinned/nixpkgs-vpsfreecz.json);
