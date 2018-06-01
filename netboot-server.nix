@@ -63,8 +63,18 @@ let
     modules = [ {
 
       imports = [
-        ./nodes/brq.nix
         ./nodes/node4.brq.nix
+      ];
+
+    } ];
+  };
+
+  # node configurations
+  node1_stg = node {
+    modules = [ {
+
+      imports = [
+        ./nodes/node1.stg.nix
       ];
 
     } ];
@@ -75,7 +85,7 @@ let
       "0c:c4:7a:ab:b4:43"
       "0c:c4:7a:ab:b4:42"
     ];
-    node16_prg = [
+    node1_stg = [
       "0c:c4:7a:30:76:18"
       "0c:c4:7a:30:76:19"
       "0c:c4:7a:30:76:1a"
@@ -104,8 +114,9 @@ in {
     nixoszfsssh = inMenu "NixOS ZFS SSH" nixosZfsSSH;
   };
   netboot.vpsadminos_items = {
-    vpsadminos = inMenu "vpsAdminOS" vpsadminos;
-    inherit node4_brq;
+    #vpsadminos = inMenu "vpsAdminOS" vpsadminos;
+    #inherit node4_brq;
+    inherit node1_stg;
   };
 
   netboot.mapping = macToItems;
