@@ -17,15 +17,19 @@ let
     boot
   '';
 
+
+  # node netboot images are private
+  privateDir = "priv";
+
   ipxe_item_vpsadminos = name: item: ''
     :${name}
     imgfree
-    imgfetch http://${server}/${name}/kernel root=/root.squashfs ${toString item.kernelParams} || goto normal
-    imgfetch http://${server}/${name}/initrd || goto normal
-    imgfetch http://${server}/${name}/root.squashfs root.squashfs || goto normal
-    imgverify kernel http://${server}/${name}/kernel.sig
-    imgverify initrd http://${server}/${name}/initrd.sig
-    imgverify root.squashfs http://${server}/${name}/root.squashfs.sig
+    imgfetch http://${server}/${privateDir}/${name}/kernel root=/root.squashfs ${toString item.kernelParams} || goto normal
+    imgfetch http://${server}/${privateDir}/${name}/initrd || goto normal
+    imgfetch http://${server}/${privateDir}/${name}/root.squashfs root.squashfs || goto normal
+    imgverify kernel http://${server}/${privateDir}/${name}/kernel.sig
+    imgverify initrd http://${server}/${privateDir}/${name}/initrd.sig
+    imgverify root.squashfs http://${server}/${privateDir}/${name}/root.squashfs.sig
     imgselect kernel
     boot
   '';
@@ -35,13 +39,14 @@ let
   items_vpsadminos = concatNl (mapAttrsToList ipxe_item_vpsadminos cfg.vpsadminos_items);
 
   all_items = cfg.nixos_items // cfg.vpsadminos_items;
-  items_symlinks = concatNl (mapAttrsToList (name: x: ''
-      mkdir $out/${name}
+
+  items_symlinks = items: subfolder: concatNl (mapAttrsToList (name: x: ''
+      mkdir -p $out/${subfolder}/${name}
       for i in ${x.dir}/*; do
-        ln -s $i $out/${name}/$( basename $i)
-        signit $out/${name}/$( basename $i )
+        ln -s $i $out/${subfolder}/${name}/$( basename $i)
+        signit $out/${subfolder}/${name}/$( basename $i )
       done
-    '') all_items);
+    '') items);
 
   menu_items = concatNl (mapAttrsToList (name: x: "item ${name} ${x.menu}" )
     (filterAttrs (const (hasAttr "menu")) all_items));
@@ -156,9 +161,9 @@ let
     }
     signit $out/script.ipxe
 
-    ${items_symlinks}
+    ${items_symlinks cfg.nixos_items ""}
+    ${items_symlinks cfg.vpsadminos_items privateDir}
   '';
-
 in
 {
   options = {
@@ -177,7 +182,7 @@ in
       includeNetbootxyz = mkOption {
         type = types.bool;
         description = "Include netboot.xyz entry";
-        default = true;
+        default = false;
       };
 
       password = mkOption {
@@ -225,10 +230,16 @@ in
             "/" = {
               extraConfig = "autoindex on;";
             };
+            "/${privateDir}" = {
+              extraConfig = ''
+                allow   172.16.254.0/24;
+                allow   172.19.254.0/24;
+                deny    all;
+              '';
+            };
           };
         };
       };
     };
-
   };
 }
