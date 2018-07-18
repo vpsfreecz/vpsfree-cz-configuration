@@ -39,10 +39,10 @@ in
 
   services.hydra = {
     enable = true;
-    hydraURL = "http://hydra.vpsfree.cz";
+    hydraURL = "http://hydra.vpsadminos.org";
     notificationSender = "srk@48.io";
     port = 8080;
-    #extraConfig = "binary_cache_secret_key_file = /etc/nix/hydra.example.org-1/secret";
+    extraConfig = "binary_cache_secret_key_file = /etc/nix/hydra.vpsadminos.org-1/secret";
     buildMachinesFiles = [ "/etc/nix/machines" ];
   };
 
@@ -64,11 +64,11 @@ in
         # create admin user
         /run/current-system/sw/bin/hydra-create-user srk --full-name 'Richard Marko' --email-address 'srk@48.io' --password letmeinpls --role admin
         # create signing keys
-        /run/current-system/sw/bin/install -d -m 551 /etc/nix/hydra.vpsfree.cz-1
-        /run/current-system/sw/bin/nix-store --generate-binary-cache-key hydra.vpsfree.cz-1 /etc/nix/hydra.vpsfree.cz-1/secret /etc/nix/hydra.vpsfree.cz-1/public
-        /run/current-system/sw/bin/chown -R hydra:hydra /etc/nix/hydra.vpsfree.cz-1
-        /run/current-system/sw/bin/chmod 440 /etc/nix/hydra.vpsfree.cz-1/secret
-        /run/current-system/sw/bin/chmod 444 /etc/nix/hydra.vpsfree.cz-1/public
+        /run/current-system/sw/bin/install -d -m 551 /etc/nix/hydra.vpsadminos.org-1
+        /run/current-system/sw/bin/nix-store --generate-binary-cache-key hydra.vpsadminos.org-1 /etc/nix/hydra.vpsadminos.org-1/secret /etc/nix/hydra.vpsadminos.org-1/public
+        /run/current-system/sw/bin/chown -R hydra:hydra /etc/nix/hydra.vpsadminos.org-1
+        /run/current-system/sw/bin/chmod 440 /etc/nix/hydra.vpsadminos.org-1/secret
+        /run/current-system/sw/bin/chmod 444 /etc/nix/hydra.vpsadminos.org-1/public
         # done
         touch ~hydra/.setup-is-complete
       fi
