@@ -15,11 +15,11 @@ let
     ls $out
   '';
 
-  osctl_man = pkgs.runCommand "osctl_man" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl pkgs.git ]; } ''
+  buildMan = component: pkgs.runCommand "${component}_man" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl pkgs.git ]; } ''
     mkdir man
     cp -R ${pinned.vpsadminosGit} vpsadminos
     chmod -R +w vpsadminos
-    pushd vpsadminos/osctl
+    pushd vpsadminos/${component}
       touch man/style.css
       osctl-env-exec rake md2man:web
       mkdir $out
@@ -31,25 +31,11 @@ let
     cp $(osctl-env-exec 'bash -c "echo $BUNDLE_PATH"')/gems/md2man-*/lib/md2man/rakefile/style.css $out/style.css
   '';
 
-  converter_man = pkgs.runCommand "converter_man" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl pkgs.git ]; } ''
-    cp -R ${pinned.vpsadminosGit} vpsadminos
-    chmod -R +w vpsadminos
-    pushd vpsadminos/converter
-      touch -d 1990-01-01 man/style.css
-      osctl-env-exec rake md2man:web
-      mkdir $out
-      cp -R man/* $out/
-    popd
-
-    # same style hack as above
-    rm -rf $out/style.css
-    cp $(osctl-env-exec 'bash -c "echo $BUNDLE_PATH"')/gems/md2man-*/lib/md2man/rakefile/style.css $out/style.css
-  '';
-
   man = pkgs.runCommand "manroot" { } ''
     mkdir $out
-    ln -s ${osctl_man} $out/osctl
-    ln -s ${converter_man} $out/converter
+    ln -s ${buildMan "osctl"} $out/osctl
+    ln -s ${buildMan "converter"} $out/converter
+    ln -s ${buildMan "osup"} $out/osup
   '';
 
   ref = pkgs.runCommand "refroot" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl pkgs.git ]; } ''
