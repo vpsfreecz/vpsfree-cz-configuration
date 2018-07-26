@@ -1,0 +1,5 @@
+:db:
+  :host: "example.org"
+  :user: "user"
+  :pass: "pass"
+  :name: "dbname"

@@ -1,7 +1,0 @@
-{
-  "dbHost": "example.org"
-, "dbUser": "user"
-, "dbPassword": "pass"
-, "dbName": "db"
-, "consoleHost": "console.example.org"
-}

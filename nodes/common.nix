@@ -49,9 +49,8 @@
 
   services.nfs.server.enable = true;
 
-  vpsadmin = {
-    enable = true;
-  } // builtins.fromJSON (builtins.readFile ../static/vpsadmin_db.json);
+  vpsadmin.enable = true;
+  system.secretsDir = toString ../static/secrets;
 
   programs.bash.promptInit = ''
     # Provide a nice prompt if the terminal supports it.
