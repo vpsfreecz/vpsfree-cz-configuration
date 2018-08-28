@@ -80,16 +80,28 @@ let
     } ];
   };
 
+  node2_stg = node {
+    modules = [ {
+
+      imports = [
+        ./nodes/node2.stg.nix
+      ];
+
+    } ];
+  };
+
   macMap = {
-    node4_prg = [
-      "0c:c4:7a:ab:b4:43"
-      "0c:c4:7a:ab:b4:42"
-    ];
+
     node1_stg = [
       "0c:c4:7a:30:76:18"
       "0c:c4:7a:30:76:19"
       "0c:c4:7a:30:76:1a"
       "0c:c4:7a:30:76:1b"
+    ];
+
+    node2_stg = [
+      "0c:c4:7a:ab:b4:43"
+      "0c:c4:7a:ab:b4:42"
     ];
   };
 
@@ -117,6 +129,7 @@ in {
     #vpsadminos = inMenu "vpsAdminOS" vpsadminos;
     #inherit node4_brq;
     inherit node1_stg;
+    inherit node2_stg;
   };
 
   netboot.mapping = macToItems;
