@@ -1,7 +1,7 @@
 {
   "url": "https://github.com/vpsfreecz/vpsadmin",
-  "rev": "091165adc84714c3ff9b833b76c84709d78a1b7f",
-  "date": "2018-07-26T13:29:35+02:00",
-  "sha256": "1s25pry9mmyqxldm7r6cj2s8d0r36kikm18wvwkwrrfxbsg09k6f",
-  "fetchSubmodules": true
+  "rev": "68846a499b651d37f7cbaaaa5827126ca5c70c95",
+  "date": "2018-08-16T09:11:50+02:00",
+  "sha256": "1gdj3cn4r02dagjdcvm456jw7bdknxpnykv7lnq6x8map8g1p9q0",
+  "fetchSubmodules": false
 }
