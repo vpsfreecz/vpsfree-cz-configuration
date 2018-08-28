@@ -9,7 +9,7 @@ let
   ipxe_item_nixos = name: item: ''
     :${name}
     imgfree
-    imgfetch http://${server}/${name}/bzImage init=${item.toplevel}/init loglevel=7 || goto normal
+    imgfetch http://${server}/${name}/bzImage init=${builtins.unsafeDiscardStringContext item.toplevel}/init loglevel=7 || goto normal
     imgfetch http://${server}/${name}/initrd || goto normal
     imgverify bzImage http://${server}/${name}/bzImage.sig
     imgverify initrd http://${server}/${name}/initrd.sig
@@ -24,7 +24,7 @@ let
   ipxe_item_vpsadminos = name: item: ''
     :${name}
     imgfree
-    imgfetch http://${server}/${privateDir}/${name}/kernel root=/root.squashfs ${toString item.kernelParams} || goto normal
+    imgfetch http://${server}/${privateDir}/${name}/kernel systemConfig=${builtins.unsafeDiscardStringContext item.toplevel} ${toString item.kernelParams} || goto normal
     imgfetch http://${server}/${privateDir}/${name}/initrd || goto normal
     imgfetch http://${server}/${privateDir}/${name}/root.squashfs root.squashfs || goto normal
     imgverify kernel http://${server}/${privateDir}/${name}/kernel.sig
