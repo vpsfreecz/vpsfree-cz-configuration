@@ -48,6 +48,8 @@
   '';
 
   services.nfs.server.enable = true;
+  services.node_exporter.enable = true;
+  services.rsyslogd.forward = [ "172.17.1.78:11514" ];
 
   vpsadmin.enable = true;
   system.secretsDir = toString ../static/secrets;
