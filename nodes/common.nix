@@ -3,6 +3,7 @@
 
   imports = [
     ./bird.nix
+    ../modules/havesnippet.nix
   ];
   # XXX: include devel keys for now
   users.users.root.openssh.authorizedKeys.keys = with import ../ssh-keys.nix; [ aither snajpa snajpa_devel srk srk_devel ];
@@ -44,6 +45,8 @@
 
   # to be able to include ipmicfg
   nixpkgs.config.allowUnfree = true;
+  
+  nixpkgs.overlays = import ../overlays;
 
   networking.openDNS = false;
   environment.etc."resolv.conf".text = ''
@@ -71,4 +74,6 @@
       fi
     fi
   '';
+
+  programs.havesnippet.enable = true;
 }

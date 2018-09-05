@@ -1,0 +1,2 @@
+source 'https://rubygems.org'
+gem 'havesnippet-client', '~> 1.2.0'

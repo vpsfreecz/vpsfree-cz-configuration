@@ -1,0 +1,15 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    havesnippet-client (1.2.0)
+      json
+    json (2.1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  havesnippet-client (~> 1.2.0)
+
+BUNDLED WITH
+   1.14.6
