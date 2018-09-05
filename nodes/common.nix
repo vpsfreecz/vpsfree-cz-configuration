@@ -14,6 +14,8 @@
     "ipmi_devintf"
   ];
 
+  boot.extraModulePackages = [ config.boot.kernelPackages.wireguard ];
+
   vpsadminos.nix = true;
   environment.systemPackages = with pkgs; [
     dmidecode
@@ -35,6 +37,9 @@
     glibc
     ipset
     ncurses
+
+    wireguard
+    wireguard-tools
   ];
 
   # to be able to include ipmicfg
