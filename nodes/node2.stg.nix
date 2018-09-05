@@ -35,19 +35,23 @@ teng1 ASN: 4200001902 pro peery 172.16.250.6 2a03:3b40:42:3:02::1
   #boot.kernelParams = [ "console=tty0" "console=ttyS0,115200" "panic=-1" ];
   #boot.consoleLogLevel = 4;
 
-  boot.zfs.pool = {
-    wipe = [ "sda" "sdb" "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ];
-    layout = "raidz2 nvme0n1 nvme1n1 nvme2n1 nvme3n1";
-    logs = "mirror sda1 sdb1";
-    caches = "sda2 sdb2";
-    partition = {
-      sda = {
-        p1 = { sizeGB=10; };
-        p2 = {};
-      };
-      sdb = {
-        p1 = { sizeGB=10; };
-        p2 = {};
+  boot.zfs.pools = {
+    tank = {
+      doCreate = true;
+      install = true;
+      wipe = [ "sda" "sdb" "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ];
+      layout = "raidz2 nvme0n1 nvme1n1 nvme2n1 nvme3n1";
+      logs = "mirror sda1 sdb1";
+      caches = "sda2 sdb2";
+      partition = {
+        sda = {
+          p1 = { sizeGB=10; };
+          p2 = {};
+        };
+        sdb = {
+          p1 = { sizeGB=10; };
+          p2 = {};
+        };
       };
     };
   };

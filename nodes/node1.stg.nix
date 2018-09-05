@@ -32,19 +32,23 @@ teng1 ASN: 4200001902 pro peery 172.16.250.1 2a03:3b40:42:3:01::1
     ip link set teng1 up
   '';
 
-  boot.zfs.pool = {
-    wipe = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" "sdh" ];
-    layout = "mirror sdc sdd mirror sde sdf mirror sdg sdh";
-    logs = "mirror sda1 sdb1";
-    caches = "sda2 sdb2";
-    partition = {
-      sda = {
-        p1 = { sizeGB=10; };
-        p2 = {};
-      };
-      sdb = {
-        p1 = { sizeGB=10; };
-        p2 = {};
+  boot.zfs.pools = {
+    tank = {
+      doCreate = true;
+      install = true;
+      wipe = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" "sdh" ];
+      layout = "mirror sdc sdd mirror sde sdf mirror sdg sdh";
+      logs = "mirror sda1 sdb1";
+      caches = "sda2 sdb2";
+      partition = {
+        sda = {
+          p1 = { sizeGB=10; };
+          p2 = {};
+        };
+        sdb = {
+          p1 = { sizeGB=10; };
+          p2 = {};
+        };
       };
     };
   };
