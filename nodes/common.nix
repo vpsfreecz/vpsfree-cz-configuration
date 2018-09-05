@@ -49,7 +49,8 @@
   environment.etc."resolv.conf".text = ''
     domain vpsfree.cz
     search vpsfree.cz prg.vpsfree.cz base48.cz
-    nameserver 172.17.4.11
+    nameserver 172.18.2.10
+    nameserver 172.18.2.11
   '';
 
   services.nfs.server.enable = true;
