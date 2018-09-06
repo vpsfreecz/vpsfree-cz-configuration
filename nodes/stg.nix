@@ -6,6 +6,8 @@
     git
   ];
 
+  programs.bash.root.historyPools = [ "tank" ];
+
   #networking.bonded = {
   #  enable = true;
   #  interfaces = lib.mkDefault [ "eth0" "eth1"];
