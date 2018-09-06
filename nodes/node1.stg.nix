@@ -34,7 +34,6 @@ teng1 ASN: 4200001902 pro peery 172.16.250.1 2a03:3b40:42:3:01::1
 
   boot.zfs.pools = {
     tank = {
-      doCreate = true;
       install = true;
       wipe = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" "sdh" ];
       layout = "mirror sdc sdd mirror sde sdf mirror sdg sdh";
