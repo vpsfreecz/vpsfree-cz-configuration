@@ -162,7 +162,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       ::IpTrafficLiveMonitor.select(
           "#{::IpTrafficLiveMonitor.table_name}.*, SUM(public_bytes_out) AS bytes_all"
       ).joins(
-          ip_address: {vps: [:vps_current_status, user: :user_account]}
+          ip_address: {network_interface: {vps: [:vps_current_status, user: :user_account]}}
       ).where(
           users: {object_state: ::User.object_states[:active]},
           user_accounts: {paid_until: nil},
@@ -171,7 +171,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       ).group('vpses.id')
     end
 
-    object { |mon| mon.ip_address.vps }
+    object { |mon| mon.ip_address.network_interface.vps }
     value { |mon| mon.bytes_all * 8 }
     check { |mon, v| v < 200*1024*1024 }
     action :alert_admins
