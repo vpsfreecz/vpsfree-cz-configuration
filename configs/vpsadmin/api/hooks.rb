@@ -72,9 +72,17 @@ end
 
 User.connect_hook(:create) do |ret, user|
 
-  # Set expiration_date to now - 4 days. The grace period for suspending
-  # users is 14 days, so new users will be suspended after 10 days.
-  user.update!(expiration_date: Time.now - 4 * 24 * 60 * 60)
+  if user.object_state == 'active'
+    # Set expiration_date to now - 4 days. The grace period for suspending
+    # users is 14 days, so new users will be suspended after 10 days.
+    user.update!(expiration_date: Time.now - 4 * 24 * 60 * 60)
+  elsif user.object_state == 'suspended'
+    # Give the user 10 days to pay
+    append_t(Transactions::Utils::NoOp, args: find_node_id) do |t|
+      t.edit(user, expiration_date: Time.now + 10 * 24 * 60 * 60)
+      t.edit(user.current_state, reason: 'Waiting for payment of the membership fee')
+    end
+  end
 
   # Create NAS dataset
   ds = ::Dataset.new(
