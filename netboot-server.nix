@@ -26,7 +26,11 @@ let
 
   node = {modules ? []}:
     let
-      build = pinned.vpsadminosBuild { inherit modules; };
+      common = {
+          imports = [
+            "${pinned.vpsadminosGit}/os/configs/common.nix"
+          ]; };
+      build = pinned.vpsadminosBuild { modules = modules ++ [common]; };
     in {
       toplevel = build.toplevel;
       kernelParams = build.kernelParams;
