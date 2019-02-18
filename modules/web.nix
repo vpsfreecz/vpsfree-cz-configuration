@@ -35,6 +35,7 @@ let
     ln -s ${buildMan "osctl"} $out/osctl
     ln -s ${buildMan "converter"} $out/converter
     ln -s ${buildMan "osup"} $out/osup
+    ln -s ${buildMan "svctl"} $out/svctl
   '';
 
   ref = pkgs.runCommand "refroot" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl-env-exec pkgs.git ]; } ''
@@ -42,7 +43,7 @@ let
     chmod -R +w vpsadminos
     mkdir $out
     pushd vpsadminos
-      for gem in libosctl osctl osctld converter ; do
+      for gem in libosctl osctl osctld converter svctl; do
         pushd $gem
           mkdir $out/$gem
           YARD_OUTPUT=$out/$gem osctl-env-exec rake yard
