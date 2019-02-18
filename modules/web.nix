@@ -106,6 +106,7 @@ in
       virtualHosts = {
         "${domain}" = {
           root = docs;
+          default = true;
           forceSSL = cfg.acmeSSL;
           enableACME = cfg.acmeSSL;
         };
