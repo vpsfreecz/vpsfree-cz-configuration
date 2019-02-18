@@ -45,7 +45,7 @@ let
     pushd vpsadminos
       for gem in libosctl osctl osctld converter svctl; do
         pushd $gem
-          mkdir $out/$gem
+          mkdir -p $out/$gem
           YARD_OUTPUT=$out/$gem osctl-env-exec rake yard
           test -f $out/$gem/index.html || (echo "gem $gem didn't produce index.html" && exit 1);
         popd
