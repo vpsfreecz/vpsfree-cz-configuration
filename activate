@@ -1,4 +1,1 @@
-export NIXOPS_DEPLOYMENT=vpsfree
-export NIX_PATH="nixpkgs=https://github.com/nixos/nixpkgs-channels/archive/nixos-17.09.tar.gz"
-
 . support/prompt.sh
