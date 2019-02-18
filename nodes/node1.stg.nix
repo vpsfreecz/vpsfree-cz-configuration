@@ -30,6 +30,10 @@ teng1 ASN: 4200001902 pro peery 172.16.250.1 2a03:3b40:42:3:01::1
     ip -6 a add 2a03:3b40:42:3:01::2/80 dev teng1
     ip link set teng0 up
     ip link set teng1 up
+
+    ip link add virtip type dummy
+    ip addr add 172.16.0.26/32 dev virtip
+    ip link set virtip up
   '';
 
   boot.zfs.pools = {
