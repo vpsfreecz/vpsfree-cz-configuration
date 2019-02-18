@@ -45,6 +45,7 @@ rec {
       builtins.scopedImport overrides (vpsadminosGit + "/os/") {
         nixpkgs = nixpkgsVpsFree.path;
         system = "x86_64-linux";
+        configuration = {};
         extraModules = modules;
         vpsadmin = vpsadminGit;
       };
