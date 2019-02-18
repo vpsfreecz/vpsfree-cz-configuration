@@ -17,8 +17,8 @@ teng1 ASN: 4200001902 pro peery 172.16.250.6 2a03:3b40:42:3:02::1
   ];
 
   services.udev.extraRules = mkNetUdevRules {
-    "teng0" = "0c:c4:7a:88:69:d8";
-    "teng1" = "0c:c4:7a:88:69:d9";
+    "teng0" = "0c:c4:7a:88:70:14";
+    "teng1" = "0c:c4:7a:88:70:15";
   };
 
   networking.hostName = "node2.stg";
@@ -37,7 +37,7 @@ teng1 ASN: 4200001902 pro peery 172.16.250.6 2a03:3b40:42:3:02::1
 
   boot.zfs.pools = {
     tank = {
-      doCreate = true;
+      doCreate = true; # XXX
       install = true;
       wipe = [ "sda" "sdb" "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ];
       layout = "raidz2 nvme0n1 nvme1n1 nvme2n1 nvme3n1";
