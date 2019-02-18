@@ -78,6 +78,8 @@
 
   programs.havesnippet.enable = true;
 
+  services.haveged.enable = true;
+
   osctl.pools.tank = {
     parallelStart = 2;
     parallelStop = 4;
