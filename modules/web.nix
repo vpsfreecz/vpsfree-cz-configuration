@@ -14,7 +14,7 @@ let
     popd
   '';
 
-  buildMan = component: pkgs.runCommand "${component}_man" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl pkgs.git ]; } ''
+  buildMan = component: pkgs.runCommand "${replaceStrings ["/"] ["_"] component}_man" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl-env-exec pkgs.git ]; } ''
     mkdir man
     cp -R ${pinned.vpsadminosGit} vpsadminos
     chmod -R +w vpsadminos
@@ -37,7 +37,7 @@ let
     ln -s ${buildMan "osup"} $out/osup
   '';
 
-  ref = pkgs.runCommand "refroot" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl pkgs.git ]; } ''
+  ref = pkgs.runCommand "refroot" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl-env-exec pkgs.git ]; } ''
     cp -R ${pinned.vpsadminosGit} vpsadminos
     chmod -R +w vpsadminos
     mkdir $out
