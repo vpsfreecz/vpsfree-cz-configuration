@@ -5,10 +5,8 @@
     ./bird.nix
     ../modules/havesnippet.nix
   ];
-  # XXX: include devel keys for now
-  users.users.root.openssh.authorizedKeys.keys = with import ../ssh-keys.nix; [ aither snajpa snajpa_devel srk srk_devel ];
-  # XXX: XXX
-  users.users.root.initialHashedPassword = "$6$AOZFDbq4EDX3p$tjWxIS9/0ZcF6/Q30LtMB0/2sAz6taxbUTtraVLVOe7zORC7AernhNWbgLBj9OAZh1wTMhd1BW9NmIU9d7gj3.";
+  users.users.root.openssh.authorizedKeys.keys = with import ../ssh-keys.nix; [ aither snajpa srk ];
+  users.users.root.initialHashedPassword = "$6$bdENLP5gkTO$iVMOmBo4EmmP2YawSOHEvMlq1WDn9RvMCG3ChYfpBoYKejAIz/g78EP2gfE8zM2SdS8p3O8E2LbzQMXwOupdj/";
 
   boot.kernelModules = [
     "ipmi_si"
