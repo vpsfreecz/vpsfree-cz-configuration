@@ -149,6 +149,7 @@ in {
     inherit node2_stg;
   };
 
+  netboot.includeNetbootxyz = true;
   netboot.mapping = macToItems;
 
   web.isoImages = [ vpsadminosISO ];
