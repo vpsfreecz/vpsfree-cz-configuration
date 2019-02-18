@@ -77,4 +77,9 @@
   '';
 
   programs.havesnippet.enable = true;
+
+  osctl.pools.tank = {
+    parallelStart = 2;
+    parallelStop = 4;
+  };
 }
