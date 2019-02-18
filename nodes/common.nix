@@ -14,6 +14,9 @@
   ];
 
   boot.extraModulePackages = [ config.boot.kernelPackages.wireguard ];
+  boot.kernel.sysctl."vm.overcommit_ratio" = "400";
+  boot.kernel.sysctl."fs.aio-max-nr" = "200000";
+  boot.extraModprobeConfig = "options zfs zfs_arc_min=34359738368";
 
   vpsadminos.nix = true;
   environment.systemPackages = with pkgs; [
