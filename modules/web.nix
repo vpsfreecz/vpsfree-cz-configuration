@@ -12,7 +12,6 @@ let
     pushd ${pinned.vpsadminosGit}
     mkdocs build --site-dir $out
     popd
-    ls $out
   '';
 
   buildMan = component: pkgs.runCommand "${component}_man" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl pkgs.git ]; } ''
