@@ -53,6 +53,16 @@ let
     popd
   '';
 
+  iso =  pkgs.runCommand "isoroot" {} ''
+    mkdir $out
+    for iso in ${concatStringsSep " " cfg.isoImages}; do
+      fpath=$iso/iso/*.iso
+      name=$( basename $fpath )
+      ln -s $fpath $out/$name
+      sha256sum $fpath > $out/$name.sha256
+    done
+  '';
+
   # XXX: if we decide to sign templates as well
   #templates_root = pkgs.runCommand "templatesroot" { buildInputs = [ pkgs.openssl ]; } ''
   #  mkdir -pv $out
@@ -77,6 +87,12 @@ in
         type = types.bool;
         description = "Enable ACME and SSL for nginx";
         default = false;
+      };
+
+      isoImages = mkOption {
+        type = types.listOf types.path;
+        description = "ISO images to publish";
+        default = [];
       };
     };
   };
@@ -135,6 +151,17 @@ in
               proxyPass = "http://172.16.0.7:8080";
               # XXX: hosts are sometimes missing this..
               #proxyPass = "http://hydra:8080";
+            };
+          };
+        };
+
+        "iso.${domain}" = {
+          root = iso;
+          forceSSL = cfg.acmeSSL;
+          enableACME = cfg.acmeSSL;
+          locations = {
+            "/" = {
+              extraConfig = "autoindex on;";
             };
           };
         };

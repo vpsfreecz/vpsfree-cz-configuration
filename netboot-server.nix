@@ -40,6 +40,19 @@ let
       };
     };
 
+  vpsadminosISO =
+    let
+      build = pinned.vpsadminosBuild {
+        modules = [{
+          imports = [
+            "${pinned.vpsadminosGit}/os/configs/iso.nix"
+          ];
+
+          system.secretsDir = null;
+        }];
+      };
+    in build.isoImage;
+
   inMenu = name: netbootitem: netbootitem // { menu = name; };
 
   # stock NixOS
@@ -137,4 +150,6 @@ in {
   };
 
   netboot.mapping = macToItems;
+
+  web.isoImages = [ vpsadminosISO ];
 }
