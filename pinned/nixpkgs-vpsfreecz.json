@@ -1,7 +1,7 @@
 {
   "url": "https://github.com/vpsfreecz/nixpkgs",
-  "rev": "1ed90f46291935b1fda536472308875cfc5ff5f7",
-  "date": "2018-08-27T13:54:50+02:00",
-  "sha256": "0m5pr5wii0lszh32h672k42jq6mg8mr7xv9d2pjfqp3psaq725w9",
+  "rev": "1c6b5f53cebbf4c8b5a49ef89982ecd38327f511",
+  "date": "2018-12-09T15:01:23+01:00",
+  "sha256": "0wgrzk32yaj7cn1bp8jfkqzlclip5mkpia4jdn8cx41rph0kc1jk",
   "fetchSubmodules": false
 }

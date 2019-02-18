@@ -1,7 +1,7 @@
 {
   "url": "https://github.com/vpsfreecz/vpsadminos",
-  "rev": "d284d499143f1e05f7c8158b3b147c40a9c37d84",
-  "date": "2018-02-16T15:46:01+01:00",
-  "sha256": "0gryginnp0blh5512r615adpr3zkwxivxzi1z4ba05n1vlszlny3",
-  "fetchSubmodules": true
+  "rev": "c25fc6c08dd21c6dbab88baf265395de6f265dc4",
+  "date": "2018-11-27T10:18:58+01:00",
+  "sha256": "13jlpp6iamf3i2iwlnnywf28b75x98gc4xvwb3y6445v27w9a37z",
+  "fetchSubmodules": false
 }
