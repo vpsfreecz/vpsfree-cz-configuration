@@ -1,2 +1,3 @@
+eho "make sure you're pulling from osctl-env-exec branch!"
 nix-prefetch-git --quiet https://github.com/vpsfreecz/vpsadminos $1 > vpsadminos-docs-deps.json
-cat vpsadminos.json
+cat vpsadminos-docs-deps.json
