@@ -32,7 +32,8 @@
     iotop
 
     # debug stuff
-    config.boot.kernelPackages.bcc
+    # config.boot.kernelPackages.bcc
+    config.boot.kernelPackages.bpftrace
     # dstat # broken..
     strace
 
