@@ -114,8 +114,8 @@ User.connect_hook(:create) do |ret, user|
     UserNamespaceMapEntry.create!(
       user_namespace_map: uns_map,
       kind: kind,
+      vps_id: 0,
       ns_id: 0,
-      host_id: 0,
       count: uns.size,
     )
   end
