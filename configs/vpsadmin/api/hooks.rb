@@ -98,10 +98,10 @@ User.connect_hook(:create) do |ret, user|
       ::Pool.primary.take!,
       nil,
       [ds],
-      false,
-      {quota: 250*1024},
-      user,
-      'nas'
+      automount: false,
+      properties: {quota: 250*1024},
+      user: user,
+      label: 'nas',
   ]).last
 
   # Assign user namespace block 8 * 65k uids
