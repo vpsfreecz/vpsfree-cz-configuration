@@ -144,18 +144,6 @@ in
           };
         };
 
-        "hydra.${domain}" = {
-          forceSSL = cfg.acmeSSL;
-          enableACME = cfg.acmeSSL;
-          locations = {
-            "/" = {
-              proxyPass = "http://172.16.0.7:8080";
-              # XXX: hosts are sometimes missing this..
-              #proxyPass = "http://hydra:8080";
-            };
-          };
-        };
-
         "iso.${domain}" = {
           root = iso;
           forceSSL = cfg.acmeSSL;

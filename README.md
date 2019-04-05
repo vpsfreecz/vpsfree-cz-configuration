@@ -19,19 +19,13 @@ nixops command is wrapped with `./deploy/manage` script with pinned nixpkgs.
     ./gen-ca
     ~~~~~
 
-4. Generate keys for Hydra
-
-    ~~~~~ bash
-    ssh-keygen -C "hydra@hydra.example.org" -N "" -f id_buildfarm
-    ~~~~~
-
-5. Create the deployment:
+4. Create the deployment:
 
     ~~~~~ bash
     ./deploy/manage virt create '<network.nix>' '<network-libvirt.nix>'
     ~~~~~
 
-6. Deploy!
+5. Deploy!
 
     ~~~~~ bash
     ./deploy/manage virt deploy
@@ -46,15 +40,6 @@ Requires `git-crypt`:
 nix-env -iA git-crypt
 git-crypt unlock
 ./deploy/manage prod deploy
-```
-
-Hydra specific
---------------
-
-Ensure that the main server knows the binary cache for `nixos`:
-
-```bash
-./deploy/manage prod ssh hydra -- nix-channel --update
 ```
 
 Testing builds

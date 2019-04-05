@@ -16,6 +16,4 @@ in
   network.description = "testing infrastructure";
 
   netboot     = lvirt;
-  hydra       = lvirt;
-  hydra_slave = lvirt;
 }
