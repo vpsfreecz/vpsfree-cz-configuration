@@ -6,7 +6,7 @@
     {
       imports = [
         ./env.nix
-        ./netboot-server.nix
+        ./machines/netboot-server.nix
       ];
     };
 }

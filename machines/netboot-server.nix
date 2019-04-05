@@ -3,7 +3,7 @@
 with lib;
 
 let
-  pinned = import ./pinned.nix { inherit lib pkgs; };
+  pinned = import ../pinned.nix { inherit lib pkgs; };
 
   nixosBuild = {modules ? []}:
     (import (pkgs.path + "/nixos/lib/eval-config.nix") {
@@ -65,7 +65,7 @@ let
 
   nixosZfsSSH = nixosNetboot {
     modules = [ {
-        imports = [ ./env.nix ];
+        imports = [ ../env.nix ];
         boot.supportedFilesystems = [ "zfs" ];
         # enable ssh
         systemd.services.sshd.wantedBy = lib.mkForce [ "multi-user.target" ];
@@ -91,7 +91,7 @@ let
     modules = [ {
 
       imports = [
-        ./nodes/node1.stg.nix
+        ../nodes/node1.stg.nix
       ];
 
     } ];
@@ -101,7 +101,7 @@ let
     modules = [ {
 
       imports = [
-        ./nodes/node2.stg.nix
+        ../nodes/node2.stg.nix
       ];
 
     } ];
@@ -127,9 +127,9 @@ let
 
 in {
   imports = [
-    ./modules/network-wide.nix
-    ./modules/netboot.nix
-    ./modules/web.nix
+    ../modules/network-wide.nix
+    ../modules/netboot.nix
+    ../modules/web.nix
   ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
