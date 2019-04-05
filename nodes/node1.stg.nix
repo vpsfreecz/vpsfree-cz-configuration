@@ -40,9 +40,15 @@ teng1 ASN: 4200001902 pro peery 172.16.250.1 2a03:3b40:42:3:01::1
     tank = {
       install = true;
       wipe = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" "sdh" ];
-      layout = "mirror sdc sdd mirror sde sdf mirror sdg sdh";
-      logs = "mirror sda1 sdb1";
-      caches = "sda2 sdb2";
+      layout = [
+        { type = "mirror"; devices = [ "sdc" "sdd" ]; }
+        { type = "mirror"; devices = [ "sde" "sdf" ]; }
+        { type = "mirror"; devices = [ "sdg" "sdh" ]; }
+      ];
+      log = [
+        { mirror = true; devices = [ "sda1" "sdb1" ]; }
+      ];
+      cache = [ "sda2" "sdb2" ];
       partition = {
         sda = {
           p1 = { sizeGB=10; };
