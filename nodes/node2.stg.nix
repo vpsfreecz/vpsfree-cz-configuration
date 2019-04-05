@@ -40,9 +40,13 @@ teng1 ASN: 4200001902 pro peery 172.16.250.6 2a03:3b40:42:3:02::1
       doCreate = true; # XXX
       install = true;
       wipe = [ "sda" "sdb" "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ];
-      layout = "raidz2 nvme0n1 nvme1n1 nvme2n1 nvme3n1";
-      logs = "mirror sda1 sdb1";
-      caches = "sda2 sdb2";
+      layout = [
+        { type = "raidz2"; devices = [ "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ]; }
+      ];
+      log = [
+        { mirror = true; devices = [ "sda1" "sdb1" ]; }
+      ];
+      cache = [ "sda2" "sdb2" ];
       partition = {
         sda = {
           p1 = { sizeGB=10; };
