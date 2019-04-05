@@ -76,17 +76,6 @@ let
   vpsadminos = node { };
 
   # node configurations
-  node4_brq = node {
-    modules = [ {
-
-      imports = [
-        ./nodes/node4.brq.nix
-      ];
-
-    } ];
-  };
-
-  # node configurations
   node1_stg = node {
     modules = [ {
 
@@ -144,7 +133,6 @@ in {
   };
   netboot.vpsadminos_items = {
     #vpsadminos = inMenu "vpsAdminOS" vpsadminos;
-    #inherit node4_brq;
     inherit node1_stg;
     inherit node2_stg;
   };
