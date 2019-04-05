@@ -59,6 +59,15 @@ teng1 ASN: 4200001902 pro peery 172.16.250.1 2a03:3b40:42:3:01::1
           p2 = {};
         };
       };
+      datasets = {
+        "/".properties = {
+          compression = "on";
+        };
+        "ct".properties = {
+          acltype = "posixacl";
+          sharenfs = "rw=@172.16.0.0/23,rw=@172.16.2.0/23,rw=@172.19.0.0/23";
+        };
+      };
     };
   };
 
