@@ -63,7 +63,7 @@ rec {
   vpsadminosDocsPkgs = import nixpkgsVpsFreeGit {
     overlays = [
       (import (vpsadminosGitDocsDeps + "/os/overlays/osctl.nix"))
-      (import (vpsadminosGitDocsDeps + "/os/overlays/gem-config.nix"))
+      (import (vpsadminosGitDocsDeps + "/os/overlays/ruby.nix"))
     ];
   };
 
