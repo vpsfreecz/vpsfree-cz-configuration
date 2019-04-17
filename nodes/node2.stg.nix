@@ -11,6 +11,9 @@ teng0 ASN: 4200001901 pro peery 172.16.251.6 2a03:3b40:42:2:02::1
 teng1 ASN: 4200001902 pro peery 172.16.250.6 2a03:3b40:42:3:02::1
 */
 
+let
+  bgpAS = 4200001002;
+in
 {
   imports = [
     ./stg.nix
@@ -63,6 +66,7 @@ teng1 ASN: 4200001902 pro peery 172.16.250.6 2a03:3b40:42:3:02::1
   vpsadmin.nodeId = 401;
   vpsadmin.consoleHost = "172.16.251.6";
   vpsadmin.netInterfaces = [ "teng0" "teng1" ];
-  networking.bird.routerId = "172.16.251.6";
-  networking.bird6.routerId =  "172.16.251.6";
+
+  node.as = bgpAS;
+  node.routerId = "172.16.251.6";
 }

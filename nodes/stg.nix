@@ -1,6 +1,9 @@
 { config, lib, pkgs, ...}:
 {
-  imports = [ ./common.nix ];
+  imports = [
+    ./common.nix
+    ./modules/bird.nix
+  ];
 
   environment.systemPackages = with pkgs; [
     git
