@@ -62,15 +62,6 @@ in
           p2 = {};
         };
       };
-      datasets = {
-        "/".properties = {
-          compression = "on";
-        };
-        "ct".properties = {
-          acltype = "posixacl";
-          sharenfs = "rw=@172.16.0.0/23,rw=@172.16.2.0/23,rw=@172.19.0.0/23";
-        };
-      };
     };
   };
 
