@@ -17,14 +17,22 @@ let
 in
 {
   options = {
-    node.as = mkOption {
-      type = types.ints.positive;
-      description = "BGP AS for this node";
-    };
+    node = {
+      as = mkOption {
+        type = types.ints.positive;
+        description = "BGP AS for this node";
+      };
 
-    node.routerId = mkOption {
-      type = types.str;
-      description = "bird router ID";
+      bfdInterfaces = mkOption {
+        type = types.str;
+        description = "BFD interfaces match";
+        example = "teng*";
+      };
+
+      routerId = mkOption {
+        type = types.str;
+        description = "bird router ID";
+      };
     };
   };
   config = {
@@ -32,6 +40,10 @@ in
       enable = true;
       routerId = config.node.routerId;
       protocol.kernel = kernelProto;
+      protocol.bfd = {
+        enable = config.node.bfdInterfaces != "";
+        interfaces."${config.node.bfdInterfaces}" = {};
+      };
       protocol.bgp = {
         bgp1 = {
           as = config.node.as;
@@ -58,6 +70,10 @@ in
       enable = true;
       routerId = config.node.routerId;
       protocol.kernel = kernelProto;
+      protocol.bfd = {
+        enable = config.node.bfdInterfaces != "";
+        interfaces."${config.node.bfdInterfaces}" = {};
+      };
       protocol.bgp = {
         bgp1 = {
           as = config.node.as;

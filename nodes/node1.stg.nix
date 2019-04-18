@@ -73,5 +73,6 @@ in
   vpsadmin.netInterfaces = [ "teng0" "teng1" ];
 
   node.as = bgpAS;
+  node.bfdInterfaces = "teng*";
   node.routerId = "172.16.251.2";
 }
