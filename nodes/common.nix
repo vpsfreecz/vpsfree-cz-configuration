@@ -35,6 +35,7 @@
     smartmontools
     usbutils
     iotop
+    ledmon
 
     # debug stuff
     # config.boot.kernelPackages.bcc
