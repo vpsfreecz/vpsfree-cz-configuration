@@ -75,6 +75,17 @@ let
   # stock vpsAdminOS
   vpsadminos = node { };
 
+  # storage nodes
+  backuper = node {
+    modules = [ {
+
+      imports = [
+        ../nodes/backuper.nix
+      ];
+
+    } ];
+  };
+
   # node configurations
   node1_stg = node {
     modules = [ {
@@ -97,6 +108,12 @@ let
   };
 
   macMap = {
+    backuper = [
+      "00:25:90:2f:a3:ac"
+      "00:25:90:2f:a3:ad"
+      "00:25:90:2f:a3:ae"
+      "00:25:90:2f:a3:af"
+    ];
 
     node1_stg = [
       "0c:c4:7a:30:76:18"
@@ -133,6 +150,7 @@ in {
   };
   netboot.vpsadminos_items = {
     #vpsadminos = inMenu "vpsAdminOS" vpsadminos;
+    inherit backuper;
     inherit node1_stg;
     inherit node2_stg;
   };
