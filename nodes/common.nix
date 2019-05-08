@@ -19,6 +19,8 @@
     "net.ipv4.neigh.default.gc_thresh1" = 2048;
     "net.ipv4.neigh.default.gc_thresh2" = 4096;
     "net.ipv4.neigh.default.gc_thresh3" = 8192;
+    "kernel.keys.maxkeys" = 500000;
+    "kernel.keys.maxbytes" = 12500000;
   };
 
   boot.extraModprobeConfig = "options zfs zfs_arc_min=34359738368";
