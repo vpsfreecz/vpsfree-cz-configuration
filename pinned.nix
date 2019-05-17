@@ -43,10 +43,10 @@ rec {
       };
     in
       builtins.scopedImport overrides (vpsadminosGit + "/os/") {
-        nixpkgs = nixpkgsVpsFree.path;
+        pkgs = nixpkgsVpsFree.path;
         system = "x86_64-linux";
         configuration = {};
-        extraModules = modules;
+        modules = modules;
         vpsadmin = vpsadminGit;
       };
   vpsadminosBuild = {modules ? []}: (vpsadminos { inherit modules; }).config.system.build;
