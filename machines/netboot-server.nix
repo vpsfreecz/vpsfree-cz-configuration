@@ -6,10 +6,10 @@ let
   pinned = import ../pinned.nix { inherit lib pkgs; };
 
   nixosBuild = {modules ? []}:
-    (import (pkgs.path + "/nixos/lib/eval-config.nix") {
+    (import (pinned.nixpkgsVpsFree.path + "/nixos/lib/eval-config.nix") {
       system = "x86_64-linux";
       modules = [
-        (pkgs.path + "/nixos/modules/installer/netboot/netboot-minimal.nix")
+        (pinned.nixpkgsVpsFree.path + "/nixos/modules/installer/netboot/netboot-minimal.nix")
       ] ++ modules;
     }).config.system.build;
 
