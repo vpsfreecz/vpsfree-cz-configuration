@@ -58,13 +58,11 @@
   
   nixpkgs.overlays = import ../overlays;
 
-  networking.openDNS = false;
-  environment.etc."resolv.conf".text = ''
-    domain vpsfree.cz
-    search vpsfree.cz prg.vpsfree.cz base48.cz
-    nameserver 172.18.2.10
-    nameserver 172.18.2.11
-  '';
+  networking = {
+    domain = "vpsfree.cz";
+    search = ["vpsfree.cz" "prg.vpsfree.cz" "base48.cz"];
+    nameservers = [ "172.18.2.10" "172.18.2.11" ];
+  };
 
   services.nfs.server.enable = true;
   services.node_exporter.enable = true;
