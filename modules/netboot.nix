@@ -121,12 +121,12 @@ let
       echo temporary debug shell
       shell
     '';
-    ca_cert = ../static/ca/root.pem;
+    ca_cert = /secrets/ca/root.pem;
     nativeBuildInputs = x.nativeBuildInputs ++ [ pkgs.openssl ];
     makeFlags = x.makeFlags ++ [
       ''EMBED=''${script}''
       ''TRUST=''${ca_cert}''
-      "CERT=${../static/ca/codesign.crt},${../static/ca/root.pem}"
+      "CERT=${/secrets/ca/codesign.crt},${/secrets/ca/root.pem}"
     ];
 
     enabledOptions = x.enabledOptions ++ [ "CONSOLE_SERIAL" "POWEROFF_CMD" "IMAGE_TRUST_CMD" ];
@@ -157,7 +157,7 @@ let
 
     ln -sv ${ipxe_script} $out/script.ipxe
     function signit {
-      openssl cms -sign -binary -noattr -in $1 -signer ${../static/ca/codesign.crt} -inkey ${../static/ca/codesign.key} -certfile ${../static/ca/root.pem} -outform DER -out ''${1}.sig
+      openssl cms -sign -binary -noattr -in $1 -signer ${/secrets/ca/codesign.crt} -inkey ${/secrets/ca/codesign.key} -certfile ${/secrets/ca/root.pem} -outform DER -out ''${1}.sig
     }
     signit $out/script.ipxe
 

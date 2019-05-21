@@ -7,7 +7,7 @@
   services.graylog = {
     enable = true;
     # pwgen -N 1 -s 96
-    passwordSecret = lib.fileContents ../static/graylog/passwordSecretSalt;
+    passwordSecret = lib.fileContents /secrets/graylog/passwordSecretSalt;
     # echo -n somepass | shasum -a 256
     rootPasswordSha2 = "670ddd27b448503bdb66dab9d3f978f7da2b6eb38f36e4268647c76203ab807f";
     elasticsearchHosts = [ "http://localhost:9200" ];

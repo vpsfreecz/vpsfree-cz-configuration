@@ -69,7 +69,7 @@
   services.rsyslogd.forward = [ "172.17.1.245:11514" ];
 
   vpsadmin.enable = true;
-  system.secretsDir = toString ../static/secrets;
+  system.secretsDir = toString /secrets/image/secrets;
 
   programs.bash.promptInit = ''
     # Provide a nice prompt if the terminal supports it.

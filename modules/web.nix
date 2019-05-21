@@ -68,7 +68,7 @@ let
   #  mkdir -pv $out
 
   #  function signit {
-  #    openssl cms -sign -binary -noattr -in $1 -signer ${../static/ca/codesign.crt} -inkey ${../static/ca/codesign.key} -certfile ${../static/ca/root.pem} -outform DER -out ''${1}.sig
+  #    openssl cms -sign -binary -noattr -in $1 -signer ${/secrets/ca/codesign.crt} -inkey ${/secrets/ca/codesign.key} -certfile ${/secrets/ca/root.pem} -outform DER -out ''${1}.sig
   #  }
   #  signit $out/XYZ
   #'';
