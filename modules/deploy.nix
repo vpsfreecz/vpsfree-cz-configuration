@@ -7,15 +7,10 @@ let
           start = [ vim-nix sensible ]; # load plugin on startup
         };
     };
-  home-manager-src = builtins.fetchTarball {
-    url = "https://github.com/rycee/home-manager/archive/8b15f1899356762187ce119980ca41c0aba782bb.tar.gz";
-    sha256 = "17bahz18icdnfa528zrgrfpvmsi34i859glfa595jy8qfap4ckng";
-  };
 in
 {
 
   imports = [
-    "${home-manager-src}/nixos"
     ./havesnippet.nix
   ];
 
@@ -47,48 +42,4 @@ in
 
   users.extraUsers.aither.openssh.authorizedKeys.keys =
     with import ../ssh-keys.nix; [ aither ];
-
-  home-manager.useUserPackages = true;
-  home-manager.users.srk = {
-    home = {
-      sessionVariables = {
-        EDITOR = "vim";
-      };
-      packages = [ customVim ];
-    };
-    programs = {
-      ssh = {
-        enable = true;
-        controlMaster = "auto";
-        controlPersist = "1h";
-        matchBlocks = import ../ssh-match-blocks.nix;
-      };
-    };
-  };
-
-  home-manager.users.aither = {
-    home = {
-      sessionVariables = {
-        EDITOR = "vim";
-      };
-      packages = [ customVim ];
-    };
-    programs = {
-      ssh = {
-        enable = true;
-        controlMaster = "auto";
-        controlPersist = "1h";
-        matchBlocks = import ../ssh-match-blocks.nix;
-      };
-    };
-  };
-
-  runit.services = lib.mapAttrs' (username: usercfg:
-    lib.nameValuePair "home-manager-${username}" {
-      run = ''
-        echo Activating home-manager configuration for ${username}
-        su -l -c ${usercfg.home.activationPackage}/activate ${username}
-        sv once "home-manager-${username}"
-      '';
-    }) config.home-manager.users;
 }
