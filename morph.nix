@@ -138,4 +138,18 @@ in
       };
     };
   };
+
+  "node1.stg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
+    imports = [
+      ./nodes/node1.stg.nix
+    ];
+
+    deployment = {
+      nixPath = [
+        { prefix = "nixpkgs"; path = pinned.nixpkgsVpsFreeSrc; }
+        { prefix = "vpsadminos"; path = pinned.vpsadminosSrc; }
+      ];
+      importPath = "${pinned.vpsadminosSrc}/os/default.nix";
+    };
+  };
 }
