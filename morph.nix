@@ -69,13 +69,6 @@ in
       gw = "172.16.254.1";
       route = "172.16.254.0/24";
     };
-
-    environment.etc."resolv.conf".text = ''
-      domain vpsfree.cz
-      search vpsfree.cz prg.vpsfree.cz base48.cz
-      nameserver 172.18.2.10
-      nameserver 172.18.2.11
-    '';
   };
 
   # uses network.pkgs
