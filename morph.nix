@@ -5,6 +5,11 @@ let
     sha256 = "0gxd10djy6khbjb012s9fl3lpjzqaknfv2g4dpfjxwwj9cbkj04h";
   }) {};
 
+  legacyPkgs = builtins.fetchTarball {
+    url    = "https://d3g5gsiof5omrk.cloudfront.net/nixos/17.09/nixos-17.09.3243.bca2ee28db4/nixexprs.tar.xz";
+    sha256 = "1adi0m8x5wckginbrq0rm036wgd9n1j1ap0zi2ph4kll907j76i2";
+  };
+
   pinned = import ./pinned.nix { inherit (newPkgs) lib pkgs; };
 in
 {
@@ -136,6 +141,20 @@ in
           }
         ];
       };
+    };
+  };
+
+  "vpsadminos.org" = { config, pkgs, ... }: with pkgs; {
+    imports = [
+      ./env.nix
+      ./machines/vpsadminos-org.nix
+      "${pinned.buildVpsFreeTemplatesSrc}/files/configuration.nix"
+    ];
+
+    deployment = {
+      nixPath = [
+        { prefix = "nixpkgs"; path = legacyPkgs; }
+      ];
     };
   };
 
