@@ -22,6 +22,11 @@ rec {
     hash = "02nsp9g1rgalmpv3bmmr38snlr0pznk4b6glm59ssc9m0cwlkdfg";
   };
 
+  buildVpsFreeTemplatesSpec = {
+    rev = "f5829847c8ee1666481eb8a64df61f3018635ec7";
+    hash = "1r8b3wyn4ggw1skdalib6i4c4i0cwmbr828qm4msx7c0j76910z4";
+  };
+
   fetchVpsadmin = spec: fetchVpsFreeRepo "vpsadmin" spec;
   fetchVpsadminos = spec:
     let
@@ -35,10 +40,12 @@ rec {
         echo ".tar.${shortRev}" > $out/.version-suffix
       '';
   fetchNixpkgsVpsFree = spec: fetchVpsFreeRepo "nixpkgs" spec;
+  fetchBuildVpsFreeTemplates = spec: fetchVpsFreeRepo "build-vpsfree-templates" spec;
 
   vpsadminSrc = fetchVpsadmin vpsadminSpec;
   vpsadminosSrc = fetchVpsadminos vpsadminosSpec;
   nixpkgsVpsFreeSrc = fetchNixpkgsVpsFree nixpkgsVpsFreeSpec;
+  buildVpsFreeTemplatesSrc = fetchBuildVpsFreeTemplates buildVpsFreeTemplatesSpec;
 
   nixpkgsVpsFree = import nixpkgsVpsFreeSrc {};
 
