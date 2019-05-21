@@ -1,8 +1,10 @@
 { config, lib, pkgs, ... }:
+
 let
   customVim =
     pkgs.vim_configurable.customize {
-        name = "vim";
+        name = "myvim";
+        wrapManual = false;
         vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
           start = [ vim-nix sensible ]; # load plugin on startup
         };
@@ -15,12 +17,30 @@ in
   ];
 
   nixpkgs.overlays = import ../overlays;
+  nix = {
+    maxJobs = 1;
+    useSandbox = true;
+    sandboxPaths = [ "/secrets/image/secrets" ];
+    buildCores = 0;
+    extraOptions =
+     ''
+       gc-keep-outputs = true
+       gc-keep-derivations = true
+     '';
+  };
+
+  environment.shellAliases = {
+    gg = "git grep -i";
+    vim = lib.mkForce "myvim";
+  };
 
   environment.systemPackages = with pkgs; [
     morph
     screen
     git
     git-crypt
+    nix-prefetch-scripts
+    customVim
   ];
 
   programs.havesnippet.enable = true;
