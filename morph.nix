@@ -5,18 +5,7 @@ let
     sha256 = "0gxd10djy6khbjb012s9fl3lpjzqaknfv2g4dpfjxwwj9cbkj04h";
   }) {};
 
-  vpsfPkgs = builtins.fetchTarball {
-    url = "https://github.com/vpsfreecz/nixpkgs/archive/bd504d2442e406018592ad64030d73cec7bd36c1.tar.gz";
-    sha256 = "02nsp9g1rgalmpv3bmmr38snlr0pznk4b6glm59ssc9m0cwlkdfg";
-  };
-
-  /*
-  vpsadminos = builtins.fetchTarball {
-    url = "https://github.com/vpsfreecz/vpsadminos/archive/a564c638b5606fbde224bd500d1766a5dc6d0dea.tar.gz";
-    sha256 = "19drbh0z22f5pfl06b810cysviqrx08hjm8wmn8rds31cvbybbz2";
-  };
-  */
-  vpsadminos = /home/srk/git/vpsadminos;
+  pinned = import ./pinned.nix { inherit (newPkgs) lib pkgs; };
 in
 {
   network =  {
@@ -32,10 +21,10 @@ in
 
     deployment = {
       nixPath = [
-        { prefix = "nixpkgs"; path = vpsfPkgs; }
-        { prefix = "vpsadminos"; path = vpsadminos; }
+        { prefix = "nixpkgs"; path = pinned.nixpkgsVpsFreeSrc; }
+        { prefix = "vpsadminos"; path = pinned.vpsadminosSrc; }
       ];
-      importPath = "${vpsadminos}/os/default.nix";
+      importPath = "${pinned.vpsadminosSrc}/os/default.nix";
     };
 
     boot.loader.grub.enable = true;

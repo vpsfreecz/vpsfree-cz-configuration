@@ -28,7 +28,7 @@ let
     let
       common = {
           imports = [
-            "${pinned.vpsadminosGit}/os/configs/common.nix"
+            "${pinned.vpsadminosSrc}/os/configs/common.nix"
           ]; };
       build = pinned.vpsadminosBuild { modules = modules ++ [common]; };
     in {
@@ -45,7 +45,7 @@ let
       build = pinned.vpsadminosBuild {
         modules = [{
           imports = [
-            "${pinned.vpsadminosGit}/os/configs/iso.nix"
+            "${pinned.vpsadminosSrc}/os/configs/iso.nix"
           ];
 
           system.secretsDir = null;

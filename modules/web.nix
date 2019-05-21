@@ -9,14 +9,14 @@ let
 
   docs = pkgs.runCommand "docsroot" { buildInputs = [ pinned.nixpkgsVpsFree.mkdocs ]; } ''
     mkdir -p $out
-    pushd ${pinned.vpsadminosGit}
+    pushd ${pinned.vpsadminosSrc}
     mkdocs build --site-dir $out
     popd
   '';
 
   buildMan = component: pkgs.runCommand "${replaceStrings ["/"] ["_"] component}_man" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl-env-exec pkgs.git ]; } ''
     mkdir man
-    cp -R ${pinned.vpsadminosGit} vpsadminos
+    cp -R ${pinned.vpsadminosSrc} vpsadminos
     chmod -R +w vpsadminos
     pushd vpsadminos/${component}
       touch man/style.css
@@ -39,7 +39,7 @@ let
   '';
 
   ref = pkgs.runCommand "refroot" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl-env-exec pkgs.git ]; } ''
-    cp -R ${pinned.vpsadminosGit} vpsadminos
+    cp -R ${pinned.vpsadminosSrc} vpsadminos
     chmod -R +w vpsadminos
     mkdir $out
     pushd vpsadminos

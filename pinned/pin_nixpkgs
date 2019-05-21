@@ -1,2 +1,0 @@
-nix-prefetch-git --leave-dotGit --quiet https://github.com/NixOS/nixpkgs > nixpkgs.json
-cat nixpkgs.json

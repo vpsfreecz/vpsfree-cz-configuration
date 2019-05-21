@@ -1,2 +1,0 @@
-nix-prefetch-git --quiet --leave-dotGit https://github.com/vpsfreecz/nixpkgs $1 > nixpkgs-vpsfreecz.json
-cat nixpkgs-vpsfreecz.json
