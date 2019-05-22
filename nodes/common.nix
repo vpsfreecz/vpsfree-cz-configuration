@@ -13,6 +13,10 @@
   ];
 
   boot.extraModulePackages = [ config.boot.kernelPackages.wireguard ];
+  boot.kernel.sysctl = {
+    "net.ipv4.neigh.default.gc_thresh3" = 16384;
+    "net.ipv6.neigh.default.gc_thresh3" = 16384;
+  };
 
   boot.extraModprobeConfig = "options zfs zfs_arc_min=34359738368";
 
