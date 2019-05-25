@@ -71,8 +71,7 @@ rec {
         pkgs = nixpkgs;
         system = "x86_64-linux";
         configuration = {};
-        modules = modules;
-        inherit vpsadmin;
+        inherit modules vpsadmin;
       };
   vpsadminosBuild = {modules ? []}: (vpsadminos { inherit modules; }).config.system.build;
 
