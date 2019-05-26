@@ -5,18 +5,10 @@ in
 {
   imports = [
     ../modules/netboot.nix
-    ../modules/web.nix
   ];
 
   netboot = {
-    host = "boot.vpsadminos.org";
-    acmeSSL = true;
+    host = "172.16.254.5";
     inherit (images) nixosItems vpsadminosItems mappings;
-  };
-
-  web = {
-    acmeSSL = true;
-    domain = "vpsadminos.org";
-    isoImages = [ images.vpsadminosISO ];
   };
 }

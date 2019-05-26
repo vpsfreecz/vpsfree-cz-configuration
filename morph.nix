@@ -79,7 +79,7 @@ in
   "pxe.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
       ./env.nix
-      ./machines/netboot-server.nix
+      ./machines/pxe.nix
       <nixpkgs/nixos/modules/profiles/minimal.nix>
     ];
     boot.loader.grub.enable = true;
@@ -90,10 +90,6 @@ in
     boot.initrd.availableKernelModules = [ "ehci_pci" "ahci" "usbhid" "sd_mod" ];
     boot.kernelModules = [ "kvm-intel" ];
     boot.extraModulePackages = [ ];
-
-    # needs to be default vhost
-    netboot.host = "172.16.254.5";
-    global.domain = "pxe.vpsfree.cz";
 
     fileSystems."/" =
       { device = "tank/root";

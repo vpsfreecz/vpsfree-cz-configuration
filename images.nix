@@ -1,9 +1,9 @@
-{ lib, config, pkgs, ... }:
+{ pkgs, lib, ... }:
 
 with lib;
 
-let
-  pinned = import ../pinned.nix { inherit lib pkgs; };
+rec {
+  pinned = import ./pinned.nix { inherit lib pkgs; };
 
   nixosBuild = {modules ? []}:
     (import (pinned.nixpkgsVpsFree.path + "/nixos/lib/eval-config.nix") {
@@ -65,7 +65,7 @@ let
 
   nixosZfsSSH = nixosNetboot {
     modules = [ {
-        imports = [ ../env.nix ];
+        imports = [ ./env.nix ];
         boot.supportedFilesystems = [ "zfs" ];
         # enable ssh
         systemd.services.sshd.wantedBy = lib.mkForce [ "multi-user.target" ];
@@ -80,7 +80,7 @@ let
     modules = [ {
 
       imports = [
-        ../nodes/backuper.nix
+        ./nodes/backuper.nix
       ];
 
     } ];
@@ -91,7 +91,7 @@ let
     modules = [ {
 
       imports = [
-        ../nodes/node1.stg.nix
+        ./nodes/node1.stg.nix
       ];
 
     } ];
@@ -101,7 +101,7 @@ let
     modules = [ {
 
       imports = [
-        ../nodes/node2.stg.nix
+        ./nodes/node2.stg.nix
       ];
 
     } ];
@@ -129,34 +129,17 @@ let
   };
 
   # netboot.mappings is in form { "MAC1" = "nodeX"; "MAC2" = "nodeX"; }
-  macToItems = lib.listToAttrs (lib.flatten (lib.mapAttrsToList (x: y: map (mac: lib.nameValuePair mac x) y) macMap));
+  mappings = lib.listToAttrs (lib.flatten (lib.mapAttrsToList (x: y: map (mac: lib.nameValuePair mac x) y) macMap));
 
-in {
-  imports = [
-    ../modules/network-wide.nix
-    ../modules/netboot.nix
-    ../modules/web.nix
-  ];
-
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
-  networking.firewall.allowedUDPPorts = [ 68 69 ];
-
-  netboot.host = lib.mkDefault "netboot";
-  netboot.password = lib.mkDefault "letmein";
-  netboot.nixos_items = {
+  nixosItems = {
     nixos = inMenu "NixOS" nixos;
     nixoszfs = inMenu "NixOS ZFS" nixosZfs;
     nixoszfsssh = inMenu "NixOS ZFS SSH" nixosZfsSSH;
   };
-  netboot.vpsadminos_items = {
-    #vpsadminos = inMenu "vpsAdminOS" vpsadminos;
+
+  vpsadminosItems = {
     inherit backuper;
     inherit node1_stg;
     inherit node2_stg;
   };
-
-  netboot.includeNetbootxyz = true;
-  netboot.mapping = macToItems;
-
-  web.isoImages = [ vpsadminosISO ];
 }

@@ -35,10 +35,10 @@ let
   '';
 
   concatNl = concatStringsSep "\n";
-  items_nixos = concatNl (mapAttrsToList ipxe_item_nixos cfg.nixos_items);
-  items_vpsadminos = concatNl (mapAttrsToList ipxe_item_vpsadminos cfg.vpsadminos_items);
+  items_nixos = concatNl (mapAttrsToList ipxe_item_nixos cfg.nixosItems);
+  items_vpsadminos = concatNl (mapAttrsToList ipxe_item_vpsadminos cfg.vpsadminosItems);
 
-  all_items = cfg.nixos_items // cfg.vpsadminos_items;
+  all_items = cfg.nixosItems // cfg.vpsadminosItems;
 
   items_symlinks = items: subfolder: concatNl (mapAttrsToList (name: x: ''
       mkdir -p $out/${subfolder}/${name}
@@ -51,7 +51,7 @@ let
   menu_items = concatNl (mapAttrsToList (name: x: "item ${name} ${x.menu}" )
     (filterAttrs (const (hasAttr "menu")) all_items));
 
-  mapping_items = concatNl (mapAttrsToList (mac: item: "iseq \${mac} ${mac} && goto ${item} ||") cfg.mapping);
+  mapping_items = concatNl (mapAttrsToList (mac: item: "iseq \${mac} ${mac} && goto ${item} ||") cfg.mappings);
 
   ipxe_script = pkgs.writeText "script.ipxe" ''
     #!ipxe
@@ -161,8 +161,8 @@ let
     }
     signit $out/script.ipxe
 
-    ${items_symlinks cfg.nixos_items ""}
-    ${items_symlinks cfg.vpsadminos_items privateDir}
+    ${items_symlinks cfg.nixosItems ""}
+    ${items_symlinks cfg.vpsadminosItems privateDir}
   '';
 in
 {
@@ -188,20 +188,21 @@ in
       password = mkOption {
         type = types.str;
         description = "IPXE menu password";
+        default = "letmein";
       };
 
-      nixos_items = mkOption {
+      nixosItems = mkOption {
         type = types.attrsOf types.unspecified;
         default = {};
       };
 
-      vpsadminos_items = mkOption {
+      vpsadminosItems = mkOption {
         type = types.attrsOf types.unspecified;
         default = {};
       };
 
-      mapping = mkOption {
-        type = types.attrsOf types.unspecified;
+      mappings = mkOption {
+        type = types.attrsOf types.str;
         default = {};
       };
 
@@ -214,6 +215,9 @@ in
   };
 
   config = {
+    networking.firewall.allowedUDPPorts = [ 68 69 ];
+    networking.firewall.allowedTCPPorts = [ 80 ] ++ lib.optional cfg.acmeSSL 443;
+
     services.tftpd = {
         enable = true;
         path = tftp_root;

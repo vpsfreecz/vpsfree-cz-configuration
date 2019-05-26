@@ -80,7 +80,6 @@ in
       domain = mkOption {
         type = types.str;
         description = "Domain of the webserver";
-        default = config.global.domain;
       };
 
       acmeSSL = mkOption {
@@ -98,6 +97,8 @@ in
   };
 
   config = {
+    networking.firewall.allowedTCPPorts = [ 80 ] ++ lib.optional cfg.acmeSSL 443;
+
     services.nginx = {
       enable = true;
       recommendedTlsSettings = cfg.acmeSSL;
