@@ -158,6 +158,10 @@ in
       ./nodes/node1.stg.nix
     ];
 
+    nixpkgs.overlays = [
+      (import "${pinned.vpsadminosSrc}/os/overlays/vpsadmin.nix" pinned.vpsadminSrc)
+    ];
+
     deployment = {
       nixPath = [
         { prefix = "nixpkgs"; path = pinned.nixpkgsVpsFreeSrc; }
@@ -166,4 +170,43 @@ in
       importPath = "${pinned.vpsadminosSrc}/os/default.nix";
     };
   };
+
+  "node2.stg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
+    imports = [
+      ./nodes/node2.stg.nix
+    ];
+
+    nixpkgs.overlays = [
+      (import "${pinned.vpsadminosSrc}/os/overlays/vpsadmin.nix" pinned.vpsadminSrc)
+    ];
+
+    deployment = {
+      nixPath = [
+        { prefix = "nixpkgs"; path = pinned.nixpkgsVpsFreeSrc; }
+        { prefix = "vpsadminos"; path = pinned.vpsadminosSrc; }
+      ];
+      importPath = "${pinned.vpsadminosSrc}/os/default.nix";
+    };
+  };
+
+  "backuper.prg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
+    imports = [
+      ./nodes/backuper.nix
+    ];
+
+    nixpkgs.overlays = [
+      (import "${pinned.vpsadminosSrc}/os/overlays/vpsadmin.nix" pinned.vpsadminSrc)
+    ];
+
+    deployment = {
+      nixPath = [
+        { prefix = "nixpkgs"; path = pinned.nixpkgsVpsFreeSrc; }
+        { prefix = "vpsadminos"; path = pinned.vpsadminosSrc; }
+      ];
+      importPath = "${pinned.vpsadminosSrc}/os/default.nix";
+    };
+  };
+
+
+
 }
