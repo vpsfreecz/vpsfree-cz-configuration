@@ -2,7 +2,6 @@
 {
   imports = [
     ./common.nix
-    ./modules/bird.nix
   ];
 
   environment.systemPackages = with pkgs; [

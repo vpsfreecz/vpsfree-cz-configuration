@@ -1,28 +1,42 @@
 { config, lib, pkgs, ...}:
-
-with (import ./lib.nix { inherit lib; });
-
 let
   bondIfaces = [ "eth0" "eth1" "eth2" "eth3" ];
   bondVlan = 200;
   bondIP = "172.16.0.5/23";
   bondGateway = "172.16.0.2";
-  bgpAS = 4200001046;
 in
 {
   imports = [
     ./storage.nix
   ];
 
-  services.udev.extraRules = mkNetUdevRules {
-    "teng0" = "00:25:90:0e:5b:1a";
-    "teng1" = "00:25:90:0e:5b:1b";
+  vpsadmin.netInterfaces = [ "eth0" "eth1" ];
+  vpsadmin.consoleHost = "172.16.0.5";
+
+  node = {
+    nodeId = 160;
+    net = {
+      hostName = "backuper";
+      as = 4200001046;
+      mac = {
+        teng0 = "00:25:90:0e:5b:1a";
+        teng1 = "00:25:90:0e:5b:1b";
+      };
+      interfaces = {
+        teng0 = { v4 = "172.16.251.182/30";   v6 = "2a03:3b40:42:2:46::2/80"; };
+        teng1 = { v4 = "172.16.250.182/30";   v6 = "2a03:3b40:42:3:46::2/80"; };
+      };
+      routerId = "172.16.251.182";
+      bgp1neighbor = { v4 = "172.16.251.181"; v6 = "2a03:3b40:42:2:46::1"; };
+      bgp2neighbor = { v4 = "172.16.250.181"; v6 = "2a03:3b40:42:3:46::1"; };
+
+      virtIP = null;
+    };
   };
 
   boot.kernelModules = [ "bonding" "8021q" ];
   boot.extraModprobeConfig = "options bonding mode=balance-xor miimon=100 xmit_hash_policy=layer3+4 max_bonds=0";
 
-  networking.hostName = "backuper";
   networking.custom = ''
     ip link add bond0 type bond
     ${lib.flip lib.concatMapStrings bondIfaces (ifc:
@@ -36,12 +50,6 @@ in
     ip addr add ${bondIP} dev bond0
     ip route add default via ${bondGateway} dev bond0
 
-    ip a add 172.16.251.182/30 dev teng0
-    ip a add 172.16.250.182/30 dev teng1
-    ip -6 a add 2a03:3b40:42:2:46::2/80 dev teng0
-    ip -6 a add 2a03:3b40:42:3:46::2/80 dev teng1
-    ip link set teng0 up
-    ip link set teng1 up
   '';
 
   boot.zfs.pools = {
@@ -177,12 +185,4 @@ in
       ];
     };
   };
-
-  vpsadmin.nodeId = 160;
-  vpsadmin.netInterfaces = [ "eth0" "eth1" ];
-  vpsadmin.consoleHost = "172.16.0.5";
-
-  node.as = bgpAS;
-  node.bfdInterfaces = "teng*";
-  node.routerId = "172.16.251.182";
 }

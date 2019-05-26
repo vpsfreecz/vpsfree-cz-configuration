@@ -2,6 +2,10 @@
 {
 
   imports = [
+    ./modules/bird.nix
+    ./modules/networking.nix
+    ./modules/serial.nix
+    ./modules/vpsadmin.nix
     ../modules/havesnippet.nix
   ];
   users.users.root.openssh.authorizedKeys.keys = with import ../ssh-keys.nix; [ aither snajpa srk ];

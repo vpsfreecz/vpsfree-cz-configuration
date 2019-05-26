@@ -2,6 +2,7 @@
 with lib;
 
 let
+  cfg = config.node.net;
   kernelProto = {
       learn = true;
       persist = true;
@@ -14,10 +15,20 @@ let
         };
       '';
     };
+  bgpNeighborOpts = { lib, pkgs, ... }: {
+    options = {
+      v4 = mkOption {
+        type = types.str;
+      };
+      v6 = mkOption {
+        type = types.str;
+      };
+    };
+  };
 in
 {
   options = {
-    node = {
+    node.net = {
       as = mkOption {
         type = types.ints.positive;
         description = "BGP AS for this node";
@@ -27,37 +38,45 @@ in
         type = types.str;
         description = "BFD interfaces match";
         example = "teng*";
+        default = "teng*";
       };
 
       routerId = mkOption {
         type = types.str;
         description = "bird router ID";
       };
+
+      bgp1neighbor = mkOption {
+        type = types.submodule bgpNeighborOpts;
+      };
+      bgp2neighbor = mkOption {
+        type = types.submodule bgpNeighborOpts;
+      };
     };
   };
   config = {
     networking.bird = {
       enable = true;
-      routerId = config.node.routerId;
+      routerId = cfg.routerId;
       protocol.kernel = kernelProto;
       protocol.bfd = {
-        enable = config.node.bfdInterfaces != "";
-        interfaces."${config.node.bfdInterfaces}" = {};
+        enable = cfg.bfdInterfaces != "";
+        interfaces."${cfg.bfdInterfaces}" = {};
       };
       protocol.bgp = {
         bgp1 = {
-          as = config.node.as;
+          as = cfg.as;
           nextHopSelf = true;
-          neighbor = { "172.16.251.1" = 4200001901; };
+          neighbor = { "${cfg.bgp1neighbor.v4}" = 4200001901; };
           extraConfig = ''
             export all;
             import all;
           '';
         };
         bgp2 = {
-          as = config.node.as;
+          as = cfg.as;
           nextHopSelf = true;
-          neighbor = { "172.16.250.1" = 4200001902; };
+          neighbor = { "${cfg.bgp2neighbor.v4}" = 4200001902; };
           extraConfig = ''
             export all;
             import all;
@@ -68,26 +87,26 @@ in
 
     networking.bird6 = {
       enable = true;
-      routerId = config.node.routerId;
+      routerId = cfg.routerId;
       protocol.kernel = kernelProto;
       protocol.bfd = {
-        enable = config.node.bfdInterfaces != "";
-        interfaces."${config.node.bfdInterfaces}" = {};
+        enable = cfg.bfdInterfaces != "";
+        interfaces."${cfg.bfdInterfaces}" = {};
       };
       protocol.bgp = {
         bgp1 = {
-          as = config.node.as;
+          as = cfg.as;
           nextHopSelf = true;
-          neighbor = { "2a03:3b40:42:2:01::1" = 4200001901; };
+          neighbor = { "${cfg.bgp1neighbor.v6}" = 4200001901; };
           extraConfig = ''
             export all;
             import all;
           '';
         };
         bgp2 = {
-          as = config.node.as;
+          as = cfg.as;
           nextHopSelf = true;
-          neighbor = { "2a03:3b40:42:3:01::1" = 4200001902; };
+          neighbor = { "${cfg.bgp2neighbor.v6}" = 4200001902; };
           extraConfig = ''
             export all;
             import all;
