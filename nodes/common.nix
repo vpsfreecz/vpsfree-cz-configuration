@@ -65,7 +65,7 @@
 
   services.nfs.server.enable = true;
   services.node_exporter.enable = true;
-  services.rsyslogd.forward = [ "172.17.1.245:11514" ];
+  # services.rsyslogd.forward = [ "172.17.1.245:11514" ];
 
   vpsadmin.enable = true;
   system.secretsDir = toString /secrets/image/secrets;
