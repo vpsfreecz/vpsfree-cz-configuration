@@ -13,13 +13,13 @@ rec {
   };
 
   vpsadminosSpec = {
-    rev = "2b6d530d55cce9ed04d4bedd7362123b6f9c11e2";
-    hash = "09fv65l49acnbw61wllc892r60gf736dj2wz4w5mwsdkmrfzw7yn";
+    rev = "2b5fa70f6c3e87c9354cf89c792e8fb6750d3915";
+    hash = "0si1iy5ln73kh0kk72x1f5070w0nqmccfbgvsdmrg3ccg2nmzxsc";
   };
 
   nixpkgsVpsFreeSpec = {
-    rev = "bd504d2442e406018592ad64030d73cec7bd36c1";
-    hash = "02nsp9g1rgalmpv3bmmr38snlr0pznk4b6glm59ssc9m0cwlkdfg";
+    rev = "eccb90a2d997d65dc514253b441e515d8e0241c3";
+    hash = "0ffa84mp1fgmnqx2vn43q9pypm3ip9y67dkhigsj598d8k1chzzw";
   };
 
   buildVpsFreeTemplatesSpec = {
