@@ -41,7 +41,6 @@
       };
 
       devuan = {
-        "1.0" = {};
         "2.0" = { tags = [ "latest" "stable" ]; };
       };
 
