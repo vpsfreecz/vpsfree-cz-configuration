@@ -33,6 +33,8 @@ let
   man = pkgs.runCommand "manroot" { } ''
     mkdir $out
     ln -s ${buildMan "osctl"} $out/osctl
+    ln -s ${buildMan "osctl-image"} $out/osctl-image
+    ln -s ${buildMan "osctl-repo"} $out/osctl-repo
     ln -s ${buildMan "converter"} $out/converter
     ln -s ${buildMan "osup"} $out/osup
     ln -s ${buildMan "svctl"} $out/svctl
