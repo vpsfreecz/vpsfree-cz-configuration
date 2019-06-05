@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }:
 let
   images = import ../images.nix { inherit lib pkgs; };
+  sshKeys = import ../ssh-keys.nix;
 in
 {
   imports = [
@@ -19,4 +20,8 @@ in
     domain = "vpsadminos.org";
     isoImages = [ images.vpsadminosISO ];
   };
+
+  users.users.root.openssh.authorizedKeys.keys = [
+    sshKeys."build.vpsfree.cz"
+  ];
 }
