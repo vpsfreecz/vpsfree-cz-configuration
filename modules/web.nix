@@ -123,6 +123,17 @@ in
           };
         };
 
+        "images.${domain}" = {
+          root = "/srv/images";
+          forceSSL = cfg.acmeSSL;
+          enableACME = cfg.acmeSSL;
+          locations = {
+            "/" = {
+              extraConfig = "autoindex on;";
+            };
+          };
+        };
+
         "man.${domain}" = {
           root = man;
           forceSSL = cfg.acmeSSL;
