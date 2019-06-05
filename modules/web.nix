@@ -43,7 +43,7 @@ let
     chmod -R +w vpsadminos
     mkdir $out
     pushd vpsadminos
-      for gem in libosctl osctl osctld converter svctl; do
+      for gem in libosctl osctl osctl-image osctl-repo osctld converter svctl; do
         pushd $gem
           mkdir -p $out/$gem
           YARD_OUTPUT=$out/$gem osctl-env-exec rake yard
