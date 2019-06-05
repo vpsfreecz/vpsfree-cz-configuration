@@ -73,6 +73,8 @@ in
       gw = "172.16.254.1";
       route = "172.16.254.0/24";
     };
+
+    services.cron.mailto = "admin@lists.vpsfree.cz";
   };
 
   # uses network.pkgs
