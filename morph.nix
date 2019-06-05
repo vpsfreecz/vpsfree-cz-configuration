@@ -22,6 +22,7 @@ in
     imports = [
       ./env.nix
       ./machines/build.nix
+      ./configs/image-repository.nix
     ];
 
     deployment = {
