@@ -15,6 +15,9 @@
     buildDataset = "tank/image-repository/build-dataset";
     logDir = "/tank/image-repository/log";
 
+    rebuildAll = true;
+    buildInterval = "0 4 * * sat";
+
     postBuild = ''
       ${pkgs.rsync}/bin/rsync -av --delete "${path}/" images.vpsadminos.org:/srv/images/
     '';
