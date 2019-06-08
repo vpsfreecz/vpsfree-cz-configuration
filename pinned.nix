@@ -8,8 +8,8 @@ rec {
   };
 
   vpsadminSpec = {
-     rev = "45cf09df192e67fd4ea5d9611114de75e3f924da";
-     hash = "0ffibnbkf4qq5b1kpf9yn1i0w3gggnd4bl7kl9z7i3qzivjsk5nh";
+     rev = "74b7429bf3ac20f38c74a610bc384a8e105fd41f";
+     hash = "0xi2201qm7w0cgp8s0llq20pxxq2bmaw0bsjjyxjfz3zb68mzv02";
   };
 
   vpsadminosSpec = {
