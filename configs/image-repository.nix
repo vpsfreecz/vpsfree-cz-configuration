@@ -61,7 +61,7 @@
 
       opensuse = {
         "leap-15.1" = { tags = [ "latest" "stable" ]; };
-        "tumbleweed" = {};
+        "tumbleweed" = { tags = [ "latest-tumbleweed" ]; };
       };
 
       slackware."14.2" = { tags = [ "latest" "stable" ]; };
