@@ -41,6 +41,8 @@
       debian = {
         "8" = {};
         "9" = { tags = [ "latest" "stable" ]; };
+        "testing" = { tags = [ "testing" ]; };
+        "unstable" = { tags = [ "unstable" ]; };
       };
 
       devuan = {
