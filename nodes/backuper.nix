@@ -16,7 +16,7 @@ in
   node = {
     nodeId = 160;
     net = {
-      hostName = "backuper";
+      hostName = "backuper.prg";
       as = 4200001046;
       mac = {
         teng0 = "00:25:90:0e:5b:1a";
