@@ -8,7 +8,8 @@
     ./modules/vpsadmin.nix
     ../modules/havesnippet.nix
   ];
-  users.users.root.openssh.authorizedKeys.keys = with import ../ssh-keys.nix; [ aither snajpa srk ];
+  users.users.root.openssh.authorizedKeys.keys = with import ../ssh-keys.nix;
+    [ aither snajpa srk "build.vpsfree.cz" ];
   users.users.root.initialHashedPassword = "$6$bdENLP5gkTO$iVMOmBo4EmmP2YawSOHEvMlq1WDn9RvMCG3ChYfpBoYKejAIz/g78EP2gfE8zM2SdS8p3O8E2LbzQMXwOupdj/";
 
   boot.kernelModules = [
