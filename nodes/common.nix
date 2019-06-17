@@ -90,4 +90,14 @@
     parallelStart = 2;
     parallelStop = 4;
   };
+
+  environment.etc =
+  let prefix = "/secrets/nodes/${ config.networking.hostName }/ssh";
+  in
+  {
+    "ssh/ssh_host_rsa_key.pub".source = "${ prefix }/ssh_host_rsa_key.pub";
+    "ssh/ssh_host_rsa_key" = { mode = "0600"; source = "${ prefix }/ssh_host_rsa_key"; };
+    "ssh/ssh_host_ed25519_key.pub".source = "${ prefix }/ssh_host_ed25519_key.pub";
+    "ssh/ssh_host_ed25519_key" = { mode = "0600"; source = "${ prefix}/ssh_host_ed25519_key"; };
+  };
 }
