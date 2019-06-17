@@ -64,7 +64,7 @@
   };
 
   services.nfs.server.enable = true;
-  services.node_exporter.enable = true;
+  services.prometheus.node_exporter.enable = true;
   # services.rsyslogd.forward = [ "172.17.1.245:11514" ];
 
   vpsadmin.enable = true;
