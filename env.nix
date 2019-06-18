@@ -18,7 +18,13 @@
 
   security.sudo.enable = true;
 
-  users.extraUsers.root.openssh.authorizedKeys.keys =
-    with import ./ssh-keys.nix; [ aither srk snajpa ];
-
+  users.users.root.openssh.authorizedKeys.keys =
+    let
+      sshKeys = import ./ssh-keys.nix;
+    in [
+      sshKeys."build.vpsfree.cz"
+      sshKeys.aither
+      sshKeys.srk
+      sshKeys.snajpa
+    ];
 }
