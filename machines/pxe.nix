@@ -10,5 +10,6 @@ in
   netboot = {
     host = "172.16.254.5";
     inherit (images) nixosItems vpsadminosItems mappings;
+    includeNetbootxyz = true;
   };
 }
