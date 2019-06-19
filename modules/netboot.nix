@@ -5,6 +5,11 @@ with lib;
 let
   cfg = config.netboot;
   server = cfg.host;
+  secretsDir = cfg.secretsDir;
+  # these are needed for iPXE build
+  # Warning: secretsDir will end up in a nix/store
+  caCert = "${secretsDir}/root.pem";
+  caCodesign = "${secretsDir}/codesign.crt";
 
   ipxe_item_nixos = name: item: ''
     :${name}
@@ -106,7 +111,7 @@ let
     ${items_nixos}
   '';
 
-  ipxe = pkgs.lib.overrideDerivation pkgs.ipxe (x: {
+  ipxe = pkgs.lib.overrideDerivation pkgs.ipxe (x: rec {
     script = pkgs.writeText "embed.ipxe" ''
       #!ipxe
       echo ${cfg.banner} stage 1
@@ -118,12 +123,11 @@ let
       echo temporary debug shell
       shell
     '';
-    ca_cert = /secrets/ca/root.pem;
     nativeBuildInputs = x.nativeBuildInputs ++ [ pkgs.openssl ];
     makeFlags = x.makeFlags ++ [
-      ''EMBED=''${script}''
-      ''TRUST=''${ca_cert}''
-      "CERT=${/secrets/ca/codesign.crt},${/secrets/ca/root.pem}"
+      "EMBED=${script}"
+      "TRUST=${caCert}"
+      "CERT=${caCodesign},${caCert}"
     ];
 
     enabledOptions = x.enabledOptions ++ [ "CONSOLE_SERIAL" "POWEROFF_CMD" "IMAGE_TRUST_CMD" ];
@@ -154,7 +158,7 @@ let
 
     ln -sv ${ipxe_script} $out/script.ipxe
     function signit {
-      openssl cms -sign -binary -noattr -in $1 -signer ${/secrets/ca/codesign.crt} -inkey ${/secrets/ca/codesign.key} -certfile ${/secrets/ca/root.pem} -outform DER -out ''${1}.sig
+      openssl cms -sign -binary -noattr -in $1 -signer ${secretsDir}/codesign.crt -inkey ${secretsDir}/codesign.key -certfile ${secretsDir}/root.pem -outform DER -out ''${1}.sig
     }
     signit $out/script.ipxe
 
@@ -186,6 +190,12 @@ in
         type = types.str;
         description = "IPXE menu password";
         default = "letmein";
+      };
+
+      secretsDir = mkOption {
+        type = types.path;
+        description = "Directory containing 'ca' subfolder with signing secrets";
+        default = "/secrets/ca";
       };
 
       nixosItems = mkOption {
