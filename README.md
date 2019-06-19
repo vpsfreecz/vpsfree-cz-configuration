@@ -1,10 +1,6 @@
 vpsfree.cz configuration
 ========================
 
-This project uses harness from https://github.com/grafted-in/nixops-manager.
-nixops command is wrapped with `./deploy/manage` script with pinned nixpkgs.
-
-
 1. Install Nix - https://nixos.org/nix/
 
 2. Clone this repository
@@ -19,34 +15,30 @@ nixops command is wrapped with `./deploy/manage` script with pinned nixpkgs.
     ./gen-ca
     ~~~~~
 
-4. Create the deployment:
+4. Install [morph overlay](overlays/morph.nix) 
 
-    ~~~~~ bash
-    ./deploy/manage virt create '<network.nix>' '<network-libvirt.nix>'
+    ~~~~~ nix
+    nixpkgs.overlays = [ (import ../overlays/morph.nix) ];
     ~~~~~
 
-5. Deploy!
+
+5. Install morph itself
 
     ~~~~~ bash
-    ./deploy/manage virt deploy
+    nix-shell -p morph
     ~~~~~
 
-Production/staging deployment
------------------------------
+6. Deploy!
 
-Requires `git-crypt`:
-
-```bash
-nix-env -iA git-crypt
-git-crypt unlock
-./deploy/manage prod deploy
-```
+    ~~~~~ bash
+    morph deploy morph.nix
+    ~~~~~
 
 Testing builds
 --------------
 
 ```bash
-./deploy/manage prod deploy --build-only
+morph build morph.nix
 ```
 
 Service specifics
