@@ -26,11 +26,7 @@ rec {
 
   node = {modules ? []}:
     let
-      common = {
-          imports = [
-            "${pinned.vpsadminosSrc}/os/configs/common.nix"
-          ]; };
-      build = pinned.vpsadminosBuild { modules = modules ++ [common]; };
+      build = pinned.vpsadminosBuild { inherit modules; };
     in {
       toplevel = build.toplevel;
       kernelParams = build.kernelParams;
