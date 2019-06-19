@@ -12,7 +12,8 @@ in
   netboot = {
     host = "boot.vpsadminos.org";
     acmeSSL = true;
-    inherit (images) nixosItems vpsadminosItems mappings;
+    vpsadminosItems = [];
+    inherit (images) nixosItems mappings;
   };
 
   web = {
