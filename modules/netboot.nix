@@ -18,18 +18,15 @@ let
   '';
 
 
-  # node netboot images are private
-  privateDir = "priv";
-
   ipxe_item_vpsadminos = name: item: ''
     :${name}
     imgfree
-    imgfetch http://${server}/${privateDir}/${name}/kernel systemConfig=${builtins.unsafeDiscardStringContext item.toplevel} ${toString item.kernelParams} || goto normal
-    imgfetch http://${server}/${privateDir}/${name}/initrd || goto normal
-    imgfetch http://${server}/${privateDir}/${name}/root.squashfs root.squashfs || goto normal
-    imgverify kernel http://${server}/${privateDir}/${name}/kernel.sig
-    imgverify initrd http://${server}/${privateDir}/${name}/initrd.sig
-    imgverify root.squashfs http://${server}/${privateDir}/${name}/root.squashfs.sig
+    imgfetch http://${server}/${name}/kernel systemConfig=${builtins.unsafeDiscardStringContext item.toplevel} ${toString item.kernelParams} || goto normal
+    imgfetch http://${server}/${name}/initrd || goto normal
+    imgfetch http://${server}/${name}/root.squashfs root.squashfs || goto normal
+    imgverify kernel http://${server}/${name}/kernel.sig
+    imgverify initrd http://${server}/${name}/initrd.sig
+    imgverify root.squashfs http://${server}/${name}/root.squashfs.sig
     imgselect kernel
     boot
   '';
@@ -40,11 +37,11 @@ let
 
   all_items = cfg.nixosItems // cfg.vpsadminosItems;
 
-  items_symlinks = items: subfolder: concatNl (mapAttrsToList (name: x: ''
-      mkdir -p $out/${subfolder}/${name}
+  items_symlinks = items: concatNl (mapAttrsToList (name: x: ''
+      mkdir -p $out/${name}
       for i in ${x.dir}/*; do
-        ln -s $i $out/${subfolder}/${name}/$( basename $i)
-        signit $out/${subfolder}/${name}/$( basename $i )
+        ln -s $i $out/${name}/$( basename $i)
+        signit $out/${name}/$( basename $i )
       done
     '') items);
 
@@ -161,8 +158,8 @@ let
     }
     signit $out/script.ipxe
 
-    ${items_symlinks cfg.nixosItems ""}
-    ${items_symlinks cfg.vpsadminosItems privateDir}
+    ${items_symlinks cfg.nixosItems}
+    ${items_symlinks cfg.vpsadminosItems}
   '';
 in
 {
@@ -233,13 +230,6 @@ in
           locations = {
             "/" = {
               extraConfig = "autoindex on;";
-            };
-            "/${privateDir}" = {
-              extraConfig = ''
-                allow   172.16.254.0/24;
-                allow   172.19.254.0/24;
-                deny    all;
-              '';
             };
           };
         };
