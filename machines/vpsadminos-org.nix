@@ -20,8 +20,4 @@ in
     domain = "vpsadminos.org";
     isoImages = [ images.vpsadminosISO ];
   };
-
-  users.users.root.openssh.authorizedKeys.keys = [
-    sshKeys."build.vpsfree.cz"
-  ];
 }
