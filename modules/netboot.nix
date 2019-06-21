@@ -194,8 +194,8 @@ in
 
       secretsDir = mkOption {
         type = types.path;
-        description = "Directory containing 'ca' subfolder with signing secrets";
-        default = "/secrets/ca";
+        description = "Directory containing signing secrets";
+        default = /secrets/ca;
       };
 
       nixosItems = mkOption {
