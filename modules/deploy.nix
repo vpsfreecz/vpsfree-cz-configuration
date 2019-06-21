@@ -38,7 +38,6 @@ in
     morph
     screen
     git
-    git-crypt
     nix-prefetch-scripts
     customVim
   ];
