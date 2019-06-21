@@ -13,8 +13,8 @@ rec {
   };
 
   vpsadminosSpec = {
-    rev = "6ed9aec75f0c0455b6b8734b33b882de5aa715b3";
-    hash = "0fl19ki4w0hcdi1bmph907l8x68h76kx4kcg7v0gssb1imimz6b7";
+    rev = "017ded7b41e4d40be61c119db22f71d2482078e9";
+    hash = "1l1l3fxhqx5rxvwjyikq7qxbp2d1hw5flfkahr5rj0hs59arpab1";
   };
 
   nixpkgsVpsFreeSpec = {
