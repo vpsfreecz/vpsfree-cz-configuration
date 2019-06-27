@@ -52,17 +52,13 @@
     # dstat # broken..
     strace
 
-    glibc
-    ipset
-    ncurses
-
     wireguard
     wireguard-tools
   ];
 
   # to be able to include ipmicfg
   nixpkgs.config.allowUnfree = true;
-  
+
   nixpkgs.overlays = import ../overlays;
 
   networking = {
