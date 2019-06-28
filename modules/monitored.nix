@@ -8,7 +8,7 @@ in
 {
   networking.firewall.allowedTCPPorts = [ 9100 ];
   networking.firewall.extraCommands = lib.concatStringsSep "\n" (
-    lib.flip map monitoringIPs (ip: "iptables -A INPUT -s ${ip} -p 9100 -j ACCEPT"));
+    lib.flip map monitoringIPs (ip: "iptables -A INPUT -p tcp -m tcp -s ${ip} --dport 9100 -j ACCEPT"));
 
   services.prometheus.exporters =
   {
