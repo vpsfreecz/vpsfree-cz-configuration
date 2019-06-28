@@ -16,10 +16,17 @@
       ];
       scrapeConfigs = [
         {
-          job_name = "node";
-          scrape_interval = "10s";
+          job_name = "mon";
+          scrape_interval = "60s";
           static_configs = [
-            # mon nodes
+            {
+              targets = [
+                "localhost:9090"
+              ];
+              labels = {
+                alias = "mon0.vpsfree.cz";
+              };
+            }
             {
               targets = [
                 "localhost:9100"
@@ -30,19 +37,32 @@
             }
             {
               targets = [
+                "mon0.base48.cz:9090"
+              ];
+              labels = {
+                alias = "mon0.base48.cz";
+              };
+            }
+            {
+              targets = [
                 "mon0.base48.cz:9100"
               ];
               labels = {
                 alias = "mon0.base48.cz";
               };
             }
-            # netboots
+          ];
+        }
+        {
+          job_name = "pxe";
+          scrape_interval = "60s";
+          static_configs = [
             {
               targets = [
-                "boot.vpsadminos.org:9100"
+                "pxe.vpsfree.cz:9100"
               ];
               labels = {
-                alias = "boot.vpsadminos.org";
+                alias = "pxe.vpsfree.cz";
               };
             }
             {
@@ -53,14 +73,18 @@
                 alias = "pxe.base48.cz";
               };
             }
-
-            # vpsadminos nodes
+          ];
+        }
+        {
+          job_name = "nodes";
+          scrape_interval = "60s";
+          static_configs = [
             {
               targets = [
-                "devnode1.base48.cz:9100"
+                "backuper.prg.vpsfree.cz:9100"
               ];
               labels = {
-                alias = "devnode1";
+                alias = "backuper";
               };
             }
             {
@@ -71,14 +95,42 @@
                 alias = "node1.stg";
               };
             }
-
-            # misc
             {
               targets = [
-                "fox.base48.cz:9100"
+                "node2.stg.vpsfree.cz:9100"
               ];
               labels = {
-                alias = "fox.base48.cz";
+                alias = "node2.stg";
+              };
+            }
+            {
+              targets = [
+                "devnode1.base48.cz:9100"
+              ];
+              labels = {
+                alias = "devnode1";
+              };
+            }
+          ];
+        }
+        {
+          job_name = "infra";
+          scrape_interval = "60s";
+          static_configs = [
+            {
+              targets = [
+                "build.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "build";
+              };
+            }
+            {
+              targets = [
+                "vpsadminos.org:9100"
+              ];
+              labels = {
+                alias = "vpsadminos.org";
               };
             }
           ];
