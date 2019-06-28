@@ -173,6 +173,27 @@ in
     };
   };
 
+  "log.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
+    imports = [
+      ./env.nix
+      ./machines/graylog.nix
+      ./profiles/ct.nix
+    ];
+
+    deployment = {
+      healthChecks = {
+        http = [
+          {
+            scheme = "http";
+            port = 80;
+            path = "/";
+            description = "Check whether nginx is running.";
+          }
+        ];
+      };
+    };
+  };
+
   "node1.stg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
       ./nodes/node1.stg.nix
