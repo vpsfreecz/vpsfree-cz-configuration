@@ -8,18 +8,18 @@ rec {
   };
 
   vpsadminSpec = {
-     rev = "b226bb02714558c614535f599302aad4ab3cb071";
-     hash = "0g1gx9fdxkl8hxpl7n19gn863cxf2cs25zj424ndaaqyz5j569xg";
+     rev = "e3374db49135966b07c7f9b012705b6f06786d95";
+     hash = "0x9hwlvlkkxz8zv3wz1izy4jh2cs7nfk17z63bxl42sbz8qsbn5a";
   };
 
   vpsadminosSpec = {
-    rev = "57137a17973da54435f0efd7cf5d271e341ef5fb";
-    hash = "0k9gz9j1w1lqb9m5mhj17v18ypvnpsqx4j2176qmfjkxmh6c6by9";
+    rev = "27e199d0fd35583287d0735b7b08ffd462f7392a";
+    hash = "06sp8ndqyy9d7pqn9lyp15m461xv1j1zqi0pjpfq9hd0r5vn10k7";
   };
 
   nixpkgsVpsFreeSpec = {
-    rev = "b5cf5ff20f92d790b703db00d202a72231943845";
-    hash = "1kd2wfvqazbnc18jfscp7vnshwlmjnxcy9d1cmpfwasbz0ks2x4n";
+    rev = "67cca52fd99815e96dc5421282529e9707d88654";
+    hash = "1hqmmih5ingj3aajgdqm7rf5m0z3jcgdg7xskwh1x7bndkn8i6h4";
   };
 
   buildVpsFreeTemplatesSpec = {
