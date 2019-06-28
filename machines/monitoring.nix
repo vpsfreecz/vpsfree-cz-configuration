@@ -8,17 +8,11 @@
   };
 
   services = {
-    prometheus = {
+    prometheus2 = {
       enable = true;
       extraFlags = [
-        "-storage.local.retention 8760h"  # 365 days
-        "-storage.local.series-file-shrink-ratio 0.3"
-        "-storage.local.memory-chunks 2097152"
-        "-storage.local.max-chunks-to-persist 1048576"
-        "-storage.local.index-cache-size.fingerprint-to-metric 2097152"
-        "-storage.local.index-cache-size.fingerprint-to-timerange 1048576"
-        "-storage.local.index-cache-size.label-name-to-label-values 2097152"
-        "-storage.local.index-cache-size.label-pair-to-fingerprints 41943040"
+        "-storage.tsdb.retention.time 365d"
+        "-storage.tsdb.retention.size 200GB"
       ];
       scrapeConfigs = [
         {
