@@ -49,7 +49,7 @@
     # debug stuff
     # config.boot.kernelPackages.bcc
     config.boot.kernelPackages.bpftrace
-    # dstat # broken..
+    dstat
     strace
 
     wireguard
