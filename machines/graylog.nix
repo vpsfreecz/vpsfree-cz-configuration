@@ -17,9 +17,9 @@
     rootPasswordSha2 = "670ddd27b448503bdb66dab9d3f978f7da2b6eb38f36e4268647c76203ab807f";
     elasticsearchHosts = [ "http://localhost:9200" ];
     extraConfig = ''
-      web_endpoint_uri = http://graylog.vpsfree.cz/api/
-      rest_listen_uri = http://127.0.0.1:9000/api/
-      web_listen_uri = http://127.0.0.1:9000/
+      http_bind_address = 127.0.0.1:9000
+      http_publish_uri  = http://log.vpsfree.cz/
+      http_external_uri = http://log.vpsfree.cz/
       '';
   };
 
