@@ -15,8 +15,8 @@
     prometheus2 = {
       enable = true;
       extraFlags = [
-        "-storage.tsdb.retention.time 365d"
-        "-storage.tsdb.retention.size 200GB"
+        "--storage.tsdb.retention.time 365d"
+        "--storage.tsdb.retention.size 200GB"
       ];
       scrapeConfigs = [
         {
