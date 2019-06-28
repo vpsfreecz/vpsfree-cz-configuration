@@ -5,6 +5,7 @@ let
 in
 {
   imports = [
+    ../modules/monitored.nix
     ../modules/netboot.nix
     ../modules/web.nix
   ];

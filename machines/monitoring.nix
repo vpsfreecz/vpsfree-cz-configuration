@@ -1,5 +1,9 @@
 { pkgs, lib, config, ... }:
 {
+  imports = [
+    ../modules/monitored.nix
+  ];
+
   networking = {
     firewall.allowedTCPPorts = [
       3000  # grafana

@@ -5,6 +5,7 @@ in
 {
   imports = [
     ../modules/netboot.nix
+    ../modules/monitored.nix
   ];
 
   netboot = {
