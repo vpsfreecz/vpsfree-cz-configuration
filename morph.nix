@@ -194,6 +194,14 @@ in
     };
   };
 
+  "mon0.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
+    imports = [
+      ./env.nix
+      ./machines/monitoring.nix
+      ./profiles/ct.nix
+    ];
+  };
+
   "node1.stg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
       ./nodes/node1.stg.nix
