@@ -46,7 +46,7 @@
         default = true;
         locations = {
           "/" = {
-            proxyPass = "http://localhost:9000";
+            proxyPass = "http://127.0.0.1:9000";
           };
         };
       };
