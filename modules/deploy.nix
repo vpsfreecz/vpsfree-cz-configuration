@@ -44,10 +44,10 @@ in
     (pkgs.writeScriptBin "generate-node-sshkeys" ''
         set -e
         test $# -eq 1 || { echo "Expects node hostname"; exit 1; }
-        test -d /secrets/nodes/"${1}" && { echo "Already there"; exit 1; }
-        mkdir -p /secrets/nodes/"${1}"/ssh
-        ssh-keygen -t rsa -b 4096 -f /secrets/nodes/"${1}"/ssh/ssh_host_rsa_key -N ""
-        ssh-keygen -t ed25519 -f /secrets/nodes/"${1}"/ssh/ssh_host_ed25519_key -N ""
+        test -d /secrets/nodes/"''${1}" && { echo "Already there"; exit 1; }
+        mkdir -p /secrets/nodes/"''${1}"/ssh
+        ssh-keygen -t rsa -b 4096 -f /secrets/nodes/"''${1}"/ssh/ssh_host_rsa_key -N ""
+        ssh-keygen -t ed25519 -f /secrets/nodes/"''${1}"/ssh/ssh_host_ed25519_key -N ""
       '')
 
   ];
