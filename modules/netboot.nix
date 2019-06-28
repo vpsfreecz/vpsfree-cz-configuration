@@ -218,6 +218,16 @@ in
         description = "Enable ACME and SSL for netboot host";
         default = false;
       };
+
+      allowedIPRanges = mkOption {
+        type = types.listOf types.str;
+        description = ''
+          Allow HTTP access for these IP ranges, if not specified
+          access is not restricted.
+        '';
+        default = [];
+        example = "10.0.0.0/24";
+      };
     };
   };
 
@@ -239,7 +249,13 @@ in
           enableACME = cfg.acmeSSL;
           locations = {
             "/" = {
-              extraConfig = "autoindex on;";
+              extraConfig = ''
+                autoindex on;
+                ${optionalString (cfg.allowedIPRanges != []) ''
+                  ${concatStringsSep "\n" (flip map cfg.allowedIPRanges (range: "allow ${range};"))}
+                  deny all;
+                ''}
+              '';
             };
           };
         };
