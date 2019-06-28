@@ -54,9 +54,9 @@ in
 
   # The storage pool on backuper is in some weird state, where it can be seen
   # as two pools with the same name, one faulted with missing devices and one
-  # as it should be. The default disk search directory of /dev/disk/by-id
-  # does not work for this pool, using /dev makes the issue disappear.
-  boot.zfs.devNodes = "/dev";
+  # as it should be. This issue manifests whenever zpool import -d is used, so
+  # we want to import the pool without it.
+  boot.zfs.devNodes = [];
 
   boot.zfs.pools = {
     storage = {
