@@ -49,6 +49,7 @@
     # debug stuff
     # config.boot.kernelPackages.bcc
     config.boot.kernelPackages.bpftrace
+    config.boot.kernelPackages.perf
     dstat
     strace
 
