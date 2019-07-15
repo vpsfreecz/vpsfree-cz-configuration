@@ -3,7 +3,7 @@
 {
 
   imports = [
-    ../modules/monitored.nix
+    ../../modules/monitored.nix
   ];
 
   networking.firewall.allowedTCPPorts = [ 80 11514 ];    # web,  tcp rsyslog

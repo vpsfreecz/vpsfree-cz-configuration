@@ -1,11 +1,11 @@
 { config, pkgs, lib, ... }:
 let
-  images = import ../images.nix { inherit lib pkgs; };
+  images = import ../../images.nix { inherit lib pkgs; };
 in
 {
   imports = [
-    ../modules/netboot.nix
-    ../modules/monitored.nix
+    ../../modules/netboot.nix
+    ../../modules/monitored.nix
   ];
 
   netboot = {

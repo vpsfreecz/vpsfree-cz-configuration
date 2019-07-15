@@ -21,7 +21,7 @@ in
   "build.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
       ./env.nix
-      ./machines/build.nix
+      ./machines/vpsfree.cz/build.nix
       ./configs/image-repository.nix
     ];
 
@@ -82,7 +82,7 @@ in
   "pxe.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
       ./env.nix
-      ./machines/pxe.nix
+      ./machines/vpsfree.cz/pxe.nix
       <nixpkgs/nixos/modules/profiles/minimal.nix>
     ];
     boot.loader.grub.enable = true;
@@ -145,7 +145,7 @@ in
   "vpsadminos.org" = { config, pkgs, ... }: with pkgs; {
     imports = [
       ./env.nix
-      ./machines/vpsadminos-org.nix
+      ./machines/vpsfree.cz/vpsadminos-org.nix
       "${pinned.buildVpsFreeTemplatesSrc}/files/configuration.nix"
     ];
 
@@ -176,7 +176,7 @@ in
   "log.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
       ./env.nix
-      ./machines/graylog.nix
+      ./machines/vpsfree.cz/graylog.nix
       ./profiles/ct.nix
     ];
 
@@ -197,14 +197,14 @@ in
   "mon0.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
       ./env.nix
-      ./machines/monitoring.nix
+      ./machines/vpsfree.cz/monitoring.nix
       ./profiles/ct.nix
     ];
   };
 
   "node1.stg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
-      ./nodes/stg/node1.nix
+      ./nodes/vpsfree.cz/stg/node1.nix
     ];
 
     nixpkgs.overlays = [
@@ -222,7 +222,7 @@ in
 
   "node2.stg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
-      ./nodes/stg/node2.nix
+      ./nodes/vpsfree.cz/stg/node2.nix
     ];
 
     nixpkgs.overlays = [
@@ -240,7 +240,7 @@ in
 
   "backuper.prg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
-      ./nodes/prg/backuper.nix
+      ./nodes/vpsfree.cz/prg/backuper.nix
     ];
 
     nixpkgs.overlays = [

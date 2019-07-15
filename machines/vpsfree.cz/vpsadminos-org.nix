@@ -1,14 +1,14 @@
 { config, pkgs, lib, ... }:
 let
-  images = import ../images.nix { inherit lib pkgs; };
-  sshKeys = import ../ssh-keys.nix;
+  images = import ../../images.nix { inherit lib pkgs; };
+  sshKeys = import ../../ssh-keys.nix;
 in
 {
   imports = [
     # Not available on nixos-17.09
     # ../modules/monitored.nix
-    ../modules/netboot.nix
-    ../modules/web.nix
+    ../../modules/netboot.nix
+    ../../modules/web.nix
   ];
 
   netboot = {

@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 {
   imports = [
-    ../modules/deploy.nix
+    ../../modules/deploy.nix
   ];
 
   networking.lxcbr = true;

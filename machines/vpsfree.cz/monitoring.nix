@@ -1,7 +1,7 @@
 { pkgs, lib, config, ... }:
 {
   imports = [
-    ../modules/monitored.nix
+    ../../modules/monitored.nix
   ];
 
   networking = {

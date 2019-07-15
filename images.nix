@@ -76,7 +76,7 @@ rec {
     modules = [ {
 
       imports = [
-        ./nodes/prg/backuper.nix
+        ./nodes/vpsfree.cz/prg/backuper.nix
       ];
 
     } ];
@@ -87,7 +87,7 @@ rec {
     modules = [ {
 
       imports = [
-        ./nodes/stg/node1.nix
+        ./nodes/vpsfree.cz/stg/node1.nix
       ];
 
     } ];
@@ -97,7 +97,7 @@ rec {
     modules = [ {
 
       imports = [
-        ./nodes/stg/node2.nix
+        ./nodes/vpsfree.cz/stg/node2.nix
       ];
 
     } ];

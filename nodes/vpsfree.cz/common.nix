@@ -2,15 +2,15 @@
 {
 
   imports = [
-    ./modules/bird.nix
-    ./modules/networking.nix
-    ./modules/serial.nix
-    ./modules/vpsadmin.nix
-    ../modules/havesnippet.nix
+    ../modules/bird.nix
+    ../modules/networking.nix
+    ../modules/serial.nix
+    ../modules/vpsadmin.nix
+    ../../modules/havesnippet.nix
   ];
   users.users.root.openssh.authorizedKeys.keys =
     let
-      sshKeys = import ../ssh-keys.nix;
+      sshKeys = import ../../ssh-keys.nix;
     in [
       sshKeys."build.vpsfree.cz"
       sshKeys.aither
@@ -60,7 +60,7 @@
   # to be able to include ipmicfg
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.overlays = import ../overlays;
+  nixpkgs.overlays = import ../../overlays;
 
   networking = {
     domain = "vpsfree.cz";
