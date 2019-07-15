@@ -1,6 +1,8 @@
 { pkgs, lib, config, ... }:
 {
   imports = [
+    ../../env.nix
+    ../../profiles/ct.nix
     ../../modules/monitored.nix
   ];
 

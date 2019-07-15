@@ -20,9 +20,7 @@ in
 
   "build.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
-      ./env.nix
       ./machines/vpsfree.cz/build.nix
-      ./configs/image-repository.nix
     ];
 
     deployment = {
@@ -32,100 +30,13 @@ in
       ];
       importPath = "${pinned.vpsadminosSrc}/os/default.nix";
     };
-
-    boot.loader.grub.enable = true;
-    boot.loader.grub.version = 2;
-    boot.loader.grub.device = "/dev/sda";
-    boot.loader.grub.copyKernels = true;
-
-    boot.kernelParams = [ "nolive" ];
-    boot.initrd.availableKernelModules = [ "ehci_pci" "ahci" "usbhid" ];
-    boot.kernelModules = [ "kvm-intel" "ipmi_si" "ipmi_devintf" ];
-    boot.extraModulePackages = [ ];
-    boot.extraModprobeConfig = "options zfs zfs_arc_max=${toString (2 * 1024 * 1024 * 1024)}";
-
-    boot.zfs.pools = {
-      tank = {
-        layout = [
-          { devices = [ "sda1" ]; }
-        ];
-      };
-    };
-
-    fileSystems."/" =
-      { device = "tank/root";
-        fsType = "zfs";
-      };
-
-    fileSystems."/boot" =
-      { device = "/dev/disk/by-uuid/7b877eb5-8ed4-475b-8739-5a740426e169";
-        fsType = "ext4";
-      };
-
-    swapDevices = [ ];
-
-    nix.maxJobs = lib.mkDefault 16;
-    powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
-
-    # 00:25:90:96:8d:90
-    networking.static = {
-      enable = true;
-      ip = "172.16.254.4";
-      gw = "172.16.254.1";
-      route = "172.16.254.0/24";
-    };
-
-    services.cron.mailto = "admin@lists.vpsfree.cz";
   };
 
   # uses network.pkgs
   "pxe.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
-      ./env.nix
       ./machines/vpsfree.cz/pxe.nix
-      <nixpkgs/nixos/modules/profiles/minimal.nix>
     ];
-    boot.loader.grub.enable = true;
-    boot.loader.grub.version = 2;
-    boot.loader.grub.device = "/dev/sda";
-    boot.loader.grub.copyKernels = true;
-
-    boot.initrd.availableKernelModules = [ "ehci_pci" "ahci" "usbhid" "sd_mod" ];
-    boot.kernelModules = [ "kvm-intel" ];
-    boot.extraModulePackages = [ ];
-
-    fileSystems."/" =
-      { device = "tank/root";
-        fsType = "zfs";
-      };
-
-    fileSystems."/boot" =
-      { device = "/dev/disk/by-uuid/39aebcc2-9cbc-461b-b494-b34c467ca595";
-        fsType = "ext4";
-      };
-
-    swapDevices = [ ];
-
-    nix.maxJobs = lib.mkDefault 8;
-    powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
-
-    boot.kernelParams = [
-      "net.ifnames=0"
-    ];
-
-    # 00:25:90:3d:0f:14
-    networking = {
-      hostName = "pxe";
-      hostId = "0fed4e57";
-      defaultGateway = "172.16.254.1";
-      interfaces = {
-        eth0 = {
-          ipv4.addresses = [
-            { address="172.16.254.5"; prefixLength=24; }
-          ];
-        };
-      };
-    };
 
     deployment = {
       healthChecks = {
@@ -144,7 +55,6 @@ in
 
   "vpsadminos.org" = { config, pkgs, ... }: with pkgs; {
     imports = [
-      ./env.nix
       ./containers/vpsadminos.org/www.nix
       "${pinned.buildVpsFreeTemplatesSrc}/files/configuration.nix"
     ];
@@ -175,9 +85,7 @@ in
 
   "log.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
-      ./env.nix
       ./containers/vpsfree.cz/log.nix
-      ./profiles/ct.nix
     ];
 
     deployment = {
