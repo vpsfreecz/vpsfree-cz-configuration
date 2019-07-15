@@ -5,7 +5,8 @@ let
 in
 {
   imports = [
-    ../modules/monitored.nix
+    # Not available on nixos-17.09
+    # ../modules/monitored.nix
     ../modules/netboot.nix
     ../modules/web.nix
   ];
