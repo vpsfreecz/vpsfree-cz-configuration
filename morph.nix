@@ -145,7 +145,7 @@ in
   "vpsadminos.org" = { config, pkgs, ... }: with pkgs; {
     imports = [
       ./env.nix
-      ./machines/vpsfree.cz/vpsadminos-org.nix
+      ./containers/vpsadminos.org/www.nix
       "${pinned.buildVpsFreeTemplatesSrc}/files/configuration.nix"
     ];
 
@@ -176,7 +176,7 @@ in
   "log.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
       ./env.nix
-      ./machines/vpsfree.cz/graylog.nix
+      ./containers/vpsfree.cz/log.nix
       ./profiles/ct.nix
     ];
 
@@ -197,7 +197,7 @@ in
   "mon0.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
       ./env.nix
-      ./machines/vpsfree.cz/monitoring.nix
+      ./containers/vpsfree.cz/mon0.nix
       ./profiles/ct.nix
     ];
   };
