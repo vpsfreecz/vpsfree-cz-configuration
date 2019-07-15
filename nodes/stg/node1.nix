@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ./stg.nix
+    ./common.nix
   ];
 
   node = {

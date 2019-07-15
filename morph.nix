@@ -204,7 +204,7 @@ in
 
   "node1.stg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
-      ./nodes/node1.stg.nix
+      ./nodes/stg/node1.nix
     ];
 
     nixpkgs.overlays = [
@@ -222,7 +222,7 @@ in
 
   "node2.stg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
-      ./nodes/node2.stg.nix
+      ./nodes/stg/node2.nix
     ];
 
     nixpkgs.overlays = [
@@ -240,7 +240,7 @@ in
 
   "backuper.prg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
     imports = [
-      ./nodes/backuper.nix
+      ./nodes/prg/backuper.nix
     ];
 
     nixpkgs.overlays = [

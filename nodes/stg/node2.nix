@@ -1,7 +1,7 @@
 { config, lib, ...}:
 {
   imports = [
-    ./stg.nix
+    ./common.nix
   ];
 
   node = {

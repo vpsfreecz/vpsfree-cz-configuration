@@ -72,11 +72,11 @@ rec {
   vpsadminos = node { };
 
   # storage nodes
-  backuper = node {
+  backuper_prg = node {
     modules = [ {
 
       imports = [
-        ./nodes/backuper.nix
+        ./nodes/prg/backuper.nix
       ];
 
     } ];
@@ -87,7 +87,7 @@ rec {
     modules = [ {
 
       imports = [
-        ./nodes/node1.stg.nix
+        ./nodes/stg/node1.nix
       ];
 
     } ];
@@ -97,14 +97,14 @@ rec {
     modules = [ {
 
       imports = [
-        ./nodes/node2.stg.nix
+        ./nodes/stg/node2.nix
       ];
 
     } ];
   };
 
   macMap = {
-    backuper = [
+    backuper_prg = [
       "00:25:90:2f:a3:ac"
       "00:25:90:2f:a3:ad"
       "00:25:90:2f:a3:ae"
@@ -134,7 +134,7 @@ rec {
   };
 
   vpsadminosItems = {
-    inherit backuper;
+    inherit backuper_prg;
     inherit node1_stg;
     inherit node2_stg;
   };

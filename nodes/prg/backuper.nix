@@ -7,7 +7,7 @@ let
 in
 {
   imports = [
-    ./storage.nix
+    ../storage.nix
   ];
 
   vpsadmin.netInterfaces = [ "eth0" "eth1" ];
