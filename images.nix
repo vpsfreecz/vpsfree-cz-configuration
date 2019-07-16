@@ -1,15 +1,37 @@
 { pkgs, lib, ... }:
-
 with lib;
+let
+  swpins = import ./swpins { name = "images"; inherit pkgs lib; };
 
-rec {
-  pinned = import ./pinned.nix { inherit lib pkgs; };
+  vpsadminos = {modules ? []}:
+    vpsadminosCustom swpins.vpsadminos swpins.nixpkgs swpings.vpsadmin { inherit modules; };
 
+  # allows to build vpsadminos with specific
+  vpsadminosCustom = os: nixpkgs: vpsadmin: {modules ? []}:
+    let
+      # this is fed into scopedImport so vpsadminos sees correct <nixpkgs> everywhere
+      overrides = {
+        __nixPath = [ { prefix = "nixpkgs"; path = nixpkgs; } ] ++ builtins.nixPath;
+        import = fn: scopedImport overrides fn;
+        scopedImport = attrs: fn: scopedImport (overrides // attrs) fn;
+        builtins = builtins // overrides;
+      };
+    in
+      builtins.scopedImport overrides (os + "/os/") {
+        pkgs = nixpkgs;
+        system = "x86_64-linux";
+        configuration = {};
+        inherit modules vpsadmin;
+      };
+
+  vpsadminosBuild = {modules ? []}: (vpsadminos { inherit modules; }).config.system.build;
+
+in rec {
   nixosBuild = {modules ? []}:
-    (import (pinned.nixpkgsVpsFree.path + "/nixos/lib/eval-config.nix") {
+    (import ("${swpins.nixpkgs}/nixos/lib/eval-config.nix") {
       system = "x86_64-linux";
       modules = [
-        (pinned.nixpkgsVpsFree.path + "/nixos/modules/installer/netboot/netboot-minimal.nix")
+        ("${swpins.nixpkgs}/nixos/modules/installer/netboot/netboot-minimal.nix")
       ] ++ modules;
     }).config.system.build;
 
@@ -26,7 +48,7 @@ rec {
 
   node = {modules ? []}:
     let
-      build = pinned.vpsadminosBuild { inherit modules; };
+      build = vpsadminosBuild { inherit modules; };
     in {
       toplevel = build.toplevel;
       kernelParams = build.kernelParams;
@@ -38,10 +60,10 @@ rec {
 
   vpsadminosISO =
     let
-      build = pinned.vpsadminosBuild {
+      build = vpsadminosBuild {
         modules = [{
           imports = [
-            "${pinned.vpsadminosSrc}/os/configs/iso.nix"
+            "${swpins.vpsadminos}/os/configs/iso.nix"
           ];
 
           system.secretsDir = null;

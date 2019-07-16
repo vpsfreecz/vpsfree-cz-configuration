@@ -1,0 +1,36 @@
+{
+  "vpsadminos": {
+    "type": "git",
+    "handler": "vpsadminos",
+    "options": {
+      "url": "https://github.com/vpsfreecz/vpsadminos",
+      "rev": "0c327b9f66953f6cf72325d67ad079d2fcc0f8c0",
+      "sha256": "0623068sgzy9ns2c4r3456iksrvvx3svx2di2z159hcr3rbnvwra"
+    }
+  },
+  "vpsadminos-runtime-deps": {
+    "type": "git",
+    "handler": "vpsadminos",
+    "options": {
+      "url": "https://github.com/vpsfreecz/vpsadminos",
+      "rev": "dc1baa76118db1591574918bb18868a1b937e3c0",
+      "sha256": "0dwagzha2p8ssn691jvz3fqb1by68f117870asc3vwzxqj8zcic8"
+    }
+  },
+  "nixpkgs": {
+    "type": "git",
+    "options": {
+      "url": "https://github.com/vpsfreecz/nixpkgs",
+      "rev": "67cca52fd99815e96dc5421282529e9707d88654",
+      "sha256": "1hqmmih5ingj3aajgdqm7rf5m0z3jcgdg7xskwh1x7bndkn8i6h4"
+    }
+  },
+  "vpsadmin": {
+    "type": "git",
+    "options": {
+      "url": "https://github.com/vpsfreecz/vpsadmin",
+      "rev": "02e2b2144a44ff7849b1b700c5711e107d3eae52",
+      "sha256": "16carxp4mlpywsqvcz0khp1lm5krjvgri7m03d89652zrmfnng0y"
+    }
+  }
+}

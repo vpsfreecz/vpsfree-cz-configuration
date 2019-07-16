@@ -5,18 +5,30 @@ with lib;
 let
   cfg = config.web;
   domain = cfg.domain;
-  pinned = import ../pinned.nix { inherit lib pkgs; };
 
-  docs = pkgs.runCommand "docsroot" { buildInputs = [ pinned.nixpkgsVpsFree.mkdocs ]; } ''
+  swpins = import ../swpins { name = "www.vpsadminos.org"; inherit lib pkgs; };
+
+  docsOs = swpins.vpsadminos-runtime-deps;
+
+  docsPkgs = import swpins.nixpkgs {
+    overlays = [
+      (import ("${docsOs}/os/overlays/osctl.nix"))
+      (import ("${docsOs}/os/overlays/ruby.nix"))
+    ];
+  };
+
+  docs = pkgs.runCommand "docsroot" { buildInputs = [ docsPkgs.mkdocs ]; } ''
     mkdir -p $out
-    pushd ${pinned.vpsadminosSrc}
+    pushd ${swpins.vpsadminos}
     mkdocs build --site-dir $out
     popd
   '';
 
-  buildMan = component: pkgs.runCommand "${replaceStrings ["/"] ["_"] component}_man" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl-env-exec pkgs.git ]; } ''
+  buildMan = component: pkgs.runCommand "${replaceStrings ["/"] ["_"] component}_man" {
+    buildInputs = [ docsPkgs.osctl-env-exec pkgs.git ];
+  } ''
     mkdir man
-    cp -R ${pinned.vpsadminosSrc} vpsadminos
+    cp -R ${swpins.vpsadminos} vpsadminos
     chmod -R +w vpsadminos
     pushd vpsadminos/${component}
       touch man/style.css
@@ -40,8 +52,10 @@ let
     ln -s ${buildMan "svctl"} $out/svctl
   '';
 
-  ref = pkgs.runCommand "refroot" { buildInputs = [ pinned.vpsadminosDocsPkgs.osctl-env-exec pkgs.git ]; } ''
-    cp -R ${pinned.vpsadminosSrc} vpsadminos
+  ref = pkgs.runCommand "refroot" {
+    buildInputs = [ docsPkgs.osctl-env-exec pkgs.git ];
+  } ''
+    cp -R ${swpins.vpsadminos} vpsadminos
     chmod -R +w vpsadminos
     mkdir $out
     pushd vpsadminos

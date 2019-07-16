@@ -7,7 +7,6 @@ in
     ../../env.nix
     ../../modules/netboot.nix
     ../../modules/monitored.nix
-    <nixpkgs/nixos/modules/profiles/minimal.nix>
   ];
 
   boot.loader.grub.enable = true;
@@ -60,5 +59,19 @@ in
       "172.16.254.0/24"
       "172.19.254.0/24"
     ];
+  };
+
+  deployment = {
+    healthChecks = {
+      http = [
+        {
+          scheme = "http";
+          port = 80;
+          path = "/";
+          description = "Check whether nginx is running.";
+          period = 1; # number of seconds between retries
+        }
+      ];
+    };
   };
 }

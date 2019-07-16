@@ -1,169 +1,96 @@
 let
-  # Pin the deployment package-set to a specific version of nixpkgs
-  newPkgs = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs-channels/archive/180aa21259b666c6b7850aee00c5871c89c0d939.tar.gz";
-    sha256 = "0gxd10djy6khbjb012s9fl3lpjzqaknfv2g4dpfjxwwj9cbkj04h";
-  }) {};
-
-  legacyPkgs = builtins.fetchTarball {
-    url    = "https://d3g5gsiof5omrk.cloudfront.net/nixos/17.09/nixos-17.09.3243.bca2ee28db4/nixexprs.tar.xz";
-    sha256 = "1adi0m8x5wckginbrq0rm036wgd9n1j1ap0zi2ph4kll907j76i2";
+  baseSwpins = import ./swpins rec {
+    name = "base";
+    pkgs = (import <nixpkgs> {});
+    lib = pkgs.lib;
   };
 
-  pinned = import ./pinned.nix { inherit (newPkgs) lib pkgs; };
+  deployment = import ./lib/deployment.nix rec {
+    pkgs = import baseSwpins.nixpkgs {};
+    lib = pkgs.lib;
+  };
+
+  domain = "vpsfree.cz";
 in
 {
   network =  {
-    pkgs = newPkgs;
+    pkgs = import baseSwpins.nixpkgs {};
     description = "vpsf hosts";
   };
 
-  "build.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
-    imports = [
-      ./machines/vpsfree.cz/build.nix
-    ];
-
-    deployment = {
-      nixPath = [
-        { prefix = "nixpkgs"; path = pinned.nixpkgsVpsFreeSrc; }
-        { prefix = "vpsadminos"; path = pinned.vpsadminosSrc; }
-      ];
-      importPath = "${pinned.vpsadminosSrc}/os/default.nix";
-    };
+  "build.vpsfree.cz" = deployment.osMachine {
+    name = "build";
+    inherit domain;
   };
 
-  # uses network.pkgs
-  "pxe.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
-    imports = [
-      ./machines/vpsfree.cz/pxe.nix
-    ];
+  "pxe.vpsfree.cz" = deployment.osMachine {
+    name = "pxe";
+    inherit domain;
+  };
 
-    deployment = {
-      healthChecks = {
-        http = [
-          {
-            scheme = "http";
-            port = 80;
-            path = "/";
-            description = "Check whether nginx is running.";
-            period = 1; # number of seconds between retries
-          }
+  "vpsadminos.org" =
+    { config, pkgs, ... }:
+      let
+        legacy = import ./swpins rec {
+          name = "legacy";
+          pkgs = (import <nixpkgs> {});
+          lib = pkgs.lib;
+        };
+      in {
+        imports = [
+          ./containers/vpsadminos.org/www.nix
+          "${legacy.build-vpsfree-templates}/files/configuration.nix"
         ];
+
+        deployment = {
+          nixPath = [
+            { prefix = "nixpkgs"; path = legacy.nixpkgs; }
+          ];
+          healthChecks = {
+            http = [
+              {
+                scheme = "http";
+                port = 80;
+                path = "/";
+                description = "Check whether nginx is running.";
+              }
+              {
+                scheme = "https";
+                port = 443;
+                host = "vpsadminos.org";
+                path = "/";
+                description = "vpsadminos.org is up";
+              }
+            ];
+          };
+        };
       };
-    };
+
+  "log.vpsfree.cz" = deployment.osContainer {
+    name = "log";
+    inherit domain;
   };
 
-  "vpsadminos.org" = { config, pkgs, ... }: with pkgs; {
-    imports = [
-      ./containers/vpsadminos.org/www.nix
-      "${pinned.buildVpsFreeTemplatesSrc}/files/configuration.nix"
-    ];
-
-    deployment = {
-      nixPath = [
-        { prefix = "nixpkgs"; path = legacyPkgs; }
-      ];
-      healthChecks = {
-        http = [
-          {
-            scheme = "http";
-            port = 80;
-            path = "/";
-            description = "Check whether nginx is running.";
-          }
-          {
-            scheme = "https";
-            port = 443;
-            host = "vpsadminos.org";
-            path = "/";
-            description = "vpsadminos.org is up";
-          }
-        ];
-      };
-    };
+  "mon0.vpsfree.cz" = deployment.osContainer {
+    name = "mon0";
+    inherit domain;
   };
 
-  "log.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
-    imports = [
-      ./containers/vpsfree.cz/log.nix
-    ];
-
-    deployment = {
-      healthChecks = {
-        http = [
-          {
-            scheme = "http";
-            port = 80;
-            path = "/";
-            description = "Check whether nginx is running.";
-          }
-        ];
-      };
-    };
+  "node1.stg.vpsfree.cz" = deployment.osNode {
+    name = "node1";
+    location = "stg";
+    inherit domain;
   };
 
-  "mon0.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
-    imports = [
-      ./env.nix
-      ./containers/vpsfree.cz/mon0.nix
-      ./profiles/ct.nix
-    ];
+  "node2.stg.vpsfree.cz" = deployment.osNode {
+    name = "node2";
+    location = "stg";
+    inherit domain;
   };
 
-  "node1.stg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
-    imports = [
-      ./nodes/vpsfree.cz/stg/node1.nix
-    ];
-
-    nixpkgs.overlays = [
-      (import "${pinned.vpsadminosSrc}/os/overlays/vpsadmin.nix" pinned.vpsadminSrc)
-    ];
-
-    deployment = {
-      nixPath = [
-        { prefix = "nixpkgs"; path = pinned.nixpkgsVpsFreeSrc; }
-        { prefix = "vpsadminos"; path = pinned.vpsadminosSrc; }
-      ];
-      importPath = "${pinned.vpsadminosSrc}/os/default.nix";
-    };
+  "backuper.prg.vpsfree.cz" = deployment.osNode {
+    name = "backuper";
+    location = "prg";
+    inherit domain;
   };
-
-  "node2.stg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
-    imports = [
-      ./nodes/vpsfree.cz/stg/node2.nix
-    ];
-
-    nixpkgs.overlays = [
-      (import "${pinned.vpsadminosSrc}/os/overlays/vpsadmin.nix" pinned.vpsadminSrc)
-    ];
-
-    deployment = {
-      nixPath = [
-        { prefix = "nixpkgs"; path = pinned.nixpkgsVpsFreeSrc; }
-        { prefix = "vpsadminos"; path = pinned.vpsadminosSrc; }
-      ];
-      importPath = "${pinned.vpsadminosSrc}/os/default.nix";
-    };
-  };
-
-  "backuper.prg.vpsfree.cz" = { config, pkgs, ... }: with pkgs; {
-    imports = [
-      ./nodes/vpsfree.cz/prg/backuper.nix
-    ];
-
-    nixpkgs.overlays = [
-      (import "${pinned.vpsadminosSrc}/os/overlays/vpsadmin.nix" pinned.vpsadminSrc)
-    ];
-
-    deployment = {
-      nixPath = [
-        { prefix = "nixpkgs"; path = pinned.nixpkgsVpsFreeSrc; }
-        { prefix = "vpsadminos"; path = pinned.vpsadminosSrc; }
-      ];
-      importPath = "${pinned.vpsadminosSrc}/os/default.nix";
-    };
-  };
-
-
-
 }

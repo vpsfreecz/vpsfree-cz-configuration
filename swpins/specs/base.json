@@ -1,0 +1,10 @@
+{
+  "nixpkgs": {
+    "type": "git",
+    "options": {
+      "url": "https://github.com/NixOS/nixpkgs-channels",
+      "rev": "180aa21259b666c6b7850aee00c5871c89c0d939",
+      "sha256": "0gxd10djy6khbjb012s9fl3lpjzqaknfv2g4dpfjxwwj9cbkj04h"
+    }
+  }
+}

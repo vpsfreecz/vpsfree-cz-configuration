@@ -1,0 +1,18 @@
+{
+  "nixpkgs": {
+    "type": "git",
+    "options": {
+      "url": "https://github.com/NixOS/nixpkgs-channels",
+      "rev": "bca2ee28db44bc2d2d1b5e97866ca4052d88e94f",
+      "sha256": "0l9jpnkvjcj9p181ns9g4gm57n3ni4q07ynkh80r6d6qidw8cwnq"
+    }
+  },
+  "build-vpsfree-templates": {
+    "type": "git",
+    "options": {
+      "url": "https://github.com/vpsfreecz/build-vpsfree-templates",
+      "rev": "f5829847c8ee1666481eb8a64df61f3018635ec7",
+      "sha256": "1r8b3wyn4ggw1skdalib6i4c4i0cwmbr828qm4msx7c0j76910z4"
+    }
+  }
+}
