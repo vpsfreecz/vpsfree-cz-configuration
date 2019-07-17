@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require 'confctl'
+require 'confctl/cli'
+ConfCtl::Cli::App.run
