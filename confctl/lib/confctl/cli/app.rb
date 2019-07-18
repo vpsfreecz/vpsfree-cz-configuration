@@ -90,6 +90,15 @@ module ConfCtl::Cli
           end
         end
       end
+
+      desc 'List configured deployments'
+      arg_name '[host-pattern]'
+      command :ls do |c|
+        c.desc 'Enable traces in Nix'
+        c.switch 'show-trace'
+
+        c.action &Command.run(Morph, :list)
+      end
     end
 
     protected

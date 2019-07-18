@@ -1,28 +1,39 @@
 { pkgs, lib }:
 let
   swpinsFor = name: import ../swpins { inherit name pkgs lib; };
+
+  inConfCtl = (builtins.getEnv "IN_CONFCTL") == "true";
 in rec {
-  osCustom = { name, domain, configFn }:
+  withInfo = { config, info }@arg: if inConfCtl then arg else config;
+
+  osCustom = { name, domain, configFn, ... }@topargs:
     let
       fqdn = "${name}.${domain}";
       swpins = swpinsFor fqdn;
-    in
-      { config, pkgs, ... }@args:
-      {
-        _module.args = { inherit swpins; };
+    in withInfo {
+      config =
+        { config, pkgs, ... }@args:
+        {
+          _module.args = { inherit swpins; };
 
-        deployment = {
-          nixPath = [
-            { prefix = "nixpkgs"; path = swpins.nixpkgs; }
-            { prefix = "vpsadminos"; path = swpins.vpsadminos; }
+          deployment = {
+            nixPath = [
+              { prefix = "nixpkgs"; path = swpins.nixpkgs; }
+              { prefix = "vpsadminos"; path = swpins.vpsadminos; }
+            ];
+            importPath = "${swpins.vpsadminos}/os/default.nix";
+          };
+
+          imports = [
+            (configFn (args // { inherit swpins; }))
           ];
-          importPath = "${swpins.vpsadminos}/os/default.nix";
         };
 
-        imports = [
-          (configFn (args // { inherit swpins; }))
-        ];
+      info = topargs.info or {
+        type = "machine";
+        inherit name domain fqdn;
       };
+    };
 
   osNode = { name, location, domain }:
     let
@@ -42,6 +53,11 @@ in rec {
               (import "${swpins.vpsadminos}/os/overlays/vpsadmin.nix" swpins.vpsadmin)
             ];
           };
+
+        info = {
+          type = "node";
+          inherit name location domain fqdn;
+        };
       };
 
   osMachine = { name, domain }:
@@ -60,21 +76,28 @@ in rec {
     let
       fqdn = "${name}.${domain}";
       swpins = swpinsFor fqdn;
-    in
-      { config, pkgs, ... }:
-      {
-        _module.args = { inherit swpins; };
+    in withInfo {
+      config =
+        { config, pkgs, ... }:
+        {
+          _module.args = { inherit swpins; };
 
-        deployment = {
-          nixPath = [
-            { prefix = "nixpkgs"; path = swpins.nixpkgs; }
-            { prefix = "vpsadminos"; path = swpins.vpsadminos; }
+          deployment = {
+            nixPath = [
+              { prefix = "nixpkgs"; path = swpins.nixpkgs; }
+              { prefix = "vpsadminos"; path = swpins.vpsadminos; }
+            ];
+          };
+
+          imports = [
+            (../containers + "/${domain}/${name}.nix")
+            ../profiles/ct.nix
           ];
         };
 
-        imports = [
-          (../containers + "/${domain}/${name}.nix")
-          ../profiles/ct.nix
-        ];
+      info = {
+        type = "container";
+        inherit name domain fqdn;
       };
+    };
 }

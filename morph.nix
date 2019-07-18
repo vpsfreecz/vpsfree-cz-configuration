@@ -28,43 +28,51 @@ in
     inherit domain;
   };
 
-  "vpsadminos.org" =
-    { config, pkgs, ... }:
-      let
-        legacy = import ./swpins rec {
-          name = "legacy";
-          pkgs = (import <nixpkgs> {});
-          lib = pkgs.lib;
-        };
-      in {
-        imports = [
-          ./containers/vpsadminos.org/www.nix
-          "${legacy.build-vpsfree-templates}/files/configuration.nix"
-        ];
-
-        deployment = {
-          nixPath = [
-            { prefix = "nixpkgs"; path = legacy.nixpkgs; }
+  "vpsadminos.org" = deployment.withInfo {
+    config =
+      { config, pkgs, ... }:
+        let
+          legacy = import ./swpins rec {
+            name = "legacy";
+            pkgs = (import <nixpkgs> {});
+            lib = pkgs.lib;
+          };
+        in {
+          imports = [
+            ./containers/vpsadminos.org/www.nix
+            "${legacy.build-vpsfree-templates}/files/configuration.nix"
           ];
-          healthChecks = {
-            http = [
-              {
-                scheme = "http";
-                port = 80;
-                path = "/";
-                description = "Check whether nginx is running.";
-              }
-              {
-                scheme = "https";
-                port = 443;
-                host = "vpsadminos.org";
-                path = "/";
-                description = "vpsadminos.org is up";
-              }
+
+          deployment = {
+            nixPath = [
+              { prefix = "nixpkgs"; path = legacy.nixpkgs; }
             ];
+            healthChecks = {
+              http = [
+                {
+                  scheme = "http";
+                  port = 80;
+                  path = "/";
+                  description = "Check whether nginx is running.";
+                }
+                {
+                  scheme = "https";
+                  port = 443;
+                  host = "vpsadminos.org";
+                  path = "/";
+                  description = "vpsadminos.org is up";
+                }
+              ];
+            };
           };
         };
-      };
+    info = rec {
+      type = "vz";
+      name = "www";
+      domain = "vpsadminos.org";
+      fqdn = "${name}.${domain}";
+    };
+  };
 
   "log.vpsfree.cz" = deployment.osContainer {
     name = "log";

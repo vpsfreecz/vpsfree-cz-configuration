@@ -34,6 +34,12 @@ similarly to shell patterns, see
 information.
 
 ## COMMANDS
+`confctl ls` [*host-pattern*]
+  List matching hosts available for deployment.
+
+    `--show-trace`
+      Enable traces in Nix.
+
 `confctl swpins file ls` [*file-pattern* [*sw-pattern*]]
   List existing files with pinned software packages.
 
