@@ -20,9 +20,11 @@ in stdenv.mkDerivation rec {
     mkdir -p "$BINDIR"
     export PATH="$BINDIR:$PATH"
     export RUBYLIB="$GEM_HOME:$BASEDIR/confctl/lib"
+    export MANPATH="$BASEDIR/confctl/man:$(man --path)"
     gem install --no-document bundler
     pushd confctl
     bundle install
+    rake md2man:man
     popd
 
     cat <<EOF > "$BINDIR/confctl"
