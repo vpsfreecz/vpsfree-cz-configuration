@@ -37,6 +37,9 @@ information.
 `confctl ls` [*host-pattern*]
   List matching hosts available for deployment.
 
+`confctl build` [*host-pattern*]
+  Build matching hosts.
+
     `--show-trace`
       Enable traces in Nix.
 

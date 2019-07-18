@@ -99,6 +99,15 @@ module ConfCtl::Cli
 
         c.action &Command.run(Morph, :list)
       end
+
+      desc 'Build target systems'
+      arg_name '[host-pattern]'
+      command :build do |c|
+        c.desc 'Enable traces in Nix'
+        c.switch 'show-trace'
+
+        c.action &Command.run(Morph, :build)
+      end
     end
 
     protected

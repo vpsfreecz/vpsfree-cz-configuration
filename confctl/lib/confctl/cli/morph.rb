@@ -41,6 +41,19 @@ module ConfCtl::Cli
       end
     end
 
+    def build
+      cmd = [
+        'morph',
+        'build',
+      ]
+
+      cmd << "--on=#{args[0]}" if args[0]
+      cmd << '--show-trace' if opts['show-trace']
+      cmd << EXPR
+
+      Process.exec(*cmd)
+    end
+
     protected
     def asset(name)
       File.join(File.dirname(__FILE__), '../../..', 'assets', name)
