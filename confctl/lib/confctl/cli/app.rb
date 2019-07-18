@@ -108,6 +108,15 @@ module ConfCtl::Cli
 
         c.action &Command.run(Morph, :build)
       end
+
+      desc 'Deploy target systems'
+      arg_name '[host-pattern [switch-action]]'
+      command :deploy do |c|
+        c.desc 'Enable traces in Nix'
+        c.switch 'show-trace'
+
+        c.action &Command.run(Morph, :deploy)
+      end
     end
 
     protected

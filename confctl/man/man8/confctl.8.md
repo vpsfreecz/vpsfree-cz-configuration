@@ -43,6 +43,14 @@ information.
     `--show-trace`
       Enable traces in Nix.
 
+`confctl deploy` [*host-pattern* [*switch-action*]]
+  Build and deploy matching hosts. *switch-action* is the argument to
+  `switch-to-configuration` called on the target host. The default action
+  is `switch`.
+
+    `--show-trace`
+      Enable traces in Nix.
+
 `confctl swpins file ls` [*file-pattern* [*sw-pattern*]]
   List existing files with pinned software packages.
 

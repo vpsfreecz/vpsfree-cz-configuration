@@ -54,6 +54,20 @@ module ConfCtl::Cli
       Process.exec(*cmd)
     end
 
+    def deploy
+      cmd = [
+        'morph',
+        'deploy',
+      ]
+
+      cmd << "--on=#{args[0]}" if args[0]
+      cmd << '--show-trace' if opts['show-trace']
+      cmd << EXPR
+      cmd << (args[1] || 'switch')
+
+      Process.exec(*cmd)
+    end
+
     protected
     def asset(name)
       File.join(File.dirname(__FILE__), '../../..', 'assets', name)
