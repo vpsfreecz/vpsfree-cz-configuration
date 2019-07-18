@@ -13,6 +13,10 @@ module ConfCtl
     # @return [String]
     attr_reader :name
 
+    # @param [String]
+    # @return [String, nil]
+    attr_accessor :channel
+
     # @param name [String]
     # @param gopts [Hash]
     # @param opts [Hash]
@@ -20,6 +24,7 @@ module ConfCtl
       @name = name
       @gopts = gopts
       @opts = opts
+      @channel = gopts[:channel]
     end
 
     def type
@@ -36,6 +41,7 @@ module ConfCtl
 
     def as_json
       ret = {}
+      ret[:channel] = channel if channel
       ret[:type] = type.to_s
       ret[:handler] = gopts[:handler] if gopts[:handler]
       ret[:options] = opts

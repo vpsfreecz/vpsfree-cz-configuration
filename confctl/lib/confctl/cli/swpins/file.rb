@@ -8,13 +8,39 @@ module ConfCtl::Cli
     include Swpins::Utils
 
     def list
-      puts sprintf('%-30s %-25s %-6s %s', 'FILE', 'SW', 'TYPE', 'PIN')
+      puts sprintf('%-30s %-25s %-15s %-6s %s', 'FILE', 'SW', 'CHANNEL', 'TYPE', 'PIN')
 
       each_file_spec(args[0] || '*', args[1] || '*') do |file, spec|
         puts sprintf(
-          '%-30s %-25s %-6s %s',
-          file.name, spec.name, spec.type, spec.version
+          '%-30s %-25s %-15s %-6s %s',
+          file.name, spec.name, spec.channel || '-', spec.type, spec.version
         )
+      end
+    end
+
+    def channel_use
+      require_args!('file', 'channel')
+      file_pattern, chan_pattern = args
+
+      each_file(file_pattern) do |file|
+        each_channel(chan_pattern) do |chan|
+          puts "Using channel #{chan.name} in #{file.name}"
+          file.use_channel(chan)
+          file.save
+        end
+      end
+    end
+
+    def channel_detach
+      require_args!('file', 'channel')
+      file_pattern, chan_pattern = args
+
+      each_file(file_pattern) do |file|
+        each_channel(chan_pattern) do |chan|
+          puts "Detaching channel #{chan.name} from #{file.name}"
+          file.detach_channel(chan, keep_specs: opts['keep-specs'])
+          file.save
+        end
       end
     end
 

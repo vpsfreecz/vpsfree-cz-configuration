@@ -18,5 +18,24 @@ module ConfCtl::Cli
         end
       end
     end
+
+    def channel_list(pattern)
+      ConfCtl::Swpins::ChannelList.new(Swpins::Channel::DIR, Swpins::File::DIR, pattern: pattern)
+    end
+
+    def each_channel(chan_pattern)
+      channel_list(chan_pattern).each do |chan|
+        chan.parse
+        yield(chan)
+      end
+    end
+
+    def each_channel_spec(chan_pattern, sw_pattern)
+      each_channel(chan_pattern) do |chan|
+        chan.specs.each do |name, spec|
+          yield(chan, spec) if ConfCtl::Pattern.match?(sw_pattern, name)
+        end
+      end
+    end
   end
 end

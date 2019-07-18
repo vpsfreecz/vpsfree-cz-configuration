@@ -18,6 +18,7 @@ module ConfCtl
       end
 
       opts.update(JSON.parse(json.strip, symbolize_names: true))
+      self.channel = nil
     end
   end
 end

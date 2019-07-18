@@ -6,7 +6,7 @@ let
 
   swpins = lib.mapAttrs (k: v: swpin v) sources;
 
-  swpin = { type, options, handler ? null }:
+  swpin = { type, options, handler ? null, ... }:
     let
       realHandler = if handler == null then type else handler;
     in

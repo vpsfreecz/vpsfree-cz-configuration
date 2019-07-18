@@ -26,6 +26,32 @@ module ConfCtl::Cli
 
       desc 'Manage software pins'
       command :swpins do |pins|
+        pins.desc 'Manage software pins channels'
+        pins.command :channel do |ch|
+          ch.desc 'List configured sw pins'
+          ch.arg_name '[channel [sw]]'
+          ch.command :ls do |c|
+            c.action &Command.run(Swpins::Channel, :list)
+          end
+
+          ch.desc 'Create a new channel'
+          ch.arg_name '<channel>'
+          ch.command :new do |c|
+            c.action &Command.run(Swpins::Channel, :create)
+          end
+
+          ch.desc 'Delete channel'
+          ch.arg_name '<channel>'
+          ch.command :del do |c|
+            c.desc 'Keep specs from the channel in files'
+            c.switch 'keep-specs', default_value: true
+
+            c.action &Command.run(Swpins::Channel, :delete)
+          end
+
+          git_commands(ch, Swpins::Channel, 'channel')
+        end
+
         pins.desc 'Manage software pins files'
         pins.command :file do |f|
           f.desc 'List configured sw pins'
@@ -34,40 +60,72 @@ module ConfCtl::Cli
             c.action &Command.run(Swpins::File, :list)
           end
 
-          f.desc 'Manage git sw pins'
-          f.command :git do |git|
-            git.desc 'Add git sw pins'
-            git.arg_name '<file> <sw> <url> <ref>'
-            git.command :add do |c|
-              c.action &Command.run(Swpins::File, :git_add)
+          f.desc 'List configured sw pins'
+          f.arg_name '[file [sw]]'
+          f.command :ls do |c|
+            c.action &Command.run(Swpins::File, :list)
+          end
+
+          git_commands(f, Swpins::File, 'file')
+
+          f.desc 'Managed channelled sw pins'
+          f.command :channel do |ch|
+            ch.desc 'Assign file to channel'
+            ch.arg_name '<file> <channel>'
+            ch.command :use do |c|
+              c.action &Command.run(Swpins::File, :channel_use)
             end
+          end
 
-            git.desc 'Delete git sw pins'
-            git.arg_name '<file> <sw>'
-            git.command :del do |c|
-              c.action &Command.run(Swpins::File, :git_delete)
+          f.desc 'Managed channelled sw pins'
+          f.command :channel do |ch|
+            ch.desc 'Detach channel from file'
+            ch.arg_name '<file> <channel>'
+            ch.command :detach do |c|
+              c.desc 'Keep specs from the channel'
+              c.switch 'keep-specs', default_value: true
+
+              c.action &Command.run(Swpins::File, :channel_detach)
             end
+          end
+        end
+      end
+    end
 
-            git.desc 'Set git sw pins'
-            git.command :set do |set|
-              set.desc 'Set to git ref'
-              set.arg_name '<file> <sw> <ref>'
-              set.command :ref do |c|
-                c.action &Command.run(Swpins::File, :git_set_ref)
-              end
+    protected
+    def git_commands(cmd, klass, arg_name)
+      cmd.desc 'Manage git sw pins'
+      cmd.command :git do |git|
+        git.desc 'Add git sw pins'
+        git.arg_name "<#{arg_name}> <sw> <url> <ref>"
+        git.command :add do |c|
+          c.action &Command.run(klass, :git_add)
+        end
 
-              set.desc 'Set to git branch'
-              set.arg_name '<file> <sw> <branch>'
-              set.command :branch do |c|
-                c.action &Command.run(Swpins::File, :git_set_branch)
-              end
+        git.desc 'Delete git sw pins'
+        git.arg_name "<#{arg_name}> <sw>"
+        git.command :del do |c|
+          c.action &Command.run(klass, :git_delete)
+        end
 
-              set.desc 'Set to git tag'
-              set.arg_name '<file> <sw> <tag>'
-              set.command :tag do |c|
-                c.action &Command.run(Swpins::File, :git_set_tag)
-              end
-            end
+        git.desc 'Set git sw pins'
+        git.command :set do |set|
+          set.desc 'Set to git ref'
+          set.arg_name "<#{arg_name}> <sw> <ref>"
+          set.command :ref do |c|
+            c.action &Command.run(klass, :git_set_ref)
+          end
+
+          set.desc 'Set to git branch'
+          set.arg_name "<#{arg_name}> <sw> <branch>"
+          set.command :branch do |c|
+            c.action &Command.run(klass, :git_set_branch)
+          end
+
+          set.desc 'Set to git tag'
+          set.arg_name "<#{arg_name}> <sw> <tag>"
+          set.command :tag do |c|
+            c.action &Command.run(klass, :git_set_tag)
           end
         end
       end
