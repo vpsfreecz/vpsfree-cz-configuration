@@ -10,6 +10,7 @@ in stdenv.mkDerivation rec {
     git
     morph
     nix-prefetch-git
+    openssl
     ruby
   ];
 
