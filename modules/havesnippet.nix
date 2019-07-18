@@ -12,7 +12,7 @@ in
   options = {
     programs.havesnippet = {
       enable = mkEnableOption "Include CLI for HaveSnippet";
-      
+
       url = mkOption {
         type = types.str;
         default = "https://paste.vpsfree.cz";

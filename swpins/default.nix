@@ -3,7 +3,7 @@ let
   json = builtins.readFile (./files + "/${name}.json");
 
   sources = builtins.fromJSON json;
-    
+
   swpins = lib.mapAttrs (k: v: swpin v) sources;
 
   swpin = { type, options, handler ? null }:
