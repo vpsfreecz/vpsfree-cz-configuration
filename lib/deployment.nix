@@ -6,6 +6,33 @@ let
 in rec {
   withInfo = { config, info }@arg: if inConfCtl then arg else config;
 
+  nixosMachine = { name, domain }@topargs:
+    let
+      fqdn = "${name}.${domain}";
+      swpins = swpinsFor fqdn;
+    in withInfo {
+      config =
+        { config, pkgs, ... }@args:
+        {
+          _module.args = { inherit swpins; };
+
+          deployment = {
+            nixPath = [
+              { prefix = "nixpkgs"; path = swpins.nixpkgs; }
+            ];
+          };
+
+          imports = [
+            (../machines + "/${domain}/${name}.nix")
+          ];
+        };
+
+      info = topargs.info or {
+        type = "machine";
+        inherit name domain fqdn;
+      };
+    };
+
   osCustom = { name, domain, configFn, ... }@topargs:
     let
       fqdn = "${name}.${domain}";

@@ -23,7 +23,7 @@ in
     inherit domain;
   };
 
-  "pxe.vpsfree.cz" = deployment.osMachine {
+  "pxe.vpsfree.cz" = deployment.nixosMachine {
     name = "pxe";
     inherit domain;
   };
