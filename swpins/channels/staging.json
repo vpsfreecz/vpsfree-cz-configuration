@@ -1,6 +1,5 @@
 {
   "vpsadminos": {
-    "channel": "staging",
     "type": "git",
     "options": {
       "url": "https://github.com/vpsfreecz/vpsadminos",
@@ -11,7 +10,6 @@
     }
   },
   "nixpkgs": {
-    "channel": "staging",
     "type": "git",
     "options": {
       "url": "https://github.com/vpsfreecz/nixpkgs",
@@ -22,7 +20,6 @@
     }
   },
   "vpsadmin": {
-    "channel": "staging",
     "type": "git",
     "options": {
       "url": "https://github.com/vpsfreecz/vpsadmin",
