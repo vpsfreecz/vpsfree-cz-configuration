@@ -22,11 +22,9 @@ let
     boot
   '';
 
-
-  ipxe_item_vpsadminos = name: item: ''
-    :${name}
+  ipxe_boot_vpsadminos = name: item: runlevel: ''
     imgfree
-    imgfetch http://${server}/${name}/kernel systemConfig=${builtins.unsafeDiscardStringContext item.toplevel} ${toString item.kernelParams} || goto normal
+    imgfetch http://${server}/${name}/kernel systemConfig=${builtins.unsafeDiscardStringContext item.toplevel} ${toString item.kernelParams} runlevel=${runlevel} || goto normal
     imgfetch http://${server}/${name}/initrd || goto normal
     imgfetch http://${server}/${name}/root.squashfs root.squashfs || goto normal
     imgverify kernel http://${server}/${name}/kernel.sig
@@ -34,6 +32,21 @@ let
     imgverify root.squashfs http://${server}/${name}/root.squashfs.sig
     imgselect kernel
     boot
+  '';
+
+  ipxe_item_vpsadminos = name: item: ''
+    :${name}
+    menu ${name} menu
+    item ${name}_default Default runlevel
+    item ${name}_single Single-user runlevel
+    choose --default ${name}_default --timeout 5000 runlevel || goto :restart
+    goto ''${runlevel}
+
+    :${name}_default
+    ${ipxe_boot_vpsadminos name item "default"}
+
+    :${name}_single
+    ${ipxe_boot_vpsadminos name item "single"}
   '';
 
   concatNl = concatStringsSep "\n";
