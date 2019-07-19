@@ -3,11 +3,8 @@ with lib;
 let
   swpins = import ./swpins { name = "images"; inherit pkgs lib; };
 
-  vpsadminos = {modules ? []}:
-    vpsadminosCustom swpins.vpsadminos swpins.nixpkgs swpings.vpsadmin { inherit modules; };
-
   # allows to build vpsadminos with specific
-  vpsadminosCustom = os: nixpkgs: vpsadmin: {modules ? []}:
+  vpsadminosCustom = {modules ? [], vpsadminos, nixpkgs, vpsadmin}:
     let
       # this is fed into scopedImport so vpsadminos sees correct <nixpkgs> everywhere
       overrides = {
@@ -17,14 +14,21 @@ let
         builtins = builtins // overrides;
       };
     in
-      builtins.scopedImport overrides (os + "/os/") {
+      builtins.scopedImport overrides (vpsadminos + "/os/") {
         pkgs = nixpkgs;
         system = "x86_64-linux";
         configuration = {};
         inherit modules vpsadmin;
       };
 
-  vpsadminosBuild = {modules ? []}: (vpsadminos { inherit modules; }).config.system.build;
+  vpsadminos = {modules ? [], ...}@args: vpsadminosCustom {
+    inherit modules;
+    vpsadminos = args.vpsadminos or swpins.vpsadminos;
+    nixpkgs = args.nixpkgs or swpins.nixpkgs;
+    vpsadmin = args.vpsadmin or swpins.vpsadmin;
+  };
+
+  vpsadminosBuild = args: (vpsadminos args).config.system.build;
 
 in rec {
   nixosBuild = {modules ? []}:
@@ -46,9 +50,13 @@ in rec {
       };
     };
 
-  node = {modules ? []}:
+  node = {fqdn, modules ? []}:
     let
-      build = vpsadminosBuild { inherit modules; };
+      nodepins = import ./swpins { name = fqdn; inherit pkgs lib; };
+      build = vpsadminosBuild {
+        inherit modules;
+        inherit (nodepins) vpsadminos nixpkgs vpsadmin;
+      };
     in {
       toplevel = build.toplevel;
       kernelParams = build.kernelParams;
@@ -95,6 +103,7 @@ in rec {
 
   # storage nodes
   backuper_prg = node {
+    fqdn = "backuper.prg.vpsfree.cz";
     modules = [ {
 
       imports = [
@@ -106,6 +115,7 @@ in rec {
 
   # node configurations
   node1_stg = node {
+    fqdn = "node1.stg.vpsfree.cz";
     modules = [ {
 
       imports = [
@@ -116,6 +126,7 @@ in rec {
   };
 
   node2_stg = node {
+    fqdn = "node2.stg.vpsfree.cz";
     modules = [ {
 
       imports = [
