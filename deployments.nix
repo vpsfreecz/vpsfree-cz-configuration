@@ -16,69 +16,27 @@ let
 
   mkDeployments = list: builtins.listToAttrs (nameValuePairs list);
 in mkDeployments [
-  (deployment.osMachine {
-    name = "build";
+
+  ### Nodes
+  ## Prague
+  # backuper.prg
+  (deployment.osNode {
+    name = "backuper";
+    location = "prg";
     inherit domain;
+    netboot = {
+      enable = true;
+      macs = [
+        "00:25:90:2f:a3:ac"
+        "00:25:90:2f:a3:ad"
+        "00:25:90:2f:a3:ae"
+        "00:25:90:2f:a3:af"
+      ];
+    };
   })
 
-  (deployment.nixosMachine {
-    name = "pxe";
-    inherit domain;
-  })
-
-  (deployment.custom rec {
-    type = "vz";
-    name = "www";
-    domain = "vpsadminos.org";
-    config =
-      { config, pkgs, ... }:
-        let
-          legacy = import ./swpins rec {
-            name = "legacy";
-            pkgs = (import <nixpkgs> {});
-            lib = pkgs.lib;
-          };
-        in {
-          imports = [
-            ./containers/vpsadminos.org/www.nix
-            "${legacy.build-vpsfree-templates}/files/configuration.nix"
-          ];
-
-          deployment = {
-            nixPath = [
-              { prefix = "nixpkgs"; path = legacy.nixpkgs; }
-            ];
-            healthChecks = {
-              http = [
-                {
-                  scheme = "http";
-                  port = 80;
-                  path = "/";
-                  description = "Check whether nginx is running.";
-                }
-                {
-                  scheme = "https";
-                  port = 443;
-                  host = "vpsadminos.org";
-                  path = "/";
-                  description = "vpsadminos.org is up";
-                }
-              ];
-            };
-          };
-        };
-  })
-
-  (deployment.osContainer {
-    name = "log";
-    inherit domain;
-  })
-
-  (deployment.osContainer {
-    name = "mon0";
-    inherit domain;
-  })
-
+  ## Staging
+  # node1.stg
   (deployment.osNode {
     name = "node1";
     location = "stg";
@@ -94,6 +52,7 @@ in mkDeployments [
     };
   })
 
+  # node2.stg
   (deployment.osNode {
     name = "node2";
     location = "stg";
@@ -107,18 +66,56 @@ in mkDeployments [
     };
   })
 
-  (deployment.osNode {
-    name = "backuper";
-    location = "prg";
+  ### Support machines
+  # build.vpsfree.cz
+  (deployment.osMachine {
+    name = "build";
     inherit domain;
-    netboot = {
-      enable = true;
-      macs = [
-        "00:25:90:2f:a3:ac"
-        "00:25:90:2f:a3:ad"
-        "00:25:90:2f:a3:ae"
-        "00:25:90:2f:a3:af"
-      ];
-    };
+  })
+
+  # pxe.vpsfree.cz
+  (deployment.nixosMachine {
+    name = "pxe";
+    inherit domain;
+  })
+
+  ### Containers
+  # vpsadminos.org
+  (deployment.custom rec {
+    type = "vz";
+    name = "www";
+    domain = "vpsadminos.org";
+    config =
+      { config, pkgs, ... }:
+        let
+          legacy = import ./swpins rec {
+            name = "legacy";
+            pkgs = (import <nixpkgs> {});
+            lib = pkgs.lib;
+          };
+        in {
+          deployment = {
+            nixPath = [
+              { prefix = "nixpkgs"; path = legacy.nixpkgs; }
+            ];
+          };
+
+          imports = [
+            ./containers/vpsadminos.org/www.nix
+            "${legacy.build-vpsfree-templates}/files/configuration.nix"
+          ];
+        };
+  })
+
+  # log.vpsfree.cz
+  (deployment.osContainer {
+    name = "log";
+    inherit domain;
+  })
+
+  # mon0.vpsfree.cz
+  (deployment.osContainer {
+    name = "mon0";
+    inherit domain;
   })
 ]

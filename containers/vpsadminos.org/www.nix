@@ -24,4 +24,24 @@ in
     domain = "vpsadminos.org";
     isoImages = [ images.vpsadminosISO ];
   };
+
+  deployment = {
+    healthChecks = {
+      http = [
+        {
+          scheme = "http";
+          port = 80;
+          path = "/";
+          description = "Check whether nginx is running.";
+        }
+        {
+          scheme = "https";
+          port = 443;
+          host = "vpsadminos.org";
+          path = "/";
+          description = "vpsadminos.org is up";
+        }
+      ];
+    };
+  };
 }
