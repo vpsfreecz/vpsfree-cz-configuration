@@ -51,6 +51,12 @@ information.
     `--show-trace`
       Enable traces in Nix.
 
+`confctl check-health` [*host-pattern*]
+  Run health checks on matching hosts.
+
+    `--show-trace`
+      Enable traces in Nix.
+
 `confctl swpins file ls` [*file-pattern* [*sw-pattern*]]
   List existing files with pinned software packages.
 

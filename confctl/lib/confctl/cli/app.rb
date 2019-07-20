@@ -117,6 +117,15 @@ module ConfCtl::Cli
 
         c.action &Command.run(Morph, :deploy)
       end
+
+      desc 'Run health checks'
+      arg_name '[host-pattern]'
+      command 'check-health' do |c|
+        c.desc 'Enable traces in Nix'
+        c.switch 'show-trace'
+
+        c.action &Command.run(Morph, :check_health)
+      end
     end
 
     protected

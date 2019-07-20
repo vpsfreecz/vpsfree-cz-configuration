@@ -67,6 +67,19 @@ module ConfCtl::Cli
       Process.exec(*cmd)
     end
 
+    def check_health
+      cmd = [
+        'morph',
+        'check-health',
+      ]
+
+      cmd << "--on=#{args[0]}" if args[0]
+      cmd << '--show-trace' if opts['show-trace']
+      cmd << MORPH_EXPR
+
+      Process.exec(*cmd)
+    end
+
     protected
     def asset(name)
       File.join(File.dirname(__FILE__), '../../..', 'assets', name)
