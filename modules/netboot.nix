@@ -66,7 +66,19 @@ let
   menu_items = concatNl (mapAttrsToList (name: x: "item ${name} ${x.menu}" )
     (filterAttrs (const (hasAttr "menu")) all_items));
 
-  mapping_items = concatNl (mapAttrsToList (mac: item: "iseq \${mac} ${mac} && goto ${item} ||") cfg.mappings);
+  extract_mapping = name: item:
+    map (mac: nameValuePair mac name) (item.macs or []);
+
+  extract_mappings = items:
+    flatten (mapAttrsToList extract_mapping items);
+
+  all_mappings =
+    mergeAttrs
+      (listToAttrs (flatten (map extract_mappings [ cfg.nixosItems cfg.vpsadminosItems ])))
+      cfg.extraMappings;
+
+  mapping_items =
+    concatNl (mapAttrsToList (mac: item: "iseq \${mac} ${mac} && goto ${item} ||") all_mappings);
 
   ipxe_script = pkgs.writeText "script.ipxe" ''
     #!ipxe
@@ -221,7 +233,7 @@ in
         default = {};
       };
 
-      mappings = mkOption {
+      extraMappings = mkOption {
         type = types.attrsOf types.str;
         default = {};
       };

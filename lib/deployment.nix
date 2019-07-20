@@ -10,19 +10,29 @@ let
         else
           "${name}.${location}.${domain}";
     in if fqdn == null then make else fqdn;
+
+  makeNetboot = netboot:
+    if netboot == null then
+      { enable = false; }
+    else
+      {
+        inherit (netboot) enable;
+        macs = netboot.macs or [];
+      };
 in rec {
-  custom = { type, name, location ? null, domain, fqdn ? null, config }: {
+  custom = { type, name, location ? null, domain, fqdn ? null, config, netboot ? null }: {
     inherit type name location domain config;
     fqdn = makeFqdn { inherit name location domain fqdn; };
+    netboot = makeNetboot netboot;
   };
 
-  nixosMachine = { name, location ? null, domain, fqdn ? null }:
+  nixosMachine = { name, location ? null, domain, fqdn ? null, netboot ? null }:
     let
       myFqdn = makeFqdn { inherit name location domain fqdn; };
       swpins = swpinsFor myFqdn;
     in custom {
       type = "machine";
-      inherit name location domain;
+      inherit name location domain netboot;
       fqdn = myFqdn;
       config =
         { config, pkgs, ... }@args:
@@ -41,13 +51,13 @@ in rec {
         };
     };
 
-  osCustom = { type, name, location ? null, domain, fqdn ? null, config, ... }:
+  osCustom = { type, name, location ? null, domain, fqdn ? null, config, netboot ? null }:
     let
       myFqdn = makeFqdn { inherit name location domain fqdn; };
       swpins = swpinsFor myFqdn;
       configFn = config;
     in custom {
-      inherit type name location domain;
+      inherit type name location domain netboot;
       fqdn = myFqdn;
       config =
         { config, pkgs, ... }@args:
@@ -68,10 +78,10 @@ in rec {
         };
     };
 
-  osNode = { name, location, domain, fqdn ? null }:
+  osNode = { name, location, domain, fqdn ? null, netboot ? null }:
     osCustom {
       type = "node";
-      inherit name location domain fqdn;
+      inherit name location domain fqdn netboot;
       config =
         { config, pkgs, swpins, ... }:
         {
@@ -85,10 +95,10 @@ in rec {
         };
     };
 
-  osMachine = { name, location ? null, domain, fqdn ? null }:
+  osMachine = { name, location ? null, domain, fqdn ? null, netboot ? null }:
     osCustom {
       type = "machine";
-      inherit name location domain fqdn;
+      inherit name location domain fqdn netboot;
       config =
         { config, pkgs, ... }:
         {

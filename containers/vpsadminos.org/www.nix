@@ -16,7 +16,7 @@ in
     host = "boot.vpsadminos.org";
     acmeSSL = true;
     vpsadminosItems = {};
-    inherit (images) nixosItems mappings;
+    inherit (images) nixosItems;
   };
 
   web = {

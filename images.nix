@@ -3,6 +3,16 @@ with lib;
 let
   swpins = import ./swpins { name = "images"; inherit pkgs lib; };
 
+  deployments = import ./deployments.nix;
+
+  netbootable = filterAttrs (k: v: v.netboot.enable) deployments;
+
+  filterDeployments = filter: filterAttrs (k: v: filter v) netbootable;
+
+  filterNodes = filter: filterDeployments (v: v.type == "node" && (filter v));
+
+  selectNodes = filter: mapAttrs (k: v: nodeImage v) (filterNodes filter);
+
   # allows to build vpsadminos with specific
   vpsadminosCustom = {modules ? [], vpsadminos, nixpkgs, vpsadmin}:
     let
@@ -18,7 +28,17 @@ let
         pkgs = nixpkgs;
         system = "x86_64-linux";
         configuration = {};
-        inherit modules vpsadmin;
+        modules = modules ++ [
+          # deployment options are defined by morph, which is not used when
+          # building images
+          {
+            options = {
+              deployment = mkOption {};
+            };
+            config = {};
+          }
+        ];
+        inherit vpsadmin;
       };
 
   vpsadminos = {modules ? [], ...}@args: vpsadminosCustom {
@@ -30,7 +50,29 @@ let
 
   vpsadminosBuild = args: (vpsadminos args).config.system.build;
 
-in rec {
+  nodeImage = node:
+    let
+      nodepins = import ./swpins { name = node.fqdn; inherit pkgs lib; };
+      build = vpsadminosBuild {
+        modules = [
+          {
+            imports = [
+              node.config
+            ];
+          }
+        ];
+        inherit (nodepins) vpsadminos nixpkgs vpsadmin;
+      };
+    in {
+      toplevel = build.toplevel;
+      kernelParams = build.kernelParams;
+      dir = pkgs.symlinkJoin {
+        name = "vpsadminos_netboot";
+        paths = with build; [ dist ];
+      };
+      macs = node.netboot.macs or [];
+    };
+
   nixosBuild = {modules ? []}:
     (import ("${swpins.nixpkgs}/nixos/lib/eval-config.nix") {
       system = "x86_64-linux";
@@ -50,22 +92,9 @@ in rec {
       };
     };
 
-  node = {fqdn, modules ? []}:
-    let
-      nodepins = import ./swpins { name = fqdn; inherit pkgs lib; };
-      build = vpsadminosBuild {
-        inherit modules;
-        inherit (nodepins) vpsadminos nixpkgs vpsadmin;
-      };
-    in {
-      toplevel = build.toplevel;
-      kernelParams = build.kernelParams;
-      dir = pkgs.symlinkJoin {
-        name = "vpsadminos_netboot";
-        paths = with build; [ dist ];
-      };
-    };
+  inMenu = name: netbootitem: netbootitem // { menu = name; };
 
+in rec {
   vpsadminosISO =
     let
       build = vpsadminosBuild {
@@ -78,8 +107,6 @@ in rec {
         }];
       };
     in build.isoImage;
-
-  inMenu = name: netbootitem: netbootitem // { menu = name; };
 
   # stock NixOS
   nixos = nixosNetboot { };
@@ -98,77 +125,18 @@ in rec {
       } ];
   };
 
-  # stock vpsAdminOS
-  vpsadminos = node { };
-
-  # storage nodes
-  backuper_prg = node {
-    fqdn = "backuper.prg.vpsfree.cz";
-    modules = [ {
-
-      imports = [
-        ./nodes/vpsfree.cz/prg/backuper.nix
-      ];
-
-    } ];
-  };
-
-  # node configurations
-  node1_stg = node {
-    fqdn = "node1.stg.vpsfree.cz";
-    modules = [ {
-
-      imports = [
-        ./nodes/vpsfree.cz/stg/node1.nix
-      ];
-
-    } ];
-  };
-
-  node2_stg = node {
-    fqdn = "node2.stg.vpsfree.cz";
-    modules = [ {
-
-      imports = [
-        ./nodes/vpsfree.cz/stg/node2.nix
-      ];
-
-    } ];
-  };
-
-  macMap = {
-    backuper_prg = [
-      "00:25:90:2f:a3:ac"
-      "00:25:90:2f:a3:ad"
-      "00:25:90:2f:a3:ae"
-      "00:25:90:2f:a3:af"
-    ];
-
-    node1_stg = [
-      "0c:c4:7a:30:76:18"
-      "0c:c4:7a:30:76:19"
-      "0c:c4:7a:30:76:1a"
-      "0c:c4:7a:30:76:1b"
-    ];
-
-    node2_stg = [
-      "0c:c4:7a:ab:b4:43"
-      "0c:c4:7a:ab:b4:42"
-    ];
-  };
-
-  # netboot.mappings is in form { "MAC1" = "nodeX"; "MAC2" = "nodeX"; }
-  mappings = lib.listToAttrs (lib.flatten (lib.mapAttrsToList (x: y: map (mac: lib.nameValuePair mac x) y) macMap));
-
   nixosItems = {
     nixos = inMenu "NixOS" nixos;
     nixoszfs = inMenu "NixOS ZFS" nixosZfs;
     nixoszfsssh = inMenu "NixOS ZFS SSH" nixosZfsSSH;
   };
 
-  vpsadminosItems = {
-    inherit backuper_prg;
-    inherit node1_stg;
-    inherit node2_stg;
+  nodesInLocation = {
+    prg = selectNodes (node: node.location == "prg");
+    brq = selectNodes (node: node.location == "brq");
+    pgnd = selectNodes (node: node.location == "pgnd");
+    stg = selectNodes (node: node.location == "stg");
   };
+
+  allNodes = selectNodes (node: true);
 }
