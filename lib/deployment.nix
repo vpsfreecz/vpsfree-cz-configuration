@@ -2,15 +2,28 @@
 let
   swpinsFor = name: import ../swpins { inherit name pkgs lib; };
 
-  inConfCtl = (builtins.getEnv "IN_CONFCTL") == "true";
-in rec {
-  withInfo = { config, info }@arg: if inConfCtl then arg else config;
-
-  nixosMachine = { name, domain }@topargs:
+  makeFqdn = { name, location, domain, fqdn }:
     let
-      fqdn = "${name}.${domain}";
-      swpins = swpinsFor fqdn;
-    in withInfo {
+      make =
+        if location == null then
+          "${name}.${domain}"
+        else
+          "${name}.${location}.${domain}";
+    in if fqdn == null then make else fqdn;
+in rec {
+  custom = { type, name, location ? null, domain, fqdn ? null, config }: {
+    inherit type name location domain config;
+    fqdn = makeFqdn { inherit name location domain fqdn; };
+  };
+
+  nixosMachine = { name, location ? null, domain, fqdn ? null }:
+    let
+      myFqdn = makeFqdn { inherit name location domain fqdn; };
+      swpins = swpinsFor myFqdn;
+    in custom {
+      type = "machine";
+      inherit name location domain;
+      fqdn = myFqdn;
       config =
         { config, pkgs, ... }@args:
         {
@@ -26,18 +39,16 @@ in rec {
             (../machines + "/${domain}/${name}.nix")
           ];
         };
-
-      info = topargs.info or {
-        type = "machine";
-        inherit name domain fqdn;
-      };
     };
 
-  osCustom = { name, domain, configFn, ... }@topargs:
+  osCustom = { type, name, location ? null, domain, fqdn ? null, config, ... }:
     let
-      fqdn = "${name}.${domain}";
-      swpins = swpinsFor fqdn;
-    in withInfo {
+      myFqdn = makeFqdn { inherit name location domain fqdn; };
+      swpins = swpinsFor myFqdn;
+      configFn = config;
+    in custom {
+      inherit type name location domain;
+      fqdn = myFqdn;
       config =
         { config, pkgs, ... }@args:
         {
@@ -55,42 +66,30 @@ in rec {
             (configFn (args // { inherit swpins; }))
           ];
         };
-
-      info = topargs.info or {
-        type = "machine";
-        inherit name domain fqdn;
-      };
     };
 
-  osNode = { name, location, domain }:
-    let
-      fqdn = "${name}.${location}.${domain}";
-    in
-      osCustom {
-        name = "${name}.${location}";
-        inherit domain;
-        configFn =
-          { config, pkgs, swpins, ... }:
-          {
-            imports = [
-              (../nodes + "/${domain}/${location}/${name}.nix")
-            ];
-
-            nixpkgs.overlays = [
-              (import "${swpins.vpsadminos}/os/overlays/vpsadmin.nix" swpins.vpsadmin)
-            ];
-          };
-
-        info = {
-          type = "node";
-          inherit name location domain fqdn;
-        };
-      };
-
-  osMachine = { name, domain }:
+  osNode = { name, location, domain, fqdn ? null }:
     osCustom {
-      inherit name domain;
-      configFn =
+      type = "node";
+      inherit name location domain fqdn;
+      config =
+        { config, pkgs, swpins, ... }:
+        {
+          imports = [
+            (../nodes + "/${domain}/${location}/${name}.nix")
+          ];
+
+          nixpkgs.overlays = [
+            (import "${swpins.vpsadminos}/os/overlays/vpsadmin.nix" swpins.vpsadmin)
+          ];
+        };
+    };
+
+  osMachine = { name, location ? null, domain, fqdn ? null }:
+    osCustom {
+      type = "machine";
+      inherit name location domain fqdn;
+      config =
         { config, pkgs, ... }:
         {
           imports = [
@@ -99,11 +98,14 @@ in rec {
         };
     };
 
-  osContainer = { name, domain }:
+  osContainer = { name, location ? null, domain, fqdn ? null }:
     let
-      fqdn = "${name}.${domain}";
-      swpins = swpinsFor fqdn;
-    in withInfo {
+      myFqdn = makeFqdn { inherit name location domain fqdn; };
+      swpins = swpinsFor myFqdn;
+    in custom {
+      type = "container";
+      inherit name location domain;
+      fqdn = myFqdn;
       config =
         { config, pkgs, ... }:
         {
@@ -121,10 +123,5 @@ in rec {
             ../profiles/ct.nix
           ];
         };
-
-      info = {
-        type = "container";
-        inherit name domain fqdn;
-      };
     };
 }

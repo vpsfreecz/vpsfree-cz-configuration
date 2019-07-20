@@ -1,12 +1,10 @@
-{ networkExpr }:
+{ deploymentsExpr }:
 let
-  network = import networkExpr;
-
-  ignore = [ "network" "defaults" "resources" "require" "_file" ];
-
-  machines = builtins.removeAttrs network ignore;
+  deployments = import deploymentsExpr;
 in {
-  machineList = builtins.attrNames machines;
+  deploymentsList = builtins.attrNames deployments;
 
-  machineInfo = builtins.mapAttrs (k: v: v.info) machines;
+  deploymentsInfo = builtins.mapAttrs (k: v: {
+    inherit (v) type name location domain fqdn;
+  }) deployments;
 }

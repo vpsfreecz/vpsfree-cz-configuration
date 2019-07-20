@@ -2,18 +2,17 @@ require 'json'
 
 module ConfCtl::Cli
   class Morph < Command
-    EXPR = File.realpath(File.join(Dir.pwd, 'morph.nix'))
+    DEPLOYMENTS_EXPR = File.realpath(File.join(Dir.pwd, 'deployments.nix'))
+    MORPH_EXPR = File.realpath(File.join(Dir.pwd, 'morph.nix'))
 
     def list
-      ENV['IN_CONFCTL'] = 'true'
-
       cmd = [
         'nix-instantiate',
         '--eval',
         '--json',
         '--strict',
-        '--arg', 'networkExpr', EXPR,
-        '--attr', 'machineInfo',
+        '--arg', 'deploymentsExpr', DEPLOYMENTS_EXPR,
+        '--attr', 'deploymentsInfo',
         (opts['show-trace'] ? '--show-trace' : ''),
         asset('eval-machines.nix'),
       ]
@@ -49,7 +48,7 @@ module ConfCtl::Cli
 
       cmd << "--on=#{args[0]}" if args[0]
       cmd << '--show-trace' if opts['show-trace']
-      cmd << EXPR
+      cmd << MORPH_EXPR
 
       Process.exec(*cmd)
     end
@@ -62,7 +61,7 @@ module ConfCtl::Cli
 
       cmd << "--on=#{args[0]}" if args[0]
       cmd << '--show-trace' if opts['show-trace']
-      cmd << EXPR
+      cmd << MORPH_EXPR
       cmd << (args[1] || 'switch')
 
       Process.exec(*cmd)
