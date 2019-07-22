@@ -38,12 +38,16 @@ let
     :${name}
     menu ${name} menu
     item ${name}_default Default runlevel
-    item ${name}_single Single-user runlevel
+    item ${name}_rescue Rescue runlevel (network and sshd)
+    item ${name}_single Single-user runlevel (console only)
     choose --default ${name}_default --timeout 5000 runlevel || goto :restart
     goto ''${runlevel}
 
     :${name}_default
     ${ipxe_boot_vpsadminos name item "default"}
+
+    :${name}_rescue
+    ${ipxe_boot_vpsadminos name item "rescue"}
 
     :${name}_single
     ${ipxe_boot_vpsadminos name item "single"}
