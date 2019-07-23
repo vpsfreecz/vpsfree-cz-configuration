@@ -3,6 +3,28 @@ with lib;
 
 let
   cfg = config.node.net;
+
+  allNetworks = import ../../data/networks.nix;
+
+  importNetworkFilter = ipVer:
+    let
+      networks = allNetworks.${"ipv${toString ipVer}"};
+      list = map (net: "${net.address}/${toString net.prefix}+") networks;
+    in ''
+      net ~ [ ${concatStringsSep ", " list} ]
+    '';
+
+  importInterfaceFilter = ipVer: optionalString (cfg.interfaces != {}) (
+    let
+      ifconds = concatMapStringsSep " || " (v: "ifname = \"${v}\"") (attrNames cfg.interfaces);
+      netLen = {
+        "ipv4" = 30;
+        "ipv6" = 80;
+      };
+    in ''
+      (${ifconds}) && net.len = ${toString netLen.${"ipv${toString ipVer}"}}
+    '');
+
   bgpNeighborOpts = { lib, pkgs, ... }: {
     options = {
       v4 = mkOption {
@@ -51,11 +73,14 @@ in
         persist = true;
         extraConfig = ''
           export all;
-          import all;
-
           import filter {
-            if net.len > 25 then accept;
-            reject;
+            if (${importNetworkFilter 4})
+               || (${importInterfaceFilter 4})
+               ${optionalString (cfg.virtIP != null) ''|| (ifname = "virtip")''}
+            then
+              accept;
+            else
+              reject;
           };
         '';
       };
@@ -93,7 +118,14 @@ in
         persist = true;
         extraConfig = ''
           export all;
-          import all;
+          import filter {
+            if (${importNetworkFilter 6})
+               || (${importInterfaceFilter 6})
+            then
+              accept;
+            else
+              reject;
+          };
         '';
       };
       protocol.bfd = {
