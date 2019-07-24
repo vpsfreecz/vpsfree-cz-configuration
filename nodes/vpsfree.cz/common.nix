@@ -69,7 +69,11 @@
     firewall.extraCommands =
       let
         nfsCfg = config.services.nfs.server;
+        exporterCfg = config.services.prometheus.node_exporter;
       in ''
+        # node_exporter
+        iptables -A nixos-fw -p tcp --dport ${toString exporterCfg.port} -j nixos-fw-accept
+
         # rpcbind
         iptables -A nixos-fw -p tcp --dport 111 -j nixos-fw-accept
         iptables -A nixos-fw -p udp --dport 111 -j nixos-fw-accept
