@@ -70,7 +70,14 @@
       let
         nfsCfg = config.services.nfs.server;
         exporterCfg = config.services.prometheus.node_exporter;
+        sshCfg = config.services.openssh;
+        sshRules = map (port:
+          "iptables -A nixos-fw -p tcp --dport ${toString port} -j nixos-fw-accept"
+        ) sshCfg.ports;
       in ''
+        # sshd
+        ${lib.concatStringsSep "\n" sshRules}
+
         # node_exporter
         iptables -A nixos-fw -p tcp --dport ${toString exporterCfg.port} -j nixos-fw-accept
 
@@ -105,6 +112,10 @@
 
   services.prometheus.node_exporter.enable = true;
   services.rsyslogd.forward = [ "172.16.4.1:11514" ];
+  services.openssh = {
+    enable = true;
+    openFirewall = false;
+  };
 
   vpsadmin.enable = true;
   system.secretsDir = toString /secrets/image/secrets;
