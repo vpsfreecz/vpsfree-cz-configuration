@@ -18,7 +18,13 @@
         };
         "ct".properties = {
           acltype = "posixacl";
-          sharenfs = "rw=@172.16.0.0/23,rw=@172.16.2.0/23,rw=@172.19.0.0/23";
+          sharenfs =
+            let
+              networks = (import ../../../data/networks/management.nix).ipv4;
+              property = lib.concatMapStringsSep "," (net:
+                "rw=@${net.address}/${toString net.prefix}"
+              ) networks;
+            in property;
         };
       };
     };
