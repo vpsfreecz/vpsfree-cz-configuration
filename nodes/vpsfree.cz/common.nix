@@ -115,6 +115,10 @@
   services.openssh = {
     enable = true;
     openFirewall = false;
+    extraConfig = ''
+      Match Address 172.16.0.0/12
+        PasswordAuthentication yes
+    '';
   };
 
   vpsadmin.enable = true;
