@@ -108,6 +108,9 @@
 
         # vpsadmin ports for zfs send/recv
         ${lib.concatStringsSep "\n" vpsadminSendRecvRules}
+
+        # vpsadmin remote console
+        iptables -A nixos-fw -p tcp -s 172.16.8.5 --dport 8081 -j nixos-fw-accept
       '';
   };
 
