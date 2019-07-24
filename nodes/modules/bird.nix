@@ -4,7 +4,7 @@ with lib;
 let
   cfg = config.node.net;
 
-  allNetworks = import ../../data/networks.nix;
+  allNetworks = import ../../data/networks/containers.nix;
 
   importNetworkFilter = ipVer:
     let
