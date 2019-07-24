@@ -74,6 +74,11 @@
         sshRules = map (port:
           "iptables -A nixos-fw -p tcp --dport ${toString port} -j nixos-fw-accept"
         ) sshCfg.ports;
+        managementNetworks = (import ../../data/networks/management.nix).ipv4;
+        vpsadminSendRecvRules = map (net: ''
+          # ${net.location}
+          iptables -A nixos-fw -p tcp -s ${net.address}/${toString net.prefix} --dport 10000:20000 -j nixos-fw-accept
+        '') managementNetworks;
       in ''
         # sshd
         ${lib.concatStringsSep "\n" sshRules}
@@ -100,6 +105,9 @@
         # lockd
         iptables -A nixos-fw -p tcp --dport ${toString nfsCfg.lockdPort} -j nixos-fw-accept
         iptables -A nixos-fw -p udp --dport ${toString nfsCfg.lockdPort} -j nixos-fw-accept
+
+        # vpsadmin ports for zfs send/recv
+        ${lib.concatStringsSep "\n" vpsadminSendRecvRules}
       '';
   };
 
