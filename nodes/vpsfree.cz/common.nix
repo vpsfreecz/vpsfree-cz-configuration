@@ -66,9 +66,39 @@
     domain = "vpsfree.cz";
     search = ["vpsfree.cz" "prg.vpsfree.cz" "base48.cz"];
     nameservers = [ "172.18.2.10" "172.18.2.11" ];
+    firewall.extraCommands =
+      let
+        nfsCfg = config.services.nfs.server;
+      in ''
+        # rpcbind
+        iptables -A nixos-fw -p tcp --dport 111 -j nixos-fw-accept
+        iptables -A nixos-fw -p udp --dport 111 -j nixos-fw-accept
+
+        # nfsd
+        iptables -A nixos-fw -p tcp --dport 2049 -j nixos-fw-accept
+        iptables -A nixos-fw -p udp --dport 2049 -j nixos-fw-accept
+
+        # mountd
+        iptables -A nixos-fw -p tcp --dport ${toString nfsCfg.mountdPort} -j nixos-fw-accept
+        iptables -A nixos-fw -p udp --dport ${toString nfsCfg.mountdPort} -j nixos-fw-accept
+
+        # statd
+        iptables -A nixos-fw -p tcp --dport ${toString nfsCfg.statdPort} -j nixos-fw-accept
+        iptables -A nixos-fw -p udp --dport ${toString nfsCfg.statdPort} -j nixos-fw-accept
+
+        # lockd
+        iptables -A nixos-fw -p tcp --dport ${toString nfsCfg.lockdPort} -j nixos-fw-accept
+        iptables -A nixos-fw -p udp --dport ${toString nfsCfg.lockdPort} -j nixos-fw-accept
+      '';
   };
 
-  services.nfs.server.enable = true;
+  services.nfs.server = {
+    enable = true;
+    mountdPort = 20048;
+    statdPort = 662;
+    lockdPort = 32769;
+  };
+
   services.prometheus.node_exporter.enable = true;
   services.rsyslogd.forward = [ "172.16.4.1:11514" ];
 
