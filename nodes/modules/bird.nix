@@ -153,5 +153,12 @@ in
         };
       };
     };
+
+    networking.firewall.extraCommands = let port = "179"; in ''
+      iptables -A nixos-fw -p tcp -s ${cfg.bgp1neighbor.v4} --dport ${port} -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp -s ${cfg.bgp2neighbor.v4} --dport ${port} -j nixos-fw-accept
+      ip6tables -A nixos-fw -p tcp -s ${cfg.bgp1neighbor.v6} --dport ${port} -j nixos-fw-accept
+      ip6tables -A nixos-fw -p tcp -s ${cfg.bgp2neighbor.v6} --dport ${port} -j nixos-fw-accept
+    '';
   };
 }
