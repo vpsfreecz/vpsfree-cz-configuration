@@ -4,9 +4,9 @@
     "type": "git",
     "options": {
       "url": "https://github.com/vpsfreecz/vpsadminos",
-      "rev": "0c327b9f66953f6cf72325d67ad079d2fcc0f8c0",
-      "date": "2019-06-28T21:40:50+02:00",
-      "sha256": "0623068sgzy9ns2c4r3456iksrvvx3svx2di2z159hcr3rbnvwra",
+      "rev": "a4e84423c554e71d73c7f8dbed88efbcb2b76545",
+      "date": "2019-07-24T10:08:24+02:00",
+      "sha256": "13qfpzzx2ybhdp04w2gkqh7fpahc81azzihqab8kbygx89w5aicf",
       "fetchSubmodules": false
     }
   },
@@ -15,9 +15,9 @@
     "type": "git",
     "options": {
       "url": "https://github.com/vpsfreecz/nixpkgs",
-      "rev": "67cca52fd99815e96dc5421282529e9707d88654",
-      "date": "2019-06-27T11:39:48+08:00",
-      "sha256": "1hqmmih5ingj3aajgdqm7rf5m0z3jcgdg7xskwh1x7bndkn8i6h4",
+      "rev": "362be9608c3e0dc5216e9d1d5f5c1a5643b7f7b1",
+      "date": "2019-07-12T22:31:26+02:00",
+      "sha256": "0934rhanamsnhawg15gg6cy9ird3c47hsqn5s46lq2n5kzl6v7ly",
       "fetchSubmodules": false
     }
   },
