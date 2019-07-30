@@ -32,7 +32,7 @@
       install = true;
       wipe = [ "sda" "sdb" "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ];
       layout = [
-        { type = "raidz2"; devices = [ "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ]; }
+        { type = "raidz"; devices = [ "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ]; }
       ];
       log = [
         { mirror = true; devices = [ "sda1" "sdb1" ]; }
