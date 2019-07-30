@@ -80,31 +80,10 @@ in mkDeployments [
   })
 
   ### Containers
-  # vpsadminos.org
-  (deployment.custom rec {
-    type = "vz";
+  # www.vpsadminos.org
+  (deployment.osContainer {
     name = "www";
     domain = "vpsadminos.org";
-    config =
-      { config, pkgs, ... }:
-        let
-          legacy = import ./swpins rec {
-            name = "legacy";
-            pkgs = (import <nixpkgs> {});
-            lib = pkgs.lib;
-          };
-        in {
-          deployment = {
-            nixPath = [
-              { prefix = "nixpkgs"; path = legacy.nixpkgs; }
-            ];
-          };
-
-          imports = [
-            ./containers/vpsadminos.org/www.nix
-            "${legacy.build-vpsfree-templates}/files/configuration.nix"
-          ];
-        };
   })
 
   # log.vpsfree.cz
