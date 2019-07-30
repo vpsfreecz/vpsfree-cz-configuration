@@ -1,0 +1,6 @@
+site_name: vpsFree.cz Cluster Configuration
+theme: readthedocs
+extra_css: ['extra.css']
+nav:
+- Services:
+  - Grafana: 'services/grafana.md'

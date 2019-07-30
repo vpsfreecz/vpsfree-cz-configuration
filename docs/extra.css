@@ -1,0 +1,8 @@
+pre {
+    overflow: auto;
+}
+
+pre, pre code {
+    font-size: 90%;
+    white-space: pre;
+}

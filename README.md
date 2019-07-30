@@ -62,9 +62,7 @@ confctl deploy
 confctl deploy "*.stg.vpsfree.cz" dry-activate
 ```
 
-## Service specifics
-### Grafana
-To set admin password for grafana use
-```bash
-grafana-cli admin reset-admin-password --homepath "/var/lib/grafana/" <NewPass>
-```
+## Documentation
+
+This configuration is documented using mkdocs. HTTP server with rendered
+documentation can be started using `confctl docs start`.

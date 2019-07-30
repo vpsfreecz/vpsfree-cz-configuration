@@ -118,6 +118,12 @@ information.
 `confctl swpins channel git set tag` *channel-pattern* *sw-pattern* *tag*
   Update matching software packages to git tag, i.e. `refs/tags/`*tag*.
 
+`confctl docs start`
+  Start HTTP server at `http://localhost:8000` to serve rendered documentation.
+
+`confctl docs stop`
+  Stop the HTTP server started by `confctl docs start`.
+
 ## BUGS
 Report bugs to https://github.com/vpsfreecz/vpsfree-cz-configuration/issues.
 

@@ -3,3 +3,4 @@
 /attic
 *.nixops-*
 .gems
+.mkdocs.*

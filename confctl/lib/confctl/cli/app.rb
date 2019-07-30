@@ -126,6 +126,19 @@ module ConfCtl::Cli
 
         c.action &Command.run(Morph, :check_health)
       end
+
+      desc 'Access rendered documentation'
+      command :docs do |docs|
+        docs.desc 'Start HTTP server'
+        docs.command :start do |c|
+          c.action &Command.run(Documentation, :start_server)
+        end
+
+        docs.desc 'Stop HTTP server'
+        docs.command :stop do |c|
+          c.action &Command.run(Documentation, :stop_server)
+        end
+      end
     end
 
     protected

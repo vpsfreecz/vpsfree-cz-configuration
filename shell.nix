@@ -8,6 +8,7 @@ in stdenv.mkDerivation rec {
 
   buildInputs = with pkgs; [
     git
+    mkdocs
     morph
     nix-prefetch-git
     openssl
