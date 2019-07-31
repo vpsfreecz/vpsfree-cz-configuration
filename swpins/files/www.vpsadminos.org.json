@@ -1,11 +1,13 @@
 {
   "vpsadminos": {
+    "channel": "os-master",
     "type": "git",
-    "handler": "vpsadminos",
     "options": {
       "url": "https://github.com/vpsfreecz/vpsadminos",
-      "rev": "0c327b9f66953f6cf72325d67ad079d2fcc0f8c0",
-      "sha256": "0623068sgzy9ns2c4r3456iksrvvx3svx2di2z159hcr3rbnvwra"
+      "rev": "258e993772cfbaccd31337d6cfab437a7080cff4",
+      "date": "2019-07-11T10:27:05+02:00",
+      "sha256": "1lls24qyr4q9irsgxap39jiz644y98isc6dbw4q01g5q0cx9x5as",
+      "fetchSubmodules": false
     }
   },
   "vpsadminos-runtime-deps": {
