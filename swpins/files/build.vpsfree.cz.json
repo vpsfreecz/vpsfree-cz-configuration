@@ -9,11 +9,14 @@
     }
   },
   "nixpkgs": {
+    "channel": "nixos-unstable",
     "type": "git",
     "options": {
-      "url": "https://github.com/vpsfreecz/nixpkgs",
-      "rev": "67cca52fd99815e96dc5421282529e9707d88654",
-      "sha256": "1hqmmih5ingj3aajgdqm7rf5m0z3jcgdg7xskwh1x7bndkn8i6h4"
+      "url": "https://github.com/NixOS/nixpkgs-channels",
+      "rev": "239fffc90d792b5362a20ec1a009978de7b8f91a",
+      "date": "2019-07-28T17:39:33-04:00",
+      "sha256": "0z0c438b5q1066x6p9qfriym5cipw8f52a456f91qzg6q1r296f8",
+      "fetchSubmodules": false
     }
   },
   "vpsadmin": {
