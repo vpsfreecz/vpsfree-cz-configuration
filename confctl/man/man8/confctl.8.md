@@ -96,6 +96,10 @@ information.
 `confctl swpins channel new` *channel*
  Create a new empty channel.
 
+`confctl swpins channel rename` *channel* *new-channel*
+  Rename *channel* to *new-channel*. All files using *channel* are switched over
+  to *new-channel*.
+
 `confctl swpins channel del` *channel-pattern*
  Delete maching channels.
 

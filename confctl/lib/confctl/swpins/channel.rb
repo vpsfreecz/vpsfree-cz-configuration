@@ -86,6 +86,15 @@ module ConfCtl
       save
     end
 
+    # @param new_name [String]
+    def rename(new_name)
+      orig_path = path
+      @name = new_name
+      @path = File.join(File.dirname(path), "#{new_name}.json")
+      save
+      File.unlink(orig_path)
+    end
+
     def delete
       File.unlink(path)
     end

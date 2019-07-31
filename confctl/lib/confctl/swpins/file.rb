@@ -95,6 +95,14 @@ module ConfCtl
       end
     end
 
+    # @param old_name [String]
+    # @param new_name [String]
+    def rename_channel(old_name, new_name)
+      specs.each do |name, spec|
+        spec.channel = new_name if spec.channel == old_name
+      end
+    end
+
     # @param name [String]
     def has_channel?(name)
       channels.include?(name)

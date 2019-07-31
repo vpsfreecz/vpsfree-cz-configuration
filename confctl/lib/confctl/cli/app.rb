@@ -40,6 +40,12 @@ module ConfCtl::Cli
             c.action &Command.run(Swpins::Channel, :create)
           end
 
+          ch.desc 'Rename channel'
+          ch.arg_name '<channel> <new-channel>'
+          ch.command :rename do |c|
+            c.action &Command.run(Swpins::Channel, :rename)
+          end
+
           ch.desc 'Delete channel'
           ch.arg_name '<channel>'
           ch.command :del do |c|

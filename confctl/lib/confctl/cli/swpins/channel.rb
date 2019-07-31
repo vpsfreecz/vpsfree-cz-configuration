@@ -27,6 +27,27 @@ module ConfCtl::Cli
       chan.create
     end
 
+    def rename
+      require_args!('channel', 'new-channel')
+
+      old_name = args[0]
+      new_name = args[1]
+
+      chan = channel_list('*').detect { |chan| chan.name == old_name }
+      fail "Channel '#{args[0]}' not found" if chan.nil?
+
+      chan.parse
+      chan.rename(new_name)
+
+      each_file('*') do |file|
+        if file.has_channel?(old_name)
+          puts "Renaming channel #{old_name} to #{new_name} in file #{file.name}"
+          file.rename_channel(old_name, new_name)
+          file.save
+        end
+      end
+    end
+
     def delete
       require_args!('channel')
 
