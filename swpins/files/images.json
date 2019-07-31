@@ -20,13 +20,5 @@
       "sha256": "0z0c438b5q1066x6p9qfriym5cipw8f52a456f91qzg6q1r296f8",
       "fetchSubmodules": false
     }
-  },
-  "vpsadmin": {
-    "type": "git",
-    "options": {
-      "url": "https://github.com/vpsfreecz/vpsadmin",
-      "rev": "02e2b2144a44ff7849b1b700c5711e107d3eae52",
-      "sha256": "16carxp4mlpywsqvcz0khp1lm5krjvgri7m03d89652zrmfnng0y"
-    }
   }
 }

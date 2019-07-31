@@ -45,7 +45,7 @@ let
     inherit modules;
     vpsadminos = args.vpsadminos or swpins.vpsadminos;
     nixpkgs = args.nixpkgs or swpins.nixpkgs;
-    vpsadmin = args.vpsadmin or swpins.vpsadmin;
+    vpsadmin = args.vpsadmin or null;
   };
 
   vpsadminosBuild = args: (vpsadminos args).config.system.build;
