@@ -44,7 +44,7 @@
     recommendedProxySettings = true;
 
     virtualHosts = {
-      "graylog" = {
+      "log.vpsfree.cz" = {
         default = true;
         locations = {
           "/" = {
