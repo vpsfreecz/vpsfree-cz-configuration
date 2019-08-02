@@ -20,8 +20,8 @@ let
         macs = netboot.macs or [];
       };
 in rec {
-  custom = { type, name, location ? null, domain, fqdn ? null, config, netboot ? null }: {
-    inherit type name location domain config;
+  custom = { type, spin, name, location ? null, domain, fqdn ? null, config, netboot ? null }: {
+    inherit type spin name location domain config;
     fqdn = makeFqdn { inherit name location domain fqdn; };
     netboot = makeNetboot netboot;
   };
@@ -32,12 +32,21 @@ in rec {
       swpins = swpinsFor myFqdn;
     in custom {
       type = "machine";
+      spin = "nixos";
       inherit name location domain netboot;
       fqdn = myFqdn;
       config =
         { config, pkgs, ... }@args:
         {
-          _module.args = { inherit swpins; };
+          _module.args = {
+            inherit swpins;
+            deploymentInfo = {
+              type = "machine";
+              spin = "nixos";
+              inherit name location domain;
+              fqdn = myFqdn;
+            };
+          };
 
           deployment = {
             nixPath = [
@@ -58,11 +67,19 @@ in rec {
       configFn = config;
     in custom {
       inherit type name location domain netboot;
+      spin = "vpsadminos";
       fqdn = myFqdn;
       config =
         { config, pkgs, ... }@args:
         {
-          _module.args = { inherit swpins; };
+          _module.args = {
+            inherit swpins;
+            deploymentInfo = {
+              inherit type name location domain;
+              spin = "vpsadminos";
+              fqdn = myFqdn;
+            };
+          };
 
           deployment = {
             nixPath = [
@@ -114,12 +131,21 @@ in rec {
       swpins = swpinsFor myFqdn;
     in custom {
       type = "container";
+      spin = "nixos";
       inherit name location domain;
       fqdn = myFqdn;
       config =
         { config, pkgs, ... }:
         {
-          _module.args = { inherit swpins; };
+          _module.args = {
+            inherit swpins;
+            deploymentInfo = {
+              type = "container";
+              spin = "nixos";
+              inherit name location domain;
+              fqdn = myFqdn;
+            };
+          };
 
           deployment = {
             nixPath = [
