@@ -2,6 +2,7 @@
 {
   imports = [
     ../../modules/deploy.nix
+    ../../modules/monitored.nix
     ../../env.nix
     ../../configs/image-repository.nix
   ];
