@@ -41,22 +41,6 @@
                 alias = "mon0.vpsfree.cz";
               };
             }
-            {
-              targets = [
-                "mon0.base48.cz:9090"
-              ];
-              labels = {
-                alias = "mon0.base48.cz";
-              };
-            }
-            {
-              targets = [
-                "mon0.base48.cz:9100"
-              ];
-              labels = {
-                alias = "mon0.base48.cz";
-              };
-            }
           ];
         }
         {
@@ -69,14 +53,6 @@
               ];
               labels = {
                 alias = "pxe.vpsfree.cz";
-              };
-            }
-            {
-              targets = [
-                "pxe.base48.cz:9100"
-              ];
-              labels = {
-                alias = "pxe.base48.cz";
               };
             }
           ];
@@ -107,14 +83,6 @@
               ];
               labels = {
                 alias = "node2.stg";
-              };
-            }
-            {
-              targets = [
-                "devnode1.base48.cz:9100"
-              ];
-              labels = {
-                alias = "devnode1";
               };
             }
           ];
