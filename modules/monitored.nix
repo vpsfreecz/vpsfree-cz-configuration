@@ -1,4 +1,4 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, deploymentInfo, ... }:
 let
   monitoringIPs = [
     "172.16.4.10"
@@ -18,12 +18,11 @@ in
       extraFlags = [ "--collector.textfile.directory=/run/metrics" ];
       enabledCollectors = [
         "vmstat"
-        "systemd"
-        "logind"
         "interrupts"
         "textfile"
         "processes"
-      ] ++ lib.optionals (!config.boot.isContainer) [ "hwmon" "mdadm" "ksmd" ];
+      ] ++ (lib.optionals (deploymentInfo.spin == "nixos") [ "systemd" "logind" ])
+        ++ (lib.optionals (!config.boot.isContainer) [ "hwmon" "mdadm" "ksmd" ]);
     };
   };
 }
