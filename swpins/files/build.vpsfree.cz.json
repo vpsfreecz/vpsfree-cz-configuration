@@ -4,8 +4,10 @@
     "handler": "vpsadminos",
     "options": {
       "url": "https://github.com/vpsfreecz/vpsadminos",
-      "rev": "0c327b9f66953f6cf72325d67ad079d2fcc0f8c0",
-      "sha256": "0623068sgzy9ns2c4r3456iksrvvx3svx2di2z159hcr3rbnvwra"
+      "rev": "48c157f34fbaee9c698b21dda563ae5093ad6f74",
+      "sha256": "1hr594979vpfa66l9nvfnldjv52szazyxyi4gs0y6csq2kmwc9il",
+      "date": "2019-08-02T18:38:36+02:00",
+      "fetchSubmodules": false
     }
   },
   "nixpkgs": {
