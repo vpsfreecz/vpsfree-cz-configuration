@@ -121,7 +121,10 @@
     lockdPort = 32769;
   };
 
-  services.prometheus.exporters.node.enable = true;
+  services.prometheus.exporters.node = {
+    enable = true;
+    extraFlags = [ "--collector.textfile.directory=/run/metrics" ];
+  };
   services.rsyslogd.forward = [ "172.16.4.1:11514" ];
   services.openssh = {
     enable = true;
