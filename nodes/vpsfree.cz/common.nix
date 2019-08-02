@@ -69,7 +69,7 @@
     firewall.extraCommands =
       let
         nfsCfg = config.services.nfs.server;
-        exporterCfg = config.services.prometheus.node_exporter;
+        exporterCfg = config.services.prometheus.exporters.node;
         sshCfg = config.services.openssh;
         sshRules = map (port:
           "iptables -A nixos-fw -p tcp --dport ${toString port} -j nixos-fw-accept"
@@ -121,7 +121,7 @@
     lockdPort = 32769;
   };
 
-  services.prometheus.node_exporter.enable = true;
+  services.prometheus.exporters.node.enable = true;
   services.rsyslogd.forward = [ "172.16.4.1:11514" ];
   services.openssh = {
     enable = true;
