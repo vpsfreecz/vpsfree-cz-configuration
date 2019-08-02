@@ -1,6 +1,6 @@
 { config, lib, pkgs, ...}:
 let
-  bondIfaces = [ "eth0" "eth1" "eth2" "eth3" ];
+  bondIfaces = [ "oneg0" "oneg1" "oneg2" "oneg3" ];
   bondVlan = 200;
   bondIP = "172.16.0.5/23";
   bondGateway = "172.16.0.2";
@@ -10,7 +10,7 @@ in
     ../storage.nix
   ];
 
-  vpsadmin.netInterfaces = [ "eth0" "eth1" ];
+  vpsadmin.netInterfaces = [ "oneg0" "oneg1" ];
   vpsadmin.consoleHost = "172.16.0.5";
 
   node = {
@@ -19,6 +19,10 @@ in
       hostName = "backuper.prg";
       as = 4200001046;
       mac = {
+        oneg0 = "00:25:90:2f:a3:ac";
+        oneg1 = "00:25:90:2f:a3:ad";
+        oneg2 = "00:25:90:2f:a3:ae";
+        oneg3 = "00:25:90:2f:a3:af";
         teng0 = "00:25:90:0e:5b:1a";
         teng1 = "00:25:90:0e:5b:1b";
       };
