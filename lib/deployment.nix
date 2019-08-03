@@ -55,7 +55,7 @@ in rec {
           };
 
           imports = [
-            (../machines + "/${domain}/${name}.nix")
+            (../machines + "/${domain}/${lib.optionalString (location != null) location}/${name}.nix")
           ];
         };
     };
@@ -120,7 +120,7 @@ in rec {
         { config, pkgs, ... }:
         {
           imports = [
-            (../machines + "/${domain}/${name}.nix")
+            (../machines + "/${domain}/${lib.optionalString (location != null) location}/${name}.nix")
           ];
         };
     };
@@ -155,7 +155,7 @@ in rec {
           };
 
           imports = [
-            (../containers + "/${domain}/${name}.nix")
+            (../containers + "/${domain}/${lib.optionalString (location != null) location}/${name}.nix")
             ../profiles/ct.nix
           ];
         };
