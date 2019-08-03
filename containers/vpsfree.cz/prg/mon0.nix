@@ -1,9 +1,9 @@
 { pkgs, lib, config, ... }:
 {
   imports = [
-    ../../env.nix
-    ../../profiles/ct.nix
-    ../../modules/monitored.nix
+    ../../../env.nix
+    ../../../profiles/ct.nix
+    ../../../modules/monitored.nix
   ];
 
   networking = {
@@ -31,7 +31,7 @@
                 "localhost:9090"
               ];
               labels = {
-                alias = "mon0.vpsfree.cz";
+                alias = "mon0.prg.vpsfree.cz";
               };
             }
             {
@@ -39,7 +39,7 @@
                 "localhost:9100"
               ];
               labels = {
-                alias = "mon0.vpsfree.cz";
+                alias = "mon0.prg.vpsfree.cz";
               };
             }
           ];

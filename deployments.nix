@@ -92,9 +92,10 @@ in mkDeployments [
     inherit domain;
   })
 
-  # mon0.vpsfree.cz
+  # mon0.prg.vpsfree.cz
   (deployment.osContainer {
     name = "mon0";
+    location = "prg";
     inherit domain;
   })
 ]
