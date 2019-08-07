@@ -247,6 +247,25 @@
                 summary: "ZFS arc_c too low (instance {{ $labels.instance }})"
                 description: "ZFS arc_c is too low (less than 1/8 of total memory)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
+            - alert: NodeHighLoad
+              expr: node_load5{job="nodes"} > 300
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: "Load average too high (instance {{ $labels.instance }})"
+                description: "5 minute load average is too high\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+            - alert: NodeCritLoad
+              expr: node_load5{job="nodes"} > 1000
+              for: 2m
+              labels:
+                severity: critical
+                frequency: hourly
+              annotations:
+                summary: "Load average critical (instance {{ $labels.instance }})"
+                description: "5 minute load average is too high\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
           - name: infra
             rules:
             - alert: InfraExporterDown
@@ -275,6 +294,15 @@
               annotations:
                 summary: "High CPU iowait (instance {{ $labels.instance }})"
                 description: "CPU iowait is > 30%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+            - alert: InfraHighLoad
+              expr: node_load5{job=~"infra|pxe"} > 300
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: "Load average too high (instance {{ $labels.instance }})"
+                description: "5 minute load average is too high\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
         ''
       ];
     };
