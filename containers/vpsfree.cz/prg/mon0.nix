@@ -247,6 +247,24 @@
                 summary: "ZFS arc_c too low (instance {{ $labels.instance }})"
                 description: "ZFS arc_c is too low (less than 1/8 of total memory)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
+            - alert: HypervisorHighArcMetaUsed
+              expr: node_zfs_arc_arc_meta_used{role="hypervisor"} / node_zfs_arc_size * 100 > 80
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: "ZFS arc_meta_used uses too much of arc_size (instance {{ $labels.instance }})"
+                description: "ZFS arc_meta_used uses more than 80% of arc_size\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+            - alert: HypervisorCritArcMetaUsed
+              expr: node_zfs_arc_arc_meta_used{role="hypervisor"} / node_zfs_arc_size * 100 > 90
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: "ZFS arc_meta_used uses too much of arc_size (instance {{ $labels.instance }})"
+                description: "ZFS arc_meta_used uses more than 90% of arc_size\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
             - alert: NodeHighLoad
               expr: node_load5{job="nodes"} > 300
               for: 5m
