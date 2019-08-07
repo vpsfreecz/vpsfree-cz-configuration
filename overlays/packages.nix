@@ -1,5 +1,7 @@
 self: super:
 {
+  havesnippet-client = super.callPackage ../packages/havesnippet-client {};
+
   morph = super.morph.overrideAttrs (oldAttrs: rec {
     name = oldAttrs.name + "-sorki";
     src = super.fetchFromGitHub {
@@ -9,4 +11,6 @@ self: super:
       sha256 = "1viwphxq7dm0zbgag6q2psibkbfhiylhp15s1i2wzlh0gnlslkd8";
     };
   });
+
+  sachet = super.callPackage ../packages/sachet {};
 }

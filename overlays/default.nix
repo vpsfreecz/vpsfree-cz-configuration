@@ -1,4 +1,3 @@
 [
-  (import ./havesnippet.nix)
-  (import ./morph.nix)
+  (import ./packages.nix)
 ]

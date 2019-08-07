@@ -1,5 +1,5 @@
 let
-  pkgs = import <nixpkgs> { overlays = [ (import ./overlays/morph.nix) ]; };
+  pkgs = import <nixpkgs> { overlays = (import ./overlays); };
   lib = pkgs.lib;
   stdenv = pkgs.stdenv;
 
