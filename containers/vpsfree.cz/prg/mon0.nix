@@ -179,6 +179,7 @@
               for: 1m
               labels:
                 severity: critical
+                frequency: 2m
               annotations:
                 summary: "Exporter down (instance {{ $labels.instance }})"
                 description: "Prometheus exporter down\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
