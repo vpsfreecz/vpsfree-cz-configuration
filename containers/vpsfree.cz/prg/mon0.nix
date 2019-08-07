@@ -59,7 +59,7 @@
         }
         {
           job_name = "nodes";
-          scrape_interval = "60s";
+          scrape_interval = "30s";
           static_configs = [
             {
               targets = [
@@ -124,13 +124,14 @@
       rules = [
         ''
           groups:
-          - name: main
+          - name: nodes
+            interval: 20s
             rules:
-            - alert: ExporterDown
-              expr: up == 0
-              for: 3m
+            - alert: NodeExporterDown
+              expr: up{job="nodes"} == 0
+              for: 1m
               labels:
-                severity: warning
+                severity: critical
               annotations:
                 summary: "Exporter down (instance {{ $labels.instance }})"
                 description: "Prometheus exporter down\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
@@ -144,6 +145,15 @@
                 summary: "High CPU load (instance {{ $labels.instance }})"
                 description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
+            - alert: HypervisorCritCpuLoad
+              expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor"}[5m])) * 100) > 90
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: "Critical CPU load (instance {{ $labels.instance }})"
+                description: "CPU load is > 90%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
             - alert: HypervisorHighIoWait
               expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 20
               for: 5m
@@ -152,6 +162,15 @@
               annotations:
                 summary: "High CPU iowait (instance {{ $labels.instance }})"
                 description: "CPU iowait is > 20%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+            - alert: HypervisorCritIoWait
+              expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 40
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: "Critical CPU iowait (instance {{ $labels.instance }})"
+                description: "CPU iowait is > 40%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: StorageHighCpuLoad
               expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="storage"}[5m])) * 100) > 80
@@ -171,14 +190,43 @@
                 summary: "High CPU iowait (instance {{ $labels.instance }})"
                 description: "CPU iowait is > 30%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
-            - alert: LowZfsArcC
-              expr: node_zfs_arc_c < (node_memory_MemTotal_bytes / 8)
+            - alert: HypervisorLowZfsArcC
+              expr: node_zfs_arc_c{role="hypervisor"} < (node_memory_MemTotal_bytes / 8)
               for: 5m
               labels:
                 severity: warning
               annotations:
                 summary: "ZFS arc_c too low (instance {{ $labels.instance }})"
                 description: "ZFS arc_c is too low (less than 1/8 of total memory)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+          - name: infra
+            rules:
+            - alert: InfraExporterDown
+              expr: up{job=~"infra|pxe"} == 0
+              for: 3m
+              labels:
+                severity: critical
+              annotations:
+                summary: "Exporter down (instance {{ $labels.instance }})"
+                description: "Prometheus exporter down\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+            - alert: InfraHighCpuLoad
+              expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",job=~"infra|pxe"}[5m])) * 100) > 80
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: "High CPU load (instance {{ $labels.instance }})"
+                description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+            - alert: InfraHighIoWait
+              expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",job=~"infra|pxe"}[5m])) * 100) > 30
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: "High CPU iowait (instance {{ $labels.instance }})"
+                description: "CPU iowait is > 30%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
         ''
       ];
     };
