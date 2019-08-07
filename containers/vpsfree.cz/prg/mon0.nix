@@ -10,7 +10,6 @@
     firewall.allowedTCPPorts = [
       3000  # grafana
       9090  # prometheus
-      9093  # alertmanager
     ];
   };
 
@@ -119,7 +118,7 @@
       ];
 
       alertmanagerURL = [
-        "localhost:${toString config.services.prometheus.alertmanager.port}"
+        "172.16.4.11:9093"
       ];
 
       rules = [
@@ -184,42 +183,11 @@
       ];
     };
 
-    prometheus.alertmanager = {
-      enable = true;
-      configuration = {
-        "global" = {
-          "smtp_smarthost" = "localhost:25";
-          "smtp_from" = "alertmanager@vpsfree.cz";
-          "smtp_require_tls" = false;
-        };
-        "route" = {
-          "group_by" = [ "alertname" "alias" ];
-          "group_wait" = "30s";
-          "group_interval" = "2m";
-          "repeat_interval" = "4h";
-          "receiver" = "team-admins";
-        };
-        "receivers" = [
-          {
-            "name" = "team-admins";
-            "email_configs" = [
-              {
-                "to" = "aither@havefun.cz";
-                "send_resolved" = true;
-              }
-            ];
-          }
-        ];
-      };
-    };
-
     grafana = {
       enable = true;
       addr = "0.0.0.0";
       domain = "grafana.vpsfree.cz";
       rootUrl = "http://grafana.vpsfree.cz/";
     };
-
-    postfix.enable = true;
   };
 }

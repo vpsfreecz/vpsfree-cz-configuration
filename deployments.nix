@@ -98,4 +98,11 @@ in mkDeployments [
     location = "prg";
     inherit domain;
   })
+
+  # alerts.prg.vpsfree.cz
+  (deployment.osContainer {
+    name = "alerts";
+    location = "prg";
+    inherit domain;
+  })
 ]
