@@ -28,14 +28,34 @@
         "group_wait" = "30s";
         "group_interval" = "2m";
         "repeat_interval" = "4h";
-        "receiver" = "team-admins";
+        "receiver" = "team-mail";
+
+        "routes" = [
+          {
+            "match" = {
+              "severity" = "critical";
+            };
+            "receiver" = "team-sms";
+            "group_wait" = "10s";
+            "repeat_interval" = "10m";
+          }
+        ];
       };
       "receivers" = [
         {
-          "name" = "team-admins";
+          "name" = "team-mail";
           "email_configs" = [
             {
-              "to" = "aither@havefun.cz";
+              "to" = "aither@havefun.cz,snajpa@snajpa.net";
+              "send_resolved" = true;
+            }
+          ];
+        }
+        {
+          "name" = "team-sms";
+          "webhook_configs" = [
+            {
+              "url" = "http://localhost:9876/alert";
               "send_resolved" = true;
             }
           ];
