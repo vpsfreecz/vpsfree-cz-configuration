@@ -4,7 +4,10 @@
     ../../../env.nix
     ../../../profiles/ct.nix
     ../../../modules/monitored.nix
+    ../../../modules/services/sachet.nix
   ];
+
+  nixpkgs.overlays = import ../../../overlays;
 
   networking = {
     firewall.allowedTCPPorts = [
@@ -42,4 +45,9 @@
   };
 
   services.postfix.enable = true;
+
+  services.sachet = {
+    enable = true;
+    configPath = "/private/sachet/config.yml";
+  };
 }
