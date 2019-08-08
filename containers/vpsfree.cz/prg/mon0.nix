@@ -61,6 +61,183 @@
           job_name = "nodes";
           scrape_interval = "30s";
           static_configs = [
+            # prg
+            {
+              targets = [
+                "node2.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node2.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node3.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node3.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node4.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node4.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node5.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node5.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node6.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node6.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node7.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node7.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node8.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node8.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node9.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node9.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node10.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node10.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node11.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node11.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node12.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node12.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node13.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node13.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node14.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node14.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node15.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node15.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node17.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node17.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node18.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node18.prg";
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
             {
               targets = [
                 "backuper.prg.vpsfree.cz:9100"
@@ -72,6 +249,75 @@
                 os = "vpsadminos";
               };
             }
+            {
+              targets = [
+                "nasbox.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "nasbox.prg";
+                location = "prg";
+                role = "storage";
+                os = "openvz";
+              };
+            }
+            # brq
+            {
+              targets = [
+                "node1.brq.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node1.brq";
+                location = "brq";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node2.brq.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node2.brq";
+                location = "brq";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node3.brq.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node3.brq";
+                location = "brq";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node4.brq.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node4.brq";
+                location = "brq";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            # pgnd
+            {
+              targets = [
+                "node1.pgnd.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "node1.pgnd";
+                location = "pgnd";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            # staging
             {
               targets = [
                 "node1.stg.vpsfree.cz:9100"
