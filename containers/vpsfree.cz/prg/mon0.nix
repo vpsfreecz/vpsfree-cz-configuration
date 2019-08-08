@@ -69,6 +69,7 @@
                 alias = "backuper.prg";
                 location = "prg";
                 role = "storage";
+                os = "vpsadminos";
               };
             }
             {
@@ -79,6 +80,7 @@
                 alias = "node1.stg";
                 location = "stg";
                 role = "hypervisor";
+                os = "vpsadminos";
               };
             }
             {
@@ -89,6 +91,7 @@
                 alias = "node2.stg";
                 location = "stg";
                 role = "hypervisor";
+                os = "vpsadminos";
               };
             }
           ];
