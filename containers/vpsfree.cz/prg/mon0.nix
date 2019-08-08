@@ -434,7 +434,7 @@
                 description: "Prometheus exporter down\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: HypervisorHighCpuLoad
-              expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor"}[5m])) * 100) > 80
+              expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600
               for: 5m
               labels:
                 severity: warning
@@ -443,7 +443,7 @@
                 description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: HypervisorCritCpuLoad
-              expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor"}[5m])) * 100) > 90
+              expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600
               for: 5m
               labels:
                 severity: critical
@@ -452,7 +452,7 @@
                 description: "CPU load is > 90%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: HypervisorHighIoWait
-              expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 20
+              expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 20 and on(instance) time() - node_boot_time_seconds > 3600
               for: 5m
               labels:
                 severity: warning
@@ -461,7 +461,7 @@
                 description: "CPU iowait is > 20%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: HypervisorCritIoWait
-              expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 40
+              expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 40 and on(instance) time() - node_boot_time_seconds > 3600
               for: 5m
               labels:
                 severity: critical
@@ -515,7 +515,7 @@
                 description: "ZFS arc_meta_used uses more than 90% of arc_size\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: NodeHighLoad
-              expr: node_load5{job="nodes"} > 300
+              expr: node_load5{job="nodes"} > 300 and on(instance) time() - node_boot_time_seconds > 3600
               for: 5m
               labels:
                 severity: warning
@@ -545,7 +545,7 @@
                 description: "Prometheus exporter down\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: InfraHighCpuLoad
-              expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",job=~"infra|pxe"}[5m])) * 100) > 80
+              expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",job=~"infra|pxe"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600
               for: 5m
               labels:
                 severity: warning
@@ -554,7 +554,7 @@
                 description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: InfraHighIoWait
-              expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",job=~"infra|pxe"}[5m])) * 100) > 30
+              expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",job=~"infra|pxe"}[5m])) * 100) > 30 and on(instance) time() - node_boot_time_seconds > 3600
               for: 5m
               labels:
                 severity: warning
@@ -563,7 +563,7 @@
                 description: "CPU iowait is > 30%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: InfraHighLoad
-              expr: node_load5{job=~"infra|pxe"} > 300
+              expr: node_load5{job=~"infra|pxe"} > 300 and on(instance) time() - node_boot_time_seconds > 3600
               for: 5m
               labels:
                 severity: warning
