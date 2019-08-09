@@ -20,6 +20,7 @@
         "--storage.tsdb.retention.time 365d"
         "--storage.tsdb.retention.size 200GB"
       ];
+      webExternalUrl = "https://mon.prg.vpsfree.cz/";
       scrapeConfigs = [
         {
           job_name = "mon";
@@ -360,6 +361,14 @@
               ];
               labels = {
                 alias = "www.vpsadminos.org";
+              };
+            }
+            {
+              targets = [
+                "proxy.prg.vpsfree.cz:9100"
+              ];
+              labels = {
+                alias = "proxy.prg";
               };
             }
           ];

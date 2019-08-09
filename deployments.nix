@@ -86,6 +86,13 @@ in mkDeployments [
     domain = "vpsadminos.org";
   })
 
+  # proxy.prg.vpsfree.cz
+  (deployment.osContainer {
+    name = "proxy";
+    location = "prg";
+    inherit domain;
+  })
+
   # log.vpsfree.cz
   (deployment.osContainer {
     name = "log";

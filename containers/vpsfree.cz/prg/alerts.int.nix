@@ -17,6 +17,7 @@
 
   services.prometheus.alertmanager = {
     enable = true;
+    webExternalUrl = "https://alerts.prg.vpsfree.cz/";
     configuration = {
       "global" = {
         "smtp_smarthost" = "localhost:25";
