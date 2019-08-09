@@ -501,7 +501,7 @@
                 description: "CPU iowait is > 30%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: HypervisorLowZfsArcC
-              expr: node_zfs_arc_c{role="hypervisor"} < (node_memory_MemTotal_bytes / 8)
+              expr: node_zfs_arc_c{role="hypervisor"} < (node_memory_MemTotal_bytes / 8) and on(instance) (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 10
               for: 5m
               labels:
                 severity: warning
