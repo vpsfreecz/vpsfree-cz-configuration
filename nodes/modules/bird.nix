@@ -1,10 +1,10 @@
-{ config, lib, ...}:
+{ config, lib, data, ...}:
 with lib;
 
 let
   cfg = config.node.net;
 
-  allNetworks = import ../../data/networks/containers.nix;
+  allNetworks = data.networks.containers;
 
   importNetworkFilter = ipVer:
     let

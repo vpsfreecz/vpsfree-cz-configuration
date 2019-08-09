@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ...}:
+{ config, lib, pkgs, data, ...}:
 {
 
   imports = [
@@ -75,7 +75,7 @@
         sshRules = map (port:
           "iptables -A nixos-fw -p tcp --dport ${toString port} -j nixos-fw-accept"
         ) sshCfg.ports;
-        managementNetworks = (import ../../data/networks/management.nix).ipv4;
+        managementNetworks = data.networks.management.ipv4;
         vpsadminSendRecvRules = map (net: ''
           # ${net.location}
           iptables -A nixos-fw -p tcp -s ${net.address}/${toString net.prefix} --dport 10000:20000 -j nixos-fw-accept

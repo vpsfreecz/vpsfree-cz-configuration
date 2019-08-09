@@ -19,6 +19,12 @@ let
         inherit (netboot) enable;
         macs = netboot.macs or [];
       };
+
+  makeModuleArgs = { swpins, type, spin, name, location ? null, domain, fqdn }: {
+    inherit swpins;
+    deploymentInfo = { inherit type spin name location domain fqdn; };
+    data = import ../data { inherit lib; };
+  };
 in rec {
   custom = { type, spin, name, location ? null, domain, fqdn ? null, config, netboot ? null }: {
     inherit type spin name location domain config;
@@ -38,14 +44,12 @@ in rec {
       config =
         { config, pkgs, ... }@args:
         {
-          _module.args = {
+          _module.args = makeModuleArgs {
             inherit swpins;
-            deploymentInfo = {
-              type = "machine";
-              spin = "nixos";
-              inherit name location domain;
-              fqdn = myFqdn;
-            };
+            type = "machine";
+            spin = "nixos";
+            inherit name location domain;
+            fqdn = myFqdn;
           };
 
           deployment = {
@@ -65,6 +69,11 @@ in rec {
       myFqdn = makeFqdn { inherit name location domain fqdn; };
       swpins = swpinsFor myFqdn;
       configFn = config;
+      moduleArgs = makeModuleArgs {
+        inherit swpins type name location domain;
+        spin = "vpsadminos";
+        fqdn = myFqdn;
+      };
     in custom {
       inherit type name location domain netboot;
       spin = "vpsadminos";
@@ -72,14 +81,7 @@ in rec {
       config =
         { config, pkgs, ... }@args:
         {
-          _module.args = {
-            inherit swpins;
-            deploymentInfo = {
-              inherit type name location domain;
-              spin = "vpsadminos";
-              fqdn = myFqdn;
-            };
-          };
+          _module.args = moduleArgs;
 
           deployment = {
             nixPath = [
@@ -90,7 +92,7 @@ in rec {
           };
 
           imports = [
-            (configFn (args // { inherit swpins; }))
+            (configFn (args // moduleArgs))
           ];
         };
     };
@@ -137,14 +139,12 @@ in rec {
       config =
         { config, pkgs, ... }:
         {
-          _module.args = {
+          _module.args = makeModuleArgs {
             inherit swpins;
-            deploymentInfo = {
-              type = "container";
-              spin = "nixos";
-              inherit name location domain;
-              fqdn = myFqdn;
-            };
+            type = "container";
+            spin = "nixos";
+            inherit name location domain;
+            fqdn = myFqdn;
           };
 
           deployment = {

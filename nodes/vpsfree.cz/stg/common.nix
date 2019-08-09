@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ...}:
+{ config, lib, pkgs, data, ... }:
 {
   imports = [
     ../common.nix
@@ -20,7 +20,7 @@
           acltype = "posixacl";
           sharenfs =
             let
-              networks = (import ../../../data/networks/management.nix).ipv4;
+              networks = data.networks.management.ipv4;
               property = lib.concatMapStringsSep "," (net:
                 "rw=@${net.address}/${toString net.prefix}"
               ) networks;
