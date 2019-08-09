@@ -377,6 +377,109 @@
             }
           ];
         }
+        {
+          job_name = "nodes-ping";
+          scrape_interval = "15s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "icmp" ];
+          };
+          static_configs = [
+            {
+              targets = [
+                "node2.prg.vpsfree.cz"
+                "node3.prg.vpsfree.cz"
+                "node4.prg.vpsfree.cz"
+                "node5.prg.vpsfree.cz"
+                "node6.prg.vpsfree.cz"
+                "node7.prg.vpsfree.cz"
+                "node8.prg.vpsfree.cz"
+                "node9.prg.vpsfree.cz"
+                "node10.prg.vpsfree.cz"
+                "node11.prg.vpsfree.cz"
+                "node12.prg.vpsfree.cz"
+                "node13.prg.vpsfree.cz"
+                "node14.prg.vpsfree.cz"
+                "node15.prg.vpsfree.cz"
+                "node17.prg.vpsfree.cz"
+                "node18.prg.vpsfree.cz"
+              ];
+              labels = {
+                location = "prg";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "nasbox.prg.vpsfree.cz"
+              ];
+              labels = {
+                location = "prg";
+                role = "storage";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "backuper.prg.vpsfree.cz"
+              ];
+              labels = {
+                location = "prg";
+                role = "storage";
+                os = "vpsadminos";
+              };
+            }
+            {
+              targets = [
+                "node1.brq.vpsfree.cz"
+                "node2.brq.vpsfree.cz"
+                "node3.brq.vpsfree.cz"
+                "node4.brq.vpsfree.cz"
+              ];
+              labels = {
+                location = "brq";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node1.pgnd.vpsfree.cz"
+              ];
+              labels = {
+                location = "pgnd";
+                role = "hypervisor";
+                os = "openvz";
+              };
+            }
+            {
+              targets = [
+                "node1.stg.vpsfree.cz"
+                "node2.stg.vpsfree.cz"
+              ];
+              labels = {
+                location = "stg";
+                role = "hypervisor";
+                os = "vpsadminos";
+              };
+            }
+          ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        }
       ];
 
       alertmanagerURL = [
@@ -585,6 +688,19 @@
                 description: "5 minute load average is too high\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
         ''
       ];
+    };
+
+    prometheus.exporters.blackbox = {
+      enable = true;
+      listenAddress = "127.0.0.1";
+      configFile = pkgs.writeText "blackbox.yml" ''
+        modules:
+          icmp:
+            prober: icmp
+            timeout: 5s
+            icmp:
+              preferred_ip_protocol: "ip4"
+      '';
     };
 
     grafana = {
