@@ -84,7 +84,7 @@
         ${lib.concatStringsSep "\n" sshRules}
 
         # node_exporter
-        iptables -A nixos-fw -p tcp --dport ${toString exporterCfg.port} -j nixos-fw-accept
+        iptables -A nixos-fw -p tcp --dport ${toString exporterCfg.port} -s 172.16.4.10 -j nixos-fw-accept
 
         # rpcbind
         iptables -A nixos-fw -p tcp --dport 111 -j nixos-fw-accept
