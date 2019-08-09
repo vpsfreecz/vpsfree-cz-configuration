@@ -30,7 +30,7 @@
                 "localhost:9090"
               ];
               labels = {
-                alias = "mon0.prg.vpsfree.cz";
+                alias = "mon.int.prg.vpsfree.cz";
               };
             }
             {
@@ -38,7 +38,7 @@
                 "localhost:9100"
               ];
               labels = {
-                alias = "mon0.prg.vpsfree.cz";
+                alias = "mon.int.prg.vpsfree.cz";
               };
             }
           ];
