@@ -2,13 +2,12 @@
 let
   monitoringIPs = [
     "172.16.4.10"
-    "172.17.66.66"
   ];
 in
 {
-  networking.firewall.allowedTCPPorts = [ 9100 ];
-  networking.firewall.extraCommands = lib.concatStringsSep "\n" (
-    lib.flip map monitoringIPs (ip: "iptables -A INPUT -p tcp -m tcp -s ${ip} --dport 9100 -j ACCEPT"));
+  networking.firewall.extraCommands = lib.concatStringsSep "\n" (map (ip:
+    "iptables -A nixos-fw -p tcp -m tcp -s ${ip} --dport 9100 -j nixos-fw-accept"
+  ) monitoringIPs);
 
   services.prometheus.exporters =
   {

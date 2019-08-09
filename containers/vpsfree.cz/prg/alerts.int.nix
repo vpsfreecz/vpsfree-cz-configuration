@@ -10,9 +10,13 @@
   nixpkgs.overlays = import ../../../overlays;
 
   networking = {
-    firewall.allowedTCPPorts = [
-      9093  # alertmanager
-    ];
+    firewall.extraCommands = ''
+      # Allow access to alertmanager from prometheus
+      iptables -A nixos-fw -p tcp --dport 9093 -s 172.16.4.10 -j nixos-fw-accept
+
+      # Allow access to alertmanager from proxy.prg
+      iptables -A nixos-fw -p tcp --dport 9093 -s 37.205.14.61 -j nixos-fw-accept
+    '';
   };
 
   services.prometheus.alertmanager = {

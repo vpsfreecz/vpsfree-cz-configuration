@@ -9,8 +9,12 @@
   networking = {
     firewall.allowedTCPPorts = [
       3000  # grafana
-      9090  # prometheus
     ];
+
+    firewall.extraCommands = ''
+      # Allow access to prometheus from proxy.prg
+      iptables -A nixos-fw -p tcp --dport 9090 -s 37.205.14.61 -j nixos-fw-accept
+    '';
   };
 
   services = {
