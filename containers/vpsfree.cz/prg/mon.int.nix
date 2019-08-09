@@ -246,6 +246,7 @@
             {
               targets = [
                 "backuper.prg.vpsfree.cz:9100"
+                "backuper.prg.vpsfree.cz:9101"
               ];
               labels = {
                 alias = "backuper.prg";
@@ -326,6 +327,7 @@
             {
               targets = [
                 "node1.stg.vpsfree.cz:9100"
+                "node1.stg.vpsfree.cz:9101"
               ];
               labels = {
                 alias = "node1.stg";
@@ -337,6 +339,7 @@
             {
               targets = [
                 "node2.stg.vpsfree.cz:9100"
+                "node2.stg.vpsfree.cz:9101"
               ];
               labels = {
                 alias = "node2.stg";
