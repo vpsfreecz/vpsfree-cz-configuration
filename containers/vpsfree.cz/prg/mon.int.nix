@@ -652,6 +652,16 @@
                 summary: "Load average critical (instance {{ $labels.instance }})"
                 description: "5 minute load average is too high\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
+            - alert: NoOsctlPoolImported
+              expr: osctl_pool_count{job="nodes",role="hypervisor",state="active"} == 0
+              for: 15m
+              labels:
+                severity: critical
+                frequency: 10m
+              annotations:
+                summary: "No osctl pool in use (instance {{ $labels.instance }})"
+                description: "No osctl pool is imported into osctld\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
           - name: nodes-ping
             interval: 15s
             rules:
