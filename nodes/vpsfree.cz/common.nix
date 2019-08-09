@@ -69,7 +69,8 @@
     firewall.extraCommands =
       let
         nfsCfg = config.services.nfs.server;
-        exporterCfg = config.services.prometheus.exporters.node;
+        nodeExporterCfg = config.services.prometheus.exporters.node;
+        osctlExporterCfg = config.osctl.exporter;
         sshCfg = config.services.openssh;
         sshRules = map (port:
           "iptables -A nixos-fw -p tcp --dport ${toString port} -j nixos-fw-accept"
@@ -84,7 +85,10 @@
         ${lib.concatStringsSep "\n" sshRules}
 
         # node_exporter
-        iptables -A nixos-fw -p tcp --dport ${toString exporterCfg.port} -s 172.16.4.10 -j nixos-fw-accept
+        iptables -A nixos-fw -p tcp --dport ${toString nodeExporterCfg.port} -s 172.16.4.10 -j nixos-fw-accept
+
+        # osctl-exporter
+        iptables -A nixos-fw -p tcp --dport ${toString osctlExporterCfg.port} -s 172.16.4.10 -j nixos-fw-accept
 
         # rpcbind
         iptables -A nixos-fw -p tcp --dport 111 -j nixos-fw-accept
@@ -125,6 +129,7 @@
     enable = true;
     extraFlags = [ "--collector.textfile.directory=/run/metrics" ];
   };
+  osctl.exporter.enable = true;
   services.rsyslogd.forward = [ "172.16.4.1:11514" ];
   services.openssh = {
     enable = true;
