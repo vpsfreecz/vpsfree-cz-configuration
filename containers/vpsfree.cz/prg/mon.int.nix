@@ -649,6 +649,39 @@
                 summary: "Load average critical (instance {{ $labels.instance }})"
                 description: "5 minute load average is too high\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
+          - name: nodes-ping
+            interval: 15s
+            rules:
+            - alert: PingExporterDown
+              expr: up{job="nodes-ping"} == 0
+              for: 5m
+              labels:
+                severity: critical
+                frequency: hourly
+              annotations:
+                summary: "Ping exporter is down (instance {{ $labels.instance }})"
+                description: "Unable to check node availability\n  LABELS: {{ $labels }}"
+
+            - alert: NodeDown
+              expr: probe_success{job="nodes-ping"} == 0
+              for: 30s
+              labels:
+                severity: critical
+                frequency: 2m
+              annotations:
+                summary: "Node is down (instance {{ $labels.instance }})"
+                description: "{{ $labels.instance }} does not respond to ping\n  LABELS: {{ $labels }}"
+
+            - alert: NodeHighPing
+              expr: probe_duration_seconds{job="nodes-ping"} >= 1 and on(job, instance) probe_success == 1
+              for: 1m
+              labels:
+                severity: warning
+                frequency: hourly
+              annotations:
+                summary: "Node is slow to respond (instance {{ $labels.instance }})"
+                description: "{{ $labels.instance }} takes more than a second to ping\n  LABELS: {{ $labels }}"
+
           - name: infra
             rules:
             - alert: InfraExporterDown
