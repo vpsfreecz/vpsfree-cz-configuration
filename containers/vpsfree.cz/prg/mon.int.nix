@@ -438,7 +438,7 @@
             rules:
             - alert: NodeExporterDown
               expr: up{job="nodes"} == 0
-              for: 1m
+              for: 5m
               labels:
                 severity: critical
                 frequency: 2m
@@ -448,7 +448,7 @@
 
             - alert: HypervisorHighCpuLoad
               expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600
-              for: 5m
+              for: 10m
               labels:
                 severity: warning
               annotations:
@@ -457,7 +457,7 @@
 
             - alert: HypervisorCritCpuLoad
               expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600
-              for: 5m
+              for: 10m
               labels:
                 severity: critical
               annotations:
@@ -466,7 +466,7 @@
 
             - alert: HypervisorHighIoWait
               expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 20 and on(instance) time() - node_boot_time_seconds > 3600
-              for: 5m
+              for: 10m
               labels:
                 severity: warning
               annotations:
@@ -475,7 +475,7 @@
 
             - alert: HypervisorCritIoWait
               expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 40 and on(instance) time() - node_boot_time_seconds > 3600
-              for: 5m
+              for: 10m
               labels:
                 severity: critical
               annotations:
@@ -520,7 +520,7 @@
 
             - alert: HypervisorCritArcMetaUsed
               expr: node_zfs_arc_arc_meta_used{role="hypervisor"} / node_zfs_arc_size * 100 > 90 and on(instance) (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 20
-              for: 5m
+              for: 10m
               labels:
                 severity: critical
               annotations:
@@ -538,7 +538,7 @@
 
             - alert: NodeCritLoad
               expr: node_load5{job="nodes"} > 1000
-              for: 2m
+              for: 5m
               labels:
                 severity: critical
                 frequency: hourly
@@ -550,7 +550,7 @@
             rules:
             - alert: InfraExporterDown
               expr: up{job=~"infra|pxe"} == 0
-              for: 3m
+              for: 10m
               labels:
                 severity: critical
               annotations:
@@ -559,7 +559,7 @@
 
             - alert: InfraHighCpuLoad
               expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",job=~"infra|pxe"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600
-              for: 5m
+              for: 10m
               labels:
                 severity: warning
               annotations:
@@ -568,7 +568,7 @@
 
             - alert: InfraHighIoWait
               expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",job=~"infra|pxe"}[5m])) * 100) > 30 and on(instance) time() - node_boot_time_seconds > 3600
-              for: 5m
+              for: 10m
               labels:
                 severity: warning
               annotations:
@@ -577,7 +577,7 @@
 
             - alert: InfraHighLoad
               expr: node_load5{job=~"infra|pxe"} > 300 and on(instance) time() - node_boot_time_seconds > 3600
-              for: 5m
+              for: 10m
               labels:
                 severity: warning
               annotations:
