@@ -127,7 +127,7 @@ in rec {
 
   nixosZfsSSH = nixosNetboot {
     modules = [ {
-        imports = [ ./env.nix ];
+        imports = [ ./environments/base.nix ];
         boot.supportedFilesystems = [ "zfs" ];
         # enable ssh
         systemd.services.sshd.wantedBy = lib.mkForce [ "multi-user.target" ];

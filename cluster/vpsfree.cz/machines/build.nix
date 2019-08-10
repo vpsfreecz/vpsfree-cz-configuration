@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 {
   imports = [
-    ../../../env.nix
+    ../../../environments/base.nix
     ../../../environments/deploy.nix
   ];
 

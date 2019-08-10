@@ -5,7 +5,7 @@ let
 in
 {
   imports = [
-    ../../../env.nix
+    ../../../environments/base.nix
   ];
 
   system.monitoring.enable = true;

@@ -1,7 +1,7 @@
 { pkgs, lib, config, ... }:
 {
   imports = [
-    ../../../../env.nix
+    ../../../../environments/base.nix
   ];
 
   nixpkgs.overlays = import ../../../../overlays;

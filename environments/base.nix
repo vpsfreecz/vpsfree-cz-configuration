@@ -20,7 +20,7 @@
 
   users.users.root.openssh.authorizedKeys.keys =
     let
-      sshKeys = import ./ssh-keys.nix;
+      sshKeys = import ../ssh-keys.nix;
     in [
       sshKeys."build.vpsfree.cz"
       sshKeys.aither

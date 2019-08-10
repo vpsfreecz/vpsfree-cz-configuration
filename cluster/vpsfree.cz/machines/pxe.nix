@@ -4,7 +4,7 @@ let
 in
 {
   imports = [
-    ../../../env.nix
+    ../../../environments/base.nix
   ];
 
   boot.loader.grub.enable = true;
