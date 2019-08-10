@@ -1,14 +1,11 @@
 { config, lib, pkgs, data, ...}:
 {
-  users.users.root.openssh.authorizedKeys.keys =
-    let
-      sshKeys = import ../../../ssh-keys.nix;
-    in [
-      sshKeys."build.vpsfree.cz"
-      sshKeys.aither
-      sshKeys.srk
-      sshKeys.snajpa
-    ];
+  users.users.root.openssh.authorizedKeys.keys = with data; [
+    sshKeys."build.vpsfree.cz"
+    sshKeys.aither
+    sshKeys.srk
+    sshKeys.snajpa
+  ];
   users.users.root.initialHashedPassword = "$6$bdENLP5gkTO$iVMOmBo4EmmP2YawSOHEvMlq1WDn9RvMCG3ChYfpBoYKejAIz/g78EP2gfE8zM2SdS8p3O8E2LbzQMXwOupdj/";
 
   boot.kernelModules = [

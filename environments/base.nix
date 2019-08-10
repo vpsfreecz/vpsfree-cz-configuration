@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, data, ... }:
 {
   time.timeZone = "Europe/Amsterdam";
   networking = {
@@ -18,13 +18,10 @@
 
   security.sudo.enable = true;
 
-  users.users.root.openssh.authorizedKeys.keys =
-    let
-      sshKeys = import ../ssh-keys.nix;
-    in [
-      sshKeys."build.vpsfree.cz"
-      sshKeys.aither
-      sshKeys.srk
-      sshKeys.snajpa
-    ];
+  users.users.root.openssh.authorizedKeys.keys = with data; [
+    sshKeys."build.vpsfree.cz"
+    sshKeys.aither
+    sshKeys.srk
+    sshKeys.snajpa
+  ];
 }

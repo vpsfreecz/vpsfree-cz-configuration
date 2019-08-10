@@ -87,6 +87,7 @@ let
       system = "x86_64-linux";
       modules = [
         ("${swpins.nixpkgs}/nixos/modules/installer/netboot/netboot-minimal.nix")
+        ./data
       ] ++ modules;
     }).config.system.build;
 

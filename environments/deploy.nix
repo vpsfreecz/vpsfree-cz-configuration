@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, data, ... }:
 
 let
   customVim =
@@ -56,7 +56,7 @@ in
   };
 
   users.extraUsers.srk.openssh.authorizedKeys.keys =
-    with import ../ssh-keys.nix; [ srk_new ];
+    with data.sshKeys; [ srk_new ];
 
   users.extraUsers.aither = {
     isNormalUser = true;
@@ -65,5 +65,5 @@ in
   };
 
   users.extraUsers.aither.openssh.authorizedKeys.keys =
-    with import ../ssh-keys.nix; [ aither ];
+    with data.sshKeys; [ aither ];
 }

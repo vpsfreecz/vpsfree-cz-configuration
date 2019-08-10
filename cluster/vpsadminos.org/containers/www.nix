@@ -1,7 +1,6 @@
 { config, pkgs, lib, data, ... }:
 let
   images = import ../../../images.nix { inherit config data lib pkgs; };
-  sshKeys = import ../../../ssh-keys.nix;
 in
 {
   imports = [
