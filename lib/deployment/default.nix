@@ -55,7 +55,7 @@ in rec {
           };
 
           imports = makeImports "nixos" [
-            (../../cluster + "/${domain}/machines/${lib.optionalString (location != null) location}/${name}.nix")
+            (../../cluster + "/${domain}/machines/${lib.optionalString (location != null) location}/${name}/config.nix")
           ];
         };
     };
@@ -119,7 +119,7 @@ in rec {
         { config, pkgs, ... }:
         {
           imports = [
-            (../../cluster + "/${domain}/machines/${lib.optionalString (location != null) location}/${name}.nix")
+            (../../cluster + "/${domain}/machines/${lib.optionalString (location != null) location}/${name}/config.nix")
           ];
         };
     };
@@ -152,7 +152,7 @@ in rec {
           };
 
           imports = makeImports "nixos" [
-            (../../cluster + "/${domain}/containers/${lib.optionalString (location != null) location}/${name}.nix")
+            (../../cluster + "/${domain}/containers/${lib.optionalString (location != null) location}/${name}/config.nix")
             ../../profiles/ct.nix
           ];
         };

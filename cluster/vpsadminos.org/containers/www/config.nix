@@ -1,10 +1,10 @@
 { config, pkgs, lib, data, ... }:
 let
-  images = import ../../../images.nix { inherit config data lib pkgs; };
+  images = import ../../../../images.nix { inherit config data lib pkgs; };
 in
 {
   imports = [
-    ../../../environments/base.nix
+    ../../../../environments/base.nix
   ];
 
   system.monitoring.enable = true;

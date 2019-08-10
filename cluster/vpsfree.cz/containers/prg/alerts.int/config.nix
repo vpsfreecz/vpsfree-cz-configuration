@@ -1,10 +1,10 @@
 { pkgs, lib, config, ... }:
 {
   imports = [
-    ../../../../environments/base.nix
+    ../../../../../environments/base.nix
   ];
 
-  nixpkgs.overlays = import ../../../../overlays;
+  nixpkgs.overlays = import ../../../../../overlays;
 
   networking = {
     firewall.extraCommands = ''

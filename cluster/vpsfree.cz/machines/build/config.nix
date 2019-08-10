@@ -1,8 +1,8 @@
 { config, pkgs, lib, ... }:
 {
   imports = [
-    ../../../environments/base.nix
-    ../../../environments/deploy.nix
+    ../../../../environments/base.nix
+    ../../../../environments/deploy.nix
   ];
 
   system.monitoring.enable = true;

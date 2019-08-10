@@ -1,4 +1,10 @@
 [
+  ./containers/log/module.nix
+  ./containers/prg/alerts.int/module.nix
+  ./containers/prg/mon.int/module.nix
+  ./containers/prg/proxy/module.nix
+  ./machines/build/module.nix
+  ./machines/pxe/module.nix
   ./nodes/brq/openvz.nix
   ./nodes/pgnd/openvz.nix
   ./nodes/prg/backuper/module.nix
