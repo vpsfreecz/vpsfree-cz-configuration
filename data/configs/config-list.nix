@@ -1,3 +1,0 @@
-[
-  ./nodes/vpsadminos.nix
-]

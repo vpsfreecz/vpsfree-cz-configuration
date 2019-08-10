@@ -1,10 +1,10 @@
 { config, pkgs, lib, data, ... }:
 let
-  images = import ../../images.nix { inherit config lib pkgs data; };
+  images = import ../../../images.nix { inherit config lib pkgs data; };
 in
 {
   imports = [
-    ../../env.nix
+    ../../../env.nix
   ];
 
   boot.loader.grub.enable = true;

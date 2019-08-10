@@ -1,10 +1,8 @@
 { config, lib, pkgs, data, ...}:
 {
-
-  imports = (import ../modules/module-list.nix);
   users.users.root.openssh.authorizedKeys.keys =
     let
-      sshKeys = import ../../ssh-keys.nix;
+      sshKeys = import ../../../ssh-keys.nix;
     in [
       sshKeys."build.vpsfree.cz"
       sshKeys.aither
@@ -54,7 +52,7 @@
   # to be able to include ipmicfg
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.overlays = import ../../overlays;
+  nixpkgs.overlays = import ../../../overlays;
 
   networking = {
     domain = "vpsfree.cz";

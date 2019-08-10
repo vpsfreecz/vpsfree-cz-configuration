@@ -1,5 +1,6 @@
 let
   shared = [
+    ./cluster
     ./programs/havesnippet.nix
     ./system/monitoring.nix
   ];
@@ -10,7 +11,9 @@ let
     ./services/vpsadminos-web.nix
   ];
 
-  vpsadminos = [];
+  vpsadminos = [
+    ./cluster/node.nix
+  ];
 in {
   nixos = shared ++ nixos;
   vpsadminos = shared ++ vpsadminos;

@@ -3,7 +3,7 @@
 {
 
   imports = [
-    ../../env.nix
+    ../../../env.nix
   ];
 
   system.monitoring.enable = true;

@@ -133,11 +133,4 @@ let
       };
     };
   };
-in {
-  options = {
-    nodes.vpsadminos = mkOption {
-      #      domain         location       name           config
-      type = types.attrsOf (types.attrsOf (types.attrsOf (types.submodule node)));
-    };
-  };
-}
+in node

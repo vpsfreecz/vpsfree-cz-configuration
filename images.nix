@@ -5,10 +5,12 @@ let
 
   deployments = import ./deployments.nix;
 
+  confLib = import ./lib { inherit lib; };
+
   netbootable = filterAttrs (k: v:
     let
-      node = data.lib.findConfig {
-        inherit config;
+      node = confLib.findConfig {
+        inherit (config) cluster;
         inherit (v) type spin domain location name;
       };
     in v.type =="node" && node.networking.netboot.enable

@@ -1,6 +1,6 @@
 { config, lib, data, deploymentInfo, ... }:
 with lib;
-with (import ../lib.nix { inherit lib; });
+with (import ../../lib { inherit lib; });
 let
   cfg = deploymentInfo.config;
 
