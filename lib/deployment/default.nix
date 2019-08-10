@@ -23,8 +23,8 @@ let
     ++ (import ../../cluster/module-list.nix)
     ++ extraImports;
 in rec {
-  custom = { type, spin, name, location ? null, domain, fqdn ? null, config }: {
-    inherit type spin name location domain config;
+  custom = { type, spin, name, location ? null, domain, fqdn ? null, role ? null, config }: {
+    inherit type spin name location domain role config;
     fqdn = makeFqdn { inherit name location domain fqdn; };
   };
 
@@ -60,13 +60,13 @@ in rec {
         };
     };
 
-  osCustom = { type, name, location ? null, domain, fqdn ? null, config }:
+  osCustom = { type, name, location ? null, domain, fqdn ? null, role ? null, config }:
     let
       myFqdn = makeFqdn { inherit name location domain fqdn; };
       swpins = swpinsFor myFqdn;
       configFn = config;
     in custom {
-      inherit type name location domain;
+      inherit type name location domain role;
       spin = "vpsadminos";
       fqdn = myFqdn;
       config =
@@ -94,10 +94,10 @@ in rec {
         };
     };
 
-  osNode = { name, location, domain, fqdn ? null }:
+  osNode = { name, location, domain, fqdn ? null, role }:
     osCustom {
       type = "node";
-      inherit name location domain fqdn;
+      inherit name location domain fqdn role;
       config =
         { config, pkgs, swpins, ... }:
         {

@@ -5,6 +5,6 @@ in {
   deploymentsList = builtins.attrNames deployments;
 
   deploymentsInfo = builtins.mapAttrs (k: v: {
-    inherit (v) type spin name location domain fqdn;
+    inherit (v) type spin name location domain fqdn role;
   }) deployments;
 }

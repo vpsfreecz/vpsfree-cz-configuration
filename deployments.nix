@@ -24,6 +24,7 @@ in mkDeployments [
     name = "backuper";
     location = "prg";
     inherit domain;
+    role = "storage";
   })
 
   ## Staging
@@ -32,6 +33,7 @@ in mkDeployments [
     name = "node1";
     location = "stg";
     inherit domain;
+    role = "hypervisor";
   })
 
   # node2.stg
@@ -39,6 +41,7 @@ in mkDeployments [
     name = "node2";
     location = "stg";
     inherit domain;
+    role = "hypervisor";
   })
 
   ### Support machines

@@ -26,16 +26,16 @@ module ConfCtl::Cli
       hosts = JSON.parse(json)
 
       puts sprintf(
-        '%-30s %-12s %-12s %-15s %-10s %s',
-        'HOST', 'TYPE', 'SPIN', 'NAME', 'LOCATION', 'DOMAIN'
+        '%-30s %-12s %-12s %-12s %-15s %-10s %s',
+        'HOST', 'TYPE', 'SPIN', 'ROLE', 'NAME', 'LOCATION', 'DOMAIN'
       )
 
       hosts.each do |host, info|
         next if args[0] && !ConfCtl::Pattern.match?(args[0], host)
 
         puts sprintf(
-          '%-30s %-12s %-12s %-15s %-10s %s',
-          host, info['type'], info['spin'], info['name'], info['location'], info['domain']
+          '%-30s %-12s %-12s %-12s %-15s %-10s %s',
+          host, info['type'], info['spin'], info['role'], info['name'], info['location'], info['domain']
         )
       end
     end
