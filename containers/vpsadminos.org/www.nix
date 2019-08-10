@@ -6,19 +6,20 @@ in
 {
   imports = [
     ../../env.nix
-    ../../modules/monitored.nix
-    ../../modules/netboot.nix
-    ../../modules/web.nix
   ];
 
-  netboot = {
+  system.monitoring.enable = true;
+
+  services.netboot = {
+    enable = true;
     host = "boot.vpsadminos.org";
     acmeSSL = true;
     vpsadminosItems = {};
     inherit (images) nixosItems;
   };
 
-  web = {
+  services.vpsadminos-web = {
+    enable = true;
     acmeSSL = true;
     domain = "vpsadminos.org";
     isoImages = [ images.vpsadminosISO ];

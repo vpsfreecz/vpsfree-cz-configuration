@@ -1,9 +1,7 @@
 { config, lib, pkgs, data, ...}:
 {
 
-  imports = [
-    ../../modules/havesnippet.nix
-  ] ++ (import ../modules/module-list.nix);
+  imports = (import ../modules/module-list.nix);
   users.users.root.openssh.authorizedKeys.keys =
     let
       sshKeys = import ../../ssh-keys.nix;

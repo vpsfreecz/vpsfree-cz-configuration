@@ -11,11 +11,6 @@ let
     };
 in
 {
-
-  imports = [
-    ./havesnippet.nix
-  ];
-
   nixpkgs.overlays = import ../overlays;
   nix = {
     maxJobs = 8;

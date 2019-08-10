@@ -1,11 +1,11 @@
 { config, pkgs, lib, ... }:
 {
   imports = [
-    ../../modules/deploy.nix
-    ../../modules/monitored.nix
     ../../env.nix
-    ../../configs/image-repository.nix
+    ../../environments/deploy.nix
   ];
+
+  system.monitoring.enable = true;
 
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;

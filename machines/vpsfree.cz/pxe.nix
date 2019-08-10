@@ -5,8 +5,6 @@ in
 {
   imports = [
     ../../env.nix
-    ../../modules/netboot.nix
-    ../../modules/monitored.nix
   ];
 
   boot.loader.grub.enable = true;
@@ -37,6 +35,8 @@ in
     "net.ifnames=0"
   ];
 
+  system.monitoring.enable = true;
+
   # 00:25:90:3d:0f:14
   networking = {
     hostName = "pxe";
@@ -51,7 +51,8 @@ in
     };
   };
 
-  netboot = {
+  services.netboot = {
+    enable = true;
     host = "172.16.254.5";
     inherit (images) nixosItems;
     vpsadminosItems = images.allNodes "vpsfree.cz";

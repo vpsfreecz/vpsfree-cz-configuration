@@ -134,5 +134,7 @@ in {
       "console=ttyS0,${toString cfg.baudRate}"
       "panic=-1"
     ];
+
+    system.monitoring.enable = true;
   };
 }

@@ -2,9 +2,6 @@
 {
   imports = [
     ../../../env.nix
-    ../../../profiles/ct.nix
-    ../../../modules/monitored.nix
-    ../../../modules/services/sachet.nix
   ];
 
   nixpkgs.overlays = import ../../../overlays;
@@ -18,6 +15,8 @@
       iptables -A nixos-fw -p tcp --dport 9093 -s 37.205.14.61 -j nixos-fw-accept
     '';
   };
+
+  system.monitoring.enable = true;
 
   services.prometheus.alertmanager = {
     enable = true;

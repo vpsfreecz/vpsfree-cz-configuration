@@ -3,10 +3,10 @@
 with lib;
 
 let
-  cfg = config.web;
+  cfg = config.services.vpsadminos-web;
   domain = cfg.domain;
 
-  swpins = import ../swpins { name = "www.vpsadminos.org"; inherit lib pkgs; };
+  swpins = import ../../swpins { name = "www.vpsadminos.org"; inherit lib pkgs; };
 
   docsOs = swpins.vpsadminos-runtime-deps;
 
@@ -92,7 +92,12 @@ let
 in
 {
   options = {
-    web = rec {
+    services.vpsadminos-web = rec {
+      enable = mkEnableOption ''
+        Enable vpsAdminOS websites, including documentation, reference
+        documentation, manual pages, ISO server and image repository.
+      '';
+
       domain = mkOption {
         type = types.str;
         description = "Domain of the webserver";
@@ -112,7 +117,7 @@ in
     };
   };
 
-  config = {
+  config = mkIf cfg.enable {
     networking.firewall.allowedTCPPorts = [ 80 ] ++ lib.optional cfg.acmeSSL 443;
 
     services.nginx = {

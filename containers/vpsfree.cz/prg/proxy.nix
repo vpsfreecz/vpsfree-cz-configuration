@@ -2,9 +2,9 @@
 {
   imports = [
     ../../../env.nix
-    ../../../profiles/ct.nix
-    ../../../modules/monitored.nix
   ];
+
+  system.monitoring.enable = true;
 
   networking = {
     firewall.allowedTCPPorts = [

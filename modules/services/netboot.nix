@@ -3,7 +3,7 @@
 with lib;
 
 let
-  cfg = config.netboot;
+  cfg = config.services.netboot;
   server = cfg.host;
   secretsDir = cfg.secretsDir;
   # these are needed for iPXE build
@@ -197,7 +197,9 @@ let
 in
 {
   options = {
-    netboot = rec {
+    services.netboot = rec {
+      enable = mkEnableOption "Enable netboot server";
+
       host = mkOption {
         type = types.str;
         description = "Hostname or IP address of the netboot server";
@@ -260,7 +262,7 @@ in
     };
   };
 
-  config = {
+  config = mkIf cfg.enable {
     networking.firewall.allowedUDPPorts = [ 68 69 ];
     networking.firewall.allowedTCPPorts = [ 80 ] ++ lib.optional cfg.acmeSSL 443;
 

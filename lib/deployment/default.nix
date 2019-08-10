@@ -17,9 +17,9 @@ let
       deploymentInfo = import ./info.nix (args // { inherit lib; });
     };
 
-  makeImports = extraImports: [
+  makeImports = spin: extraImports: [
     ../../data
-  ] ++ extraImports;
+  ] ++ (import ../../modules/module-list.nix).${spin} ++ extraImports;
 in rec {
   custom = { type, spin, name, location ? null, domain, fqdn ? null, config }: {
     inherit type spin name location domain config;
@@ -52,7 +52,7 @@ in rec {
             ];
           };
 
-          imports = makeImports [
+          imports = makeImports "nixos" [
             (../../machines + "/${domain}/${lib.optionalString (location != null) location}/${name}.nix")
           ];
         };
@@ -86,7 +86,7 @@ in rec {
             importPath = "${swpins.vpsadminos}/os/default.nix";
           };
 
-          imports = makeImports [
+          imports = makeImports "vpsadminos" [
             (configFn (args // moduleArgs))
           ];
         };
@@ -149,7 +149,7 @@ in rec {
             ];
           };
 
-          imports = makeImports [
+          imports = makeImports "nixos" [
             (../../containers + "/${domain}/${lib.optionalString (location != null) location}/${name}.nix")
             ../../profiles/ct.nix
           ];
