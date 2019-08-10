@@ -50,6 +50,10 @@ let
         osNode = mkOption {
           type = types.nullOr (types.submodule osNode);
         };
+
+        vzNode = mkOption {
+          type = types.nullOr (types.submodule vzNode);
+        };
       };
     };
 
@@ -76,6 +80,8 @@ let
     };
 
   osNode = (import ./nodes/vpsadminos.nix) args;
+
+  vzNode = (import ./nodes/openvz.nix) args;
 in {
   options = {
     cluster = mkOption {
