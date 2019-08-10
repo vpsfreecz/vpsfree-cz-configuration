@@ -1,6 +1,10 @@
 { config, ... }:
-{
-  cluster."vpsfree.cz".prg.backuper = {
+let
+  addr = "172.16.0.5";
+in {
+  cluster."vpsfree.cz".prg.backuper = rec {
+    addresses.main = addr;
+
     osNode = {
       nodeId = 160;
 
@@ -48,6 +52,11 @@
 
         virtIP = null;
       };
+    };
+
+    services = {
+      node-exporter = {};
+      osctl-exporter = {};
     };
   };
 }

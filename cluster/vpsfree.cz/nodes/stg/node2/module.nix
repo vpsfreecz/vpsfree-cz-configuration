@@ -1,6 +1,10 @@
 { config, ... }:
-{
-  cluster."vpsfree.cz".stg.node2 = {
+let
+  addr = "172.16.0.66";
+in {
+  cluster."vpsfree.cz".stg.node2 = rec {
+    addresses.main = addr;
+
     osNode = {
       nodeId = 401;
 
@@ -39,8 +43,13 @@
           };
         };
 
-        virtIP = "172.16.0.66/32";
+        virtIP = "${addr}/32";
       };
+    };
+
+    services = {
+      node-exporter = {};
+      osctl-exporter = {};
     };
   };
 }
