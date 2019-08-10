@@ -2,12 +2,8 @@
 {
 
   imports = [
-    ../modules/bird.nix
-    ../modules/networking.nix
-    ../modules/serial.nix
-    ../modules/vpsadmin.nix
     ../../modules/havesnippet.nix
-  ];
+  ] ++ (import ../modules/module-list.nix);
   users.users.root.openssh.authorizedKeys.keys =
     let
       sshKeys = import ../../ssh-keys.nix;

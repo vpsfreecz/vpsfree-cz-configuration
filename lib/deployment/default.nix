@@ -1,6 +1,6 @@
 { pkgs, lib }:
 let
-  swpinsFor = name: import ../swpins { inherit name pkgs lib; };
+  swpinsFor = name: import ../../swpins { inherit name pkgs lib; };
 
   makeFqdn = { name, location, domain, fqdn }:
     let
@@ -11,41 +11,35 @@ let
           "${name}.${location}.${domain}";
     in if fqdn == null then make else fqdn;
 
-  makeNetboot = netboot:
-    if netboot == null then
-      { enable = false; }
-    else
-      {
-        inherit (netboot) enable;
-        macs = netboot.macs or [];
-      };
+  makeModuleArgs =
+    { config, swpins, type, spin, name, location ? null, domain, fqdn }@args: {
+      inherit swpins;
+      deploymentInfo = import ./info.nix (args // { inherit lib; });
+    };
 
-  makeModuleArgs = { swpins, type, spin, name, location ? null, domain, fqdn }: {
-    inherit swpins;
-    deploymentInfo = { inherit type spin name location domain fqdn; };
-    data = import ../data { inherit lib; };
-  };
+  makeImports = extraImports: [
+    ../../data
+  ] ++ extraImports;
 in rec {
-  custom = { type, spin, name, location ? null, domain, fqdn ? null, config, netboot ? null }: {
+  custom = { type, spin, name, location ? null, domain, fqdn ? null, config }: {
     inherit type spin name location domain config;
     fqdn = makeFqdn { inherit name location domain fqdn; };
-    netboot = makeNetboot netboot;
   };
 
-  nixosMachine = { name, location ? null, domain, fqdn ? null, netboot ? null }:
+  nixosMachine = { name, location ? null, domain, fqdn ? null }:
     let
       myFqdn = makeFqdn { inherit name location domain fqdn; };
       swpins = swpinsFor myFqdn;
     in custom {
       type = "machine";
       spin = "nixos";
-      inherit name location domain netboot;
+      inherit name location domain;
       fqdn = myFqdn;
       config =
         { config, pkgs, ... }@args:
         {
           _module.args = makeModuleArgs {
-            inherit swpins;
+            inherit config swpins;
             type = "machine";
             spin = "nixos";
             inherit name location domain;
@@ -58,29 +52,30 @@ in rec {
             ];
           };
 
-          imports = [
-            (../machines + "/${domain}/${lib.optionalString (location != null) location}/${name}.nix")
+          imports = makeImports [
+            (../../machines + "/${domain}/${lib.optionalString (location != null) location}/${name}.nix")
           ];
         };
     };
 
-  osCustom = { type, name, location ? null, domain, fqdn ? null, config, netboot ? null }:
+  osCustom = { type, name, location ? null, domain, fqdn ? null, config }:
     let
       myFqdn = makeFqdn { inherit name location domain fqdn; };
       swpins = swpinsFor myFqdn;
       configFn = config;
-      moduleArgs = makeModuleArgs {
-        inherit swpins type name location domain;
-        spin = "vpsadminos";
-        fqdn = myFqdn;
-      };
     in custom {
-      inherit type name location domain netboot;
+      inherit type name location domain;
       spin = "vpsadminos";
       fqdn = myFqdn;
       config =
         { config, pkgs, ... }@args:
-        {
+        let
+          moduleArgs = makeModuleArgs {
+            inherit config swpins type name location domain;
+            spin = "vpsadminos";
+            fqdn = myFqdn;
+          };
+        in {
           _module.args = moduleArgs;
 
           deployment = {
@@ -91,21 +86,21 @@ in rec {
             importPath = "${swpins.vpsadminos}/os/default.nix";
           };
 
-          imports = [
+          imports = makeImports [
             (configFn (args // moduleArgs))
           ];
         };
     };
 
-  osNode = { name, location, domain, fqdn ? null, netboot ? null }:
+  osNode = { name, location, domain, fqdn ? null }:
     osCustom {
       type = "node";
-      inherit name location domain fqdn netboot;
+      inherit name location domain fqdn;
       config =
         { config, pkgs, swpins, ... }:
         {
           imports = [
-            (../nodes + "/${domain}/${location}/${name}.nix")
+            (../../nodes + "/${domain}/${location}/${name}.nix")
           ];
 
           nixpkgs.overlays = [
@@ -114,15 +109,15 @@ in rec {
         };
     };
 
-  osMachine = { name, location ? null, domain, fqdn ? null, netboot ? null }:
+  osMachine = { name, location ? null, domain, fqdn ? null }:
     osCustom {
       type = "machine";
-      inherit name location domain fqdn netboot;
+      inherit name location domain fqdn;
       config =
         { config, pkgs, ... }:
         {
           imports = [
-            (../machines + "/${domain}/${lib.optionalString (location != null) location}/${name}.nix")
+            (../../machines + "/${domain}/${lib.optionalString (location != null) location}/${name}.nix")
           ];
         };
     };
@@ -140,7 +135,7 @@ in rec {
         { config, pkgs, ... }:
         {
           _module.args = makeModuleArgs {
-            inherit swpins;
+            inherit config swpins;
             type = "container";
             spin = "nixos";
             inherit name location domain;
@@ -154,9 +149,9 @@ in rec {
             ];
           };
 
-          imports = [
-            (../containers + "/${domain}/${lib.optionalString (location != null) location}/${name}.nix")
-            ../profiles/ct.nix
+          imports = makeImports [
+            (../../containers + "/${domain}/${lib.optionalString (location != null) location}/${name}.nix")
+            ../../profiles/ct.nix
           ];
         };
     };

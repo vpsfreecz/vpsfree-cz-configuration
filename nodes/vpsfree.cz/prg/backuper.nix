@@ -13,31 +13,6 @@ in
   vpsadmin.netInterfaces = [ "oneg0" "oneg1" ];
   vpsadmin.consoleHost = "172.16.0.5";
 
-  node = {
-    nodeId = 160;
-    net = {
-      hostName = "backuper.prg";
-      as = 4200001046;
-      mac = {
-        oneg0 = "00:25:90:2f:a3:ac";
-        oneg1 = "00:25:90:2f:a3:ad";
-        oneg2 = "00:25:90:2f:a3:ae";
-        oneg3 = "00:25:90:2f:a3:af";
-        teng0 = "00:25:90:0e:5b:1a";
-        teng1 = "00:25:90:0e:5b:1b";
-      };
-      interfaces = {
-        teng0 = { v4 = "172.16.251.182/30";   v6 = "2a03:3b40:42:2:46::2/80"; };
-        teng1 = { v4 = "172.16.250.182/30";   v6 = "2a03:3b40:42:3:46::2/80"; };
-      };
-      routerId = "172.16.251.182";
-      bgp1neighbor = { v4 = "172.16.251.181"; v6 = "2a03:3b40:42:2:46::1"; };
-      bgp2neighbor = { v4 = "172.16.250.181"; v6 = "2a03:3b40:42:3:46::1"; };
-
-      virtIP = null;
-    };
-  };
-
   boot.kernelModules = [ "bonding" "8021q" ];
   boot.extraModprobeConfig = "options bonding mode=balance-xor miimon=100 xmit_hash_policy=layer3+4 max_bonds=0";
 

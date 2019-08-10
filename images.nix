@@ -1,11 +1,18 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, data, ... }:
 with lib;
 let
   swpins = import ./swpins { name = "images"; inherit pkgs lib; };
 
   deployments = import ./deployments.nix;
 
-  netbootable = filterAttrs (k: v: v.netboot.enable) deployments;
+  netbootable = filterAttrs (k: v:
+    let
+      node = data.lib.findConfig {
+        inherit config;
+        inherit (v) type spin domain location name;
+      };
+    in v.type =="node" && node.networking.netboot.enable
+  ) deployments;
 
   filterDeployments = filter: filterAttrs (k: v: filter v) netbootable;
 
@@ -131,12 +138,12 @@ in rec {
     nixoszfsssh = inMenu "NixOS ZFS SSH" nixosZfsSSH;
   };
 
-  nodesInLocation = {
-    prg = selectNodes (node: node.location == "prg");
-    brq = selectNodes (node: node.location == "brq");
-    pgnd = selectNodes (node: node.location == "pgnd");
-    stg = selectNodes (node: node.location == "stg");
+  nodesInLocation = domain: {
+    prg = selectNodes (node: node.domain == domain && node.location == "prg");
+    brq = selectNodes (node: node.domain == domain && node.location == "brq");
+    pgnd = selectNodes (node: node.domain == domain && node.location == "pgnd");
+    stg = selectNodes (node: node.domain == domain && node.location == "stg");
   };
 
-  allNodes = selectNodes (node: true);
+  allNodes = domain: selectNodes (node: node.domain == domain);
 }

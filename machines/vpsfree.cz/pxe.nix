@@ -1,6 +1,6 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, data, ... }:
 let
-  images = import ../../images.nix { inherit lib pkgs; };
+  images = import ../../images.nix { inherit config lib pkgs data; };
 in
 {
   imports = [
@@ -54,7 +54,7 @@ in
   netboot = {
     host = "172.16.254.5";
     inherit (images) nixosItems;
-    vpsadminosItems = images.allNodes;
+    vpsadminosItems = images.allNodes "vpsfree.cz";
     includeNetbootxyz = true;
     allowedIPRanges = [
       "172.16.254.0/24"
