@@ -1,11 +1,10 @@
 { config, lib, ... }@args:
 with lib;
 let
-  domain = {
+  deployment = {
     options = {
-      nodes.vpsadminos = mkOption {
-        #      location       name           config
-        type = types.attrsOf (types.attrsOf (types.submodule osNode));
+      osNode = mkOption {
+        type = types.nullOr (types.submodule osNode);
       };
     };
   };
@@ -14,7 +13,8 @@ let
 in {
   options = {
     cluster = mkOption {
-      type = types.attrsOf (types.submodule domain);
+      #      domain         location       name           deployment
+      type = types.attrsOf (types.attrsOf (types.attrsOf (types.submodule deployment)));
       default = {};
     };
   };

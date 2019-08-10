@@ -9,10 +9,11 @@ let
 
   netbootable = filterAttrs (k: v:
     let
-      node = confLib.findConfig {
+      cfg = confLib.findConfig {
         inherit (config) cluster;
-        inherit (v) type spin domain location name;
+        inherit (v) domain location name;
       };
+      node = cfg.osNode;
     in v.type =="node" && node.networking.netboot.enable
   ) deployments;
 

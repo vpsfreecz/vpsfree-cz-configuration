@@ -10,24 +10,8 @@ rec {
   ) rs);
 
   findConfig =
-    { cluster, type, spin, domain, location, name }:
-    {
-      node = findNode {
-        nodes = cluster.${domain}.nodes;
-        inherit spin location name;
-      };
-    }.${type};
-
-  findNode =
-    { nodes, spin, location, name}:
-    {
-      vpsadminos = findOsNode {
-        locations = nodes.vpsadminos;
-        inherit location name;
-      };
-    }.${spin};
-
-  findOsNode =
-    { locations, location, name }:
-    locations.${location}.${name};
+    { cluster, domain, location, name }:
+    let
+      realLocation = if isNull location then "global" else location;
+    in cluster.${domain}.${realLocation}.${name};
 }

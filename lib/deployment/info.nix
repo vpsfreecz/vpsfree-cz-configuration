@@ -5,6 +5,6 @@ in {
   inherit type spin name location domain fqdn;
   config = confLib.findConfig {
     inherit (config) cluster;
-    inherit type spin name location domain;
+    inherit name location domain;
   };
 }

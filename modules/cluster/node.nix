@@ -2,7 +2,7 @@
 with lib;
 with (import ../../lib { inherit lib; });
 let
-  cfg = deploymentInfo.config;
+  cfg = deploymentInfo.config.osNode;
 
   mapEachIp = fn: addresses:
     flatten (mapAttrsToList (ifname: ips:
