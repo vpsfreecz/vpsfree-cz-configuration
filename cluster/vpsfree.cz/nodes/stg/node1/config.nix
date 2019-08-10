@@ -1,15 +1,17 @@
-{ config, lib, ...}:
+{ config, lib, ... }:
 {
   imports = [
-    ./common.nix
+    ../common.nix
   ];
 
   boot.zfs.pools = {
     tank = {
       install = true;
-      wipe = [ "sda" "sdb" "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ];
+      wipe = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" "sdh" ];
       layout = [
-        { type = "raidz"; devices = [ "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ]; }
+        { type = "mirror"; devices = [ "sdc" "sdd" ]; }
+        { type = "mirror"; devices = [ "sde" "sdf" ]; }
+        { type = "mirror"; devices = [ "sdg" "sdh" ]; }
       ];
       log = [
         { mirror = true; devices = [ "sda1" "sdb1" ]; }

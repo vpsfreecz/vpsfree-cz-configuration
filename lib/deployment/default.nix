@@ -20,7 +20,7 @@ let
   makeImports = spin: extraImports: [
     ../../data
   ] ++ (import ../../modules/module-list.nix).${spin}
-    ++ (import ../../cluster/config-list.nix)
+    ++ (import ../../cluster/module-list.nix)
     ++ extraImports;
 in rec {
   custom = { type, spin, name, location ? null, domain, fqdn ? null, config }: {
@@ -102,7 +102,7 @@ in rec {
         { config, pkgs, swpins, ... }:
         {
           imports = [
-            (../../cluster + "/${domain}/nodes/${location}/${name}.nix")
+            (../../cluster + "/${domain}/nodes/${location}/${name}/config.nix")
           ];
 
           nixpkgs.overlays = [
