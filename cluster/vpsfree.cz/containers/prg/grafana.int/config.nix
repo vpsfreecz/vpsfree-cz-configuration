@@ -13,8 +13,6 @@ in {
     ../../../../../environments/base.nix
   ];
 
-  system.monitoring.enable = true;
-
   networking = {
     firewall.extraCommands = ''
       # Allow access to grafana from proxy.prg

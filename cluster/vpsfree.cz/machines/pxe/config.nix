@@ -35,8 +35,6 @@ in
     "net.ifnames=0"
   ];
 
-  system.monitoring.enable = true;
-
   # 00:25:90:3d:0f:14
   networking = {
     hostName = "pxe";

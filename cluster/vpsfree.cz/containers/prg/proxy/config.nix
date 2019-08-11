@@ -25,8 +25,6 @@ in {
     ../../../../../environments/base.nix
   ];
 
-  system.monitoring.enable = true;
-
   networking = {
     firewall.allowedTCPPorts = [
       80 443 # nginx

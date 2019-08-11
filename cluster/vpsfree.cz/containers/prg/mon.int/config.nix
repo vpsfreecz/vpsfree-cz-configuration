@@ -1,4 +1,5 @@
 { pkgs, lib, confLib, config, deploymentInfo, ... }:
+with lib;
 let
   alertsPrg = confLib.findConfig {
     cluster = config.cluster;
@@ -22,12 +23,118 @@ let
   };
 
   promPort = deploymentInfo.config.services.prometheus.port;
+  exporterPort = deploymentInfo.config.services.node-exporter.port;
+
+  allDeployments = confLib.getClusterDeployments config.cluster;
+
+  getAlias = d: "${d.name}${optionalString (!isNull d.location) ".${d.location}"}";
+  ensureLocation = location: if location == null then "global" else location;
+
+  scrapeConfigs = {
+    monitorings =
+      let
+        deps = filter (d:
+          d.config.monitoring.enable && d.config.monitoring.isMonitor && d.fqdn != deploymentInfo.fqdn
+        ) allDeployments;
+      in {
+        exporterConfigs = [
+          {
+            targets = [
+              "localhost:${toString promPort}"
+              "localhost:${toString exporterPort}"
+            ];
+            labels = {
+              alias = getAlias deploymentInfo;
+              fqdn = deploymentInfo.fqdn;
+            } // deploymentInfo.config.monitoring.labels;
+          }
+        ] ++ (flatten (map (d: {
+          targets = [
+            "${d.fqdn}:${toString d.services.prometheus.port}"
+            "${d.fqdn}:${toString d.services.node-exporter.port}"
+          ];
+          labels = {
+            alias = getAlias d;
+            fqdn = d.fqdn;
+          } // d.config.monitoring.labels;
+        }) deps));
+
+        pingConfigs = map (d: {
+          targets = [ d.fqdn ];
+          labels = {
+            domain = d.domain;
+            location = realLocation d.location;
+            os = d.spin;
+          };
+        }) deps;
+      };
+
+    infra =
+      let
+        deps = filter (d:
+          d.config.monitoring.enable && !d.config.monitoring.isMonitor && (d.type == "machine" || d.type == "container")
+        ) allDeployments;
+      in {
+        exporterConfigs = map (d: {
+          targets = [
+            "${d.fqdn}:${toString d.config.services.node-exporter.port}"
+          ] ++ (optional (hasAttr "osctl-exporter" d.config.services) "${d.fqdn}:${toString d.config.services.osctl-exporter.port}");
+          labels = {
+            alias = getAlias d;
+            fqdn = d.fqdn;
+            domain = d.domain;
+            location = ensureLocation d.location;
+            type = d.type;
+            os = d.spin;
+          } // d.config.monitoring.labels;
+        }) deps;
+
+        pingConfigs = map (d: {
+          targets = [ d.fqdn ];
+          labels = {
+            domain = d.domain;
+            location = ensureLocation d.location;
+            os = d.spin;
+          };
+        }) deps;
+      };
+
+    nodes =
+      let
+        deps = filter (d:
+          d.config.monitoring.enable && d.type == "node"
+        ) allDeployments;
+      in {
+        exporterConfigs = map (d: {
+          targets = [
+            "${d.fqdn}:${toString d.config.services.node-exporter.port}"
+          ] ++ (optional (hasAttr "osctl-exporter" d.config.services) "${d.fqdn}:${toString d.config.services.osctl-exporter.port}");
+          labels = {
+            alias = getAlias d;
+            fqdn = d.fqdn;
+            domain = d.domain;
+            location = ensureLocation d.location;
+            type = d.type;
+            os = d.spin;
+            role = d.role;
+          } // d.config.monitoring.labels;
+        }) deps;
+
+        pingConfigs = map (d: {
+          targets = [ d.fqdn ];
+          labels = {
+            domain = d.domain;
+            location = ensureLocation d.location;
+            role = d.role;
+            os = d.spin;
+          };
+        }) deps;
+      };
+  };
 in {
   imports = [
     ../../../../../environments/base.nix
   ];
-
-  system.monitoring.enable = true;
 
   networking = {
     firewall.extraCommands = ''
@@ -52,445 +159,17 @@ in {
         {
           job_name = "mon";
           scrape_interval = "60s";
-          static_configs = [
-            {
-              targets = [
-                "localhost:9090"
-              ];
-              labels = {
-                alias = "mon.int.prg.vpsfree.cz";
-              };
-            }
-            {
-              targets = [
-                "localhost:9100"
-              ];
-              labels = {
-                alias = "mon.int.prg.vpsfree.cz";
-              };
-            }
-          ];
+          static_configs = scrapeConfigs.monitorings.exporterConfigs;
         }
+      ] ++ (optional (scrapeConfigs.monitorings.pingConfigs != [])
         {
-          job_name = "pxe";
-          scrape_interval = "60s";
-          static_configs = [
-            {
-              targets = [
-                "pxe.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "pxe.vpsfree.cz";
-              };
-            }
-          ];
-        }
-        {
-          job_name = "nodes";
-          scrape_interval = "30s";
-          static_configs = [
-            # prg
-            {
-              targets = [
-                "node2.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node2.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node3.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node3.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node4.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node4.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node5.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node5.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node6.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node6.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node7.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node7.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node8.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node8.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node9.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node9.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node10.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node10.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node11.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node11.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node12.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node12.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node13.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node13.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node14.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node14.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node15.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node15.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node17.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node17.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node18.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node18.prg";
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "backuper.prg.vpsfree.cz:9100"
-                "backuper.prg.vpsfree.cz:9101"
-              ];
-              labels = {
-                alias = "backuper.prg";
-                location = "prg";
-                role = "storage";
-                os = "vpsadminos";
-              };
-            }
-            {
-              targets = [
-                "nasbox.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "nasbox.prg";
-                location = "prg";
-                role = "storage";
-                os = "openvz";
-              };
-            }
-            # brq
-            {
-              targets = [
-                "node1.brq.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node1.brq";
-                location = "brq";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node2.brq.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node2.brq";
-                location = "brq";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node3.brq.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node3.brq";
-                location = "brq";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node4.brq.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node4.brq";
-                location = "brq";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            # pgnd
-            {
-              targets = [
-                "node1.pgnd.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "node1.pgnd";
-                location = "pgnd";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            # staging
-            {
-              targets = [
-                "node1.stg.vpsfree.cz:9100"
-                "node1.stg.vpsfree.cz:9101"
-              ];
-              labels = {
-                alias = "node1.stg";
-                location = "stg";
-                role = "hypervisor";
-                os = "vpsadminos";
-              };
-            }
-            {
-              targets = [
-                "node2.stg.vpsfree.cz:9100"
-                "node2.stg.vpsfree.cz:9101"
-              ];
-              labels = {
-                alias = "node2.stg";
-                location = "stg";
-                role = "hypervisor";
-                os = "vpsadminos";
-              };
-            }
-          ];
-        }
-        {
-          job_name = "infra";
-          scrape_interval = "60s";
-          static_configs = [
-            {
-              targets = [
-                "build.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "build";
-              };
-            }
-            {
-              targets = [
-                "www.vpsadminos.org:9100"
-              ];
-              labels = {
-                alias = "www.vpsadminos.org";
-              };
-            }
-            {
-              targets = [
-                "proxy.prg.vpsfree.cz:9100"
-              ];
-              labels = {
-                alias = "proxy.prg";
-              };
-            }
-          ];
-        }
-        {
-          job_name = "nodes-ping";
+          job_name = "mon-ping";
           scrape_interval = "15s";
           metrics_path = "/probe";
           params = {
             module = [ "icmp" ];
           };
-          static_configs = [
-            {
-              targets = [
-                "node2.prg.vpsfree.cz"
-                "node3.prg.vpsfree.cz"
-                "node4.prg.vpsfree.cz"
-                "node5.prg.vpsfree.cz"
-                "node6.prg.vpsfree.cz"
-                "node7.prg.vpsfree.cz"
-                "node8.prg.vpsfree.cz"
-                "node9.prg.vpsfree.cz"
-                "node10.prg.vpsfree.cz"
-                "node11.prg.vpsfree.cz"
-                "node12.prg.vpsfree.cz"
-                "node13.prg.vpsfree.cz"
-                "node14.prg.vpsfree.cz"
-                "node15.prg.vpsfree.cz"
-                "node17.prg.vpsfree.cz"
-                "node18.prg.vpsfree.cz"
-              ];
-              labels = {
-                location = "prg";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "nasbox.prg.vpsfree.cz"
-              ];
-              labels = {
-                location = "prg";
-                role = "storage";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "backuper.prg.vpsfree.cz"
-              ];
-              labels = {
-                location = "prg";
-                role = "storage";
-                os = "vpsadminos";
-              };
-            }
-            {
-              targets = [
-                "node1.brq.vpsfree.cz"
-                "node2.brq.vpsfree.cz"
-                "node3.brq.vpsfree.cz"
-                "node4.brq.vpsfree.cz"
-              ];
-              labels = {
-                location = "brq";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node1.pgnd.vpsfree.cz"
-              ];
-              labels = {
-                location = "pgnd";
-                role = "hypervisor";
-                os = "openvz";
-              };
-            }
-            {
-              targets = [
-                "node1.stg.vpsfree.cz"
-                "node2.stg.vpsfree.cz"
-              ];
-              labels = {
-                location = "stg";
-                role = "hypervisor";
-                os = "vpsadminos";
-              };
-            }
-          ];
+          static_configs = scrapeConfigs.monitorings.pingConfigs;
           relabel_configs = [
             {
               source_labels = [ "__address__" ];
@@ -506,7 +185,67 @@ in {
             }
           ];
         }
-      ];
+      ) ++ [
+        {
+          job_name = "nodes";
+          scrape_interval = "30s";
+          static_configs = scrapeConfigs.nodes.exporterConfigs;
+        }
+      ] ++ (optional (scrapeConfigs.nodes.pingConfigs != [])
+        {
+          job_name = "nodes-ping";
+          scrape_interval = "15s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "icmp" ];
+          };
+          static_configs = scrapeConfigs.nodes.pingConfigs;
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        }
+      ) ++ [
+        {
+          job_name = "infra";
+          scrape_interval = "60s";
+          static_configs = scrapeConfigs.infra.exporterConfigs;
+        }
+      ] ++ (optional (scrapeConfigs.infra.pingConfigs != [])
+        {
+          job_name = "infra-ping";
+          scrape_interval = "15s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "icmp" ];
+          };
+          static_configs = scrapeConfigs.infra.pingConfigs;
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        }
+      );
 
       alertmanagerURL = [
         "${alertsPrg.services.alertmanager.address}:${toString alertsPrg.services.alertmanager.port}"
@@ -721,7 +460,7 @@ in {
           - name: infra
             rules:
             - alert: InfraExporterDown
-              expr: up{job=~"infra|pxe"} == 0
+              expr: up{job="infra"} == 0
               for: 10m
               labels:
                 severity: critical
@@ -730,7 +469,7 @@ in {
                 description: "Prometheus exporter down\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: InfraHighCpuLoad
-              expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",job=~"infra|pxe"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600
+              expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",job="infra"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600
               for: 10m
               labels:
                 severity: warning
@@ -739,7 +478,7 @@ in {
                 description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: InfraHighIoWait
-              expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",job=~"infra|pxe"}[5m])) * 100) > 30 and on(instance) time() - node_boot_time_seconds > 3600
+              expr: (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",job="infra"}[5m])) * 100) > 30 and on(instance) time() - node_boot_time_seconds > 3600
               for: 10m
               labels:
                 severity: warning
@@ -748,7 +487,7 @@ in {
                 description: "CPU iowait is > 30%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
             - alert: InfraHighLoad
-              expr: node_load5{job=~"infra|pxe"} > 300 and on(instance) time() - node_boot_time_seconds > 3600
+              expr: node_load5{job="infra"} > 300 and on(instance) time() - node_boot_time_seconds > 3600
               for: 10m
               labels:
                 severity: warning

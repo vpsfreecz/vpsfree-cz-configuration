@@ -79,6 +79,33 @@ let
         vzNode = mkOption {
           type = types.nullOr (types.submodule vzNode);
         };
+
+        monitoring = {
+          enable = mkOption {
+            type = types.bool;
+            default = true;
+            description = ''
+              Monitor this system
+            '';
+          };
+
+          isMonitor = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              Determines if this system is monitoring other systems, or if it
+              is just being monitored
+            '';
+          };
+
+          labels = mkOption {
+            type = types.attrs;
+            default = {};
+            description = ''
+              Custom labels added to the Prometheus target
+            '';
+          };
+        };
       };
     };
 

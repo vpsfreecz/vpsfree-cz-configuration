@@ -3,43 +3,45 @@ with lib;
 let
   cfg = config.system.monitoring;
 
-  monPrg = confLib.findConfig {
-    cluster = config.cluster;
-    domain = "vpsfree.cz";
-    location = "prg";
-    name = "mon.int";
-  };
+  allDeployments = confLib.getClusterDeployments config.cluster;
 
-  monitoringIPs = [
-    monPrg.addresses.primary
-  ];
+  monitorings = filter (d: d.config.monitoring.isMonitor) allDeployments;
 
   exporterPort = deploymentInfo.config.services.node-exporter.port;
 in {
   options = {
     system.monitoring = {
-      enable = mkEnableOption "Monitor this system";
-    };
-  };
-
-  config = mkIf cfg.enable {
-    networking.firewall.extraCommands = lib.concatStringsSep "\n" (map (ip:
-      "iptables -A nixos-fw -p tcp -m tcp -s ${ip} --dport ${toString exporterPort} -j nixos-fw-accept"
-    ) monitoringIPs);
-
-    services.prometheus.exporters = {
-      node = {
-        enable = true;
-        port = exporterPort;
-        extraFlags = [ "--collector.textfile.directory=/run/metrics" ];
-        enabledCollectors = [
-          "vmstat"
-          "interrupts"
-          "textfile"
-          "processes"
-        ] ++ (lib.optionals (deploymentInfo.spin == "nixos") [ "systemd" "logind" ])
-          ++ (lib.optionals (!config.boot.isContainer) [ "hwmon" "mdadm" "ksmd" ]);
+      enable = mkOption {
+        type = types.bool;
+        description = "Monitor this system";
       };
     };
   };
+
+  config = mkMerge [
+    {
+      system.monitoring.enable = mkDefault deploymentInfo.config.monitoring.enable;
+    }
+    (mkIf cfg.enable {
+      networking.firewall.extraCommands = concatStringsSep "\n" (map (d: ''
+        # Allow access to node-exporter from ${d.fqdn}
+        iptables -A nixos-fw -p tcp -m tcp -s ${d.config.addresses.primary} --dport ${toString exporterPort} -j nixos-fw-accept
+      '') monitorings);
+
+      services.prometheus.exporters = {
+        node = {
+          enable = true;
+          port = exporterPort;
+          extraFlags = [ "--collector.textfile.directory=/run/metrics" ];
+          enabledCollectors = [
+            "vmstat"
+            "interrupts"
+            "textfile"
+            "processes"
+          ] ++ (optionals (deploymentInfo.spin == "nixos") [ "systemd" "logind" ])
+            ++ (optionals (!config.boot.isContainer) [ "hwmon" "mdadm" "ksmd" ]);
+        };
+      };
+    })
+  ];
 }

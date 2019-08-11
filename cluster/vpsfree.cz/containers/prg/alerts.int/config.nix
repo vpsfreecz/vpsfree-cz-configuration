@@ -32,8 +32,6 @@ in {
     '';
   };
 
-  system.monitoring.enable = true;
-
   services.prometheus.alertmanager = {
     enable = true;
     port = alertmanagerPort;

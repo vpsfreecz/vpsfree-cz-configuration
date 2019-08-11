@@ -8,5 +8,6 @@
       node-exporter = {};
       prometheus = {};
     };
+    monitoring.isMonitor = true;
   };
 }

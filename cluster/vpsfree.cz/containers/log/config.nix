@@ -6,8 +6,6 @@
     ../../../../environments/base.nix
   ];
 
-  system.monitoring.enable = true;
-
   networking.firewall.allowedTCPPorts = [ 80 11514 ];    # web,  tcp rsyslog
   networking.firewall.allowedUDPPorts = [ 12201 11515 ]; # gelf, upd rsyslog
 

@@ -7,8 +7,6 @@ in
     ../../../../environments/base.nix
   ];
 
-  system.monitoring.enable = true;
-
   services.netboot = {
     enable = true;
     host = "boot.vpsadminos.org";
