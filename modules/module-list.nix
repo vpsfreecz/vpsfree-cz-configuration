@@ -2,6 +2,7 @@ let
   shared = [
     ./cluster
     ./config/service-ports.nix
+    ./misc/conf-lib.nix
     ./programs/havesnippet.nix
     ./system/monitoring.nix
   ];

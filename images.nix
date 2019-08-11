@@ -1,11 +1,9 @@
-{ config, pkgs, lib, data, ... }:
+{ config, pkgs, lib, confLib, data, ... }:
 with lib;
 let
   swpins = import ./swpins { name = "images"; inherit pkgs lib; };
 
   deployments = import ./deployments.nix;
-
-  confLib = import ./lib { inherit lib; };
 
   netbootable = filterAttrs (k: v:
     let

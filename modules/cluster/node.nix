@@ -1,6 +1,5 @@
-{ config, lib, data, deploymentInfo, ... }:
+{ config, lib, confLib, data, deploymentInfo, ... }:
 with lib;
-with (import ../../lib { inherit lib; });
 let
   cfg = deploymentInfo.config.osNode;
 
@@ -47,7 +46,7 @@ in {
     vpsadmin.consoleHost = mkDefault cfg.networking.bird.routerId;
     vpsadmin.netInterfaces = mkDefault (lib.attrNames cfg.networking.interfaces.addresses);
 
-    services.udev.extraRules = mkNetUdevRules cfg.networking.interfaces.names;
+    services.udev.extraRules = confLib.mkNetUdevRules cfg.networking.interfaces.names;
 
     networking.hostName = deploymentInfo.fqdn;
     networking.custom = ''
