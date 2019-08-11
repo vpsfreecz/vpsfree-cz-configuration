@@ -1,10 +1,13 @@
 { deploymentsExpr }:
 let
   deployments = import deploymentsExpr;
-in {
-  deploymentsList = builtins.attrNames deployments;
 
-  deploymentsInfo = builtins.mapAttrs (k: v: {
-    inherit (v) type spin name location domain fqdn role;
+  nameValuePairs = builtins.map (d: {
+    name = d.fqdn;
+    value = { inherit (d) type spin name location domain fqdn role; };
   }) deployments;
+in {
+  deploymentsList = builtins.map (d: d.fqdn) deployments;
+
+  deploymentsInfo = builtins.listToAttrs nameValuePairs;
 }

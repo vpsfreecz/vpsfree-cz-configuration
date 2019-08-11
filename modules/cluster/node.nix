@@ -1,7 +1,7 @@
 { config, lib, confLib, data, deploymentInfo, ... }:
 with lib;
 let
-  cfg = deploymentInfo.config.osNode;
+  cfg = deploymentInfo.config;
 
   mapEachIp = fn: addresses:
     flatten (mapAttrsToList (ifname: ips:
@@ -20,9 +20,9 @@ let
       net ~ [ ${concatStringsSep ", " list} ]
     '';
 
-  importInterfaceFilter = ipVer: optionalString (cfg.networking.interfaces != {}) (
+  importInterfaceFilter = ipVer: optionalString (cfg.osNode.networking.interfaces != {}) (
     let
-      ifconds = concatMapStringsSep " || " (v: "ifname = \"${v}\"") (attrNames cfg.networking.interfaces);
+      ifconds = concatMapStringsSep " || " (v: "ifname = \"${v}\"") (attrNames cfg.osNode.networking.interfaces);
       netLen = {
         "ipv4" = 30;
         "ipv6" = 80;
@@ -32,7 +32,7 @@ let
     '');
 
   makeBirdBgp = neighbours: listToAttrs (imap1 (i: neigh: nameValuePair "bgp${toString i}" {
-    as = cfg.networking.bird.as;
+    as = cfg.osNode.networking.bird.as;
     nextHopSelf = true;
     neighbor = { "${neigh.address}" = neigh.as; };
     extraConfig = ''
@@ -42,32 +42,32 @@ let
   }) neighbours);
 in {
   config = mkIf (deploymentInfo.type == "node") {
-    vpsadmin.nodeId = cfg.nodeId;
-    vpsadmin.consoleHost = mkDefault cfg.networking.bird.routerId;
-    vpsadmin.netInterfaces = mkDefault (lib.attrNames cfg.networking.interfaces.addresses);
+    vpsadmin.nodeId = cfg.node.id;
+    vpsadmin.consoleHost = mkDefault cfg.osNode.networking.bird.routerId;
+    vpsadmin.netInterfaces = mkDefault (lib.attrNames cfg.osNode.networking.interfaces.addresses);
 
-    services.udev.extraRules = confLib.mkNetUdevRules cfg.networking.interfaces.names;
+    services.udev.extraRules = confLib.mkNetUdevRules cfg.osNode.networking.interfaces.names;
 
     networking.hostName = deploymentInfo.fqdn;
     networking.custom = ''
       ${concatStringsSep "\n" (mapEachIp (ifname: v: addr: ''
       ip -${toString v} addr add ${addr} dev ${ifname}
-      '') cfg.networking.interfaces.addresses)}
+      '') cfg.osNode.networking.interfaces.addresses)}
 
       ${concatStringsSep "\n" (mapAttrsToList (ifname: ips: ''
         ip link set ${ifname} up
-      '') cfg.networking.interfaces.addresses)}
+      '') cfg.osNode.networking.interfaces.addresses)}
 
-      ${optionalString (!isNull cfg.networking.virtIP) ''
+      ${optionalString (!isNull cfg.osNode.networking.virtIP) ''
       ip link add virtip type dummy
-      ip addr add ${cfg.networking.virtIP} dev virtip
+      ip addr add ${cfg.osNode.networking.virtIP} dev virtip
       ip link set virtip up
       ''}
     '';
 
-    networking.bird = mkIf cfg.networking.bird.enable {
+    networking.bird = mkIf cfg.osNode.networking.bird.enable {
       enable = true;
-      routerId = cfg.networking.bird.routerId;
+      routerId = cfg.osNode.networking.bird.routerId;
       protocol.kernel = {
         learn = true;
         persist = true;
@@ -76,7 +76,7 @@ in {
           import filter {
             if (${importNetworkFilter 4})
                || (${importInterfaceFilter 4})
-               ${optionalString (cfg.networking.virtIP != null) ''|| (ifname = "virtip")''}
+               ${optionalString (cfg.osNode.networking.virtIP != null) ''|| (ifname = "virtip")''}
             then
               accept;
             else
@@ -85,15 +85,15 @@ in {
         '';
       };
       protocol.bfd = {
-        enable = cfg.networking.bird.bfdInterfaces != "";
-        interfaces."${cfg.networking.bird.bfdInterfaces}" = {};
+        enable = cfg.osNode.networking.bird.bfdInterfaces != "";
+        interfaces."${cfg.osNode.networking.bird.bfdInterfaces}" = {};
       };
-      protocol.bgp = makeBirdBgp cfg.networking.bird.bgpNeighbours.v4;
+      protocol.bgp = makeBirdBgp cfg.osNode.networking.bird.bgpNeighbours.v4;
     };
 
-    networking.bird6 = mkIf cfg.networking.bird.enable {
+    networking.bird6 = mkIf cfg.osNode.networking.bird.enable {
       enable = true;
-      routerId = cfg.networking.bird.routerId;
+      routerId = cfg.osNode.networking.bird.routerId;
       protocol.kernel = {
         learn = true;
         persist = true;
@@ -110,27 +110,27 @@ in {
         '';
       };
       protocol.bfd = {
-        enable = cfg.networking.bird.bfdInterfaces != "";
-        interfaces."${cfg.networking.bird.bfdInterfaces}" = {};
+        enable = cfg.osNode.networking.bird.bfdInterfaces != "";
+        interfaces."${cfg.osNode.networking.bird.bfdInterfaces}" = {};
       };
-      protocol.bgp = makeBirdBgp cfg.networking.bird.bgpNeighbours.v6;
+      protocol.bgp = makeBirdBgp cfg.osNode.networking.bird.bgpNeighbours.v6;
     };
 
     networking.firewall.extraCommands =
       let
         port = toString config.servicePorts.bird-bgp;
-      in optionalString cfg.networking.bird.enable ''
+      in optionalString cfg.osNode.networking.bird.enable ''
         ${concatMapStringsSep "\n" (neigh: ''
         iptables -A nixos-fw -p tcp -s ${neigh.address} --dport ${port} -j nixos-fw-accept
-        '') cfg.networking.bird.bgpNeighbours.v4}
+        '') cfg.osNode.networking.bird.bgpNeighbours.v4}
         ${concatMapStringsSep "\n" (neigh: ''
         ip6tables -A nixos-fw -p tcp -s ${neigh.address} --dport ${port} -j nixos-fw-accept
-        '') cfg.networking.bird.bgpNeighbours.v6}
+        '') cfg.osNode.networking.bird.bgpNeighbours.v6}
       '';
 
-    boot.kernelParams = optionals cfg.serial.enable [
+    boot.kernelParams = optionals cfg.osNode.serial.enable [
       "console=tty0"
-      "console=ttyS0,${toString cfg.baudRate}"
+      "console=ttyS0,${toString cfg.osNode.serial.baudRate}"
       "panic=-1"
     ];
 

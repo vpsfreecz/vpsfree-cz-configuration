@@ -7,6 +7,16 @@ let
     { config, ...}:
     {
       options = {
+        type = mkOption {
+          type = types.enum [ "node" "machine" "container" ];
+          description = "Deployment type";
+        };
+
+        spin = mkOption {
+          type = types.enum [ "openvz" "nixos" "vpsadminos" ];
+          description = "OS type";
+        };
+
         addresses = {
           primary = mkOption {
             type = types.str;
@@ -47,6 +57,10 @@ let
           });
         };
 
+        node = mkOption {
+          type = types.nullOr (types.submodule node);
+        };
+
         osNode = mkOption {
           type = types.nullOr (types.submodule osNode);
         };
@@ -78,6 +92,8 @@ let
         };
       };
     };
+
+  node = (import ./nodes/common.nix) args;
 
   osNode = (import ./nodes/vpsadminos.nix) args;
 

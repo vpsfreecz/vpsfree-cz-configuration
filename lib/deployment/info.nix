@@ -1,9 +1,7 @@
-{ config, lib, type, spin, name, location, domain, fqdn, ... }:
-let
-  confLib = import ../. { inherit lib; };
-in {
+{ config, lib, type, spin, name, location, domain, fqdn, findConfig, ... }:
+{
   inherit type spin name location domain fqdn;
-  config = confLib.findConfig {
+  config = findConfig {
     inherit (config) cluster;
     inherit name location domain;
   };

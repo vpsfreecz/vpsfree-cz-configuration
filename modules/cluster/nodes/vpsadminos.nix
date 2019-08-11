@@ -3,11 +3,6 @@ with lib;
 let
   node = {
     options = {
-      nodeId = mkOption {
-        type = types.ints.positive;
-        description = "ID of this node in vpsAdmin";
-      };
-
       networking = {
         netboot = {
           enable = mkEnableOption "Include this node on pxe servers";

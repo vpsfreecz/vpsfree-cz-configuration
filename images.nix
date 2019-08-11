@@ -3,17 +3,13 @@ with lib;
 let
   swpins = import ./swpins { name = "images"; inherit pkgs lib; };
 
-  deployments = import ./deployments.nix;
+  deployments = confLib.getClusterDeployments config.cluster;
+
+  deploymentAttrs = listToAttrs (map (d: nameValuePair d.fqdn d) deployments);
 
   netbootable = filterAttrs (k: v:
-    let
-      cfg = confLib.findConfig {
-        inherit (config) cluster;
-        inherit (v) domain location name;
-      };
-      node = cfg.osNode;
-    in v.type =="node" && node.networking.netboot.enable
-  ) deployments;
+    v.type =="node" && v.spin == "vpsadminos" && v.config.osNode.networking.netboot.enable
+  ) deploymentAttrs;
 
   filterDeployments = filter: filterAttrs (k: v: filter v) netbootable;
 
@@ -65,7 +61,7 @@ let
         modules = [
           {
             imports = [
-              node.config
+              node.build.toplevel
             ];
           }
         ];

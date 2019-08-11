@@ -1,0 +1,3 @@
+[
+  ./containers/www/module.nix
+]

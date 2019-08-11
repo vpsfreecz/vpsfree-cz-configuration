@@ -3,11 +3,17 @@ let
   addr = "172.16.0.66";
 in {
   cluster."vpsfree.cz".stg.node2 = rec {
+    type = "node";
+    spin = "vpsadminos";
+
+    node = {
+      id = 401;
+      role = "hypervisor";
+    };
+
     addresses.primary = addr;
 
     osNode = {
-      nodeId = 401;
-
       networking = {
         netboot = {
           enable = true;

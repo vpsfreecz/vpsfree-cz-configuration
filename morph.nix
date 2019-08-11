@@ -7,7 +7,12 @@ let
 
   deployments = import ./deployments.nix;
 
-  configs = builtins.mapAttrs (k: v: v.config) deployments;
+  nameValuePairs = builtins.map (d: {
+    name = d.fqdn;
+    value = d.build.toplevel;
+  }) deployments;
+
+  configs = builtins.listToAttrs nameValuePairs;
 in configs // {
   network =  {
     pkgs = import baseSwpins.nixpkgs {};

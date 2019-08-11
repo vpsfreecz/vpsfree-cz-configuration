@@ -3,11 +3,15 @@ let
   addr = "172.16.0.5";
 in {
   cluster."vpsfree.cz".prg.backuper = rec {
-    addresses.primary = addr;
+    type = "node";
+    spin = "vpsadminos";
+
+    node = {
+      id = 160;
+      role = "storage";
+    };
 
     osNode = {
-      nodeId = 160;
-
       networking = {
         netboot = {
           enable = true;
