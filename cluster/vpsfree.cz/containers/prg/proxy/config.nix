@@ -13,6 +13,13 @@ let
     location = "prg";
     name = "mon.int";
   };
+
+  grafanaPrg = confLib.findConfig {
+    cluster = config.cluster;
+    domain = "vpsfree.cz";
+    location = "prg";
+    name = "grafana.int";
+  };
 in {
   imports = [
     ../../../../../environments/base.nix
@@ -51,6 +58,13 @@ in {
         forceSSL = true;
         basicAuthFile = "/private/nginx/mon.htpasswd";
         locations."/".proxyPass = "http://${monPrg.services.prometheus.address}:${toString monPrg.services.prometheus.port}";
+      };
+
+      "grafana.prg.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        basicAuthFile = "/private/nginx/mon.htpasswd";
+        locations."/".proxyPass = "http://${grafanaPrg.services.grafana.address}:${toString grafanaPrg.services.grafana.port}";
       };
     };
   };

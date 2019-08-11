@@ -7,6 +7,13 @@ let
     name = "alerts.int";
   };
 
+  grafanaPrg = confLib.findConfig {
+    cluster = config.cluster;
+    domain = "vpsfree.cz";
+    location = "prg";
+    name = "grafana.int";
+  };
+
   proxyPrg = confLib.findConfig {
     cluster = config.cluster;
     domain = "vpsfree.cz";
@@ -23,13 +30,12 @@ in {
   system.monitoring.enable = true;
 
   networking = {
-    firewall.allowedTCPPorts = [
-      3000  # grafana
-    ];
-
     firewall.extraCommands = ''
       # Allow access to prometheus from proxy.prg
       iptables -A nixos-fw -p tcp --dport ${toString promPort} -s ${proxyPrg.addresses.primary} -j nixos-fw-accept
+
+      # Allow access to prometheus from grafana.int.prg
+      iptables -A nixos-fw -p tcp --dport ${toString promPort} -s ${grafanaPrg.addresses.primary} -j nixos-fw-accept
     '';
   };
 
@@ -764,13 +770,6 @@ in {
             icmp:
               preferred_ip_protocol: "ip4"
       '';
-    };
-
-    grafana = {
-      enable = true;
-      addr = "0.0.0.0";
-      domain = "grafana.vpsfree.cz";
-      rootUrl = "http://grafana.vpsfree.cz/";
     };
   };
 }

@@ -14,6 +14,7 @@ with lib;
     servicePorts = {
       alertmanager = 9093;
       bird-bgp = 179;
+      grafana = 3000;
       vpsadmin-console = 8081;
       prometheus = 9090;
       node-exporter = 9100;
