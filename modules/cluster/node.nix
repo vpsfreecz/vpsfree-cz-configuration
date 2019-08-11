@@ -118,7 +118,7 @@ in {
 
     networking.firewall.extraCommands =
       let
-        port = "179";
+        port = toString config.servicePorts.bird-bgp;
       in optionalString cfg.networking.bird.enable ''
         ${concatMapStringsSep "\n" (neigh: ''
         iptables -A nixos-fw -p tcp -s ${neigh.address} --dport ${port} -j nixos-fw-accept
@@ -135,5 +135,6 @@ in {
     ];
 
     system.monitoring.enable = true;
+    osctl.exporter.port = deploymentInfo.config.services.osctl-exporter.port;
   };
 }

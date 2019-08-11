@@ -50,6 +50,7 @@ in {
     services = {
       node-exporter = {};
       osctl-exporter = {};
+      vpsadmin-console = {};
     };
   };
 }

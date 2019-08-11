@@ -1,5 +1,21 @@
-{ pkgs, lib, config, ... }:
-{
+{ pkgs, lib, confLib, config, deploymentInfo, ... }:
+let
+  alertsPrg = confLib.findConfig {
+    cluster = config.cluster;
+    domain = "vpsfree.cz";
+    location = "prg";
+    name = "alerts.int";
+  };
+
+  proxyPrg = confLib.findConfig {
+    cluster = config.cluster;
+    domain = "vpsfree.cz";
+    location = "prg";
+    name = "proxy";
+  };
+
+  promPort = deploymentInfo.config.services.prometheus.port;
+in {
   imports = [
     ../../../../../environments/base.nix
   ];
@@ -13,7 +29,7 @@
 
     firewall.extraCommands = ''
       # Allow access to prometheus from proxy.prg
-      iptables -A nixos-fw -p tcp --dport 9090 -s 37.205.14.61 -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp --dport ${toString promPort} -s ${proxyPrg.addresses.primary} -j nixos-fw-accept
     '';
   };
 
@@ -24,6 +40,7 @@
         "--storage.tsdb.retention.time 365d"
         "--storage.tsdb.retention.size 200GB"
       ];
+      listenAddress = "0.0.0.0:${toString promPort}";
       webExternalUrl = "https://mon.prg.vpsfree.cz/";
       scrapeConfigs = [
         {
@@ -486,7 +503,7 @@
       ];
 
       alertmanagerURL = [
-        "172.16.4.11:9093"
+        "${alertsPrg.services.alertmanager.address}:${toString alertsPrg.services.alertmanager.port}"
       ];
 
       rules = [

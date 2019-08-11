@@ -1,5 +1,21 @@
-{ pkgs, lib, config, ... }:
-{
+{ pkgs, lib, confLib, config, deploymentInfo, ... }:
+let
+  monPrg = confLib.findConfig {
+    cluster = config.cluster;
+    domain = "vpsfree.cz";
+    location = "prg";
+    name = "mon.int";
+  };
+
+  proxyPrg = confLib.findConfig {
+    cluster = config.cluster;
+    domain = "vpsfree.cz";
+    location = "prg";
+    name = "proxy";
+  };
+
+  alertmanagerPort = deploymentInfo.config.services.alertmanager.port;
+in {
   imports = [
     ../../../../../environments/base.nix
   ];
@@ -9,10 +25,10 @@
   networking = {
     firewall.extraCommands = ''
       # Allow access to alertmanager from prometheus
-      iptables -A nixos-fw -p tcp --dport 9093 -s 172.16.4.10 -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${monPrg.addresses.primary} -j nixos-fw-accept
 
       # Allow access to alertmanager from proxy.prg
-      iptables -A nixos-fw -p tcp --dport 9093 -s 37.205.14.61 -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${proxyPrg.addresses.primary} -j nixos-fw-accept
     '';
   };
 
@@ -20,6 +36,7 @@
 
   services.prometheus.alertmanager = {
     enable = true;
+    port = alertmanagerPort;
     webExternalUrl = "https://alerts.prg.vpsfree.cz/";
     configuration = {
       "global" = {

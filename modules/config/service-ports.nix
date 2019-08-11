@@ -12,6 +12,10 @@ with lib;
 
   config = {
     servicePorts = {
+      alertmanager = 9093;
+      bird-bgp = 179;
+      vpsadmin-console = 8081;
+      prometheus = 9090;
       node-exporter = 9100;
       osctl-exporter = 9101;
     };

@@ -1,5 +1,19 @@
-{ pkgs, lib, config, ... }:
-{
+{ pkgs, lib, config, confLib, ... }:
+let
+  alertsPrg = confLib.findConfig {
+    cluster = config.cluster;
+    domain = "vpsfree.cz";
+    location = "prg";
+    name = "alerts.int";
+  };
+
+  monPrg = confLib.findConfig {
+    cluster = config.cluster;
+    domain = "vpsfree.cz";
+    location = "prg";
+    name = "mon.int";
+  };
+in {
   imports = [
     ../../../../../environments/base.nix
   ];
@@ -29,14 +43,14 @@
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/private/nginx/mon.htpasswd";
-        locations."/".proxyPass = "http://172.16.4.11:9093";
+        locations."/".proxyPass = "http://${alertsPrg.services.alertmanager.address}:${toString alertsPrg.services.alertmanager.port}";
       };
 
       "mon.prg.vpsfree.cz" = {
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/private/nginx/mon.htpasswd";
-        locations."/".proxyPass = "http://172.16.4.10:9090";
+        locations."/".proxyPass = "http://${monPrg.services.prometheus.address}:${toString monPrg.services.prometheus.port}";
       };
     };
   };

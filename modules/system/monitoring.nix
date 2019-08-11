@@ -1,11 +1,20 @@
-{ lib, config, pkgs, deploymentInfo, ... }:
+{ lib, config, pkgs, deploymentInfo, confLib, ... }:
 with lib;
 let
   cfg = config.system.monitoring;
 
+  monPrg = confLib.findConfig {
+    cluster = config.cluster;
+    domain = "vpsfree.cz";
+    location = "prg";
+    name = "mon.int";
+  };
+
   monitoringIPs = [
-    "172.16.4.10"
+    monPrg.addresses.primary
   ];
+
+  exporterPort = deploymentInfo.config.services.node-exporter.port;
 in {
   options = {
     system.monitoring = {
@@ -15,12 +24,13 @@ in {
 
   config = mkIf cfg.enable {
     networking.firewall.extraCommands = lib.concatStringsSep "\n" (map (ip:
-      "iptables -A nixos-fw -p tcp -m tcp -s ${ip} --dport 9100 -j nixos-fw-accept"
+      "iptables -A nixos-fw -p tcp -m tcp -s ${ip} --dport ${toString exporterPort} -j nixos-fw-accept"
     ) monitoringIPs);
 
     services.prometheus.exporters = {
       node = {
         enable = true;
+        port = exporterPort;
         extraFlags = [ "--collector.textfile.directory=/run/metrics" ];
         enabledCollectors = [
           "vmstat"

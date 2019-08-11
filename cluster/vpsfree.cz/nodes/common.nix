@@ -1,4 +1,4 @@
-{ config, lib, pkgs, data, ...}:
+{ config, lib, pkgs, data, deploymentInfo, confLib, ...}:
 {
   users.users.root.openssh.authorizedKeys.keys = with data; [
     sshKeys."build.vpsfree.cz"
@@ -57,9 +57,16 @@
     nameservers = [ "172.18.2.10" "172.18.2.11" ];
     firewall.extraCommands =
       let
+        nodeCfg = deploymentInfo.config;
         nfsCfg = config.services.nfs.server;
         nodeExporterCfg = config.services.prometheus.exporters.node;
         osctlExporterCfg = config.osctl.exporter;
+        monPrg = confLib.findConfig {
+          cluster = config.cluster;
+          domain = "vpsfree.cz";
+          location = "prg";
+          name = "mon.int";
+        };
         sshCfg = config.services.openssh;
         sshRules = map (port:
           "iptables -A nixos-fw -p tcp --dport ${toString port} -j nixos-fw-accept"
@@ -74,10 +81,10 @@
         ${lib.concatStringsSep "\n" sshRules}
 
         # node_exporter
-        iptables -A nixos-fw -p tcp --dport ${toString nodeExporterCfg.port} -s 172.16.4.10 -j nixos-fw-accept
+        iptables -A nixos-fw -p tcp --dport ${toString nodeExporterCfg.port} -s ${monPrg.addresses.primary} -j nixos-fw-accept
 
         # osctl-exporter
-        iptables -A nixos-fw -p tcp --dport ${toString osctlExporterCfg.port} -s 172.16.4.10 -j nixos-fw-accept
+        iptables -A nixos-fw -p tcp --dport ${toString osctlExporterCfg.port} -s ${monPrg.addresses.primary} -j nixos-fw-accept
 
         # rpcbind
         iptables -A nixos-fw -p tcp --dport 111 -j nixos-fw-accept
@@ -102,8 +109,10 @@
         # vpsadmin ports for zfs send/recv
         ${lib.concatStringsSep "\n" vpsadminSendRecvRules}
 
+        ${lib.optionalString (lib.hasAttr "vpsadmin-console" nodeCfg.services) ''
         # vpsadmin remote console
-        iptables -A nixos-fw -p tcp -s 172.16.8.5 --dport 8081 -j nixos-fw-accept
+        iptables -A nixos-fw -p tcp -s 172.16.8.5 --dport ${toString nodeCfg.services.vpsadmin-console.port} -j nixos-fw-accept
+        ''}
       '';
   };
 
