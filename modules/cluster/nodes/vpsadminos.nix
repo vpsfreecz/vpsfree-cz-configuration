@@ -4,17 +4,6 @@ let
   node = {
     options = {
       networking = {
-        netboot = {
-          enable = mkEnableOption "Include this node on pxe servers";
-          macs = mkOption {
-            type = types.listOf types.str;
-            default = [];
-            description = ''
-              List of MAC addresses for iPXE node auto-detection
-            '';
-          };
-        };
-
         interfaces = {
           names = mkOption {
             type = types.attrsOf types.str;

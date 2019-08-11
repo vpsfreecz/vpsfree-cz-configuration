@@ -11,20 +11,20 @@ in {
       role = "hypervisor";
     };
 
+    netboot = {
+      enable = true;
+      macs = [
+        "0c:c4:7a:30:76:18"
+        "0c:c4:7a:30:76:19"
+        "0c:c4:7a:30:76:1a"
+        "0c:c4:7a:30:76:1b"
+      ];
+    };
+
     addresses.primary = addr;
 
     osNode = {
       networking = {
-        netboot = {
-          enable = true;
-          macs = [
-            "0c:c4:7a:30:76:18"
-            "0c:c4:7a:30:76:19"
-            "0c:c4:7a:30:76:1a"
-            "0c:c4:7a:30:76:1b"
-          ];
-        };
-
         interfaces = {
           names = {
             teng0 = "0c:c4:7a:88:69:d8";

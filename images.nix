@@ -7,9 +7,7 @@ let
 
   deploymentAttrs = listToAttrs (map (d: nameValuePair d.fqdn d) deployments);
 
-  netbootable = filterAttrs (k: v:
-    v.type =="node" && v.spin == "vpsadminos" && v.config.osNode.networking.netboot.enable
-  ) deploymentAttrs;
+  netbootable = filterAttrs (k: v: v.config.netboot.enable) deploymentAttrs;
 
   filterDeployments = filter: filterAttrs (k: v: filter v) netbootable;
 
@@ -74,7 +72,7 @@ let
         name = "vpsadminos_netboot";
         paths = with build; [ dist ];
       };
-      macs = node.netboot.macs or [];
+      macs = node.config.netboot.macs or [];
     };
 
   nixosBuild = {modules ? []}:

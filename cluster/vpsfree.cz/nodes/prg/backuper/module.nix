@@ -11,18 +11,18 @@ in {
       role = "storage";
     };
 
+    netboot = {
+      enable = true;
+      macs = [
+        "00:25:90:2f:a3:ac"
+        "00:25:90:2f:a3:ad"
+        "00:25:90:2f:a3:ae"
+        "00:25:90:2f:a3:af"
+      ];
+    };
+
     osNode = {
       networking = {
-        netboot = {
-          enable = true;
-          macs = [
-            "00:25:90:2f:a3:ac"
-            "00:25:90:2f:a3:ad"
-            "00:25:90:2f:a3:ae"
-            "00:25:90:2f:a3:af"
-          ];
-        };
-
         interfaces = {
           names = {
             oneg0 = "00:25:90:2f:a3:ac";

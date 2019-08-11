@@ -45,6 +45,17 @@ let
           };
         };
 
+        netboot = {
+          enable = mkEnableOption "Include this system on pxe servers";
+          macs = mkOption {
+            type = types.listOf types.str;
+            default = [];
+            description = ''
+              List of MAC addresses for iPXE node auto-detection
+            '';
+          };
+        };
+
         services = mkOption {
           type = types.attrsOf (types.submodule service);
           default = {};
