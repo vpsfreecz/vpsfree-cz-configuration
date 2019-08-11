@@ -8,7 +8,7 @@ let
     {
       options = {
         addresses = {
-          main = mkOption {
+          primary = mkOption {
             type = types.str;
             default = head config.addresses.v4;
             description = ''
@@ -20,7 +20,7 @@ let
 
           v4 = mkOption {
             type = types.listOf types.str;
-            default = [ config.main ];
+            default = [ config.addresses.primary ];
             description = ''
               List of IPv4 addresses this machine responds to
             '';
@@ -42,7 +42,7 @@ let
             Services published by this machine
           '';
           apply = mapAttrs (name: sv: {
-            address = if isNull sv.address then config.addresses.main else sv.address;
+            address = if isNull sv.address then config.addresses.primary else sv.address;
             port = if isNull sv.port then topLevelConfig.servicePorts.${name} else sv.port;
           });
         };

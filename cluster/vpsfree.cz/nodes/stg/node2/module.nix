@@ -3,7 +3,7 @@ let
   addr = "172.16.0.66";
 in {
   cluster."vpsfree.cz".stg.node2 = rec {
-    addresses.main = addr;
+    addresses.primary = addr;
 
     osNode = {
       nodeId = 401;

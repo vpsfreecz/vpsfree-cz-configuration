@@ -3,7 +3,7 @@ let
   addr = "172.16.0.5";
 in {
   cluster."vpsfree.cz".prg.backuper = rec {
-    addresses.main = addr;
+    addresses.primary = addr;
 
     osNode = {
       nodeId = 160;
