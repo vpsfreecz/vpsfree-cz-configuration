@@ -16,8 +16,6 @@
     screen
   ];
 
-  security.sudo.enable = true;
-
   users.users.root.openssh.authorizedKeys.keys = with data; [
     sshKeys."build.vpsfree.cz"
     sshKeys.aither
