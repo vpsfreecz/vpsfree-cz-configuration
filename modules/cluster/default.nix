@@ -130,6 +130,24 @@ let
             '';
           };
         };
+
+        logging = {
+          enable = mkOption {
+            type = types.bool;
+            default = true;
+            description = ''
+              Send logs to central log system
+            '';
+          };
+
+          isLogger = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              This system is used as a central log system
+            '';
+          };
+        };
       };
     };
 

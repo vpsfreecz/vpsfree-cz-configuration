@@ -4,6 +4,7 @@
     type = "container";
     spin = "nixos";
     addresses.primary = { address = "172.16.4.1"; prefix = 32; };
+    logging.isLogger = true;
     services = {
       graylog-gelf = {};
       graylog-rsyslog-tcp = {};

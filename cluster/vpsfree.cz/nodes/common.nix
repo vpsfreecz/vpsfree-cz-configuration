@@ -120,7 +120,6 @@
     extraFlags = [ "--collector.textfile.directory=/run/metrics" ];
   };
   osctl.exporter.enable = true;
-  services.rsyslogd.forward = [ "172.16.4.1:11514" ];
   services.openssh = {
     openFirewall = false;
     extraConfig = ''
