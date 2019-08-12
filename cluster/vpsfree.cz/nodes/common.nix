@@ -1,11 +1,9 @@
 { config, lib, pkgs, data, deploymentInfo, confLib, ...}:
 {
-  users.users.root.openssh.authorizedKeys.keys = with data; [
-    sshKeys."build.vpsfree.cz"
-    sshKeys.aither
-    sshKeys.srk
-    sshKeys.snajpa
+  imports = [
+    ../../../environments/base.nix
   ];
+
   users.users.root.initialHashedPassword = "$6$bdENLP5gkTO$iVMOmBo4EmmP2YawSOHEvMlq1WDn9RvMCG3ChYfpBoYKejAIz/g78EP2gfE8zM2SdS8p3O8E2LbzQMXwOupdj/";
 
   boot.kernelModules = [
@@ -26,10 +24,7 @@
     dmidecode
     ipmicfg
     lm_sensors
-    #nvi
-    vim
     pciutils
-    screen
     smartmontools
     usbutils
     iotop
@@ -52,9 +47,6 @@
   nixpkgs.overlays = import ../../../overlays;
 
   networking = {
-    domain = "vpsfree.cz";
-    search = ["vpsfree.cz" "prg.vpsfree.cz" "base48.cz"];
-    nameservers = [ "172.18.2.10" "172.18.2.11" ];
     firewall.extraCommands =
       let
         nodeCfg = deploymentInfo.config;
@@ -130,7 +122,6 @@
   osctl.exporter.enable = true;
   services.rsyslogd.forward = [ "172.16.4.1:11514" ];
   services.openssh = {
-    enable = true;
     openFirewall = false;
     extraConfig = ''
       Match Address 172.16.0.0/12
