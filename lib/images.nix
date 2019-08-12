@@ -1,7 +1,7 @@
 { config, pkgs, lib, confLib, data, ... }:
 with lib;
 let
-  swpins = import ./swpins { name = "images"; inherit pkgs lib; };
+  swpins = import ../swpins { name = "images"; inherit pkgs lib; };
 
   deployments = confLib.getClusterDeployments config.cluster;
 
@@ -54,7 +54,7 @@ let
 
   nodeImage = node:
     let
-      nodepins = import ./swpins { name = node.fqdn; inherit pkgs lib; };
+      nodepins = import ../swpins { name = node.fqdn; inherit pkgs lib; };
       build = vpsadminosBuild {
         modules = [
           {
@@ -80,7 +80,7 @@ let
       system = "x86_64-linux";
       modules = [
         ("${swpins.nixpkgs}/nixos/modules/installer/netboot/netboot-minimal.nix")
-        ./data
+        ../data
       ] ++ modules;
     }).config.system.build;
 
@@ -121,7 +121,7 @@ in rec {
 
   nixosZfsSSH = nixosNetboot {
     modules = [ {
-        imports = [ ./environments/base.nix ];
+        imports = [ ../environments/base.nix ];
         boot.supportedFilesystems = [ "zfs" ];
         # enable ssh
         systemd.services.sshd.wantedBy = lib.mkForce [ "multi-user.target" ];
