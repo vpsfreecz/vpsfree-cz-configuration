@@ -39,6 +39,7 @@ in {
             "textfile"
             "processes"
           ] ++ (optionals (deploymentInfo.spin == "nixos") [ "systemd" "logind" ])
+            ++ (optionals (deploymentInfo.spin == "vpsadminos") [ "runit" "nfs" ])
             ++ (optionals (!config.boot.isContainer) [ "hwmon" "mdadm" "ksmd" ]);
         };
       };
