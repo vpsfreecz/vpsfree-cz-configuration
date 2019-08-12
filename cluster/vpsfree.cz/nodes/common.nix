@@ -115,10 +115,6 @@
     lockdPort = 32769;
   };
 
-  services.prometheus.exporters.node = {
-    enable = true;
-    extraFlags = [ "--collector.textfile.directory=/run/metrics" ];
-  };
   osctl.exporter.enable = true;
   services.openssh = {
     openFirewall = false;
