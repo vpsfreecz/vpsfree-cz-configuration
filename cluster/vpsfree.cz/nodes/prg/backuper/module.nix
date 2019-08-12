@@ -1,7 +1,5 @@
 { config, ... }:
-let
-  addr = "172.16.0.5";
-in {
+{
   cluster."vpsfree.cz".prg.backuper = rec {
     type = "node";
     spin = "vpsadminos";
@@ -20,6 +18,8 @@ in {
         "00:25:90:2f:a3:af"
       ];
     };
+
+    addresses.primary = "172.16.0.5";
 
     osNode = {
       networking = {
