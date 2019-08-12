@@ -51,7 +51,7 @@ in {
     networking.hostName = deploymentInfo.fqdn;
     networking.custom = ''
       ${concatStringsSep "\n" (mapEachIp (ifname: v: addr: ''
-      ip -${toString v} addr add ${addr} dev ${ifname}
+      ip -${toString v} addr add ${addr.string} dev ${ifname}
       '') cfg.osNode.networking.interfaces.addresses)}
 
       ${concatStringsSep "\n" (mapAttrsToList (ifname: ips: ''
@@ -60,7 +60,7 @@ in {
 
       ${optionalString (!isNull cfg.osNode.networking.virtIP) ''
       ip link add virtip type dummy
-      ip addr add ${cfg.osNode.networking.virtIP} dev virtip
+      ip addr add ${cfg.osNode.networking.virtIP.string} dev virtip
       ip link set virtip up
       ''}
     '';

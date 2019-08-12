@@ -139,10 +139,10 @@ in {
   networking = {
     firewall.extraCommands = ''
       # Allow access to prometheus from proxy.prg
-      iptables -A nixos-fw -p tcp --dport ${toString promPort} -s ${proxyPrg.addresses.primary} -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp --dport ${toString promPort} -s ${proxyPrg.addresses.primary.address} -j nixos-fw-accept
 
       # Allow access to prometheus from grafana.int.prg
-      iptables -A nixos-fw -p tcp --dport ${toString promPort} -s ${grafanaPrg.addresses.primary} -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp --dport ${toString promPort} -s ${grafanaPrg.addresses.primary.address} -j nixos-fw-accept
     '';
   };
 

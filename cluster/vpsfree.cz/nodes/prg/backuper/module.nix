@@ -19,7 +19,7 @@
       ];
     };
 
-    addresses.primary = "172.16.0.5";
+    addresses.primary = { address = "172.16.0.5"; prefix = 23; };
 
     osNode = {
       networking = {
@@ -33,8 +33,14 @@
             teng1 = "00:25:90:0e:5b:1b";
           };
           addresses = {
-            teng0 = { v4 = [ "172.16.251.182/30" ]; v6 = [ "2a03:3b40:42:2:46::2/80" ]; };
-            teng1 = { v4 = [ "172.16.250.182/30" ]; v6 = [ "2a03:3b40:42:3:46::2/80" ]; };
+            teng0 = {
+              v4 = [ { address = "172.16.251.182"; prefix = 30; } ];
+              v6 = [ { address = "2a03:3b40:42:2:46::2"; prefix = 80; } ];
+            };
+            teng1 = {
+              v4 = [ { address = "172.16.250.182"; prefix = 30; } ];
+              v6 = [ { address = "2a03:3b40:42:3:46::2"; prefix = 80; } ];
+            };
           };
         };
 

@@ -25,10 +25,10 @@ in {
   networking = {
     firewall.extraCommands = ''
       # Allow access to alertmanager from prometheus
-      iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${monPrg.addresses.primary} -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${monPrg.addresses.primary.address} -j nixos-fw-accept
 
       # Allow access to alertmanager from proxy.prg
-      iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${proxyPrg.addresses.primary} -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${proxyPrg.addresses.primary.address} -j nixos-fw-accept
     '';
   };
 

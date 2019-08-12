@@ -3,7 +3,7 @@
   cluster."vpsfree.cz".prg."mon.int" = rec {
     type = "container";
     spin = "nixos";
-    addresses.primary = "172.16.4.10";
+    addresses.primary = { address = "172.16.4.10"; prefix = 32; };
     services = {
       node-exporter = {};
       prometheus = {};

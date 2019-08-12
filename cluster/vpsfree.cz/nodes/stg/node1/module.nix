@@ -1,6 +1,24 @@
 { config, ... }:
 let
-  addr = "172.16.0.26";
+  allAddresses = {
+    primary = { address = "172.16.0.26"; prefix = 32; };
+    teng0 = {
+      v4 = [
+        { address = "172.16.251.2"; prefix = 30; }
+      ];
+      v6 = [
+        { address = "2a03:3b40:42:2:01::2"; prefix = 80; }
+      ];
+    };
+    teng1 = {
+      v4 = [
+        { address = "172.16.250.2"; prefix = 30; }
+      ];
+      v6 = [
+        { address = "2a03:3b40:42:3:01::2"; prefix = 80; }
+      ];
+    };
+  };
 in {
   cluster."vpsfree.cz".stg.node1 = rec {
     type = "node";
@@ -21,7 +39,11 @@ in {
       ];
     };
 
-    addresses.primary = addr;
+    addresses = with allAddresses; {
+      inherit primary;
+      v4 = teng0.v4 ++ teng1.v4;
+      v6 = teng0.v6 ++ teng1.v6;
+    };
 
     osNode = {
       networking = {
@@ -31,8 +53,7 @@ in {
             teng1 = "0c:c4:7a:88:69:d9";
           };
           addresses = {
-            teng0 = { v4 = [ "172.16.251.2/30" ]; v6 = [ "2a03:3b40:42:2:01::2/80" ]; };
-            teng1 = { v4 = [ "172.16.250.2/30" ]; v6 = [ "2a03:3b40:42:3:01::2/80" ]; };
+            inherit (allAddresses) teng0 teng1;
           };
         };
 
@@ -51,7 +72,7 @@ in {
           };
         };
 
-        virtIP = "${addr}/32";
+        virtIP = addresses.primary;
       };
     };
 

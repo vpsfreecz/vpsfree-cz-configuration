@@ -16,7 +16,7 @@ in {
   networking = {
     firewall.extraCommands = ''
       # Allow access to grafana from proxy.prg
-      iptables -A nixos-fw -p tcp --dport ${toString grafanaPort} -s ${proxyPrg.addresses.primary} -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp --dport ${toString grafanaPort} -s ${proxyPrg.addresses.primary.address} -j nixos-fw-accept
     '';
   };
 

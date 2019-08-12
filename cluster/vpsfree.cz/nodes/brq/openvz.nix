@@ -5,7 +5,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.19.0.10";
+      addresses.primary = { address = "172.19.0.10"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -14,7 +14,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.19.0.11";
+      addresses.primary = { address = "172.19.0.11"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -23,7 +23,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.19.0.12";
+      addresses.primary = { address = "172.19.0.12"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -32,7 +32,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.19.0.13";
+      addresses.primary = { address = "172.19.0.13"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };

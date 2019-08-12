@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, mkOptions, ... }:
 with lib;
 let
   node = {
@@ -68,9 +68,9 @@ let
         };
 
         virtIP = mkOption {
-          type = types.nullOr types.str;
+          type = types.nullOr (types.submodule (mkOptions.addresses 4));
           description = "Virtual IP for dummy interface";
-          example = "10.0.0.100/32";
+          example = { address = "10.0.0.100"; prefix = 32; };
         };
       };
 
@@ -88,14 +88,14 @@ let
   interfaceAddresses = {
     options = {
       v4 = mkOption {
-        type = types.listOf types.str;
+        type = types.listOf (types.submodule (mkOptions.addresses 4));
         default = [];
         description = ''
           A lisf of IPv4 addresses with prefix
         '';
       };
       v6 = mkOption {
-        type = types.listOf types.str;
+        type = types.listOf (types.submodule (mkOptions.addresses 4));
         default = [];
         description = ''
           A lisf of IPv6 addresses with prefix

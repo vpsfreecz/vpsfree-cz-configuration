@@ -5,7 +5,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.11";
+      addresses.primary = { address = "172.16.0.11"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -14,7 +14,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.12";
+      addresses.primary = { address = "172.16.0.12"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -23,7 +23,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.13";
+      addresses.primary = { address = "172.16.0.13"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -32,7 +32,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.14";
+      addresses.primary = { address = "172.16.0.14"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -41,7 +41,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.15";
+      addresses.primary = { address = "172.16.0.15"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -50,7 +50,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.17";
+      addresses.primary = { address = "172.16.0.17"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -59,7 +59,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.18";
+      addresses.primary = { address = "172.16.0.18"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -68,7 +68,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.19";
+      addresses.primary = { address = "172.16.0.19"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -77,7 +77,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.20";
+      addresses.primary = { address = "172.16.0.20"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -86,7 +86,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.21";
+      addresses.primary = { address = "172.16.0.21"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -95,7 +95,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.22";
+      addresses.primary = { address = "172.16.0.22"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -104,7 +104,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.23";
+      addresses.primary = { address = "172.16.0.23"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -113,7 +113,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.24";
+      addresses.primary = { address = "172.16.0.24"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -122,7 +122,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.25";
+      addresses.primary = { address = "172.16.0.25"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -131,7 +131,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.27";
+      addresses.primary = { address = "172.16.0.27"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -140,7 +140,7 @@
       type = "node";
       spin = "openvz";
       node.role = "hypervisor";
-      addresses.primary = "172.16.0.28";
+      addresses.primary = { address = "172.16.0.28"; prefix = 23; };
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
@@ -149,7 +149,7 @@
       type = "node";
       spin = "openvz";
       node.role = "storage";
-      addresses.primary = "172.16.0.6";
+      addresses.primary = { address = "172.16.0.6"; prefix = 23; };
       vzNode.role = "storage";
       services.node-exporter = {};
     };

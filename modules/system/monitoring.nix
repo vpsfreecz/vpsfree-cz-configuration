@@ -25,7 +25,7 @@ in {
     (mkIf cfg.enable {
       networking.firewall.extraCommands = concatStringsSep "\n" (map (d: ''
         # Allow access to node-exporter from ${d.fqdn}
-        iptables -A nixos-fw -p tcp -m tcp -s ${d.config.addresses.primary} --dport ${toString exporterPort} -j nixos-fw-accept
+        iptables -A nixos-fw -p tcp -m tcp -s ${d.config.addresses.primary.address} --dport ${toString exporterPort} -j nixos-fw-accept
       '') monitorings);
 
       services.prometheus.exporters = {

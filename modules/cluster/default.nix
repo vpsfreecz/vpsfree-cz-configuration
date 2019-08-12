@@ -3,6 +3,30 @@ with lib;
 let
   topLevelConfig = config;
 
+  mkOptions = {
+    addresses = v:
+      { config, ... }:
+      {
+        options = {
+          address = mkOption {
+            type = types.str;
+            description = "IPv${toString v} address";
+          };
+
+          prefix = mkOption {
+            type = types.ints.positive;
+            description = "Prefix length";
+          };
+
+          string = mkOption {
+            type = types.str;
+            default = "${config.address}/${toString config.prefix}";
+            description = "Address with prefix as string";
+          };
+        };
+      };
+  };
+
   deployment =
     { config, ...}:
     {
@@ -19,7 +43,7 @@ let
 
         addresses = {
           primary = mkOption {
-            type = types.str;
+            type = types.submodule (mkOptions.addresses 4);
             default = head config.addresses.v4;
             description = ''
               Default address other machines should use to connect to this machine
@@ -29,7 +53,7 @@ let
           };
 
           v4 = mkOption {
-            type = types.listOf types.str;
+            type = types.listOf (types.submodule (mkOptions.addresses 4));
             default = [ config.addresses.primary ];
             description = ''
               List of IPv4 addresses this machine responds to
@@ -37,7 +61,7 @@ let
           };
 
           v6 = mkOption {
-            type = types.listOf types.str;
+            type = types.listOf (types.submodule (mkOptions.addresses 6));
             default = [];
             description = ''
               List of IPv6 addresses this machine responds to
@@ -63,7 +87,7 @@ let
             Services published by this machine
           '';
           apply = mapAttrs (name: sv: {
-            address = if isNull sv.address then config.addresses.primary else sv.address;
+            address = if isNull sv.address then config.addresses.primary.address else sv.address;
             port = if isNull sv.port then topLevelConfig.servicePorts.${name} else sv.port;
           });
         };
@@ -133,7 +157,7 @@ let
 
   node = (import ./nodes/common.nix) args;
 
-  osNode = (import ./nodes/vpsadminos.nix) args;
+  osNode = (import ./nodes/vpsadminos.nix) (args // { inherit mkOptions; });
 
   vzNode = (import ./nodes/openvz.nix) args;
 in {

@@ -73,10 +73,10 @@
         ${lib.concatStringsSep "\n" sshRules}
 
         # node_exporter
-        iptables -A nixos-fw -p tcp --dport ${toString nodeExporterCfg.port} -s ${monPrg.addresses.primary} -j nixos-fw-accept
+        iptables -A nixos-fw -p tcp --dport ${toString nodeExporterCfg.port} -s ${monPrg.addresses.primary.address} -j nixos-fw-accept
 
         # osctl-exporter
-        iptables -A nixos-fw -p tcp --dport ${toString osctlExporterCfg.port} -s ${monPrg.addresses.primary} -j nixos-fw-accept
+        iptables -A nixos-fw -p tcp --dport ${toString osctlExporterCfg.port} -s ${monPrg.addresses.primary.address} -j nixos-fw-accept
 
         # rpcbind
         iptables -A nixos-fw -p tcp --dport 111 -j nixos-fw-accept
