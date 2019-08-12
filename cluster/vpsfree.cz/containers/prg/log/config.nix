@@ -30,7 +30,7 @@ in {
     # pwgen -N 1 -s 96
     passwordSecret = lib.fileContents /secrets/graylog/passwordSecretSalt;
     # echo -n somepass | shasum -a 256
-    rootPasswordSha2 = "670ddd27b448503bdb66dab9d3f978f7da2b6eb38f36e4268647c76203ab807f";
+    rootPasswordSha2 = "86a09e9fb695d0a2d17439318566b69d4f04486cf96a422473d9b7ee782d4845";
     elasticsearchHosts = [ "http://localhost:9200" ];
     extraConfig = ''
       http_bind_address = 127.0.0.1:9000
