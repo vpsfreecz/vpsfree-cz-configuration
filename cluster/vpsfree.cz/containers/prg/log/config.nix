@@ -4,6 +4,10 @@ let
   rsyslogTcpPort = deploymentInfo.config.services.graylog-rsyslog-tcp.port;
   rsyslogUdpPort = deploymentInfo.config.services.graylog-rsyslog-udp.port;
   gelfPort = deploymentInfo.config.services.graylog-gelf.port;
+
+  loggedAddresses = filter (a:
+    a.config.logging.enable
+  ) (confLib.getAllAddressesOf config.cluster 4);
 in {
   imports = [
     ../../../../../environments/base.nix
@@ -17,7 +21,7 @@ in {
         iptables -A nixos-fw -p tcp -s ${a.address} --dport ${toString rsyslogTcpPort} -j nixos-fw-accept
         iptables -A nixos-fw -p udp -s ${a.address} --dport ${toString rsyslogUdpPort} -j nixos-fw-accept
         iptables -A nixos-fw -p udp -s ${a.address} --dport ${toString gelfPort} -j nixos-fw-accept
-      '') (confLib.getAllAddressesOf config.cluster 4)}
+      '') loggedAddresses}
     '';
   };
 
