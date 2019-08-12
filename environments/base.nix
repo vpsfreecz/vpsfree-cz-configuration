@@ -16,10 +16,5 @@
     screen
   ];
 
-  users.users.root.openssh.authorizedKeys.keys = with data; [
-    sshKeys."build.vpsfree.cz"
-    sshKeys.aither
-    sshKeys.srk
-    sshKeys.snajpa
-  ];
+  users.users.root.openssh.authorizedKeys.keys = with data.sshKeys; admins ++ builders;
 }
