@@ -20,9 +20,9 @@ let
       net ~ [ ${concatStringsSep ", " list} ]
     '';
 
-  importInterfaceFilter = ipVer: optionalString (cfg.osNode.networking.interfaces != {}) (
+  importInterfaceFilter = ipVer: optionalString (cfg.osNode.networking.interfaces.addresses != {}) (
     let
-      ifconds = concatMapStringsSep " || " (v: "ifname = \"${v}\"") (attrNames cfg.osNode.networking.interfaces);
+      ifconds = concatMapStringsSep " || " (v: "ifname = \"${v}\"") (attrNames cfg.osNode.networking.interfaces.addresses);
       netLen = {
         "ipv4" = 30;
         "ipv6" = 80;
