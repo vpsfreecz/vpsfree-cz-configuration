@@ -3,7 +3,7 @@
 {
 
   imports = [
-    ../../../../environments/base.nix
+    ../../../../../environments/base.nix
   ];
 
   networking.firewall.allowedTCPPorts = [ 80 11514 ];    # web,  tcp rsyslog
@@ -18,8 +18,8 @@
     elasticsearchHosts = [ "http://localhost:9200" ];
     extraConfig = ''
       http_bind_address = 127.0.0.1:9000
-      http_publish_uri  = http://log.vpsfree.cz/
-      http_external_uri = http://log.vpsfree.cz/
+      http_publish_uri  = http://log.prg.vpsfree.cz/
+      http_external_uri = http://log.prg.vpsfree.cz/
       '';
   };
 
@@ -42,7 +42,7 @@
     recommendedProxySettings = true;
 
     virtualHosts = {
-      "log.vpsfree.cz" = {
+      "log.prg.vpsfree.cz" = {
         default = true;
         locations = {
           "/" = {

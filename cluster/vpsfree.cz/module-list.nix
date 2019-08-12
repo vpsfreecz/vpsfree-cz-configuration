@@ -1,6 +1,6 @@
 [
-  ./containers/log/module.nix
   ./containers/prg/alerts.int/module.nix
+  ./containers/prg/log/module.nix
   ./containers/prg/grafana.int/module.nix
   ./containers/prg/mon.int/module.nix
   ./containers/prg/proxy/module.nix
