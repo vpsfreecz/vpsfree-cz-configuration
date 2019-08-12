@@ -48,22 +48,4 @@ in
   ];
 
   programs.havesnippet.enable = true;
-
-  users.extraUsers.srk = {
-    isNormalUser = true;
-    createHome = true;
-    uid = 1000;
-  };
-
-  users.extraUsers.srk.openssh.authorizedKeys.keys =
-    with data.sshKeys; [ srk_new ];
-
-  users.extraUsers.aither = {
-    isNormalUser = true;
-    createHome = true;
-    uid = 1001;
-  };
-
-  users.extraUsers.aither.openssh.authorizedKeys.keys =
-    with data.sshKeys; [ aither ];
 }
