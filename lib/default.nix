@@ -73,4 +73,13 @@ in rec {
     builtins.filter (d:
       d.domain == domain && d.type == "node"
     ) (getClusterDeployments cluster);
+
+  # Get IP version addresses from all machines in a cluster
+  getAllAddressesOf = cluster: v:
+    let
+      deps = getClusterDeployments cluster;
+      addresses = flatten (map (d:
+        map (a: d // a) d.config.addresses.${"v${toString v}"}
+      ) deps);
+    in addresses;
 }

@@ -1,13 +1,25 @@
-{ config, pkgs, lib, ... }:
-
-{
-
+{ config, pkgs, lib, confLib, deploymentInfo, ... }:
+with lib;
+let
+  rsyslogTcpPort = deploymentInfo.config.services.graylog-rsyslog-tcp.port;
+  rsyslogUdpPort = deploymentInfo.config.services.graylog-rsyslog-udp.port;
+  gelfPort = deploymentInfo.config.services.graylog-gelf.port;
+in {
   imports = [
     ../../../../../environments/base.nix
   ];
 
-  networking.firewall.allowedTCPPorts = [ 80 11514 ];    # web,  tcp rsyslog
-  networking.firewall.allowedUDPPorts = [ 12201 11515 ]; # gelf, upd rsyslog
+  networking.firewall = {
+    allowedTCPPorts = [ 80 ];
+    extraCommands = ''
+      ${concatMapStringsSep "\n" (a: ''
+        # Allow access from ${a.fqdn} @ ${a.address}
+        iptables -A nixos-fw -p tcp -s ${a.address} --dport ${toString rsyslogTcpPort} -j nixos-fw-accept
+        iptables -A nixos-fw -p udp -s ${a.address} --dport ${toString rsyslogUdpPort} -j nixos-fw-accept
+        iptables -A nixos-fw -p udp -s ${a.address} --dport ${toString gelfPort} -j nixos-fw-accept
+      '') (confLib.getAllAddressesOf config.cluster 4)}
+    '';
+  };
 
   services.graylog = {
     enable = true;
@@ -34,7 +46,7 @@
 
   services.SystemdJournal2Gelf = {
     enable = true;
-    graylogServer = "127.0.0.1:12201";
+    graylogServer = "127.0.0.1:${toString gelfPort}";
   };
 
   services.nginx = {

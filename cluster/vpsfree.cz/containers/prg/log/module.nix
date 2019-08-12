@@ -4,6 +4,11 @@
     type = "container";
     spin = "nixos";
     addresses.primary = { address = "172.16.4.1"; prefix = 32; };
-    services.node-exporter = {};
+    services = {
+      graylog-gelf = {};
+      graylog-rsyslog-tcp = {};
+      graylog-rsyslog-udp = {};
+      node-exporter = {};
+    };
   };
 }

@@ -19,6 +19,9 @@ with lib;
       prometheus = 9090;
       node-exporter = 9100;
       osctl-exporter = 9101;
+      graylog-rsyslog-tcp = 11514;
+      graylog-rsyslog-udp = 11515;
+      graylog-gelf = 12201;
     };
   };
 }
