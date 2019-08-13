@@ -7,6 +7,13 @@ let
     name = "mon.int";
   };
 
+  logPrg = confLib.findConfig {
+    cluster = config.cluster;
+    domain = "vpsfree.cz";
+    location = "prg";
+    name = "log";
+  };
+
   proxyPrg = confLib.findConfig {
     cluster = config.cluster;
     domain = "vpsfree.cz";
@@ -26,6 +33,9 @@ in {
     firewall.extraCommands = ''
       # Allow access to alertmanager from prometheus
       iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${monPrg.addresses.primary.address} -j nixos-fw-accept
+
+      # Allow access to alertmanager from log.prg
+      iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${logPrg.addresses.primary.address} -j nixos-fw-accept
 
       # Allow access to alertmanager from proxy.prg
       iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${proxyPrg.addresses.primary.address} -j nixos-fw-accept
