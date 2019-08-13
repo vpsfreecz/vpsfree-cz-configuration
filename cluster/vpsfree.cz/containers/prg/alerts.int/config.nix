@@ -146,6 +146,12 @@ in {
                 };
                 "repeat_interval" = "1m";
               }
+              {
+                "match" = {
+                  "frequency" = "15s";
+                };
+                "repeat_interval" = "15s";
+              }
             ];
           }
         ];
