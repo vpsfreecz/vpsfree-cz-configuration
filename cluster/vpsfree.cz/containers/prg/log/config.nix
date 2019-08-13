@@ -13,6 +13,8 @@ in {
     ../../../../../environments/base.nix
   ];
 
+  nixpkgs.overlays = import ../../../../../overlays;
+
   networking.firewall = {
     allowedTCPPorts = [ 80 ];
     extraCommands = ''
@@ -37,6 +39,9 @@ in {
       http_publish_uri  = http://log.prg.vpsfree.cz/
       http_external_uri = http://log.prg.vpsfree.cz/
       '';
+    plugins = [
+      pkgs.graylogPlugins.alertmanager-callback
+    ];
   };
 
   services.elasticsearch = {
