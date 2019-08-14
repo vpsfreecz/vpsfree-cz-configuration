@@ -1,4 +1,5 @@
-{ pkgs, lib, confLib, config, deploymentInfo, ... }:
+{ pkgs, lib, confLib, config, data, deploymentInfo, ... }:
+with lib;
 let
   monPrg = confLib.findConfig {
     cluster = config.cluster;
@@ -22,6 +23,27 @@ let
   };
 
   alertmanagerPort = deploymentInfo.config.services.alertmanager.port;
+
+  allContainers = filter (
+    d: d.type == "container"
+  ) (confLib.getClusterDeployments config.cluster);
+
+  containerInhibitRules = map (ct:
+    let
+      realLocation = if isNull ct.location then "global" else ct.location;
+      ctData = data.containers.${ct.domain}.${realLocation}.${ct.name};
+    in {
+      target_match = {
+        type = "container";
+        fqdn = "${ct.fqdn}";
+      };
+      source_match = {
+        alertname = "NodeDown";
+        type = "node";
+        fqdn = "${ctData.node.fqdn}";
+      };
+    }
+  ) allContainers;
 in {
   imports = [
     ../../../../../environments/base.nix
@@ -187,7 +209,7 @@ in {
           };
           equal = [ "fqdn" ];
         }
-      ];
+      ] ++ containerInhibitRules;
     };
   };
 
