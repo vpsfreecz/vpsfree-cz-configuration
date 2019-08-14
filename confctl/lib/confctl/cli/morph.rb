@@ -1,41 +1,21 @@
-require 'json'
-
 module ConfCtl::Cli
   class Morph < Command
-    DEPLOYMENTS_EXPR = File.realpath(File.join(Dir.pwd, 'deployments.nix'))
     MORPH_EXPR = File.realpath(File.join(Dir.pwd, 'morph.nix'))
 
     def list
-      cmd = [
-        'nix-instantiate',
-        '--eval',
-        '--json',
-        '--strict',
-        '--arg', 'deploymentsExpr', DEPLOYMENTS_EXPR,
-        '--attr', 'deploymentsInfo',
-        (opts['show-trace'] ? '--show-trace' : ''),
-        asset('eval-machines.nix'),
-      ]
-
-      json = `#{cmd.join(' ')}`
-
-      if $?.exitstatus != 0
-        fail "nix-instantiate failed with exit status #{$?.exitstatus}"
-      end
-
-      hosts = JSON.parse(json)
+      deps = ConfCtl::Deployments.new(show_trace: opts['show-trace'])
 
       puts sprintf(
         '%-30s %-12s %-12s %-12s %-15s %-10s %s',
         'HOST', 'TYPE', 'SPIN', 'ROLE', 'NAME', 'LOCATION', 'DOMAIN'
       )
 
-      hosts.each do |host, info|
+      deps.each do |host, d|
         next if args[0] && !ConfCtl::Pattern.match?(args[0], host)
 
         puts sprintf(
           '%-30s %-12s %-12s %-12s %-15s %-10s %s',
-          host, info['type'], info['spin'], info['role'], info['name'], info['location'], info['domain']
+          host, d.type, d.spin, d.role, d.name, d.location, d.domain
         )
       end
     end
@@ -78,11 +58,6 @@ module ConfCtl::Cli
       cmd << MORPH_EXPR
 
       Process.exec(*cmd)
-    end
-
-    protected
-    def asset(name)
-      File.join(File.dirname(__FILE__), '../../..', 'assets', name)
     end
   end
 end
