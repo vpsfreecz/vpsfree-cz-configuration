@@ -57,6 +57,12 @@ information.
     `--show-trace`
       Enable traces in Nix.
 
+`confctl gen-data all`
+  Generate all required data files from vpsAdmin API.
+
+`confctl gen-data network`
+  Generate network data files from vpsAdmin API.
+
 `confctl swpins file ls` [*file-pattern* [*sw-pattern*]]
   List existing files with pinned software packages.
 
