@@ -6,7 +6,43 @@ module ConfCtl::Cli
     DATADIR = File.join(ConfCtl.root, 'data')
 
     def all
+      containers
       network
+    end
+
+    def containers
+      api = get_client
+
+      deployments = ConfCtl::Deployments.new
+      data = {}
+
+      deployments.each do |host, d|
+        next if d.type != 'container'
+
+        ct = api.vps.show(
+          d.config['container']['id'],
+          meta: {includes: 'node__location__environment'},
+        )
+
+        loc = d.location || 'global'
+
+        data[d.domain] ||= {}
+        data[d.domain][loc] ||= {}
+        data[d.domain][loc][d.name] = {
+          node: {
+            id: ct.node.id,
+            name: ct.node.name,
+            location: ct.node.location.domain,
+            domain: ct.node.location.environment.domain,
+            fqdn: "#{ct.node.domain_name}.#{ct.node.location.environment.domain}",
+          },
+        }
+      end
+
+      nixer = ConfCtl::Nixer.new(data)
+      update_file('containers.nix') do |f|
+        f.puts(nixer.serialize)
+      end
     end
 
     def network

@@ -153,6 +153,11 @@ module ConfCtl::Cli
           c.action &Command.run(GenData, :all)
         end
 
+        gen.desc 'Generate container data files'
+        gen.command :containers do |c|
+          c.action &Command.run(GenData, :containers)
+        end
+
         gen.desc 'Generate network data files'
         gen.command :network do |c|
           c.action &Command.run(GenData, :network)

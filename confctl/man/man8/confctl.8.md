@@ -60,6 +60,9 @@ information.
 `confctl gen-data all`
   Generate all required data files from vpsAdmin API.
 
+`confctl gen-data containers`
+  Generate container data files from vpsAdmin API.
+
 `confctl gen-data network`
   Generate network data files from vpsAdmin API.
 
