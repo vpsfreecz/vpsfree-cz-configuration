@@ -92,6 +92,10 @@ let
           });
         };
 
+        container = mkOption {
+          type = types.nullOr (types.submodule container);
+        };
+
         node = mkOption {
           type = types.nullOr (types.submodule node);
         };
@@ -169,6 +173,17 @@ let
           description = ''
             Port the service listens on
           '';
+        };
+      };
+    };
+
+  container =
+    { config, ... }:
+    {
+      options = {
+        id = mkOption {
+          type = types.int;
+          description = "VPS ID in vpsAdmin";
         };
       };
     };

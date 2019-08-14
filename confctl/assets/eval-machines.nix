@@ -15,7 +15,7 @@ let
       inherit (config) addresses netboot;
     };
 
-    container = base;
+    container = base // { inherit (config) container; };
 
     node = base // (nodeConfigBySpin config spin);
 
