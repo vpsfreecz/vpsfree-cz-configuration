@@ -176,6 +176,18 @@ in {
           ];
         }
       ];
+
+      inhibit_rules = [
+        {
+          target_match = {
+            alertname = "NodeExporterDown";
+          };
+          source_match = {
+            alertname = "NodeDown";
+          };
+          equal = [ "fqdn" ];
+        }
+      ];
     };
   };
 
