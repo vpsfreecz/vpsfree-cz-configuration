@@ -47,6 +47,7 @@ in {
     vpsadmin.netInterfaces = mkDefault (lib.attrNames cfg.osNode.networking.interfaces.addresses);
 
     services.udev.extraRules = confLib.mkNetUdevRules cfg.osNode.networking.interfaces.names;
+    services.rsyslogd.hostName = "${deploymentInfo.name}.${deploymentInfo.location}";
 
     networking.hostName = deploymentInfo.fqdn;
     networking.custom = ''
