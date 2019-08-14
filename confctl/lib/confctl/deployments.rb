@@ -4,7 +4,9 @@ module ConfCtl
   class Deployments
     DEPLOYMENTS_EXPR = File.join(ConfCtl.root, 'deployments.nix')
 
-    Deployment = Struct.new(:type, :spin, :role, :name, :location, :domain, :fqdn)
+    Deployment = Struct.new(
+      :type, :spin, :role, :name, :location, :domain, :fqdn, :config
+    )
 
     # @param opts [Hash]
     # @option opts [Boolean] :show_trace
@@ -53,6 +55,7 @@ module ConfCtl
           info['location'],
           info['domain'],
           info['fqdn'],
+          info['config'],
         )]
       end]
     end
