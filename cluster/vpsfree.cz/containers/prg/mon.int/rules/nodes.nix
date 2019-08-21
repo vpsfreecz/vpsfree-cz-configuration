@@ -226,7 +226,7 @@
         expr = ''osctl_pool_count{job="nodes",role="hypervisor",state="active"} == 0'';
         for = "15m";
         labels = {
-          severity = "critical";
+          severity = "fatal";
           frequency = "10m";
         };
         annotations = {
@@ -269,7 +269,7 @@
         expr = ''probe_success{job="nodes-ping"} == 0'';
         for = "30s";
         labels = {
-          severity = "critical";
+          severity = "fatal";
           frequency = "2m";
         };
         annotations = {

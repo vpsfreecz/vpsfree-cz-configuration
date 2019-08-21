@@ -111,8 +111,8 @@ in {
 
           # SMS alerts
           {
-            match = {
-              severity = "critical";
+            match_re = {
+              severity = "critical|fatal";
             };
             receiver = "team-sms";
             group_wait = "10s";
