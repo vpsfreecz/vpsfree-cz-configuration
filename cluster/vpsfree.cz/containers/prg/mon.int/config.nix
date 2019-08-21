@@ -255,6 +255,7 @@ in {
         ./rules/common.nix
         ./rules/nodes.nix
         ./rules/infra.nix
+        ./rules/time-of-day.nix
       ]);
     };
 

@@ -176,6 +176,15 @@ in {
               }
             ];
           }
+
+          # Blackhole
+          {
+            match = {
+              severity = "none";
+            };
+            receiver = "blackhole";
+            continue = false;
+          }
         ];
       };
       receivers = [
@@ -196,6 +205,9 @@ in {
               send_resolved = true;
             }
           ];
+        }
+        {
+          name = "blackhole";
         }
       ];
 
@@ -236,6 +248,17 @@ in {
             severity = "critical";
           };
           equal = [ "alertclass" "instance" ];
+        }
+
+        # Disable critical alerts during quiet hours. Use fatal alerts to bypass
+        # quiet hours.
+        {
+          target_match = {
+            severity = "critical";
+          };
+          source_match = {
+            alertname = "QuietHours";
+          };
         }
 
         # Ignore alerts for containers which are on nodes that are down
