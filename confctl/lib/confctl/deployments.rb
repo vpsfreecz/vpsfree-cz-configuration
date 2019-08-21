@@ -30,6 +30,7 @@ module ConfCtl
         '--eval',
         '--json',
         '--strict',
+        '--read-write-mode',
         '--arg', 'deploymentsExpr', DEPLOYMENTS_EXPR,
         '--attr', 'deploymentsInfo',
         (opts[:show_trace] ? '--show-trace' : ''),
