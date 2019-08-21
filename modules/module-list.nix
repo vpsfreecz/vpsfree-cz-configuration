@@ -8,6 +8,7 @@ let
   ];
 
   nixos = [
+    ./services/monitoring/prometheus/rules.nix
     ./services/netboot.nix
     ./services/sachet.nix
     ./services/vpsadminos-web.nix
