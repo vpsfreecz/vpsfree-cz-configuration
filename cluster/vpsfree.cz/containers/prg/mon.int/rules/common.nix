@@ -54,6 +54,7 @@
         expr = "zpool_list_capacity >= 80";
         for = "1h";
         labels = {
+          alertclass = "zpoolcap";
           severity = "warning";
         };
         annotations = {
@@ -71,6 +72,7 @@
         expr = "zpool_list_capacity >= 90";
         for = "15m";
         labels = {
+          alertclass = "zpoolcap";
           severity = "critical";
           frequency = "daily";
         };
@@ -89,6 +91,7 @@
         expr = "zpool_list_capacity >= 95";
         for = "15m";
         labels = {
+          alertclass = "zpoolcap";
           severity = "fatal";
           frequency = "daily";
         };

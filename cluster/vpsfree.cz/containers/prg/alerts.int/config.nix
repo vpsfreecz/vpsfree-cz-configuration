@@ -200,6 +200,7 @@ in {
       ];
 
       inhibit_rules = [
+        # Ignore unreachable exporters when nodes are down
         {
           target_match = {
             alertname = "NodeExporterDown";
@@ -209,6 +210,35 @@ in {
           };
           equal = [ "fqdn" ];
         }
+
+        # Disable less-important alerts when more important alerts of the same
+        # class are firing.
+        {
+          target_match = {
+            severity = "critical";
+          };
+          target_match_re = {
+            alertclass = ".+";
+          };
+          source_match = {
+            severity = "fatal";
+          };
+          equal = [ "alertclass" "instance" ];
+        }
+        {
+          target_match = {
+            severity = "warning";
+          };
+          target_match_re = {
+            alertclass = ".+";
+          };
+          source_match = {
+            severity = "critical";
+          };
+          equal = [ "alertclass" "instance" ];
+        }
+
+        # Ignore alerts for containers which are on nodes that are down
       ] ++ containerInhibitRules;
     };
   };
