@@ -84,6 +84,24 @@
           '';
         };
       }
+      {
+        alert = "ZpoolFatalFreeSpace";
+        expr = "zpool_list_capacity >= 95";
+        for = "15m";
+        labels = {
+          severity = "fatal";
+          frequency = "daily";
+        };
+        annotations = {
+          summary = "Not enough free space (instance {{ $labels.instance }})";
+          description = ''
+            Zpool uses more than 95% of available space
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 ]

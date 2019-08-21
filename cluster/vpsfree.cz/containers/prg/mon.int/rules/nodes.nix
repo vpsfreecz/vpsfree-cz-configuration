@@ -95,6 +95,24 @@
       }
 
       {
+        alert = "HypervisorFatalIoWait";
+        expr = ''(avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 50 and on(instance) time() - node_boot_time_seconds > 3600'';
+        for = "20m";
+        labels = {
+          severity = "critical";
+        };
+        annotations = {
+          summary = "Critical CPU iowait (instance {{ $labels.instance }})";
+          description = ''
+            CPU iowait is > 50%
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "StorageHighCpuLoad";
         expr = ''100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="storage"}[5m])) * 100) > 80'';
         for = "15m";
@@ -208,6 +226,25 @@
         for = "5m";
         labels = {
           severity = "critical";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Load average critical (instance {{ $labels.instance }})";
+          description = ''
+            5 minute load average is too high
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeFatalLoad";
+        expr = ''node_load5{job="nodes"} > 2000'';
+        for = "5m";
+        labels = {
+          severity = "fatal";
           frequency = "hourly";
         };
         annotations = {
