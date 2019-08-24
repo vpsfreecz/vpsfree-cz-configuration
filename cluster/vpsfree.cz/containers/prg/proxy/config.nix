@@ -61,7 +61,6 @@ in {
       "grafana.prg.vpsfree.cz" = {
         enableACME = true;
         forceSSL = true;
-        basicAuthFile = "/private/nginx/mon.htpasswd";
         locations."/".proxyPass = "http://${grafanaPrg.services.grafana.address}:${toString grafanaPrg.services.grafana.port}";
       };
     };
