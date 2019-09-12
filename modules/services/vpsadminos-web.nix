@@ -45,6 +45,7 @@ let
   man = pkgs.runCommand "manroot" { } ''
     mkdir $out
     ln -s ${buildMan "osctl"} $out/osctl
+    ln -s ${buildMan "osctl-exportfs"} $out/osctl-exportfs
     ln -s ${buildMan "osctl-image"} $out/osctl-image
     ln -s ${buildMan "osctl-repo"} $out/osctl-repo
     ln -s ${buildMan "converter"} $out/converter
@@ -59,7 +60,7 @@ let
     chmod -R +w vpsadminos
     mkdir $out
     pushd vpsadminos
-      for gem in libosctl osctl osctl-image osctl-repo osctld converter svctl; do
+      for gem in libosctl osctl osctl-exportfs osctl-image osctl-repo osctld converter svctl; do
         pushd $gem
           mkdir -p $out/$gem
           YARD_OUTPUT=$out/$gem osctl-env-exec rake yard
