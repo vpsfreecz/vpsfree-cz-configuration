@@ -27,6 +27,10 @@ let
   buildMan = component: pkgs.runCommand "${replaceStrings ["/"] ["_"] component}_man" {
     buildInputs = [ docsPkgs.osctl-env-exec pkgs.git ];
   } ''
+    # Necessary for unicode characters in manpages
+    export LOCALE_ARCHIVE="${pkgs.glibcLocales}/lib/locale/locale-archive"
+    export LANG="en_US.UTF-8"
+
     mkdir man
     cp -R ${swpins.vpsadminos} vpsadminos
     chmod -R +w vpsadminos
