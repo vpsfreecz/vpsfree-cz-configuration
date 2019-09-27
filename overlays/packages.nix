@@ -5,12 +5,12 @@ self: super:
   havesnippet-client = super.callPackage ../packages/havesnippet-client {};
 
   morph = super.morph.overrideAttrs (oldAttrs: rec {
-    name = oldAttrs.name + "-sorki";
+    name = oldAttrs.name + "-vpsfree";
     src = super.fetchFromGitHub {
-      owner = "sorki";
+      owner = "vpsfreecz";
       repo = "morph";
-      rev = "d9396af1adeb7d9d012c2f75f7c90475464b12a4";
-      sha256 = "1viwphxq7dm0zbgag6q2psibkbfhiylhp15s1i2wzlh0gnlslkd8";
+      rev = "0436aa6eaf1e1bfe9735b32d084b71764a2e3073";
+      sha256 = "100dk373ksnnyl4x1nv3igdrai39xlmi8d173ghgfaw5w6fw6kvh";
     };
   });
 
