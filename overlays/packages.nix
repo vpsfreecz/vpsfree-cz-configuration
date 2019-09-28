@@ -5,7 +5,7 @@ self: super:
   havesnippet-client = super.callPackage ../packages/havesnippet-client {};
 
   morph = super.morph.overrideAttrs (oldAttrs: rec {
-    name = oldAttrs.name + "-vpsfree";
+    name = "morph-vpsfree";
     src = super.fetchFromGitHub {
       owner = "vpsfreecz";
       repo = "morph";
