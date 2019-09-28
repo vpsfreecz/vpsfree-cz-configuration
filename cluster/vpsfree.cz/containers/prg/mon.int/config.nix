@@ -147,7 +147,7 @@ in {
   };
 
   services = {
-    prometheus2 = {
+    prometheus = {
       enable = true;
       extraFlags = [
         "--storage.tsdb.retention.time 365d"

@@ -1,20 +1,20 @@
 { config, pkgs, lib, ... }:
 with lib;
 let
-  cfg2 = config.services.prometheus2;
+  cfg = config.services.prometheus;
 
   ruleFile = pkgs.writeText "prometheus-rules" (builtins.toJSON {
-    groups = cfg2.ruleConfigs;
+    groups = cfg.ruleConfigs;
   });
 in {
   options = {
-    services.prometheus2.ruleConfigs = mkOption {
+    services.prometheus.ruleConfigs = mkOption {
       type = types.listOf types.attrs;
       default = [];
     };
   };
 
-  config = mkIf (cfg2.ruleConfigs != []) {
-    services.prometheus2.ruleFiles = [ ruleFile ];
+  config = mkIf (cfg.ruleConfigs != []) {
+    services.prometheus.ruleFiles = [ ruleFile ];
   };
 }
