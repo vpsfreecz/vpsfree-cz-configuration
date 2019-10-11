@@ -4,7 +4,7 @@
     ../../../environments/base.nix
   ];
 
-  users.users.root.initialHashedPassword = "$6$bdENLP5gkTO$iVMOmBo4EmmP2YawSOHEvMlq1WDn9RvMCG3ChYfpBoYKejAIz/g78EP2gfE8zM2SdS8p3O8E2LbzQMXwOupdj/";
+  users.users.root.initialHashedPassword = "$6$X/q70eX.dr$svzVWUFXbcOwEtPtURVVy0n80evQMXxI4fU7ICBG5xXftWSuZh4G4zSQ8FF9mgICLfwxzFTffFcXluhn0xazH.";
 
   boot.kernelModules = [
     "ipmi_si"
