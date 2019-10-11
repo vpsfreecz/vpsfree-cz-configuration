@@ -46,7 +46,7 @@ in {
 
   services.elasticsearch = {
     enable = true;
-    package = pkgs.elasticsearch5;
+    package = pkgs.elasticsearch6-oss;
   };
 
   services.mongodb = {
