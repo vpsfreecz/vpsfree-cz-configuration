@@ -247,8 +247,17 @@ in {
         }
       );
 
-      alertmanagerURL = [
-        "${alertsPrg.services.alertmanager.address}:${toString alertsPrg.services.alertmanager.port}"
+      alertmanagers = [
+        {
+          scheme = "http";
+          static_configs = [
+            {
+              targets = [
+                "${alertsPrg.services.alertmanager.address}:${toString alertsPrg.services.alertmanager.port}"
+              ];
+            }
+          ];
+        }
       ];
 
       ruleConfigs = flatten (map (v: import v) [
