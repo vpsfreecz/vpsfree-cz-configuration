@@ -83,8 +83,8 @@
         iptables -A nixos-fw -p udp --dport 111 -j nixos-fw-accept
 
         # nfsd
-        iptables -A nixos-fw -p tcp --dport 2049 -j nixos-fw-accept
-        iptables -A nixos-fw -p udp --dport 2049 -j nixos-fw-accept
+        iptables -A nixos-fw -p tcp --dport ${toString nfsCfg.nfsd.port} -j nixos-fw-accept
+        iptables -A nixos-fw -p udp --dport ${toString nfsCfg.nfsd.port} -j nixos-fw-accept
 
         # mountd
         iptables -A nixos-fw -p tcp --dport ${toString nfsCfg.mountdPort} -j nixos-fw-accept
@@ -110,6 +110,7 @@
 
   services.nfs.server = {
     enable = true;
+    nfsd.port = 2049;
     mountdPort = 20048;
     statdPort = 662;
     lockdPort = 32769;
