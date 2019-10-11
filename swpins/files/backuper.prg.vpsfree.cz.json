@@ -14,10 +14,10 @@
     "channel": "staging",
     "type": "git",
     "options": {
-      "url": "https://github.com/vpsfreecz/nixpkgs",
-      "rev": "362be9608c3e0dc5216e9d1d5f5c1a5643b7f7b1",
-      "date": "2019-07-12T22:31:26+02:00",
-      "sha256": "0934rhanamsnhawg15gg6cy9ird3c47hsqn5s46lq2n5kzl6v7ly",
+      "url": "https://github.com/NixOS/nixpkgs-channels",
+      "rev": "dbad7c7d59f12e81032bc3100e3d9fa44b6d4e70",
+      "date": "2019-10-10T23:59:58+02:00",
+      "sha256": "1pjhslnhz4gngbclyr39x4xaicrc1sz2xy8bsrvlr3cl5qrbki2b",
       "fetchSubmodules": false
     }
   },
