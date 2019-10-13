@@ -31,9 +31,9 @@ module ConfCtl::Cli
         data[d.domain][loc][d.name] = {
           node: {
             id: ct.node.id,
-            name: ct.node.name,
-            location: ct.node.location.domain,
-            domain: ct.node.location.environment.domain,
+            name: rdomain(ct.node.name),
+            location: rdomain(ct.node.location.domain),
+            domain: rdomain(ct.node.location.environment.domain),
             fqdn: "#{ct.node.domain_name}.#{ct.node.location.environment.domain}",
           },
         }
@@ -87,6 +87,10 @@ module ConfCtl::Cli
 
       File.open(tmp, 'w') { |f| yield(f) }
       File.rename(tmp, abs)
+    end
+
+    def rdomain(domain)
+      domain ? domain.split('.').reverse.join('.') : nil
     end
   end
 end

@@ -1,31 +1,27 @@
 {
-  "vpsadminos.org" = {
-    global = {
-      www = {
-        node = {
-          domain = "vpsfree.cz";
-          fqdn = "node1.stg.vpsfree.cz";
-          id = 400;
-          location = "stg";
-          name = "node1";
-        };
-      };
-    };
-  };
-  "vpsfree.cz" = {
+  "cz.vpsfree" = {
     prg = {
-      "alerts.int" = {
+      "int.alerts" = {
         node = {
-          domain = "vpsfree.cz";
+          domain = "cz.vpsfree";
           fqdn = "node2.stg.vpsfree.cz";
           id = 401;
           location = "stg";
           name = "node2";
         };
       };
-      "grafana.int" = {
+      "int.grafana" = {
         node = {
-          domain = "vpsfree.cz";
+          domain = "cz.vpsfree";
+          fqdn = "node2.stg.vpsfree.cz";
+          id = 401;
+          location = "stg";
+          name = "node2";
+        };
+      };
+      "int.mon" = {
+        node = {
+          domain = "cz.vpsfree";
           fqdn = "node2.stg.vpsfree.cz";
           id = 401;
           location = "stg";
@@ -34,16 +30,7 @@
       };
       log = {
         node = {
-          domain = "vpsfree.cz";
-          fqdn = "node2.stg.vpsfree.cz";
-          id = 401;
-          location = "stg";
-          name = "node2";
-        };
-      };
-      "mon.int" = {
-        node = {
-          domain = "vpsfree.cz";
+          domain = "cz.vpsfree";
           fqdn = "node2.stg.vpsfree.cz";
           id = 401;
           location = "stg";
@@ -52,11 +39,24 @@
       };
       proxy = {
         node = {
-          domain = "vpsfree.cz";
+          domain = "cz.vpsfree";
           fqdn = "node2.stg.vpsfree.cz";
           id = 401;
           location = "stg";
           name = "node2";
+        };
+      };
+    };
+  };
+  "org.vpsadminos" = {
+    global = {
+      www = {
+        node = {
+          domain = "cz.vpsfree";
+          fqdn = "node1.stg.vpsfree.cz";
+          id = 400;
+          location = "stg";
+          name = "node1";
         };
       };
     };
