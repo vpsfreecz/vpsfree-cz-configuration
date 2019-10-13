@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  cluster."cz.vpsfree".prg."alerts.int" = rec {
+  cluster."cz.vpsfree".prg."int.alerts" = rec {
     type = "container";
     spin = "nixos";
     container.id = 14077;

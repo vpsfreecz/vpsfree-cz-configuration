@@ -1,8 +1,8 @@
 [
-  ./containers/prg/alerts.int/module.nix
+  ./containers/prg/int.alerts/module.nix
+  ./containers/prg/int.grafana/module.nix
+  ./containers/prg/int.mon/module.nix
   ./containers/prg/log/module.nix
-  ./containers/prg/grafana.int/module.nix
-  ./containers/prg/mon.int/module.nix
   ./containers/prg/proxy/module.nix
   ./machines/build/module.nix
   ./machines/pxe/module.nix

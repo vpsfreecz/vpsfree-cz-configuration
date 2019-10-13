@@ -57,7 +57,7 @@
           cluster = config.cluster;
           domain = "cz.vpsfree";
           location = "prg";
-          name = "mon.int";
+          name = "int.mon";
         };
         sshCfg = config.services.openssh;
         sshRules = map (port:

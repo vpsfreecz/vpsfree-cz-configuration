@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  cluster."cz.vpsfree".prg."grafana.int" = rec {
+  cluster."cz.vpsfree".prg."int.grafana" = rec {
     type = "container";
     spin = "nixos";
     container.id = 14118;

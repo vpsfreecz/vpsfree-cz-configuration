@@ -5,7 +5,7 @@ let
     cluster = config.cluster;
     domain = "cz.vpsfree";
     location = "prg";
-    name = "mon.int";
+    name = "int.mon";
   };
 
   logPrg = confLib.findConfig {

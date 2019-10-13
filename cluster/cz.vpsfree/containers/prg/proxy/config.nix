@@ -4,21 +4,21 @@ let
     cluster = config.cluster;
     domain = "cz.vpsfree";
     location = "prg";
-    name = "alerts.int";
+    name = "int.alerts";
   };
 
   monPrg = confLib.findConfig {
     cluster = config.cluster;
     domain = "cz.vpsfree";
     location = "prg";
-    name = "mon.int";
+    name = "int.mon";
   };
 
   grafanaPrg = confLib.findConfig {
     cluster = config.cluster;
     domain = "cz.vpsfree";
     location = "prg";
-    name = "grafana.int";
+    name = "int.grafana";
   };
 in {
   imports = [

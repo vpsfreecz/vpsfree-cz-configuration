@@ -5,14 +5,14 @@ let
     cluster = config.cluster;
     domain = "cz.vpsfree";
     location = "prg";
-    name = "alerts.int";
+    name = "int.alerts";
   };
 
   grafanaPrg = confLib.findConfig {
     cluster = config.cluster;
     domain = "cz.vpsfree";
     location = "prg";
-    name = "grafana.int";
+    name = "int.grafana";
   };
 
   proxyPrg = confLib.findConfig {
