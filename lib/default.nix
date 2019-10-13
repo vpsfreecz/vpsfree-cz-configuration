@@ -3,6 +3,8 @@ with lib;
 let
   deployment = import ./deployment { inherit pkgs lib findConfig; };
 
+  reverseDomain = domain: concatStringsSep "." (reverseList (splitString "." domain));
+
   findConfig =
     { cluster, domain, location, name }:
     let
@@ -16,13 +18,13 @@ let
       attrs = {
         inherit domain name;
         location = if location == "global" then null else location;
-        fqdn = concatStringsSep "." (
-          [ name ]
+        fqdn = reverseDomain (concatStringsSep "." (
+          [ domain ]
           ++
           (optional (location != "global") location)
           ++
-          [ domain ]
-        );
+          [ name ]
+        ));
         inherit (config) type spin;
         role = if config.type == "node" then config.node.role else null;
         inherit config;
