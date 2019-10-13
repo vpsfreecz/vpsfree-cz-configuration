@@ -15,7 +15,8 @@ module ConfCtl::Cli
 
         puts sprintf(
           '%-30s %-12s %-12s %-12s %-15s %-10s %s',
-          host, d.type, d.spin, d.role, d.name, d.location, d.domain
+          host, d.type, d.spin, d.role,
+          rdomain(d.name), rdomain(d.location), rdomain(d.domain)
         )
       end
     end
@@ -58,6 +59,11 @@ module ConfCtl::Cli
       cmd << MORPH_EXPR
 
       Process.exec(*cmd)
+    end
+
+    protected
+    def rdomain(domain)
+      domain ? domain.split('.').reverse.join('.') : nil
     end
   end
 end
