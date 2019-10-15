@@ -17,6 +17,7 @@ with lib;
       grafana = 3000;
       vpsadmin-console = 8081;
       prometheus = 9090;
+      nginx = 80;
       node-exporter = 9100;
       osctl-exporter = 9101;
       graylog-rsyslog-tcp = 11514;

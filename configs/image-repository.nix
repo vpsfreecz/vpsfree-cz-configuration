@@ -19,7 +19,7 @@
     buildInterval = "0 4 * * sat";
 
     postBuild = ''
-      ${pkgs.rsync}/bin/rsync -av --delete "${path}/" images.vpsadminos.org:/srv/images/
+      ${pkgs.rsync}/bin/rsync -av --delete "${path}/" images.int.vpsadminos.org:/srv/images/
     '';
 
     vendors.vpsadminos = { defaultVariant = "minimal"; };

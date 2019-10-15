@@ -50,7 +50,34 @@
   };
   "org.vpsadminos" = {
     global = {
-      www = {
+      "int.images" = {
+        node = {
+          domain = "cz.vpsfree";
+          fqdn = "node1.stg.vpsfree.cz";
+          id = 400;
+          location = "stg";
+          name = "node1";
+        };
+      };
+      "int.iso" = {
+        node = {
+          domain = "cz.vpsfree";
+          fqdn = "node1.stg.vpsfree.cz";
+          id = 400;
+          location = "stg";
+          name = "node1";
+        };
+      };
+      "int.www" = {
+        node = {
+          domain = "cz.vpsfree";
+          fqdn = "node1.stg.vpsfree.cz";
+          id = 400;
+          location = "stg";
+          name = "node1";
+        };
+      };
+      proxy = {
         node = {
           domain = "cz.vpsfree";
           fqdn = "node1.stg.vpsfree.cz";

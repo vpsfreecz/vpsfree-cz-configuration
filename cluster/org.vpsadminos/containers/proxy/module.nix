@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  cluster."org.vpsadminos".global.www = rec {
+  cluster."org.vpsadminos".global.proxy = rec {
     type = "container";
     spin = "nixos";
     container.id = 14006;

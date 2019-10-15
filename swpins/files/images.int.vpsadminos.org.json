@@ -1,0 +1,24 @@
+{
+  "nixpkgs": {
+    "channel": "nixos-19.09",
+    "type": "git",
+    "options": {
+      "url": "https://github.com/NixOS/nixpkgs-channels",
+      "rev": "dbad7c7d59f12e81032bc3100e3d9fa44b6d4e70",
+      "date": "2019-10-10T23:59:58+02:00",
+      "sha256": "1pjhslnhz4gngbclyr39x4xaicrc1sz2xy8bsrvlr3cl5qrbki2b",
+      "fetchSubmodules": false
+    }
+  },
+  "vpsadminos": {
+    "channel": "os-master",
+    "type": "git",
+    "options": {
+      "url": "https://github.com/vpsfreecz/vpsadminos",
+      "rev": "eda23c531e244badd6873af9939244b7927a5e8e",
+      "date": "2019-10-08T21:20:07+02:00",
+      "sha256": "0ikqynbg05jmibiasvvk03kpb7jp9z83bfhzwzsj0689f3h7g58z",
+      "fetchSubmodules": false
+    }
+  }
+}
