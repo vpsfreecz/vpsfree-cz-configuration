@@ -32,6 +32,7 @@ in
   '';
 
   services.nfs.server.nfsd.nproc = 16;
+  services.zfs.autoScrub.interval = "0 4 * */3 *";
 
   boot.zfs.pools.storage = {};
 }
