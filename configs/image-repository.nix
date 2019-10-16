@@ -82,5 +82,48 @@
         "musl" = { tags = [ "latest-musl" "stable-musl" ]; };
       };
     };
+
+    garbageCollection = [
+      {
+        distribution = "arch";
+        version = "\\d+";
+        keep = 4;
+      }
+      {
+        distribution = "debian";
+        version = "testing-\\d+";
+        keep = 4;
+      }
+      {
+        distribution = "debian";
+        version = "unstable-\\d+";
+        keep = 4;
+      }
+      {
+        distribution = "gentoo";
+        version = "\\d+";
+        keep = 4;
+      }
+      {
+        distribution = "nixos";
+        version = "unstable-\\d+";
+        keep = 4;
+      }
+      {
+        distribution = "opensuse";
+        version = "tumbleweed-\\d+";
+        keep = 4;
+      }
+      {
+        distribution = "void";
+        version = "glibc-\\d+";
+        keep = 4;
+      }
+      {
+        distribution = "void";
+        version = "musl-\\d+";
+        keep = 4;
+      }
+    ];
   };
 }
