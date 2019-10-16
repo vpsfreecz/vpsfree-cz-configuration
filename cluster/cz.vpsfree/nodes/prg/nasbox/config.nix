@@ -31,5 +31,7 @@ in
 
   '';
 
+  services.nfs.server.nfsd.nproc = 16;
+
   boot.zfs.pools.storage = {};
 }
