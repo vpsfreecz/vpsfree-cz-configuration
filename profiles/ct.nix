@@ -7,4 +7,8 @@
   ];
 
   services.resolved.enable = false;
+
+  systemd.extraConfig = ''
+    DefaultTimeoutStartSec=900s
+  '';
 }
