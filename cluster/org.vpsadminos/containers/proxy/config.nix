@@ -1,5 +1,12 @@
 { config, pkgs, lib, confLib, data, ... }:
 let
+  cache = confLib.findConfig {
+    cluster = config.cluster;
+    domain = "org.vpsadminos";
+    location = null;
+    name = "int.cache";
+  };
+
   images = confLib.findConfig {
     cluster = config.cluster;
     domain = "org.vpsadminos";
@@ -61,6 +68,12 @@ in {
         enableACME = true;
         forceSSL = true;
         locations."/".proxyPass = "http://${iso.services.nginx.address}:${toString iso.services.nginx.port}";
+      };
+
+      "cache.vpsadminos.org" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://${cache.services.nix-serve.address}:${toString cache.services.nix-serve.port}";
       };
     };
   };
