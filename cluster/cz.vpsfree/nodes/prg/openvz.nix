@@ -144,14 +144,5 @@
       vzNode.role = "hypervisor";
       services.node-exporter = {};
     };
-
-    nasbox = {
-      type = "node";
-      spin = "openvz";
-      node.role = "storage";
-      addresses.primary = { address = "172.16.0.6"; prefix = 23; };
-      vzNode.role = "storage";
-      services.node-exporter = {};
-    };
   };
 }

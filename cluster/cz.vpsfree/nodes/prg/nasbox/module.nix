@@ -10,8 +10,7 @@
     };
 
     netboot = {
-      # TODO: enable when ready
-      enable = false;
+      enable = true;
       macs = [
         "00:25:90:94:3e:bc"
         "00:25:90:94:3e:bd"
