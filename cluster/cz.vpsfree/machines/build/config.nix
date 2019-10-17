@@ -37,7 +37,6 @@
 
   swapDevices = [ ];
 
-  nix.maxJobs = lib.mkDefault 16;
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 
   # 00:25:90:96:8d:90
@@ -53,4 +52,10 @@
   networking.lxcbr = true;
   networking.hostName = "build";
   networking.dhcpd = true;
+
+  nix = {
+    maxJobs = lib.mkDefault 16;
+    binaryCaches = [ "https://cache.vpsadminos.org" ];
+    binaryCachePublicKeys = [ "cache.vpsadminos.org:wpIJlNZQIhS+0gFf1U3MC9sLZdLW3sh5qakOWGDoDrE=" ];
+  };
 }
