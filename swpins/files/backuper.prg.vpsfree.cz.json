@@ -1,12 +1,12 @@
 {
   "vpsadminos": {
-    "channel": "staging",
+    "channel": "storage",
     "type": "git",
     "options": {
       "url": "https://github.com/vpsfreecz/vpsadminos",
-      "rev": "8620de6aa2692dc8453ff40e048b992c7e2affd6",
-      "date": "2019-10-14T22:49:26+02:00",
-      "sha256": "0bzx1f6alf9h3wi1vi1n63k6ngcbcnl15mqlbggagy6cizfgnr2f",
+      "rev": "08c592a5e1f9245ca42b7388229e4e269ca1bdce",
+      "date": "2019-10-17T20:10:30+02:00",
+      "sha256": "0hyl19b9lzbdka3n2v9cy665f6fi343hhpd7cv9j3ikzz9hrasvb",
       "fetchSubmodules": false
     }
   },
