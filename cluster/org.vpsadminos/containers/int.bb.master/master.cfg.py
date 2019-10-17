@@ -9,17 +9,12 @@ c['protocols'] = {'pb': {'port': 9989}}
 c['db'] = {'db_url': 'sqlite:///state.sqlite'}
 c['www']= {'port': 8010}
 
-c['change_source'] = changes.GitPoller(
-    repourl='https://github.com/vpsfreecz/vpsadminos',
-    branches=['master', 'devel', 'buildbot'],
-    pollInterval=600,
-    project='vpsadminos'
-)
+c['www']['change_hook_dialects'] = {'github': {}}
 
 c['schedulers'] = [
     schedulers.SingleBranchScheduler(
         name='all',
-        change_filter=util.ChangeFilter(project='vpsadminos'),
+        change_filter=util.ChangeFilter(repository='https://github.com/vpsfreecz/vpsadminos'),
         treeStableTimer=None,
         builderNames=['buildos']
     ),

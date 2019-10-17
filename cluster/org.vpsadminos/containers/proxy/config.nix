@@ -107,6 +107,11 @@ in {
               proxy_pass ${target}/ws;
               proxy_read_timeout 6000s;
             '';
+            "/change_hook".extraConfig = ''
+              auth_basic secured;
+              auth_basic_user_file /private/nginx/bbgithub.htpasswd;
+              proxy_pass ${target}/change_hook/github;
+            '';
           };
       };
     };
