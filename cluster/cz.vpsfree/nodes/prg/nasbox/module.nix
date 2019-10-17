@@ -44,6 +44,7 @@
 
     services = {
       node-exporter = {};
+      osctl-exporter = {};
     };
   };
 }
