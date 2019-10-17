@@ -4,7 +4,7 @@ from buildbot.plugins import *
 c = BuildmasterConfig = {}
 c['title'] = 'vpsAdminOS'
 c['titleURL'] = 'vpsAdminOS'
-c['buildbotURL'] = 'http://172.16.4.20:8010/'
+c['buildbotURL'] = 'https://master.bb.vpsadminos.org/'
 c['protocols'] = {'pb': {'port': 9989}}
 c['db'] = {'db_url': 'sqlite:///state.sqlite'}
 c['www']= {'port': 8010}

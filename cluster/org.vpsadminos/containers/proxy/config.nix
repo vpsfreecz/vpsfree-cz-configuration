@@ -27,6 +27,13 @@ let
     location = null;
     name = "int.www";
   };
+
+  bbmaster = confLib.findConfig {
+    cluster = config.cluster;
+    domain = "org.vpsadminos";
+    location = null;
+    name = "int.bb.master";
+  };
 in {
   imports = [
     ../../../../environments/base.nix
@@ -37,6 +44,10 @@ in {
       80 443 # nginx
     ];
   };
+
+  environment.systemPackages = with pkgs; [
+    apacheHttpd # for htpasswd
+  ];
 
   services.nginx = {
     enable = true;
@@ -74,6 +85,29 @@ in {
         enableACME = true;
         forceSSL = true;
         locations."/".proxyPass = "http://${cache.services.nix-serve.address}:${toString cache.services.nix-serve.port}";
+      };
+
+      "master.bb.vpsadminos.org" = {
+        enableACME = true;
+        forceSSL = true;
+        basicAuthFile = "/private/nginx/bbmaster.htpasswd";
+        locations =
+          let
+            target = "http://${bbmaster.services.buildbot-master.address}:${toString bbmaster.services.buildbot-master.port}";
+          in {
+            "/".proxyPass = target;
+            "/sse".extraConfig = ''
+              proxy_buffering off;
+              proxy_pass ${target}/sse/;
+            '';
+            "/ws".extraConfig = ''
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+              proxy_pass ${target}/ws;
+              proxy_read_timeout 6000s;
+            '';
+          };
       };
     };
   };
