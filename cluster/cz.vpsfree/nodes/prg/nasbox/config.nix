@@ -9,7 +9,10 @@
 
   boot.kernelModules = [ "8021q" ];
 
-  services.nfs.server.nfsd.nproc = 16;
+  services.nfs.server.nfsd = {
+    nproc = 16;
+    udp = true;
+  };
   services.zfs.autoScrub.interval = "0 4 * */3 *";
 
   boot.zfs.pools.storage = {};
