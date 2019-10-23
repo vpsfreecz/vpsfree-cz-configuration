@@ -154,6 +154,9 @@ module ConfCtl::Cli
         c.desc 'Assume the answer to confirmations is yes'
         c.switch %w(y yes)
 
+        c.desc 'Toggle health checks'
+        c.switch 'health-checks', default_value: true
+
         c.action &Command.run(Morph, :deploy)
       end
 

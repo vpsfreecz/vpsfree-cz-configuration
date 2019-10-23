@@ -51,6 +51,7 @@ module ConfCtl::Cli
 
       cmd << "--on={#{deps.map { |host, d| host }.join(',')}}"
       cmd << '--show-trace' if opts['show-trace']
+      cmd << '--skip-health-checks' unless opts['health-checks']
       cmd << MORPH_EXPR
       cmd << action
 

@@ -87,6 +87,10 @@ information.
     `-y`, `--yes`
       Do not ask for confirmation on standard input, assume the answer is yes.
 
+    `--[no-]health-checks`
+      Determines whether health checks are run after activation. Enabled by
+      default.
+
 `confctl check-health` [*host-pattern*]
   Run health checks on matching hosts.
 
