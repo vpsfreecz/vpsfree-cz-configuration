@@ -103,6 +103,15 @@ module ConfCtl::Cli
         c.desc 'Enable traces in Nix'
         c.switch 'show-trace'
 
+        c.desc 'Filter deployments by type'
+        c.flag :type
+
+        c.desc 'Filter deployments by spin'
+        c.flag :spin
+
+        c.desc 'Filter deployments by role'
+        c.flag :role
+
         c.action &Command.run(Morph, :list)
       end
 
@@ -111,6 +120,15 @@ module ConfCtl::Cli
       command :build do |c|
         c.desc 'Enable traces in Nix'
         c.switch 'show-trace'
+
+        c.desc 'Filter deployments by type'
+        c.flag :type
+
+        c.desc 'Filter deployments by spin'
+        c.flag :spin
+
+        c.desc 'Filter deployments by role'
+        c.flag :role
 
         c.desc 'Assume the answer to confirmations is yes'
         c.switch %w(y yes)
@@ -124,6 +142,15 @@ module ConfCtl::Cli
         c.desc 'Enable traces in Nix'
         c.switch 'show-trace'
 
+        c.desc 'Filter deployments by type'
+        c.flag :type
+
+        c.desc 'Filter deployments by spin'
+        c.flag :spin
+
+        c.desc 'Filter deployments by role'
+        c.flag :role
+
         c.desc 'Assume the answer to confirmations is yes'
         c.switch %w(y yes)
 
@@ -135,6 +162,15 @@ module ConfCtl::Cli
       command 'check-health' do |c|
         c.desc 'Enable traces in Nix'
         c.switch 'show-trace'
+
+        c.desc 'Filter deployments by type'
+        c.flag :type
+
+        c.desc 'Filter deployments by spin'
+        c.flag :spin
+
+        c.desc 'Filter deployments by role'
+        c.flag :role
 
         c.action &Command.run(Morph, :check_health)
       end

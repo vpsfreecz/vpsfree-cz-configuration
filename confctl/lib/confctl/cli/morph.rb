@@ -4,9 +4,7 @@ module ConfCtl::Cli
 
     def list
       deps = ConfCtl::Deployments.new(show_trace: opts['show-trace'])
-      list_deployments(deps.select do |host, d|
-        args[0].nil? || ConfCtl::Pattern.match?(args[0], host)
-      end)
+      list_deployments(select_deployments(args[0]))
     end
 
     def build
@@ -81,10 +79,12 @@ module ConfCtl::Cli
     protected
     def select_deployments(pattern)
       deps = ConfCtl::Deployments.new(show_trace: opts['show-trace'])
-      return deps if pattern.nil?
 
       deps.select do |host, d|
-        ConfCtl::Pattern.match?(pattern, host)
+        (pattern.nil? || ConfCtl::Pattern.match?(pattern, host)) \
+          && (opts[:type].nil? || opts[:type] == d.type) \
+          && (opts[:spin].nil? || opts[:spin] == d.spin) \
+          && (opts[:role].nil? || opts[:role] == d.role)
       end
     end
 

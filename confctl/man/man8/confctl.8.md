@@ -37,11 +37,32 @@ information.
 `confctl ls` [*host-pattern*]
   List matching hosts available for deployment.
 
+    `--show-trace`
+      Enable traces in Nix.
+
+    `--type` `container`|`machine`|`node`
+      Filter deployments by type.
+
+    `--spin` `nixos`|`vpsadminos`
+      Filter deployments by spin.
+
+    `--role` `hypervisor`|`storage`
+      Filter deployments by node role.
+
 `confctl build` [*host-pattern*]
   Build matching hosts.
 
     `--show-trace`
       Enable traces in Nix.
+
+    `--type` `container`|`machine`|`node`
+      Filter deployments by type.
+
+    `--spin` `nixos`|`vpsadminos`
+      Filter deployments by spin.
+
+    `--role` `hypervisor`|`storage`
+      Filter deployments by node role.
 
     `-y`, `--yes`
       Do not ask for confirmation on standard input, assume the answer is yes.
@@ -54,6 +75,15 @@ information.
     `--show-trace`
       Enable traces in Nix.
 
+    `--type` `container`|`machine`|`node`
+      Filter deployments by type.
+
+    `--spin` `nixos`|`vpsadminos`
+      Filter deployments by spin.
+
+    `--role` `hypervisor`|`storage`
+      Filter deployments by node role.
+
     `-y`, `--yes`
       Do not ask for confirmation on standard input, assume the answer is yes.
 
@@ -62,6 +92,15 @@ information.
 
     `--show-trace`
       Enable traces in Nix.
+
+    `--type` `container`|`machine`|`node`
+      Filter deployments by type.
+
+    `--spin` `nixos`|`vpsadminos`
+      Filter deployments by spin.
+
+    `--role` `hypervisor`|`storage`
+      Filter deployments by node role.
 
 `confctl gen-data all`
   Generate all required data files from vpsAdmin API.
