@@ -4,21 +4,9 @@ module ConfCtl::Cli
 
     def list
       deps = ConfCtl::Deployments.new(show_trace: opts['show-trace'])
-
-      puts sprintf(
-        '%-30s %-12s %-12s %-12s %-15s %-10s %s',
-        'HOST', 'TYPE', 'SPIN', 'ROLE', 'NAME', 'LOCATION', 'DOMAIN'
-      )
-
-      deps.each do |host, d|
-        next if args[0] && !ConfCtl::Pattern.match?(args[0], host)
-
-        puts sprintf(
-          '%-30s %-12s %-12s %-12s %-15s %-10s %s',
-          host, d.type, d.spin, d.role,
-          rdomain(d.name), rdomain(d.location), rdomain(d.domain)
-        )
-      end
+      list_deployments(deps.select do |host, d|
+        args[0].nil? || ConfCtl::Pattern.match?(args[0], host)
+      end)
     end
 
     def build
@@ -27,10 +15,19 @@ module ConfCtl::Cli
         'build',
       ]
 
-      cmd << "--on=#{args[0]}" if args[0]
+      deps = select_deployments(args[0])
+
+      ask_confirmation! do
+        puts "The following deployments will be built:"
+        list_deployments(deps)
+      end
+
+      cmd << "--on={#{deps.map { |host, d| host }.join(',')}}"
       cmd << '--show-trace' if opts['show-trace']
       cmd << MORPH_EXPR
 
+      puts "Executing #{cmd.join(' ')}"
+      puts
       Process.exec(*cmd)
     end
 
@@ -40,11 +37,27 @@ module ConfCtl::Cli
         'deploy',
       ]
 
-      cmd << "--on=#{args[0]}" if args[0]
+      deps = select_deployments(args[0])
+      action = args[1] || 'switch'
+
+      unless %w(boot switch test dry-activate).include?(action)
+        raise GLI::BadCommandLine, "invalid action '#{action}'"
+      end
+
+      ask_confirmation! do
+        puts "The following deployments will be built and deployed:"
+        list_deployments(deps)
+        puts
+        puts "Target action: #{action}"
+      end
+
+      cmd << "--on={#{deps.map { |host, d| host }.join(',')}}"
       cmd << '--show-trace' if opts['show-trace']
       cmd << MORPH_EXPR
-      cmd << (args[1] || 'switch')
+      cmd << action
 
+      puts "Executing #{cmd.join(' ')}"
+      puts
       Process.exec(*cmd)
     end
 
@@ -54,14 +67,55 @@ module ConfCtl::Cli
         'check-health',
       ]
 
-      cmd << "--on=#{args[0]}" if args[0]
+      deps = select_deployments(args[0])
+
+      cmd << "--on={#{deps.map { |host, d| host }.join(',')}}"
       cmd << '--show-trace' if opts['show-trace']
       cmd << MORPH_EXPR
 
+      puts "Executing #{cmd.join(' ')}"
+      puts
       Process.exec(*cmd)
     end
 
     protected
+    def select_deployments(pattern)
+      deps = ConfCtl::Deployments.new(show_trace: opts['show-trace'])
+      return deps if pattern.nil?
+
+      deps.select do |host, d|
+        ConfCtl::Pattern.match?(pattern, host)
+      end
+    end
+
+    def ask_confirmation
+      return true if opts[:yes]
+
+      yield
+      STDOUT.write("\nContinue? [y/N]: ")
+      STDOUT.flush
+      STDIN.readline.strip.downcase == 'y'
+    end
+
+    def ask_confirmation!(&block)
+      fail 'Aborted' unless ask_confirmation(&block)
+    end
+
+    def list_deployments(deps)
+      puts sprintf(
+        '%-30s %-12s %-12s %-12s %-15s %-10s %s',
+        'HOST', 'TYPE', 'SPIN', 'ROLE', 'NAME', 'LOCATION', 'DOMAIN'
+      )
+
+      deps.each do |host, d|
+        puts sprintf(
+          '%-30s %-12s %-12s %-12s %-15s %-10s %s',
+          host, d.type, d.spin, d.role,
+          rdomain(d.name), rdomain(d.location), rdomain(d.domain)
+        )
+      end
+    end
+
     def rdomain(domain)
       domain ? domain.split('.').reverse.join('.') : nil
     end

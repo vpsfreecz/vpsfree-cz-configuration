@@ -112,6 +112,9 @@ module ConfCtl::Cli
         c.desc 'Enable traces in Nix'
         c.switch 'show-trace'
 
+        c.desc 'Assume the answer to confirmations is yes'
+        c.switch %w(y yes)
+
         c.action &Command.run(Morph, :build)
       end
 
@@ -120,6 +123,9 @@ module ConfCtl::Cli
       command :deploy do |c|
         c.desc 'Enable traces in Nix'
         c.switch 'show-trace'
+
+        c.desc 'Assume the answer to confirmations is yes'
+        c.switch %w(y yes)
 
         c.action &Command.run(Morph, :deploy)
       end

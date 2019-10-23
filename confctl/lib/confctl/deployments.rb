@@ -21,6 +21,8 @@ module ConfCtl
       deployments.each(&block)
     end
 
+    include Enumerable
+
     protected
     attr_reader :opts, :deployments
 

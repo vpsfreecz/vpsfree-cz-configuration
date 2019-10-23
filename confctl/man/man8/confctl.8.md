@@ -43,13 +43,19 @@ information.
     `--show-trace`
       Enable traces in Nix.
 
-`confctl deploy` [*host-pattern* [*switch-action*]]
+    `-y`, `--yes`
+      Do not ask for confirmation on standard input, assume the answer is yes.
+
+`confctl deploy` [*host-pattern*] [`boot`|`switch`|`test`|`dry-activate`]
   Build and deploy matching hosts. *switch-action* is the argument to
   `switch-to-configuration` called on the target host. The default action
   is `switch`.
 
     `--show-trace`
       Enable traces in Nix.
+
+    `-y`, `--yes`
+      Do not ask for confirmation on standard input, assume the answer is yes.
 
 `confctl check-health` [*host-pattern*]
   Run health checks on matching hosts.
