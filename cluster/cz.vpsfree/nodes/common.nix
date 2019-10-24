@@ -126,6 +126,8 @@
     '';
   };
 
+  osctl.exportfs.enable = true;
+
   vpsadmin.enable = true;
   system.secretsDir = toString /secrets/image/secrets;
 
