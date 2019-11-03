@@ -51,11 +51,30 @@
       }
       {
         alert = "ZpoolLowFreeSpace";
-        expr = "zpool_list_capacity >= 80";
+        expr = "zpool_list_capacity >= 75";
         for = "1h";
         labels = {
           alertclass = "zpoolcap";
           severity = "warning";
+        };
+        annotations = {
+          summary = "Not enough free space (instance {{ $labels.instance }})";
+          description = ''
+            Zpool uses more than 75% of available space
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+      {
+        alert = "ZpoolCritFreeSpace";
+        expr = "zpool_list_capacity >= 80";
+        for = "15m";
+        labels = {
+          alertclass = "zpoolcap";
+          severity = "critical";
+          frequency = "hourly";
         };
         annotations = {
           summary = "Not enough free space (instance {{ $labels.instance }})";
@@ -68,37 +87,18 @@
         };
       }
       {
-        alert = "ZpoolCritFreeSpace";
+        alert = "ZpoolFatalFreeSpace";
         expr = "zpool_list_capacity >= 90";
         for = "15m";
         labels = {
           alertclass = "zpoolcap";
-          severity = "critical";
-          frequency = "daily";
+          severity = "fatal";
+          frequency = "hourly";
         };
         annotations = {
           summary = "Not enough free space (instance {{ $labels.instance }})";
           description = ''
             Zpool uses more than 90% of available space
-
-            VALUE = {{ $value }}
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
-      {
-        alert = "ZpoolFatalFreeSpace";
-        expr = "zpool_list_capacity >= 95";
-        for = "15m";
-        labels = {
-          alertclass = "zpoolcap";
-          severity = "fatal";
-          frequency = "daily";
-        };
-        annotations = {
-          summary = "Not enough free space (instance {{ $labels.instance }})";
-          description = ''
-            Zpool uses more than 95% of available space
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
