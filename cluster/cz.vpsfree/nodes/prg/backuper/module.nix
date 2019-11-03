@@ -45,7 +45,6 @@
         };
 
         bird = {
-          enable = false; # don't need bird as long as bonding is in use
           as = 4200001046;
           routerId = "172.16.251.182";
           bgpNeighbours = {
