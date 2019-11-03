@@ -26,6 +26,9 @@
               ) networks;
             in property;
         };
+        "reservation".properties = {
+          refreservation = "100G";
+        };
       };
     };
   };
