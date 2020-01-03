@@ -11,4 +11,5 @@
   systemd.extraConfig = ''
     DefaultTimeoutStartSec=900s
   '';
+  systemd.services.systemd-udev-trigger.enable = false;
 }
