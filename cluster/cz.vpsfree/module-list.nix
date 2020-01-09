@@ -8,6 +8,7 @@
   ./machines/pxe/module.nix
   ./nodes/brq/openvz.nix
   ./nodes/pgnd/openvz.nix
+  ./nodes/prg/node1/module.nix
   ./nodes/prg/backuper/module.nix
   ./nodes/prg/nasbox/module.nix
   ./nodes/prg/openvz.nix
