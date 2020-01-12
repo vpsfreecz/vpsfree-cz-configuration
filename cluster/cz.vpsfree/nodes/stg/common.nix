@@ -28,6 +28,7 @@
         };
         "reservation".properties = {
           refreservation = "100G";
+          canmount = "off";
         };
       };
     };
