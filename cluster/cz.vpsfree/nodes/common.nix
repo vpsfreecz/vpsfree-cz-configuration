@@ -148,8 +148,8 @@
   services.haveged.enable = true;
 
   osctl.pools.tank = {
-    parallelStart = 2;
-    parallelStop = 4;
+    parallelStart = 4;
+    parallelStop = 20;
   };
 
   environment.etc =
