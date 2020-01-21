@@ -4,9 +4,9 @@
     "type": "git",
     "options": {
       "url": "https://github.com/vpsfreecz/vpsadminos",
-      "rev": "c52c85cd548e2f127c63f63fd7fc7a54d3afc03c",
-      "date": "2020-01-12T08:17:50+01:00",
-      "sha256": "1f4wjw1flihw0a2s8s4c9g9azr81cxkxy56cg8r0g1cp3nzvvad0",
+      "rev": "f769a9d0940a4e643e089dfeea6f535edb635af9",
+      "date": "2020-01-21T15:32:49+01:00",
+      "sha256": "0j9nfra2hsvgpi7zlw9k1bhphvi711xv6c5r1ipbc3mcn047q545",
       "fetchSubmodules": false
     }
   },
