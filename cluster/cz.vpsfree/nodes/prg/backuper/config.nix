@@ -19,6 +19,8 @@
 
   boot.zfs.pools = {
     storage = {
+      guid = "5841452050336007819";
+
       layout = [
         { type = "raidz1";
           devices = [

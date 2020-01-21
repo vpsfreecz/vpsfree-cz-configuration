@@ -15,5 +15,7 @@
   };
   services.zfs.autoScrub.interval = "0 4 * */3 *";
 
-  boot.zfs.pools.storage = {};
+  boot.zfs.pools.storage = {
+    guid = "2575935829831167981";
+  };
 }
