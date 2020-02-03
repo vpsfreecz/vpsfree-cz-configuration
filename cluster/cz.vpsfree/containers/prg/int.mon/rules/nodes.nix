@@ -23,6 +23,20 @@
       }
 
       {
+        alert = "HypervisorBooting";
+        expr = ''time() - node_boot_time_seconds{role="hypervisor"} < 2400'';
+        labels = {
+          severity = "none";
+        };
+        annotations = {
+          description = ''
+            This alert fires when a node is booting. It can be used to inhibit
+            other alerts. It should be blackholed by Alertmanager.
+          '';
+        };
+      }
+
+      {
         alert = "HypervisorHighCpuLoad";
         expr = ''100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
