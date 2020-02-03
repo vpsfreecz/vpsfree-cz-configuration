@@ -37,8 +37,8 @@ let
         type = "container";
         fqdn = "${ct.fqdn}";
       };
-      source_match = {
-        alertname = "NodeDown";
+      source_match_re = {
+        alertname = "NodeDown|HypervisorBooting";
         type = "node";
         fqdn = "${ctData.node.fqdn}";
       };
@@ -261,7 +261,7 @@ in {
           };
         }
 
-        # Ignore alerts for containers which are on nodes that are down
+        # Ignore alerts for containers which are on nodes that are down or booting
       ] ++ containerInhibitRules;
     };
   };
