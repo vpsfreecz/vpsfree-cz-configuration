@@ -9,6 +9,7 @@
   boot.kernelModules = [
     "ipmi_si"
     "ipmi_devintf"
+    "wireguard"
   ];
 
   boot.extraModulePackages = [ config.boot.kernelPackages.wireguard ];
