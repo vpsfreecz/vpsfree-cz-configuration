@@ -9,6 +9,8 @@
   boot.kernelModules = [
     "ipmi_si"
     "ipmi_devintf"
+    "ipip"
+    "ip_gre"
     "wireguard"
   ];
 
