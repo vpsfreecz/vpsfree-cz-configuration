@@ -101,6 +101,9 @@
         iptables -A nixos-fw -p tcp --dport ${toString nfsCfg.lockdPort} -j nixos-fw-accept
         iptables -A nixos-fw -p udp --dport ${toString nfsCfg.lockdPort} -j nixos-fw-accept
 
+        # iperf
+        iptables -A nixos-fw -p tcp --dport 5001 -j nixos-fw-accept
+
         # vpsadmin ports for zfs send/recv
         ${lib.concatStringsSep "\n" vpsadminSendRecvRules}
 
