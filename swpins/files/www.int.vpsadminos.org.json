@@ -15,8 +15,10 @@
     "handler": "vpsadminos",
     "options": {
       "url": "https://github.com/vpsfreecz/vpsadminos",
-      "rev": "dc1baa76118db1591574918bb18868a1b937e3c0",
-      "sha256": "0dwagzha2p8ssn691jvz3fqb1by68f117870asc3vwzxqj8zcic8"
+      "rev": "369289feee60c129187d99396f3fa7082711280e",
+      "sha256": "17a0917vwpqrnqcpm9wni1w9l6rhdfqygfvq17ljj79d7aqvyjfj",
+      "date": "2020-03-06T15:40:21+01:00",
+      "fetchSubmodules": false
     }
   },
   "vpsadminos": {
