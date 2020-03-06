@@ -18,10 +18,42 @@ let
     ];
   };
 
+  trackingCode = pkgs.writeText "vpsfree-matomo.js" ''
+    var _paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="https://piwik.vpsfree.cz/";
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', '8']);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+  '';
+
+  docsSource = pkgs.runCommand "os-docs-src" {} ''
+    mkdir -p $out
+    cp -r ${swpins.vpsadminos}/docs/. $out/
+    mkdir -p $out/js
+    ln -s ${trackingCode} $out/js/vpsfree-matomo.js
+  '';
+
+  configOverride = pkgs.writeText "mkdocs-override.yml" (builtins.toJSON {
+    docs_dir = docsSource;
+    extra_javascript = [ "js/vpsfree-matomo.js" ];
+  });
+
+  mkdocsConfig = pkgs.runCommand "mkdocs-merged.yml" {
+    buildInputs = [ docsPkgs.yaml-merge ];
+  } ''
+    yaml-merge ${swpins.vpsadminos}/mkdocs.yml ${configOverride} > $out
+  '';
+
   docs = pkgs.runCommand "docsroot" { buildInputs = [ docsPkgs.mkdocs ]; } ''
     mkdir -p $out
     pushd ${swpins.vpsadminos}
-    mkdocs build --site-dir $out
+    mkdocs build --config-file ${mkdocsConfig} --site-dir $out
     popd
   '';
 
