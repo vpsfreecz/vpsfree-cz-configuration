@@ -44,6 +44,63 @@ let
       };
     }
   ) allContainers;
+
+  intervalRoutes = [
+    {
+      match = {
+        frequency = "daily";
+      };
+      repeat_interval = "24h";
+    }
+    {
+      match = {
+        frequency = "6h";
+      };
+      repeat_interval = "6h";
+    }
+    {
+      match = {
+        frequency = "hourly";
+      };
+      repeat_interval = "1h";
+    }
+    {
+      match = {
+        frequency = "15m";
+      };
+      repeat_interval = "15m";
+    }
+    {
+      match = {
+        frequency = "10m";
+      };
+      repeat_interval = "10m";
+    }
+    {
+      match = {
+        frequency = "5m";
+      };
+      repeat_interval = "5m";
+    }
+    {
+      match = {
+        frequency = "2m";
+      };
+      repeat_interval = "2m";
+    }
+    {
+      match_re = {
+        frequency = "1m|minutely";
+      };
+      repeat_interval = "1m";
+    }
+    {
+      match = {
+        frequency = "15s";
+      };
+      repeat_interval = "15s";
+    }
+  ];
 in {
   imports = [
     ../../../../../environments/base.nix
@@ -84,29 +141,16 @@ in {
         routes = [
           # Mail alerts
           {
-            match = {
-              severity = "warning";
+            match_re = {
+              severity = "warning|critical|fatal";
             };
             group_wait = "30s";
             group_interval = "2m";
             repeat_interval = "4h";
             receiver = "team-mail";
-            continue = false;
+            continue = true;
 
-            routes = [
-              {
-                match = {
-                  frequency = "daily";
-                };
-                repeat_interval = "24h";
-              }
-              {
-                match = {
-                  frequency = "hourly";
-                };
-                repeat_interval = "1h";
-              }
-            ];
+            routes = intervalRoutes;
           }
 
           # SMS alerts
@@ -119,62 +163,7 @@ in {
             repeat_interval = "10m";
             continue = false;
 
-            routes = [
-              {
-                match = {
-                  frequency = "daily";
-                };
-                repeat_interval = "24h";
-              }
-              {
-                match = {
-                  frequency = "6h";
-                };
-                repeat_interval = "6h";
-              }
-              {
-                match = {
-                  frequency = "hourly";
-                };
-                repeat_interval = "1h";
-              }
-              {
-                match = {
-                  frequency = "15m";
-                };
-                repeat_interval = "15m";
-              }
-              {
-                match = {
-                  frequency = "10m";
-                };
-                repeat_interval = "10m";
-              }
-              {
-                match = {
-                  frequency = "5m";
-                };
-                repeat_interval = "5m";
-              }
-              {
-                match = {
-                  frequency = "2m";
-                };
-                repeat_interval = "2m";
-              }
-              {
-                match_re = {
-                  frequency = "1m|minutely";
-                };
-                repeat_interval = "1m";
-              }
-              {
-                match = {
-                  frequency = "15s";
-                };
-                repeat_interval = "15s";
-              }
-            ];
+            routes = intervalRoutes;
           }
 
           # Blackhole
