@@ -30,6 +30,6 @@ in {
   services.buildbot-master = {
     enable = true;
     masterCfg = ./master.cfg.py;
-    port = config.servicePorts.buildbot-master;
+    port = config.serviceDefinitions.buildbot-master.port;
   };
 }

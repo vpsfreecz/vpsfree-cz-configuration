@@ -119,7 +119,7 @@ in {
 
     networking.firewall.extraCommands =
       let
-        port = toString config.servicePorts.bird-bgp;
+        port = toString config.serviceDefinitions.bird-bgp.port;
       in optionalString cfg.osNode.networking.bird.enable ''
         ${concatMapStringsSep "\n" (neigh: ''
         iptables -A nixos-fw -p tcp -s ${neigh.address} --dport ${port} -j nixos-fw-accept

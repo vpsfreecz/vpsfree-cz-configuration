@@ -24,5 +24,8 @@ let
 
   allDeployments = confLib.getClusterDeployments cluster;
 
-  managedDeployments = builtins.filter (dep: dep.spin != "openvz") allDeployments;
+  managedDeployments =
+    builtins.filter (dep:
+      lib.elem dep.spin [ "vpsadminos" "nixos" ]
+    ) allDeployments;
 in managedDeployments

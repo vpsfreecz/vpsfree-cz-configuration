@@ -37,7 +37,7 @@ let
         };
 
         spin = mkOption {
-          type = types.enum [ "openvz" "nixos" "vpsadminos" ];
+          type = types.enum [ "openvz" "nixos" "vpsadminos" "other" ];
           description = "OS type";
         };
 
@@ -86,10 +86,14 @@ let
           description = ''
             Services published by this machine
           '';
-          apply = mapAttrs (name: sv: {
-            address = if isNull sv.address then config.addresses.primary.address else sv.address;
-            port = if isNull sv.port then topLevelConfig.servicePorts.${name} else sv.port;
-          });
+          apply = mapAttrs (name: sv:
+            let
+              def = topLevelConfig.serviceDefinitions.${name};
+            in {
+              address = if isNull sv.address then config.addresses.primary.address else sv.address;
+              port = if isNull sv.port then def.port else sv.port;
+              monitor = if isNull sv.monitor then def.monitor else sv.monitor;
+            });
         };
 
         container = mkOption {
@@ -172,6 +176,14 @@ let
           default = null;
           description = ''
             Port the service listens on
+          '';
+        };
+
+        monitor = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            What kind of monitoring this services needs
           '';
         };
       };

@@ -21,7 +21,7 @@ in {
   services.nix-serve = {
     enable = true;
     secretKeyFile = "/private/nix-serve/cache-priv-key.pem";
-    port = config.servicePorts.nix-serve;
+    port = config.serviceDefinitions.nix-serve.port;
   };
 
   users.users.push = {
