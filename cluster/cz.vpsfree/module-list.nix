@@ -1,4 +1,6 @@
 [
+  ./containers/brq/dns-resolvers.nix
+  ./containers/prg/dns-resolvers.nix
   ./containers/prg/int.alerts/module.nix
   ./containers/prg/int.grafana/module.nix
   ./containers/prg/int.mon/module.nix
