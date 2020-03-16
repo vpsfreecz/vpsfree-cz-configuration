@@ -27,6 +27,8 @@ let
 
   allDeployments = confLib.getClusterDeployments config.cluster;
 
+  monitoredDeployments = filter (d: d.config.monitoring.enable) allDeployments;
+
   getAlias = d: "${d.name}${optionalString (!isNull d.location) ".${d.location}"}";
   ensureLocation = location: if location == null then "global" else location;
 
@@ -34,8 +36,8 @@ let
     monitorings =
       let
         deps = filter (d:
-          d.config.monitoring.enable && d.config.monitoring.isMonitor && d.fqdn != deploymentInfo.fqdn
-        ) allDeployments;
+          d.config.monitoring.isMonitor && d.fqdn != deploymentInfo.fqdn
+        ) monitoredDeployments;
       in {
         exporterConfigs = [
           {
@@ -72,8 +74,10 @@ let
     infra =
       let
         deps = filter (d:
-          d.config.monitoring.enable && !d.config.monitoring.isMonitor && (d.type == "machine" || d.type == "container")
-        ) allDeployments;
+          !d.config.monitoring.isMonitor && (d.type == "machine" || d.type == "container")
+        ) monitoredDeployments;
+
+        exporterDeps = filter (d: d.spin != "other") deps;
       in {
         exporterConfigs = map (d: {
           targets = [
@@ -87,7 +91,7 @@ let
             type = d.type;
             os = d.spin;
           } // d.config.monitoring.labels;
-        }) deps;
+        }) exporterDeps;
 
         pingConfigs = map (d: {
           targets = [ d.fqdn ];
@@ -101,9 +105,7 @@ let
 
     nodes =
       let
-        deps = filter (d:
-          d.config.monitoring.enable && d.type == "node"
-        ) allDeployments;
+        deps = filter (d: d.type == "node") monitoredDeployments;
       in {
         exporterConfigs = map (d: {
           targets = [
@@ -129,6 +131,32 @@ let
             os = d.spin;
           };
         }) deps;
+      };
+
+    dnsResolvers =
+      let
+        filterServices = d: fn:
+          let
+            serviceList = mapAttrsToList (name: config: {
+              deployment = d;
+              inherit name config;
+            }) d.config.services;
+          in
+            filter (sv: fn sv.config) serviceList;
+
+        resolverServices = flatten (map (d:
+          filterServices d (sv: sv.monitor == "dns-resolver")
+        ) monitoredDeployments);
+      in {
+        dnsProbes = map (sv: {
+          targets = [ "${sv.config.address}:${toString sv.config.port}" ];
+          labels = {
+            fqdn = sv.deployment.fqdn;
+            domain = sv.deployment.domain;
+            location = ensureLocation sv.deployment.location;
+            service = "dns-resolver";
+          };
+        }) resolverServices;
       };
   };
 in {
@@ -245,6 +273,30 @@ in {
             }
           ];
         }
+      ) ++ (optional (scrapeConfigs.dnsResolvers.dnsProbes != [])
+        {
+          job_name = "dns-resolvers";
+          scrape_interval = "60s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "dns" ];
+          };
+          static_configs = scrapeConfigs.dnsResolvers.dnsProbes;
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        }
       );
 
       alertmanagers = [
@@ -278,6 +330,12 @@ in {
             timeout: 5s
             icmp:
               preferred_ip_protocol: "ip4"
+          dns:
+            prober: dns
+            dns:
+              query_name: google.com
+              query_type: A
+              transport_protocol: tcp
       '';
     };
   };
