@@ -316,6 +316,7 @@ in {
         ./rules/common.nix
         ./rules/nodes.nix
         ./rules/infra.nix
+        ./rules/dns-resolvers.nix
         ./rules/time-of-day.nix
       ]);
     };
