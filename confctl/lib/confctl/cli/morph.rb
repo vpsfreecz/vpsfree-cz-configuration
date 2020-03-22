@@ -36,7 +36,7 @@ module ConfCtl::Cli
       cmd << '--show-trace' if opts['show-trace']
       cmd << MORPH_EXPR
 
-      puts "Executing #{cmd.join(' ')}"
+      puts "Executing #{cmd.map { |v| "\"#{v}\"" }.join(' ')}"
       puts
       Process.exec(*cmd)
     end
@@ -67,7 +67,7 @@ module ConfCtl::Cli
       cmd << MORPH_EXPR
       cmd << action
 
-      puts "Executing #{cmd.join(' ')}"
+      puts "Executing #{cmd.map { |v| "\"#{v}\"" }.join(' ')}"
       puts
       Process.exec(*cmd)
     end
@@ -84,7 +84,7 @@ module ConfCtl::Cli
       cmd << '--show-trace' if opts['show-trace']
       cmd << MORPH_EXPR
 
-      puts "Executing #{cmd.join(' ')}"
+      puts "Executing #{cmd.map { |v| "\"#{v}\"" }.join(' ')}"
       puts
       Process.exec(*cmd)
     end
