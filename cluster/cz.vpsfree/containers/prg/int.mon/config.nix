@@ -32,6 +32,15 @@ let
   getAlias = d: "${d.name}${optionalString (!isNull d.location) ".${d.location}"}";
   ensureLocation = location: if location == null then "global" else location;
 
+  filterServices = d: fn:
+    let
+      serviceList = mapAttrsToList (name: config: {
+        deployment = d;
+        inherit name config;
+      }) d.config.services;
+    in
+      filter (sv: fn sv.config) serviceList;
+
   scrapeConfigs = {
     monitorings =
       let
@@ -135,15 +144,6 @@ let
 
     dnsResolvers =
       let
-        filterServices = d: fn:
-          let
-            serviceList = mapAttrsToList (name: config: {
-              deployment = d;
-              inherit name config;
-            }) d.config.services;
-          in
-            filter (sv: fn sv.config) serviceList;
-
         resolverServices = flatten (map (d:
           filterServices d (sv: sv.monitor == "dns-resolver")
         ) monitoredDeployments);
@@ -157,6 +157,23 @@ let
             service = "dns-resolver";
           };
         }) resolverServices;
+      };
+
+    dnsAuthoritatives =
+      let
+        authoritativeServices = flatten (map (d:
+          filterServices d (sv: sv.monitor == "dns-authoritative")
+        ) monitoredDeployments);
+      in {
+        dnsProbes = map (sv: {
+          targets = [ "${sv.config.address}:${toString sv.config.port}" ];
+          labels = {
+            fqdn = sv.deployment.fqdn;
+            domain = sv.deployment.domain;
+            location = ensureLocation sv.deployment.location;
+            service = "dns-authoritative";
+          };
+        }) authoritativeServices;
       };
   };
 in {
@@ -279,9 +296,33 @@ in {
           scrape_interval = "60s";
           metrics_path = "/probe";
           params = {
-            module = [ "dns" ];
+            module = [ "dns_resolver" ];
           };
           static_configs = scrapeConfigs.dnsResolvers.dnsProbes;
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        }
+      ) ++ (optional (scrapeConfigs.dnsAuthoritatives.dnsProbes != [])
+        {
+          job_name = "dns-authoritatives";
+          scrape_interval = "60s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "dns_authoritative" ];
+          };
+          static_configs = scrapeConfigs.dnsAuthoritatives.dnsProbes;
           relabel_configs = [
             {
               source_labels = [ "__address__" ];
@@ -316,6 +357,7 @@ in {
         ./rules/common.nix
         ./rules/nodes.nix
         ./rules/infra.nix
+        ./rules/dns-authoritatives.nix
         ./rules/dns-resolvers.nix
         ./rules/time-of-day.nix
       ]);
@@ -331,10 +373,16 @@ in {
             timeout: 5s
             icmp:
               preferred_ip_protocol: "ip4"
-          dns:
+          dns_resolver:
             prober: dns
             dns:
               query_name: google.com
+              query_type: A
+              transport_protocol: tcp
+          dns_authoritative:
+            prober: dns
+            dns:
+              query_name: vpsfree.cz
               query_type: A
               transport_protocol: tcp
       '';
