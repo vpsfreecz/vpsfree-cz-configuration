@@ -103,6 +103,9 @@ module ConfCtl::Cli
         c.desc 'Enable traces in Nix'
         c.switch 'show-trace'
 
+        c.desc 'Filter (un)managed deployments'
+        c.flag :managed, must_match: %w(y yes n no a all)
+
         c.desc 'Filter deployments by type'
         c.flag :type
 

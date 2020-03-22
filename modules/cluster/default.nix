@@ -31,6 +31,20 @@ let
     { config, ...}:
     {
       options = {
+        managed = mkOption {
+          type = types.nullOr types.bool;
+          default = null;
+          apply = v:
+            if !isNull v then v
+            else if elem config.spin [ "nixos" "vpsadminos" ] then true
+            else false;
+          description = ''
+            Determines whether the deployment is managed using confctl or not
+
+            By default, NixOS and vpsAdminOS deployments are managed by confctl.
+          '';
+        };
+
         type = mkOption {
           type = types.enum [ "node" "machine" "container" ];
           description = "Deployment type";

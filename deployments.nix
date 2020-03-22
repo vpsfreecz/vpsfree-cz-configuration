@@ -23,9 +23,4 @@ let
   cluster = evalConfig.config.cluster;
 
   allDeployments = confLib.getClusterDeployments cluster;
-
-  managedDeployments =
-    builtins.filter (dep:
-      lib.elem dep.spin [ "vpsadminos" "nixos" ]
-    ) allDeployments;
-in managedDeployments
+in allDeployments

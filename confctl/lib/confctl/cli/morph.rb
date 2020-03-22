@@ -4,7 +4,19 @@ module ConfCtl::Cli
 
     def list
       deps = ConfCtl::Deployments.new(show_trace: opts['show-trace'])
-      list_deployments(select_deployments(args[0]))
+      selected = select_deployments(args[0])
+
+      managed =
+        case opts[:managed]
+        when 'y', 'yes'
+          selected.managed
+        when 'n', 'no'
+          selected.unmanaged
+        else
+          selected
+        end
+
+      list_deployments(managed)
     end
 
     def build
@@ -13,7 +25,7 @@ module ConfCtl::Cli
         'build',
       ]
 
-      deps = select_deployments(args[0])
+      deps = select_deployments(args[0]).managed
 
       ask_confirmation! do
         puts "The following deployments will be built:"
@@ -35,7 +47,7 @@ module ConfCtl::Cli
         'deploy',
       ]
 
-      deps = select_deployments(args[0])
+      deps = select_deployments(args[0]).managed
       action = args[1] || 'switch'
 
       unless %w(boot switch test dry-activate).include?(action)
@@ -66,7 +78,7 @@ module ConfCtl::Cli
         'check-health',
       ]
 
-      deps = select_deployments(args[0])
+      deps = select_deployments(args[0]).managed
 
       cmd << "--on={#{deps.map { |host, d| host }.join(',')}}"
       cmd << '--show-trace' if opts['show-trace']
@@ -103,18 +115,35 @@ module ConfCtl::Cli
     end
 
     def list_deployments(deps)
-      puts sprintf(
-        '%-30s %-12s %-12s %-12s %-15s %-10s %s',
-        'HOST', 'TYPE', 'SPIN', 'ROLE', 'NAME', 'LOCATION', 'DOMAIN'
-      )
+      fmt, cols, fmtopts = printf_fmt_cols
+      puts sprintf(fmt, *cols)
 
       deps.each do |host, d|
-        puts sprintf(
-          '%-30s %-12s %-12s %-12s %-15s %-10s %s',
-          host, d.type, d.spin, d.role,
-          rdomain(d.name), rdomain(d.location), rdomain(d.domain)
-        )
+        args = [fmt, host]
+        args << (d.managed ? 'yes' : 'no') if fmtopts[:managed]
+        args.concat([
+          d.type, d.spin, d.role,
+          rdomain(d.name), rdomain(d.location), rdomain(d.domain),
+        ])
+
+        puts sprintf(*args)
       end
+    end
+
+    def printf_fmt_cols
+      fmts = %w(%-30s)
+      cols = %w(HOST)
+      managed = %w(a all).include?(opts[:managed])
+
+      if managed
+        fmts << '%-10s'
+        cols << 'MANAGED'
+      end
+
+      fmts.concat(%w(%-12s %-12s %-12s %-15s %-10s %s))
+      cols.concat(%w(TYPE SPIN ROLE NAME LOCATION DOMAIN))
+
+      [fmts.join(' '), cols, {managed: managed}]
     end
 
     def rdomain(domain)

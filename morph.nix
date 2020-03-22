@@ -7,10 +7,12 @@ let
 
   deployments = import ./deployments.nix;
 
+  managedDeployments = builtins.filter (d: d.managed) deployments;
+
   nameValuePairs = builtins.map (d: {
     name = d.fqdn;
     value = d.build.toplevel;
-  }) deployments;
+  }) managedDeployments;
 
   configs = builtins.listToAttrs nameValuePairs;
 in configs // {

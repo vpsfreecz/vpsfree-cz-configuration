@@ -25,7 +25,7 @@ let
           ++
           [ name ]
         ));
-        inherit (config) type spin;
+        inherit (config) managed type spin;
         role = if config.type == "node" then config.node.role else null;
         inherit config;
       };
@@ -34,8 +34,10 @@ let
     in attrs // { build.toplevel = toplevel; };
 
   buildConfig =
-    { domain, location, name, fqdn, type, spin, role, ... }:
-    if type == "node" then
+    { domain, location, name, fqdn, managed, type, spin, role, ... }:
+    if !managed then
+      null
+    else if type == "node" then
       deployment.osNode { inherit name location domain fqdn role; }
     else if type == "machine" && spin == "vpsadminos" then
       deployment.osMachine { inherit name location domain fqdn; }

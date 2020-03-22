@@ -5,7 +5,7 @@ let
   nameValuePairs = builtins.map (d: {
     name = d.fqdn;
     value = {
-      inherit (d) type spin name location domain fqdn role;
+      inherit (d) managed type spin name location domain fqdn role;
       config = configByType d.config d.type d.spin;
     };
   }) deployments;

@@ -3,8 +3,9 @@ with lib;
 {
   options = {
     id = mkOption {
-      type = types.ints.positive;
+      type = types.nullOr types.ints.positive;
       description = "ID of this node in vpsAdmin";
+      default = null;
     };
 
     role = mkOption {

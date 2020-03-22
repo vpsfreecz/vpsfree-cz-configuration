@@ -40,6 +40,11 @@ information.
     `--show-trace`
       Enable traces in Nix.
 
+    `--managed` `y`|`yes`|`n`|`no`|`a`|`all`
+      The configuration can contain deployments which are not managed by confctl
+      and are there just for reference. This option determines what kind of
+      deployments should be listed.
+
     `--type` `container`|`machine`|`node`
       Filter deployments by type.
 

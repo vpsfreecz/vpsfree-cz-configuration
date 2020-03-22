@@ -5,14 +5,15 @@ module ConfCtl
     DEPLOYMENTS_EXPR = File.join(ConfCtl.root, 'deployments.nix')
 
     Deployment = Struct.new(
-      :type, :spin, :role, :name, :location, :domain, :fqdn, :config
+      :managed, :type, :spin, :role, :name, :location, :domain, :fqdn, :config
     )
 
     # @param opts [Hash]
     # @option opts [Boolean] :show_trace
+    # @option opts [Boolean] :deployments
     def initialize(opts = {})
       @opts = opts
-      @deployments = parse(extract)
+      @deployments = opts[:deployments] || parse(extract)
     end
 
     # @yieldparam [String] host
@@ -21,7 +22,29 @@ module ConfCtl
       deployments.each(&block)
     end
 
-    include Enumerable
+    # @yieldparam [String] host
+    # @yieldparam [Deployment] deployment
+    # @return [Deployments]
+    def select(&block)
+      self.class.new(deployments: deployments.select(&block))
+    end
+
+    # @yieldparam [String] host
+    # @yieldparam [Deployment] deployment
+    # @return [Array]
+    def map(&block)
+      deployments.map(&block)
+    end
+
+    # @return [Deployments]
+    def managed
+      select { |host, dep| dep.managed }
+    end
+
+    # @return [Deployments]
+    def unmanaged
+      select { |host, dep| !dep.managed }
+    end
 
     protected
     attr_reader :opts, :deployments
@@ -51,6 +74,7 @@ module ConfCtl
     def parse(data)
       Hash[JSON.parse(data).map do |host, info|
         [host, Deployment.new(
+          info['managed'],
           info['type'],
           info['spin'],
           info['role'],
