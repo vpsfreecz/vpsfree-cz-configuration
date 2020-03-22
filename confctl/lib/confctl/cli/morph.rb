@@ -12,8 +12,10 @@ module ConfCtl::Cli
           selected.managed
         when 'n', 'no'
           selected.unmanaged
-        else
+        when 'a', 'all'
           selected
+        else
+          selected.managed
         end
 
       list_deployments(managed)

@@ -22,7 +22,7 @@
       }
 
       {
-        alert = "DnsResolverDown";
+        alert = "DnsAuthoritativeDown";
         expr = ''probe_success{job="dns-authoritatives"} == 0'';
         for = "2m";
         labels = {
