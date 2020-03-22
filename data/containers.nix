@@ -1,5 +1,25 @@
 {
   "cz.vpsfree" = {
+    brq = {
+      ns1 = {
+        node = {
+          domain = "cz.vpsfree";
+          fqdn = "node3.brq.vpsfree.cz";
+          id = 212;
+          location = "brq";
+          name = "node3";
+        };
+      };
+      ns2 = {
+        node = {
+          domain = "cz.vpsfree";
+          fqdn = "node2.brq.vpsfree.cz";
+          id = 211;
+          location = "brq";
+          name = "node2";
+        };
+      };
+    };
     prg = {
       "int.alerts" = {
         node = {
@@ -35,6 +55,24 @@
           id = 401;
           location = "stg";
           name = "node2";
+        };
+      };
+      ns1 = {
+        node = {
+          domain = "cz.vpsfree";
+          fqdn = "node2.prg.vpsfree.cz";
+          id = 102;
+          location = "prg";
+          name = "node2";
+        };
+      };
+      ns2 = {
+        node = {
+          domain = "cz.vpsfree";
+          fqdn = "node15.prg.vpsfree.cz";
+          id = 116;
+          location = "prg";
+          name = "node15";
         };
       };
       proxy = {
