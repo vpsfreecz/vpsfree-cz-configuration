@@ -34,6 +34,10 @@ in {
   config = {
     serviceDefinitions = {
       alertmanager.port = 9093;
+      bind = {
+        port = 53;
+        monitor = "dns-authoritative";
+      };
       bird-bgp.port = 179;
       buildbot-master.port = 8010;
       grafana.port = 3000;

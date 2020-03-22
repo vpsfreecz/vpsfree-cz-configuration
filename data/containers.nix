@@ -20,6 +20,26 @@
         };
       };
     };
+    global = {
+      ns1 = {
+        node = {
+          domain = "cz.vpsfree";
+          fqdn = "node13.prg.vpsfree.cz";
+          id = 114;
+          location = "prg";
+          name = "node13";
+        };
+      };
+      ns2 = {
+        node = {
+          domain = "cz.vpsfree";
+          fqdn = "node2.brq.vpsfree.cz";
+          id = 211;
+          location = "brq";
+          name = "node2";
+        };
+      };
+    };
     prg = {
       "int.alerts" = {
         node = {
