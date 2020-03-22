@@ -357,8 +357,7 @@ in {
         ./rules/common.nix
         ./rules/nodes.nix
         ./rules/infra.nix
-        ./rules/dns-authoritatives.nix
-        ./rules/dns-resolvers.nix
+        ./rules/dns.nix
         ./rules/time-of-day.nix
       ]);
     };
