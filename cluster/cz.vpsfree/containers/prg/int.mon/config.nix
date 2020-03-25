@@ -338,7 +338,25 @@ in {
             }
           ];
         }
-      );
+      ) ++ [
+        {
+          job_name = "jitsi-meet";
+          scrape_interval = "60s";
+          static_configs = [
+            {
+              targets = [
+                "meet.vpsfree.cz:9100"
+              ];
+              labels = {
+                fqdn = "meet.vpsfree.cz";
+                domain = "vpsfree.cz";
+                location = "global";
+                type = "container";
+              };
+            }
+          ];
+        }
+      ];
 
       alertmanagers = [
         {
