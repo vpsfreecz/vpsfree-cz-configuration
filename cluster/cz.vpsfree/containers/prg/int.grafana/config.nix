@@ -26,5 +26,9 @@ in {
     port = grafanaPort;
     domain = "grafana.prg.vpsfree.cz";
     rootUrl = "https://grafana.prg.vpsfree.cz/";
+    auth.anonymous = {
+      enable = true;
+      org_name = "vpsFree.cz";
+    };
   };
 }
