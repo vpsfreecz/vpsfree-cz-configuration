@@ -341,7 +341,7 @@ in {
       ) ++ [
         {
           job_name = "jitsi-meet";
-          scrape_interval = "60s";
+          scrape_interval = "30s";
           static_configs = [
             {
               targets = [
