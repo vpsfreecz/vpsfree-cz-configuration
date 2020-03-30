@@ -27,4 +27,8 @@
       };
     };
   };
+
+  boot.kernelParams = [
+    "idle=poll"
+  ];
 }
