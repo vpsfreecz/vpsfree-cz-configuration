@@ -27,8 +27,4 @@
       };
     };
   };
-
-  boot.kernelParams = [
-    "idle=poll"
-  ];
 }
