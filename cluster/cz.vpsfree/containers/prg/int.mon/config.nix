@@ -175,6 +175,42 @@ let
           };
         }) authoritativeServices;
       };
+
+    jitsiMeet =
+      let
+        videoBridges = {
+          "jvb1" = "37.205.14.168";
+          "jvb2" = "37.205.14.153";
+          "jvb3" = "83.167.228.190";
+          "jvb4" = "83.167.228.189";
+        };
+      in {
+        jvbConfigs = mapAttrsToList (name: addr: {
+          targets = [ "${addr}:9100" ];
+          labels = {
+            alias = "meet-${name}";
+            type = "meet-jvb";
+          };
+        }) videoBridges;
+
+        jvbPingConfigs = mapAttrsToList (name: addr: {
+          targets = [ addr ];
+          labels = {
+            alias = "meet-${name}";
+            type = "meet-jvb";
+          };
+        }) videoBridges;
+
+        webConfigs = [
+          {
+            targets = [ "https://meet.vpsfree.cz" ];
+            labels = {
+              alias = "meet.vpsfree.cz";
+              type = "meet-web";
+            };
+          }
+        ];
+      };
   };
 in {
   imports = [
@@ -340,19 +376,53 @@ in {
         }
       ) ++ [
         {
-          job_name = "jitsi-meet";
+          job_name = "meet-jvbs";
           scrape_interval = "30s";
-          static_configs = [
+          static_configs = scrapeConfigs.jitsiMeet.jvbConfigs;
+        }
+        {
+          job_name = "meet-jvbs-ping";
+          scrape_interval = "15s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "icmp" ];
+          };
+          static_configs = scrapeConfigs.jitsiMeet.jvbPingConfigs;
+          relabel_configs = [
             {
-              targets = [
-                "meet.vpsfree.cz:9100"
-              ];
-              labels = {
-                fqdn = "meet.vpsfree.cz";
-                domain = "vpsfree.cz";
-                location = "global";
-                type = "container";
-              };
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        }
+        {
+          job_name = "meet-web";
+          scrape_interval = "60s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "meet_http_2xx" ];
+          };
+          static_configs = scrapeConfigs.jitsiMeet.webConfigs;
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
             }
           ];
         }
@@ -377,6 +447,7 @@ in {
         ./rules/infra.nix
         ./rules/dns.nix
         ./rules/time-of-day.nix
+        ./rules/meet.nix
       ]);
     };
 
@@ -402,6 +473,15 @@ in {
               query_name: vpsfree.cz
               query_type: A
               transport_protocol: tcp
+          meet_http_2xx:
+            prober: http
+            timeout: 5s
+            http:
+              valid_http_versions: ["HTTP/1.1", "HTTP/2"]
+              method: GET
+              headers:
+                Host: meet.vpsfree.cz
+              preferred_ip_protocol: ip4
       '';
     };
   };
