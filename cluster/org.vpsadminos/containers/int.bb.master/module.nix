@@ -9,5 +9,6 @@
       buildbot-master = {};
       node-exporter = {};
     };
+    monitoring.enable = false;
   };
 }

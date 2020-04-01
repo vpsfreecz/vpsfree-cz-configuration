@@ -6,5 +6,6 @@
     container.id = 14571;
     addresses.primary = { address = "172.16.4.21"; prefix = 32; };
     services.node-exporter = {};
+    monitoring.enable = false;
   };
 }
