@@ -13,6 +13,7 @@
   ./nodes/pgnd/openvz.nix
   ./nodes/prg/node1/module.nix
   ./nodes/prg/node7/module.nix
+  ./nodes/prg/node15/module.nix
   ./nodes/prg/backuper/module.nix
   ./nodes/prg/nasbox/module.nix
   ./nodes/prg/openvz.nix
