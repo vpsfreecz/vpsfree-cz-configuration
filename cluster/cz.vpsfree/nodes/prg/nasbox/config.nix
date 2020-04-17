@@ -1,7 +1,7 @@
 { config, lib, pkgs, ...}:
 {
   imports = [
-    ../../storage.nix
+    ../../common/storage.nix
   ];
 
   vpsadmin.netInterfaces = [ "oneg0" "oneg1" ];

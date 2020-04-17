@@ -1,7 +1,7 @@
 { config, lib, pkgs, ...}:
 {
   imports = [
-    ./common.nix
+    ./all.nix
   ];
 
   programs.bash.root.historyPools = [ "storage" ];

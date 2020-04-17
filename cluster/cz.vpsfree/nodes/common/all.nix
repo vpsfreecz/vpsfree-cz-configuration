@@ -1,8 +1,8 @@
 { config, lib, pkgs, data, deploymentInfo, confLib, ...}:
 {
   imports = [
-    ../../../environments/base.nix
-    ../../../configs/munin-node.nix
+    ../../../../environments/base.nix
+    ../../../../configs/munin-node.nix
   ];
 
   users.users.root.initialHashedPassword = "$6$X/q70eX.dr$svzVWUFXbcOwEtPtURVVy0n80evQMXxI4fU7ICBG5xXftWSuZh4G4zSQ8FF9mgICLfwxzFTffFcXluhn0xazH.";
@@ -33,6 +33,8 @@
     usbutils
     iotop
     ledmon
+    git
+    ethtool
 
     # debug stuff
     # config.boot.kernelPackages.bcc
@@ -48,7 +50,7 @@
   # to be able to include ipmicfg
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.overlays = import ../../../overlays;
+  nixpkgs.overlays = import ../../../../overlays;
 
   networking = {
     firewall.extraCommands =
@@ -124,6 +126,7 @@
   };
 
   osctl.exporter.enable = true;
+
   services.openssh = {
     openFirewall = false;
     extraConfig = ''
@@ -136,6 +139,7 @@
   osctl.exportfs.enable = true;
 
   vpsadmin.enable = true;
+
   system.secretsDir = toString /secrets/image/secrets;
 
   programs.bash.promptInit = ''
@@ -153,20 +157,4 @@
   programs.havesnippet.enable = true;
 
   services.haveged.enable = true;
-
-  osctl.pools.tank = {
-    parallelStart = 4;
-    parallelStop = 20;
-  };
-
-  environment.etc =
-  let prefix = "/secrets/nodes/${ config.networking.hostName }/ssh";
-      path = pkgs.copyPathToStore prefix;
-  in
-  {
-    "ssh/ssh_host_rsa_key.pub".source = "${ path }/ssh_host_rsa_key.pub";
-    "ssh/ssh_host_rsa_key" = { mode = "0600"; source = "${ path }/ssh_host_rsa_key"; };
-    "ssh/ssh_host_ed25519_key.pub".source = "${ path }/ssh_host_ed25519_key.pub";
-    "ssh/ssh_host_ed25519_key" = { mode = "0600"; source = "${ path }/ssh_host_ed25519_key"; };
-  };
 }
