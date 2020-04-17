@@ -4,7 +4,7 @@
   networking = {
     domain = "vpsfree.cz";
     search = ["vpsfree.cz" "prg.vpsfree.cz" "base48.cz"];
-    nameservers = [ "172.18.2.10" "172.18.2.11" "1.1.1.1" ];
+    nameservers = [ "172.16.9.90" "1.1.1.1" ];
   };
 
   services.openssh.enable = true;
