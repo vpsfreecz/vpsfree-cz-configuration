@@ -10,7 +10,7 @@
   ./machines/build/module.nix
   ./machines/pxe/module.nix
   ./nodes/brq/openvz.nix
-  ./nodes/pgnd/openvz.nix
+  ./nodes/pgnd/node1/module.nix
   ./nodes/prg/node1/module.nix
   ./nodes/prg/node7/module.nix
   ./nodes/prg/node15/module.nix
