@@ -13,7 +13,7 @@ in
 {
   nixpkgs.overlays = import ../overlays;
   nix = {
-    maxJobs = 4;
+    maxJobs = 3;
     useSandbox = true;
     sandboxPaths = [ "/secrets/image/secrets" ];
     buildCores = 0;
