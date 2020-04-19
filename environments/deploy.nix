@@ -24,6 +24,8 @@ in
      '';
   };
 
+  environment.enableDebugInfo = true;
+
   environment.shellAliases = {
     gg = "git grep -i";
     vim = lib.mkForce "myvim";
