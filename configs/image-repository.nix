@@ -74,7 +74,8 @@
 
       ubuntu = {
         "16.04" = {};
-        "18.04" = { tags = [ "latest" "stable" ]; };
+        "18.04" = {};
+        "20.04" = { tags = [ "latest" "stable" ]; };
       };
 
       void = {
