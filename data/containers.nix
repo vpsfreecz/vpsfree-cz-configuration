@@ -89,10 +89,10 @@
       ns2 = {
         node = {
           domain = "cz.vpsfree";
-          fqdn = "node15.prg.vpsfree.cz";
-          id = 116;
+          fqdn = "node8.prg.vpsfree.cz";
+          id = 109;
           location = "prg";
-          name = "node15";
+          name = "node8";
         };
       };
       proxy = {
@@ -138,46 +138,46 @@
       "int.cache" = {
         node = {
           domain = "cz.vpsfree";
-          fqdn = "node1.stg.vpsfree.cz";
-          id = 400;
-          location = "stg";
-          name = "node1";
+          fqdn = "node7.prg.vpsfree.cz";
+          id = 108;
+          location = "prg";
+          name = "node7";
         };
       };
       "int.images" = {
         node = {
           domain = "cz.vpsfree";
-          fqdn = "node1.stg.vpsfree.cz";
-          id = 400;
-          location = "stg";
-          name = "node1";
+          fqdn = "node7.prg.vpsfree.cz";
+          id = 108;
+          location = "prg";
+          name = "node7";
         };
       };
       "int.iso" = {
         node = {
           domain = "cz.vpsfree";
-          fqdn = "node1.stg.vpsfree.cz";
-          id = 400;
-          location = "stg";
-          name = "node1";
+          fqdn = "node7.prg.vpsfree.cz";
+          id = 108;
+          location = "prg";
+          name = "node7";
         };
       };
       "int.www" = {
         node = {
           domain = "cz.vpsfree";
-          fqdn = "node1.stg.vpsfree.cz";
-          id = 400;
-          location = "stg";
-          name = "node1";
+          fqdn = "node7.prg.vpsfree.cz";
+          id = 108;
+          location = "prg";
+          name = "node7";
         };
       };
       proxy = {
         node = {
           domain = "cz.vpsfree";
-          fqdn = "node1.stg.vpsfree.cz";
-          id = 400;
-          location = "stg";
-          name = "node1";
+          fqdn = "node7.prg.vpsfree.cz";
+          id = 108;
+          location = "prg";
+          name = "node7";
         };
       };
     };
