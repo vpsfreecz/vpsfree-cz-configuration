@@ -2,8 +2,6 @@
 {
   imports = [
     ../common.nix
-    ../../common/netboot.nix
-    ../../common/tank.nix
   ];
 
   boot.zfs.pools = {

@@ -20,12 +20,12 @@ let
     };
   };
 in {
-  cluster."cz.vpsfree".stg.node1 = rec {
+  cluster."cz.vpsfree".prg.node16 = rec {
     type = "node";
     spin = "vpsadminos";
 
     node = {
-      id = 400;
+      id = 117;
       role = "hypervisor";
     };
 
@@ -59,7 +59,7 @@ in {
 
         bird = {
           as = 4200001001;
-          routerId = "172.16.251.2";
+          routerId = "172.16.0.26";
           bgpNeighbours = {
             v4 = [
               { address = "172.16.251.1"; as = 4200001901; }
