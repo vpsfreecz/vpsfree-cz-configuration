@@ -1,6 +1,7 @@
 {
   "vpsadminos": {
     "type": "git",
+    "handler": "vpsadminos",
     "options": {
       "url": "https://github.com/vpsfreecz/vpsadminos",
       "rev": "6def4aa560cce5d9b9d676dffac2df4e588af5a3",
