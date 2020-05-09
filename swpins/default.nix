@@ -29,7 +29,7 @@ let
           cp -a ${repo} $out
           chmod 700 $out
           echo "${shortRev}" > $out/.git-revision
-          echo ".tar.${shortRev}" > $out/.version-suffix
+          echo ".git.${shortRev}" > $out/.version-suffix
         '';
   };
 in swpins
