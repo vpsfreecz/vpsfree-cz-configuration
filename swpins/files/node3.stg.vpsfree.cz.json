@@ -2,6 +2,7 @@
   "vpsadminos": {
     "channel": "staging",
     "type": "git",
+    "handler": "vpsadminos",
     "options": {
       "url": "https://github.com/vpsfreecz/vpsadminos",
       "rev": "797ddff2615f8efae26f37e0c37147e84826504e",
