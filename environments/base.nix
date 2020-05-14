@@ -17,4 +17,9 @@
   ];
 
   users.users.root.openssh.authorizedKeys.keys = with data.sshKeys; admins ++ builders;
+
+  security.acme = {
+    acceptTerms = true;
+    email = "podpora@vpsfree.cz";
+  };
 }
