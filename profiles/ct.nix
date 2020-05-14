@@ -12,4 +12,9 @@
     DefaultTimeoutStartSec=900s
   '';
   systemd.services.systemd-udev-trigger.enable = false;
+
+  security.acme = {
+    acceptTerms = true;
+    email = "podpora@vpsfree.cz";
+  };
 }
