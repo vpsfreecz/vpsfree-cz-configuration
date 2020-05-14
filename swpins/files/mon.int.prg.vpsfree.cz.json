@@ -12,13 +12,13 @@
     }
   },
   "nixpkgs": {
-    "channel": "nixos-19.09",
+    "channel": "nixos-20.03",
     "type": "git",
     "options": {
       "url": "https://github.com/NixOS/nixpkgs-channels",
-      "rev": "b047b7315d8c9bee05e3b2d7daf0a357099180fa",
-      "date": "2020-01-09T07:41:04+01:00",
-      "sha256": "1m8v9wrmi5kmbjl247850drn87nblhsq8kxydj2h6qvy6hy90z6k",
+      "rev": "a4f8cec54dcf77b322947117e9b9a0c444bcb17d",
+      "date": "2020-05-13T20:59:31+02:00",
+      "sha256": "0wf9dz754wb8j1g19pdbj13kb1vrfg8hh5sfc39f0m6ifw16wwfp",
       "fetchSubmodules": false
     }
   }
