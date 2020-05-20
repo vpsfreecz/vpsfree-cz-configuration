@@ -76,7 +76,7 @@ let
     # hack around md2man unable to generate style.css due to creating
     # it readonly, which we workaround with touch which results in empty style..
     rm -rf $out/style.css
-    cp $(osctl-env-exec 'bash -c "echo $BUNDLE_PATH"')/gems/md2man-*/lib/md2man/rakefile/style.css $out/style.css
+    cp $(osctl-env-exec 'bash -c "echo $GEM_HOME"')/gems/md2man-*/lib/md2man/rakefile/style.css $out/style.css
   '';
 
   man = pkgs.runCommand "manroot" { } ''
