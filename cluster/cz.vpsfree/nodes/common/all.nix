@@ -15,7 +15,8 @@
     "wireguard"
   ];
 
-  boot.extraModulePackages = [ config.boot.kernelPackages.wireguard ];
+  boot.extraModulePackages =
+    lib.optional (lib.versionOlder config.boot.kernelPackages.kernel.version "5.6") config.boot.kernelPackages.wireguard;
   boot.kernel.sysctl = {
     "net.ipv4.neigh.default.gc_thresh3" = 16384;
     "net.ipv6.neigh.default.gc_thresh3" = 16384;
