@@ -8,7 +8,7 @@ in stdenv.mkDerivation rec {
 
   buildInputs = with pkgs; [
     git
-    mkdocs
+    #mkdocs
     morph
     ncurses
     nix-prefetch-git

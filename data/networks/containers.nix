@@ -58,6 +58,9 @@
     address = "2a03:3b40:100::";
     prefix = 48;
   } {
+    address = "2a03:3b40:20::";
+    prefix = 44;
+  } {
     address = "2a03:3b40:3::";
     prefix = 64;
   } {
