@@ -27,9 +27,9 @@
     "type": "git",
     "options": {
       "url": "https://github.com/vpsfreecz/vpsadmin",
-      "rev": "d578c9515c4a27a9ac85241c478ef3f598871dd5",
-      "date": "2020-07-07T22:23:16+02:00",
-      "sha256": "1djmqzmh2d1hb1mc86aasn5jm6f1il9413bv36qq009yb15hx912",
+      "rev": "0e60e6a3250dfe9f6f33a32c851aa98a6862d5cd",
+      "date": "2020-07-08T17:02:13+02:00",
+      "sha256": "0s5vjbd9rwjh4yylz1yq13n9c1y3vnsk2bsiqrhqa6hl1cpbnamq",
       "fetchSubmodules": false
     }
   }
