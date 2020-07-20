@@ -10,6 +10,7 @@
       datasets = {
         "/".properties = {
           compression = "on";
+          xattr = "sa";
         };
         "ct".properties = {
           acltype = "posixacl";

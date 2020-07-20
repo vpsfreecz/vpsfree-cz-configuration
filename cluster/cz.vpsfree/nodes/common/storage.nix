@@ -8,6 +8,9 @@
 
   boot.zfs.pools.storage = {
     datasets = {
+      "/".properties = {
+        xattr = "sa";
+      };
       "reservation".properties = {
         refreservation = "100G";
       };
