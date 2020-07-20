@@ -1,7 +1,7 @@
 { config, ... }:
 let
   allAddresses = {
-    primary = { address = "172.16.0.67"; prefix = 32; };
+    primary = { address = "172.16.0.30"; prefix = 32; };
     teng0 = {
       v4 = [
         { address = "172.16.251.30"; prefix = 30; }
@@ -20,16 +20,22 @@ let
     };
   };
 in {
-  cluster."cz.vpsfree".stg.node3 = rec {
+  cluster."cz.vpsfree".prg.node20 = rec {
     type = "node";
     spin = "vpsadminos";
 
     node = {
-      id = 402;
+      id = 121;
       role = "hypervisor";
     };
 
-    netboot.enable = false;
+    netboot = {
+      enable = true;
+      macs = [
+        "ec:f4:bb:d0:08:f4"
+        "ec:f4:bb:d0:08:f5"
+      ];
+    };
 
     addresses = with allAddresses; {
       inherit primary;
@@ -41,17 +47,17 @@ in {
       networking = {
         interfaces = {
           names = {
-            teng0 = "d4:ae:52:98:20:0d";
-            teng1 = "d4:ae:52:98:20:0b";
+            teng0 = "ec:f4:bb:d0:08:f2";
+            teng1 = "ec:f4:bb:d0:08:f0";
           };
           addresses = {
-            inherit (allAddresses) teng0; # teng1
+            inherit (allAddresses) teng0 teng1;
           };
         };
 
         bird = {
           as = 4200001008;
-          routerId = "172.16.0.67";
+          routerId = "172.16.0.30";
           bgpNeighbours = {
             v4 = [
               { address = "172.16.251.29"; as = 4200001901; }
