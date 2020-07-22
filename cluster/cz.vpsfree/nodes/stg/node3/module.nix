@@ -1,7 +1,7 @@
 { config, ... }:
 let
   allAddresses = {
-    primary = { address = "172.16.0.30"; prefix = 32; };
+    primary = { address = "172.16.0.67"; prefix = 32; };
     teng0 = {
       v4 = [
         { address = "172.16.251.30"; prefix = 30; }
@@ -20,12 +20,12 @@ let
     };
   };
 in {
-  cluster."cz.vpsfree".prg.node20 = rec {
+  cluster."cz.vpsfree".stg.node3 = rec {
     type = "node";
     spin = "vpsadminos";
 
     node = {
-      id = 121;
+      id = 402;
       role = "hypervisor";
     };
 
@@ -57,7 +57,7 @@ in {
 
         bird = {
           as = 4200001008;
-          routerId = "172.16.0.30";
+          routerId = "172.16.0.67";
           bgpNeighbours = {
             v4 = [
               { address = "172.16.251.29"; as = 4200001901; }
