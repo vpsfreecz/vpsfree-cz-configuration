@@ -5,9 +5,9 @@
     "handler": "vpsadminos",
     "options": {
       "url": "https://github.com/vpsfreecz/vpsadminos",
-      "rev": "849a6735ff4ea875ee34214e50b5d9bb00127317",
-      "date": "2020-07-07T17:04:53+02:00",
-      "sha256": "0h864bvsj4sa0z8p30w38m60i96pgm1lgajil1bfzrfssacf2ssj",
+      "rev": "426cf09181ea3797bd3acfbaa3eb52c28746f720",
+      "date": "2020-07-22T17:17:35+02:00",
+      "sha256": "1mzkq0mj6lk5a10z3m0aqa4v6fqxpdz3isjl9a68nf8y4rj71hj5",
       "fetchSubmodules": false
     }
   },
@@ -16,9 +16,9 @@
     "type": "git",
     "options": {
       "url": "https://github.com/NixOS/nixpkgs-channels",
-      "rev": "a4f8cec54dcf77b322947117e9b9a0c444bcb17d",
-      "date": "2020-05-13T20:59:31+02:00",
-      "sha256": "0wf9dz754wb8j1g19pdbj13kb1vrfg8hh5sfc39f0m6ifw16wwfp",
+      "rev": "2ec04dc22a8d632400868c58ced7c646891b441e",
+      "date": "2020-07-15T15:04:26+02:00",
+      "sha256": "1x5pjhcymrc0jwkm6p4740gm742wm3jmvy0sfpi4sm9p75kjnyh4",
       "fetchSubmodules": false
     }
   },
