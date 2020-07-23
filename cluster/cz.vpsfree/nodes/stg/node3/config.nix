@@ -11,6 +11,9 @@
       layout = [
         { type = "raidz"; devices = [ "sda" "sdb" "sdc" "sdd" ]; }
       ];
+      properties = {
+        ashift = "12";
+      };
     };
   };
 }
