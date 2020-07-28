@@ -3,7 +3,7 @@ GEM
   specs:
     havesnippet-client (1.2.0)
       json
-    json (2.1.0)
+    json (2.3.1)
 
 PLATFORMS
   ruby
