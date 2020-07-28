@@ -20,12 +20,12 @@ let
     };
   };
 in {
-  cluster."cz.vpsfree".stg.node2 = rec {
+  cluster."cz.vpsfree".stg.node1 = rec {
     type = "node";
     spin = "vpsadminos";
 
     node = {
-      id = 401;
+      id = 400;
       role = "hypervisor";
     };
 

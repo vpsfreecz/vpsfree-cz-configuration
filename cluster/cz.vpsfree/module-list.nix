@@ -19,6 +19,6 @@
   ./nodes/prg/backuper/module.nix
   ./nodes/prg/nasbox/module.nix
   ./nodes/prg/openvz.nix
-  ./nodes/stg/node2/module.nix
+  ./nodes/stg/node1/module.nix
   ./nodes/stg/node3/module.nix
 ]
