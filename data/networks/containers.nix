@@ -15,6 +15,9 @@
     address = "172.16.9.0";
     prefix = 24;
   } {
+    address = "172.18.0.0";
+    prefix = 16;
+  } {
     address = "172.19.9.0";
     prefix = 24;
   } {
