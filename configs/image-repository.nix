@@ -50,7 +50,8 @@
       };
 
       devuan = {
-        "2.0" = { tags = [ "latest" "stable" ]; };
+        "2.0" = {};
+        "3.0" = { tags = [ "latest" "stable" ]; };
       };
 
       fedora = {
