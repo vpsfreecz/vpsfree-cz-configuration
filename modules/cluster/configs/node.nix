@@ -43,7 +43,7 @@ let
 in {
   config = mkIf (deploymentInfo.type == "node") {
     vpsadmin.nodeId = cfg.node.id;
-    vpsadmin.consoleHost = mkDefault cfg.osNode.networking.bird.routerId;
+    vpsadmin.consoleHost = mkDefault deploymentInfo.config.addresses.primary.address;
     vpsadmin.netInterfaces = mkDefault (lib.attrNames cfg.osNode.networking.interfaces.addresses);
 
     services.udev.extraRules = confLib.mkNetUdevRules cfg.osNode.networking.interfaces.names;
