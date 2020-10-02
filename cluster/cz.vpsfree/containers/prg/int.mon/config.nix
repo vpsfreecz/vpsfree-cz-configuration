@@ -189,6 +189,14 @@ let
           #"jvb8" = "37.205.14.154";
           "jvb9" = "37.205.14.3";
           #"jvb10" = "37.205.14.121";
+
+          # linuxdays jvbs
+          "ld-jvb1" = "37.205.8.129";
+          "ld-jvb2" = "37.205.8.211";
+          "ld-jvb3" = "37.205.8.244";
+          "ld-jvb4" = "37.205.12.30";
+          "ld-jvb5" = "37.205.12.33";
+          "ld-jvb6" = "37.205.12.55";
         };
       in {
         jvbConfigs = mapAttrsToList (name: addr: {
@@ -212,6 +220,13 @@ let
             targets = [ "https://meet.vpsfree.cz" ];
             labels = {
               alias = "meet.vpsfree.cz";
+              type = "meet-web";
+            };
+          }
+          {
+            targets = [ "https://meet.linuxdays.cz" ];
+            labels = {
+              alias = "meet.linuxdays.cz";
               type = "meet-web";
             };
           }
