@@ -179,41 +179,48 @@ let
     jitsiMeet =
       let
         videoBridges = {
-          "jvb1" = "37.205.14.168";
-          "jvb2" = "37.205.14.153";
-          "jvb3" = "83.167.228.190";
-          "jvb4" = "83.167.228.189";
-          "jvb5" = "83.167.228.188";
-          #"jvb6" = "83.167.228.187";
-          "jvb7" = "37.205.14.129";
-          #"jvb8" = "37.205.14.154";
-          "jvb9" = "37.205.14.3";
-          #"jvb10" = "37.205.14.121";
+          vpsfree = {
+            "jvb1" = "37.205.14.168";
+            "jvb2" = "37.205.14.153";
+            "jvb3" = "83.167.228.190";
+            "jvb4" = "83.167.228.189";
+            "jvb5" = "83.167.228.188";
+            #"jvb6" = "83.167.228.187";
+            "jvb7" = "37.205.14.129";
+            #"jvb8" = "37.205.14.154";
+            "jvb9" = "37.205.14.3";
+            #"jvb10" = "37.205.14.121";
+          };
 
-          # linuxdays jvbs
-          "ld-jvb1" = "37.205.8.129";
-          "ld-jvb2" = "37.205.8.211";
-          "ld-jvb3" = "37.205.8.244";
-          "ld-jvb4" = "37.205.12.30";
-          "ld-jvb5" = "37.205.12.33";
-          "ld-jvb6" = "37.205.12.55";
+          linuxdays = {
+            "ld-jvb1" = "37.205.8.129";
+            "ld-jvb2" = "37.205.8.211";
+            "ld-jvb3" = "37.205.8.244";
+            "ld-jvb4" = "37.205.12.30";
+            "ld-jvb5" = "37.205.12.33";
+            "ld-jvb6" = "37.205.12.55";
+          };
         };
       in {
-        jvbConfigs = mapAttrsToList (name: addr: {
-          targets = [ "${addr}:9100" ];
-          labels = {
-            alias = "meet-${name}";
-            type = "meet-jvb";
-          };
-        }) videoBridges;
+        jvbConfigs = flatten (mapAttrsToList (project: bridges:
+          mapAttrsToList (name: addr: {
+            targets = [ "${addr}:9100" ];
+            labels = {
+              alias = "meet-${name}";
+              type = "meet-jvb";
+              project = project;
+            };
+          }) bridges) videoBridges);
 
-        jvbPingConfigs = mapAttrsToList (name: addr: {
-          targets = [ addr ];
-          labels = {
-            alias = "meet-${name}";
-            type = "meet-jvb";
-          };
-        }) videoBridges;
+        jvbPingConfigs = flatten (mapAttrsToList (project: bridges:
+          mapAttrsToList (name: addr: {
+            targets = [ addr ];
+            labels = {
+              alias = "meet-${name}";
+              type = "meet-jvb";
+              project = project;
+            };
+          }) bridges) videoBridges);
 
         webConfigs = [
           {
