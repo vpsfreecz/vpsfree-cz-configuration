@@ -15,10 +15,10 @@
     "channel": "staging",
     "type": "git",
     "options": {
-      "url": "https://github.com/NixOS/nixpkgs-channels",
-      "rev": "2ec04dc22a8d632400868c58ced7c646891b441e",
-      "date": "2020-07-15T15:04:26+02:00",
-      "sha256": "1x5pjhcymrc0jwkm6p4740gm742wm3jmvy0sfpi4sm9p75kjnyh4",
+      "url": "https://github.com/NixOS/nixpkgs",
+      "rev": "89281dd1dfed6839610f0ccad0c0e493606168fe",
+      "date": "2020-10-06T01:19:04-04:00",
+      "sha256": "14jwgdqbhxf9581z9afzjzj0r0maw3m7227gn5bpk4fn8057vs5s",
       "fetchSubmodules": false
     }
   },
