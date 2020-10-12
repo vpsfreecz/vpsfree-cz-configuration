@@ -9,8 +9,8 @@ self: super:
     src = super.fetchFromGitHub {
       owner = "vpsfreecz";
       repo = "morph";
-      rev = "0436aa6eaf1e1bfe9735b32d084b71764a2e3073";
-      sha256 = "100dk373ksnnyl4x1nv3igdrai39xlmi8d173ghgfaw5w6fw6kvh";
+      rev = "b9e1e4f3c577119c65a394f1b6aedc183b319474";
+      sha256 = "sha256:1w0cid6anvy776k9gl32s20lixn9nmai5wxhaybxnpzxdda28c6p";
     };
   });
 
