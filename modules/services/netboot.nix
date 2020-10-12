@@ -22,9 +22,9 @@ let
     boot
   '';
 
-  ipxe_boot_vpsadminos = name: item: runlevel: ''
+  ipxe_boot_vpsadminos = { name, item, runlevel ? "default", kernelParams ? [] }: ''
     imgfree
-    imgfetch http://${server}/${name}/kernel systemConfig=${builtins.unsafeDiscardStringContext item.toplevel} ${toString item.kernelParams} runlevel=${runlevel} || goto normal
+    imgfetch http://${server}/${name}/kernel systemConfig=${builtins.unsafeDiscardStringContext item.toplevel} ${toString item.kernelParams} runlevel=${runlevel} ${concatStringsSep " " kernelParams} || goto normal
     imgfetch http://${server}/${name}/initrd || goto normal
     imgfetch http://${server}/${name}/root.squashfs root.squashfs || goto normal
     imgverify kernel http://${server}/${name}/kernel.sig
@@ -38,19 +38,27 @@ let
     :${name}
     menu ${name} menu
     item ${name}_default Default runlevel
+    item ${name}_nopools Default runlevel without container imports
+    item ${name}_nostart Default runlevel without container autostart
     item ${name}_rescue Rescue runlevel (network and sshd)
     item ${name}_single Single-user runlevel (console only)
     choose --default ${name}_default --timeout 5000 runlevel || goto :restart
     goto ''${runlevel}
 
     :${name}_default
-    ${ipxe_boot_vpsadminos name item "default"}
+    ${ipxe_boot_vpsadminos { inherit name item; runlevel = "default"; }}
+
+    :${name}_nopools
+    ${ipxe_boot_vpsadminos { inherit name item; runlevel = "default"; kernelParams = [ "osctl.pools=0" ]; }}
+
+    :${name}_nostart
+    ${ipxe_boot_vpsadminos { inherit name item; runlevel = "default"; kernelParams = [ "osctl.autostart=0" ]; }}
 
     :${name}_rescue
-    ${ipxe_boot_vpsadminos name item "rescue"}
+    ${ipxe_boot_vpsadminos { inherit name item; runlevel = "rescue"; }}
 
     :${name}_single
-    ${ipxe_boot_vpsadminos name item "single"}
+    ${ipxe_boot_vpsadminos { inherit name item; runlevel = "single"; }}
   '';
 
   concatNl = concatStringsSep "\n";
