@@ -25,6 +25,7 @@ module ConfCtl::Cli
       cmd = [
         'morph',
         'build',
+        '--keep-result',
       ]
 
       deps = select_deployments(args[0]).managed
@@ -47,6 +48,7 @@ module ConfCtl::Cli
       cmd = [
         'morph',
         'deploy',
+        '--keep-result',
       ]
 
       deps = select_deployments(args[0]).managed
