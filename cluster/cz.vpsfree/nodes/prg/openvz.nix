@@ -91,15 +91,6 @@
       services.node-exporter = {};
     };
 
-    node13 = {
-      type = "node";
-      spin = "openvz";
-      node.role = "hypervisor";
-      addresses.primary = { address = "172.16.0.23"; prefix = 23; };
-      vzNode.role = "hypervisor";
-      services.node-exporter = {};
-    };
-
     node14 = {
       type = "node";
       spin = "openvz";
