@@ -1,6 +1,6 @@
-{ config, pkgs, lib, confLib, data, ... }:
+{ config, pkgs, lib, confLib, confData, ... }:
 let
-  images = import ../../../../lib/images.nix { inherit config lib confLib pkgs data; };
+  images = import ../../../../lib/images.nix { inherit config lib confLib pkgs confData; };
 in
 {
   imports = [

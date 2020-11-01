@@ -1,4 +1,4 @@
-{ config, pkgs, data, ... }:
+{ config, pkgs, confData, ... }:
 {
   time.timeZone = "Europe/Amsterdam";
   networking = {
@@ -16,5 +16,5 @@
     screen
   ];
 
-  users.users.root.openssh.authorizedKeys.keys = with data.sshKeys; admins ++ builders;
+  users.users.root.openssh.authorizedKeys.keys = with confData.sshKeys; admins ++ builders;
 }

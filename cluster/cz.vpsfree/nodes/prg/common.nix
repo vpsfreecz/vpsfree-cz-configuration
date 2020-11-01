@@ -1,4 +1,4 @@
-{ config, lib, pkgs, data, ... }:
+{ config, lib, pkgs, ... }:
 {
   imports = [
     ../common/all.nix

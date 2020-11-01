@@ -1,4 +1,4 @@
-{ config, pkgs, lib, confLib, data, ... }:
+{ config, pkgs, lib, confLib, ... }:
 let
   proxy = confLib.findConfig {
     cluster = config.cluster;

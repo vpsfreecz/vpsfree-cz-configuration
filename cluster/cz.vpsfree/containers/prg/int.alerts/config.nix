@@ -1,4 +1,4 @@
-{ pkgs, lib, confLib, config, data, deploymentInfo, ... }:
+{ pkgs, lib, confLib, config, confData, deploymentInfo, ... }:
 with lib;
 let
   monPrg = confLib.findConfig {
@@ -31,7 +31,7 @@ let
   containerInhibitRules = map (ct:
     let
       realLocation = if isNull ct.location then "global" else ct.location;
-      ctData = data.vpsadmin.containers.${ct.domain}.${realLocation}.${ct.name};
+      ctData = confData.vpsadmin.containers.${ct.domain}.${realLocation}.${ct.name};
     in {
       target_match = {
         type = "container";
