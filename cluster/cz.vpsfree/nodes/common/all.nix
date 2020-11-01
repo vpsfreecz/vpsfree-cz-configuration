@@ -27,7 +27,8 @@
   vpsadminos.nix = true;
   environment.systemPackages = with pkgs; [
     dmidecode
-    ipmicfg
+    # Constantly broken
+    # ipmicfg
     lm_sensors
     pciutils
     smartmontools
