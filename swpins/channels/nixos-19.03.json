@@ -1,7 +1,12 @@
 {
   "nixpkgs": {
     "type": "git",
-    "options": {
+    "fetcher": "git",
+    "spec_options": {
+      "url": "https://github.com/NixOS/nixpkgs-channels",
+      "fetch_submodules": false
+    },
+    "fetcher_options": {
       "url": "https://github.com/NixOS/nixpkgs-channels",
       "rev": "d15a31f88a261281cd7c79038ae860c5ed95507d",
       "date": "2019-10-22T18:03:27+02:00",

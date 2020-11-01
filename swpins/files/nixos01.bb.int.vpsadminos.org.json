@@ -2,7 +2,12 @@
   "nixpkgs": {
     "channel": "nixos-19.09",
     "type": "git",
-    "options": {
+    "fetcher": "git",
+    "spec_options": {
+      "url": "https://github.com/NixOS/nixpkgs-channels",
+      "fetch_submodules": false
+    },
+    "fetcher_options": {
       "url": "https://github.com/NixOS/nixpkgs-channels",
       "rev": "b047b7315d8c9bee05e3b2d7daf0a357099180fa",
       "date": "2020-01-09T07:41:04+01:00",
@@ -12,8 +17,13 @@
   },
   "vpsadminos-runtime-deps": {
     "type": "git",
+    "fetcher": "git",
     "handler": "vpsadminos",
-    "options": {
+    "spec_options": {
+      "url": "https://github.com/vpsfreecz/vpsadminos",
+      "fetch_submodules": false
+    },
+    "fetcher_options": {
       "url": "https://github.com/vpsfreecz/vpsadminos",
       "rev": "369289feee60c129187d99396f3fa7082711280e",
       "sha256": "17a0917vwpqrnqcpm9wni1w9l6rhdfqygfvq17ljj79d7aqvyjfj",
@@ -24,8 +34,13 @@
   "vpsadminos": {
     "channel": "os-master",
     "type": "git",
+    "fetcher": "git",
     "handler": "vpsadminos",
-    "options": {
+    "spec_options": {
+      "url": "https://github.com/vpsfreecz/vpsadminos",
+      "fetch_submodules": false
+    },
+    "fetcher_options": {
       "url": "https://github.com/vpsfreecz/vpsadminos",
       "rev": "81dcb0e6c67fee4adf8a308973a60c38ae5aa835",
       "date": "2020-08-12T22:04:30+02:00",
