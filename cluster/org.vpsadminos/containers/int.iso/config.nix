@@ -23,6 +23,7 @@ let
 in {
   imports = [
     ../../../../environments/base.nix
+    ../../../../profiles/ct.nix
   ];
 
   networking = {
