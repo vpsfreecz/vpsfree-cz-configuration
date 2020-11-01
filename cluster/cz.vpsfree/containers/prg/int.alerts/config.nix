@@ -31,7 +31,7 @@ let
   containerInhibitRules = map (ct:
     let
       realLocation = if isNull ct.location then "global" else ct.location;
-      ctData = data.containers.${ct.domain}.${realLocation}.${ct.name};
+      ctData = data.vpsadmin.containers.${ct.domain}.${realLocation}.${ct.name};
     in {
       target_match = {
         type = "container";

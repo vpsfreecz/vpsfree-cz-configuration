@@ -71,7 +71,7 @@
         sshRules = map (port:
           "iptables -A nixos-fw -p tcp --dport ${toString port} -j nixos-fw-accept"
         ) sshCfg.ports;
-        managementNetworks = data.networks.management.ipv4;
+        managementNetworks = data.vpsadmin.networks.management.ipv4;
         vpsadminSendRecvRules = map (net: ''
           # ${net.location}
           iptables -A nixos-fw -p tcp -s ${net.address}/${toString net.prefix} --dport 10000:20000 -j nixos-fw-accept
