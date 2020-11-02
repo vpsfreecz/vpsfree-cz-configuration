@@ -2,37 +2,27 @@
 let
   cache = confLib.findConfig {
     cluster = config.cluster;
-    domain = "org.vpsadminos";
-    location = null;
-    name = "int.cache";
+    name = "org.vpsadminos/containers/int.cache";
   };
 
   images = confLib.findConfig {
     cluster = config.cluster;
-    domain = "org.vpsadminos";
-    location = null;
-    name = "int.images";
+    name = "org.vpsadminos/containers/int.images";
   };
 
   iso = confLib.findConfig {
     cluster = config.cluster;
-    domain = "org.vpsadminos";
-    location = null;
-    name = "int.iso";
+    name = "org.vpsadminos/containers/int.iso";
   };
 
   www = confLib.findConfig {
     cluster = config.cluster;
-    domain = "org.vpsadminos";
-    location = null;
-    name = "int.www";
+    name = "org.vpsadminos/containers/int.www";
   };
 
   bbmaster = confLib.findConfig {
     cluster = config.cluster;
-    domain = "org.vpsadminos";
-    location = null;
-    name = "int.bb.master";
+    name = "org.vpsadminos/containers/int.bb.master";
   };
 in {
   imports = [

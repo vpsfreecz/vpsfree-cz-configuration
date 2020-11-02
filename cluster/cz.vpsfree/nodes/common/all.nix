@@ -52,20 +52,20 @@
   # to be able to include ipmicfg
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.overlays = import ../../../../overlays;
+  nixpkgs.overlays = (import ../../../../overlays) ++ [
+    (import <vpsadminos/os/overlays/vpsadmin.nix> <vpsadmin>)
+  ];
 
   networking = {
     firewall.extraCommands =
       let
-        nodeCfg = deploymentInfo.config;
+        nodeCfg = deploymentInfo;
         nfsCfg = config.services.nfs.server;
         nodeExporterCfg = config.services.prometheus.exporters.node;
         osctlExporterCfg = config.osctl.exporter;
         monPrg = confLib.findConfig {
           cluster = config.cluster;
-          domain = "cz.vpsfree";
-          location = "prg";
-          name = "int.mon";
+          name = "cz.vpsfree/containers/prg/int.mon";
         };
         sshCfg = config.services.openssh;
         sshRules = map (port:

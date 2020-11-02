@@ -2,12 +2,10 @@
 let
   proxyPrg = confLib.findConfig {
     cluster = config.cluster;
-    domain = "cz.vpsfree";
-    location = "prg";
-    name = "proxy";
+    name = "cz.vpsfree/containers/prg/proxy";
   };
 
-  grafanaPort = deploymentInfo.config.services.grafana.port;
+  grafanaPort = deploymentInfo.services.grafana.port;
 in {
   imports = [
     ../../../../../environments/base.nix

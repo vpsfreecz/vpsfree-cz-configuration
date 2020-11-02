@@ -12,13 +12,18 @@ let
     };
   };
 in {
-  cluster."cz.vpsfree".prg.backuper = rec {
-    type = "node";
+  cluster."cz.vpsfree/nodes/prg/backuper" = rec {
     spin = "vpsadminos";
 
     node = {
       id = 160;
       role = "storage";
+    };
+
+    host = {
+      name = "backuper";
+      location = "prg";
+      domain = "vpsfree.cz";
     };
 
     netboot = {

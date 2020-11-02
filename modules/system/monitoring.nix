@@ -7,7 +7,7 @@ let
 
   monitorings = filter (d: d.config.monitoring.isMonitor) allDeployments;
 
-  exporterPort = deploymentInfo.config.services.node-exporter.port;
+  exporterPort = deploymentInfo.services.node-exporter.port;
 in {
   options = {
     system.monitoring = {
@@ -20,11 +20,11 @@ in {
 
   config = mkMerge [
     {
-      system.monitoring.enable = mkDefault deploymentInfo.config.monitoring.enable;
+      system.monitoring.enable = mkDefault deploymentInfo.monitoring.enable;
     }
     (mkIf cfg.enable {
       networking.firewall.extraCommands = concatStringsSep "\n" (map (d: ''
-        # Allow access to node-exporter from ${d.fqdn}
+        # Allow access to node-exporter from ${d.config.host.fqdn}
         iptables -A nixos-fw -p tcp -m tcp -s ${d.config.addresses.primary.address} --dport ${toString exporterPort} -j nixos-fw-accept
       '') monitorings);
 

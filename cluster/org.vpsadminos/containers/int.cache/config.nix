@@ -2,9 +2,7 @@
 let
   proxy = confLib.findConfig {
     cluster = config.cluster;
-    domain = "org.vpsadminos";
-    location = null;
-    name = "proxy";
+    name = "org.vpsadminos/containers/proxy";
   };
 in {
   imports = [

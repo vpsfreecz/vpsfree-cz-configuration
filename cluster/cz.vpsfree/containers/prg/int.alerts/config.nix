@@ -3,43 +3,37 @@ with lib;
 let
   monPrg = confLib.findConfig {
     cluster = config.cluster;
-    domain = "cz.vpsfree";
-    location = "prg";
-    name = "int.mon";
+    name = "cz.vpsfree/containers/prg/int.mon";
   };
 
   logPrg = confLib.findConfig {
     cluster = config.cluster;
-    domain = "cz.vpsfree";
-    location = "prg";
-    name = "log";
+    name = "cz.vpsfree/containers/prg/log";
   };
 
   proxyPrg = confLib.findConfig {
     cluster = config.cluster;
-    domain = "cz.vpsfree";
-    location = "prg";
-    name = "proxy";
+    name = "cz.vpsfree/containers/prg/proxy";
   };
 
-  alertmanagerPort = deploymentInfo.config.services.alertmanager.port;
+  alertmanagerPort = deploymentInfo.services.alertmanager.port;
 
   allContainers = filter (
-    d: d.type == "container"
+    d: d.config.container != null
   ) (confLib.getClusterDeployments config.cluster);
+
+  reverseDomain = domain: concatStringsSep "." (reverseList (splitString "." domain));
 
   containerInhibitRules = map (ct:
     let
-      realLocation = if isNull ct.location then "global" else ct.location;
-      ctData = confData.vpsadmin.containers.${ct.domain}.${realLocation}.${ct.name};
+      realLocation = if isNull ct.config.host.location then "global" else ct.config.host.location;
+      ctData = confData.vpsadmin.containers.${reverseDomain ct.config.host.domain}.${realLocation}.${reverseDomain ct.config.host.name};
     in {
       target_match = {
-        type = "container";
-        fqdn = "${ct.fqdn}";
+        fqdn = "${ct.config.host.fqdn}";
       };
       source_match_re = {
         alertname = "NodeDown|HypervisorBooting";
-        type = "node";
         fqdn = "${ctData.node.fqdn}";
       };
     }

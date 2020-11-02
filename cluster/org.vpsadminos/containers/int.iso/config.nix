@@ -2,9 +2,7 @@
 let
   proxy = confLib.findConfig {
     cluster = config.cluster;
-    domain = "org.vpsadminos";
-    location = null;
-    name = "proxy";
+    name = "org.vpsadminos/containers/proxy";
   };
 
   images = import ../../../../lib/images.nix { inherit config confData lib confLib pkgs; };

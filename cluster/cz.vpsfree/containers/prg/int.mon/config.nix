@@ -3,33 +3,27 @@ with lib;
 let
   alertsPrg = confLib.findConfig {
     cluster = config.cluster;
-    domain = "cz.vpsfree";
-    location = "prg";
-    name = "int.alerts";
+    name = "cz.vpsfree/containers/prg/int.alerts";
   };
 
   grafanaPrg = confLib.findConfig {
     cluster = config.cluster;
-    domain = "cz.vpsfree";
-    location = "prg";
-    name = "int.grafana";
+    name = "cz.vpsfree/containers/prg/int.grafana";
   };
 
   proxyPrg = confLib.findConfig {
     cluster = config.cluster;
-    domain = "cz.vpsfree";
-    location = "prg";
-    name = "proxy";
+    name = "cz.vpsfree/containers/prg/proxy";
   };
 
-  promPort = deploymentInfo.config.services.prometheus.port;
-  exporterPort = deploymentInfo.config.services.node-exporter.port;
+  promPort = deploymentInfo.services.prometheus.port;
+  exporterPort = deploymentInfo.services.node-exporter.port;
 
   allDeployments = confLib.getClusterDeployments config.cluster;
 
   monitoredDeployments = filter (d: d.config.monitoring.enable) allDeployments;
 
-  getAlias = d: "${d.name}${optionalString (!isNull d.location) ".${d.location}"}";
+  getAlias = host: "${host.name}${optionalString (!isNull host.location) ".${host.location}"}";
   ensureLocation = location: if location == null then "global" else location;
 
   filterServices = d: fn:
@@ -45,7 +39,7 @@ let
     monitorings =
       let
         deps = filter (d:
-          d.config.monitoring.isMonitor && d.fqdn != deploymentInfo.fqdn
+          d.config.monitoring.isMonitor && d.config.host.fqdn != deploymentInfo.host.fqdn
         ) monitoredDeployments;
       in {
         exporterConfigs = [
@@ -55,27 +49,27 @@ let
               "localhost:${toString exporterPort}"
             ];
             labels = {
-              alias = getAlias deploymentInfo;
-              fqdn = deploymentInfo.fqdn;
-            } // deploymentInfo.config.monitoring.labels;
+              alias = getAlias deploymentInfo.host;
+              fqdn = deploymentInfo.host.fqdn;
+            } // deploymentInfo.monitoring.labels;
           }
         ] ++ (flatten (map (d: {
           targets = [
-            "${d.fqdn}:${toString d.services.prometheus.port}"
-            "${d.fqdn}:${toString d.services.node-exporter.port}"
+            "${d.config.host.fqdn}:${toString d.services.prometheus.port}"
+            "${d.config.host.fqdn}:${toString d.services.node-exporter.port}"
           ];
           labels = {
-            alias = getAlias d;
-            fqdn = d.fqdn;
+            alias = getAlias d.config.host;
+            fqdn = d.config.host.fqdn;
           } // d.config.monitoring.labels;
         }) deps));
 
         pingConfigs = map (d: {
-          targets = [ d.fqdn ];
+          targets = [ d.config.host.fqdn ];
           labels = {
-            domain = d.domain;
-            location = realLocation d.location;
-            os = d.spin;
+            domain = d.config.host.domain;
+            location = realLocation d.config.host.location;
+            os = d.config.spin;
           };
         }) deps;
       };
@@ -83,61 +77,60 @@ let
     infra =
       let
         deps = filter (d:
-          !d.config.monitoring.isMonitor && (d.type == "machine" || d.type == "container")
+          !d.config.monitoring.isMonitor && (d.config.node == null)
         ) monitoredDeployments;
 
-        exporterDeps = filter (d: d.spin != "other") deps;
+        exporterDeps = filter (d: d.config.spin != "other") deps;
       in {
         exporterConfigs = map (d: {
           targets = [
-            "${d.fqdn}:${toString d.config.services.node-exporter.port}"
-          ] ++ (optional (hasAttr "osctl-exporter" d.config.services) "${d.fqdn}:${toString d.config.services.osctl-exporter.port}");
+            "${d.config.host.fqdn}:${toString d.config.services.node-exporter.port}"
+          ] ++ (optional (hasAttr "osctl-exporter" d.config.services) "${d.config.host.fqdn}:${toString d.config.services.osctl-exporter.port}");
           labels = {
-            alias = getAlias d;
-            fqdn = d.fqdn;
-            domain = d.domain;
-            location = ensureLocation d.location;
-            type = d.type;
-            os = d.spin;
+            alias = getAlias d.config.host;
+            fqdn = d.config.host.fqdn;
+            domain = d.config.host.domain;
+            location = ensureLocation d.config.host.location;
+            os = d.config.spin;
           } // d.config.monitoring.labels;
         }) exporterDeps;
 
         pingConfigs = map (d: {
-          targets = [ d.fqdn ];
+          targets = [ d.config.host.fqdn ];
           labels = {
-            domain = d.domain;
-            location = ensureLocation d.location;
-            os = d.spin;
+            domain = d.config.host.domain;
+            location = ensureLocation d.config.host.location;
+            os = d.config.spin;
           };
         }) deps;
       };
 
     nodes =
       let
-        deps = filter (d: d.type == "node") monitoredDeployments;
+        deps = filter (d: d.config.node != null) monitoredDeployments;
       in {
         exporterConfigs = map (d: {
           targets = [
-            "${d.fqdn}:${toString d.config.services.node-exporter.port}"
-          ] ++ (optional (hasAttr "osctl-exporter" d.config.services) "${d.fqdn}:${toString d.config.services.osctl-exporter.port}");
+            "${d.config.host.fqdn}:${toString d.config.services.node-exporter.port}"
+          ] ++ (optional (hasAttr "osctl-exporter" d.config.services) "${d.config.host.fqdn}:${toString d.config.services.osctl-exporter.port}");
           labels = {
-            alias = getAlias d;
-            fqdn = d.fqdn;
-            domain = d.domain;
-            location = ensureLocation d.location;
-            type = d.type;
-            os = d.spin;
-            role = d.role;
+            alias = getAlias d.config.host;
+            fqdn = d.config.host.fqdn;
+            domain = d.config.host.domain;
+            location = ensureLocation d.config.host.location;
+            type = "node";
+            os = d.config.spin;
+            role = d.config.node.role;
           } // d.config.monitoring.labels;
         }) deps;
 
         pingConfigs = map (d: {
-          targets = [ d.fqdn ];
+          targets = [ d.config.host.fqdn ];
           labels = {
-            domain = d.domain;
-            location = ensureLocation d.location;
-            role = d.role;
-            os = d.spin;
+            domain = d.config.host.domain;
+            location = ensureLocation d.config.host.location;
+            role = d.config.node.role;
+            os = d.config.spin;
           };
         }) deps;
       };
@@ -151,9 +144,9 @@ let
         dnsProbes = map (sv: {
           targets = [ "${sv.config.address}:${toString sv.config.port}" ];
           labels = {
-            fqdn = sv.deployment.fqdn;
-            domain = sv.deployment.domain;
-            location = ensureLocation sv.deployment.location;
+            fqdn = sv.deployment.config.host.fqdn;
+            domain = sv.deployment.config.host.domain;
+            location = ensureLocation sv.deployment.config.host.location;
             service = "dns-resolver";
           };
         }) resolverServices;
@@ -168,9 +161,9 @@ let
         dnsProbes = map (sv: {
           targets = [ "${sv.config.address}:${toString sv.config.port}" ];
           labels = {
-            fqdn = sv.deployment.fqdn;
-            domain = sv.deployment.domain;
-            location = ensureLocation sv.deployment.location;
+            fqdn = sv.deployment.config.host.fqdn;
+            domain = sv.deployment.config.host.domain;
+            location = ensureLocation sv.deployment.config.host.location;
             service = "dns-authoritative";
           };
         }) authoritativeServices;

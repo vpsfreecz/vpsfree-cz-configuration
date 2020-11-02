@@ -20,13 +20,18 @@ let
     };
   };
 in {
-  cluster."cz.vpsfree".prg.node16 = rec {
-    type = "node";
+  cluster."cz.vpsfree/nodes/prg/node16" = rec {
     spin = "vpsadminos";
 
     node = {
       id = 117;
       role = "hypervisor";
+    };
+
+    host = {
+      name = "node16";
+      location = "prg";
+      domain = "vpsfree.cz";
     };
 
     netboot = {

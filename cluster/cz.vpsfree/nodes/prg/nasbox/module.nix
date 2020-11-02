@@ -12,13 +12,18 @@ let
     };
   };
 in {
-  cluster."cz.vpsfree".prg.nasbox = rec {
-    type = "node";
+  cluster."cz.vpsfree/nodes/prg/nasbox" = rec {
     spin = "vpsadminos";
 
     node = {
       id = 170;
       role = "storage";
+    };
+
+    host = {
+      name = "nasbox";
+      location = "prg";
+      domain = "vpsfree.cz";
     };
 
     netboot = {

@@ -2,24 +2,6 @@
   ./containers/dns-authoritative.nix
   ./containers/brq/dns-resolvers.nix
   ./containers/prg/dns-resolvers.nix
-  ./containers/prg/int.alerts/module.nix
-  ./containers/prg/int.grafana/module.nix
-  ./containers/prg/int.mon/module.nix
-  ./containers/prg/log/module.nix
-  ./containers/prg/proxy/module.nix
-  ./machines/build/module.nix
-  ./machines/pxe/module.nix
   ./nodes/brq/openvz.nix
-  ./nodes/pgnd/node1/module.nix
-  ./nodes/prg/node1/module.nix
-  ./nodes/prg/node7/module.nix
-  ./nodes/prg/node13/module.nix
-  ./nodes/prg/node15/module.nix
-  ./nodes/prg/node16/module.nix
-  ./nodes/prg/node19/module.nix
-  ./nodes/prg/node20/module.nix
-  ./nodes/prg/backuper/module.nix
-  ./nodes/prg/nasbox/module.nix
   ./nodes/prg/openvz.nix
-  ./nodes/stg/node1/module.nix
 ]
