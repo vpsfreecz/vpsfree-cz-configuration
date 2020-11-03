@@ -74,18 +74,5 @@ in {
       };
     };
   };
-
-  deployment = {
-    healthChecks = {
-      http = [
-        {
-          scheme = "http";
-          port = 80;
-          path = "/";
-          description = "Check whether nginx is running.";
-        }
-      ];
-    };
-  };
 }
 

@@ -65,18 +65,4 @@ in
       "172.19.254.0/24"
     ];
   };
-
-  deployment = {
-    healthChecks = {
-      http = [
-        {
-          scheme = "http";
-          port = 80;
-          path = "/";
-          description = "Check whether nginx is running.";
-          period = 1; # number of seconds between retries
-        }
-      ];
-    };
-  };
 }
