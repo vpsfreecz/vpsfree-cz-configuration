@@ -1,11 +1,13 @@
-{ config, pkgs, lib, confLib, confData, ... }:
+{ config, pkgs, lib, confDir, confLib, confData, ... }:
 let
   proxy = confLib.findConfig {
     cluster = config.cluster;
     name = "org.vpsadminos/containers/proxy";
   };
 
-  images = import ../../../../lib/images.nix { inherit config confData lib confLib pkgs; };
+  images = import <confctl/nix/lib/images.nix> {
+    inherit config lib pkgs confDir confLib confData;
+  };
 
   isoImages = [ images.vpsadminosISO ];
 
