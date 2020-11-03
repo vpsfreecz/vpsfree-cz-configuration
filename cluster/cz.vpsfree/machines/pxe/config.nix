@@ -58,7 +58,7 @@ in
     enable = true;
     host = "172.16.254.5";
     inherit (images) nixosItems;
-    vpsadminosItems = images.allNodes "cz.vpsfree";
+    vpsadminosItems = images.allNodes "vpsfree.cz";
     includeNetbootxyz = true;
     allowedIPRanges = [
       "172.16.254.0/24"
