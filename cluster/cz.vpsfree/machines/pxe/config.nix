@@ -1,7 +1,7 @@
-{ config, pkgs, lib, confLib, confData, ... }:
+{ config, pkgs, lib, confDir, confLib, confData, ... }:
 let
   images = import <confctl/nix/lib/images.nix> {
-    inherit config lib confLib pkgs confData;
+    inherit config lib pkgs confDir confLib confData;
     nixosModules = [
       ../../../../environments/base.nix
     ];
