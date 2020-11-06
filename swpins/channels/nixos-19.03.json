@@ -1,17 +1,20 @@
 {
   "nixpkgs": {
     "type": "git",
-    "fetcher": "git",
-    "spec_options": {
-      "url": "https://github.com/NixOS/nixpkgs-channels",
-      "fetch_submodules": false
+    "nix_options": {
+      "fetchSubmodules": false,
+      "update": "refs/heads/nixos-19.03",
+      "url": "https://github.com/NixOS/nixpkgs"
     },
-    "fetcher_options": {
-      "url": "https://github.com/NixOS/nixpkgs-channels",
-      "rev": "d15a31f88a261281cd7c79038ae860c5ed95507d",
-      "date": "2019-10-22T18:03:27+02:00",
-      "sha256": "038iqfwmppnxq6aa89qm6k98lhwg686bmc9qjifibddm8pcp2wd0",
-      "fetchSubmodules": false
+    "state": {
+      "rev": "d15a31f88a261281cd7c79038ae860c5ed95507d"
+    },
+    "fetcher": {
+      "type": "zip",
+      "options": {
+        "url": "https://github.com/NixOS/nixpkgs/archive/d15a31f88a261281cd7c79038ae860c5ed95507d.tar.gz",
+        "sha256": "038iqfwmppnxq6aa89qm6k98lhwg686bmc9qjifibddm8pcp2wd0"
+      }
     }
   }
 }

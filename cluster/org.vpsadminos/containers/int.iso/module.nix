@@ -2,6 +2,7 @@
 {
   cluster."org.vpsadminos/containers/int.iso" = rec {
     spin = "nixos";
+    swpins.channels = [ "nixos-stable" "os-master" ];
     container.id = 14562;
     host = { name = "iso.int"; domain = "vpsadminos.org"; };
     addresses.primary = { address = "172.16.4.16"; prefix = 32; };

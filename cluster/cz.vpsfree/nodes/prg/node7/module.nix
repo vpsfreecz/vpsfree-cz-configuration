@@ -23,6 +23,8 @@ in {
   cluster."cz.vpsfree/nodes/prg/node7" = rec {
     spin = "vpsadminos";
 
+    swpins.channels = [ "production" ];
+
     node = {
       id = 108;
       role = "hypervisor";

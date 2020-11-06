@@ -15,6 +15,8 @@ in {
   cluster."cz.vpsfree/nodes/prg/backuper" = rec {
     spin = "vpsadminos";
 
+    swpins.channels = [ "storage" ];
+
     node = {
       id = 160;
       role = "storage";

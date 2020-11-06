@@ -1,0 +1,20 @@
+{
+  "nixpkgs": {
+    "type": "git",
+    "nix_options": {
+      "fetchSubmodules": false,
+      "update": "refs/heads/nixos-20.03",
+      "url": "https://github.com/NixOS/nixpkgs"
+    },
+    "state": {
+      "rev": "a4f8cec54dcf77b322947117e9b9a0c444bcb17d"
+    },
+    "fetcher": {
+      "type": "zip",
+      "options": {
+        "url": "https://github.com/NixOS/nixpkgs/archive/a4f8cec54dcf77b322947117e9b9a0c444bcb17d.tar.gz",
+        "sha256": "0wf9dz754wb8j1g19pdbj13kb1vrfg8hh5sfc39f0m6ifw16wwfp"
+      }
+    }
+  }
+}
