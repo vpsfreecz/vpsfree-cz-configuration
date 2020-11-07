@@ -7,41 +7,29 @@ vpsAdminOS-powered nodes, machines and related services run in containers.
 ## Requirements
 
 - [Nix](https://nixos.org/nix/)
+- [confctl](https://github.com/vpsfreecz/confctl)
 
 ## Usage
-Clone this repository:
+First, setup [confctl](https://github.com/vpsfreecz/confctl). For now, `confctl`
+and `vpsfree-cz-configuration` should be cloned to adjacent directories.
+
+Clone the repositories:
 
 ```bash
-git clone https://github.com/vpsfreecz/vpsfree-cz-configuration/
+git clone https://github.com/vpsfreecz/confctl
+git clone https://github.com/vpsfreecz/vpsfree-cz-configuration
 ```
 
-Change into its directory and run `nix-shell`:
+Change into the configuration directory and run `nix-shell`:
 
 ```bash
 cd vpsfree-cz-configuration
 nix-shell
 ```
 
-Hosts can be built and deployed using `confctl`:
-
-```bash
-confctl
-NAME
-    confctl - Manage vpsFree.cz cluster configuration and deployments
-
-SYNOPSIS
-    confctl [global options] command [command options] [arguments...]
-
-GLOBAL OPTIONS
-    --help - Show this message
-
-COMMANDS
-    build  - Build target systems
-    deploy - Deploy target systems
-    help   - Shows a list of commands or help for one command
-    ls     - List configured deployments
-    swpins - Manage software pins
-```
+Hosts can be built and deployed using `confctl`, see
+[confctl](https://github.com/vpsfreecz/confctl) or `man confctl` for more
+information.
 
 ## Examples
 
@@ -53,16 +41,11 @@ confctl ls
 confctl build
 
 # Build selected hosts
-confctl build "*.stg.vpsfree.cz"
+confctl build "cz.vpsfree/nodes/stg/*"
 
 # Deploy all hosts
 confctl deploy
 
 # Try to deploy configuration of selected hosts
-confctl deploy "*.stg.vpsfree.cz" dry-activate
+confctl deploy "cz.vpsfree/nodes/stg/*" dry-activate
 ```
-
-## Documentation
-
-This configuration is documented using mkdocs. HTTP server with rendered
-documentation can be started using `confctl docs start`.
