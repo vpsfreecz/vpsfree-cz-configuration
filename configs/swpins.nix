@@ -5,7 +5,7 @@ let
 
     git = {
       url = "https://github.com/NixOS/nixpkgs";
-      update = "refs/heads/${branch}";
+      update.ref = "refs/heads/${branch}";
     };
   };
 
@@ -14,7 +14,7 @@ let
 
     git-rev = {
       url = "https://github.com/vpsfreecz/vpsadminos";
-      update = "refs/heads/${branch}";
+      update.ref = "refs/heads/${branch}";
     };
   };
 
@@ -23,7 +23,7 @@ let
 
     git = {
       url = "https://github.com/vpsfreecz/vpsadmin";
-      update = "refs/heads/${branch}";
+      update.ref = "refs/heads/${branch}";
     };
   };
 
