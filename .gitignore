@@ -4,3 +4,4 @@
 *.nixops-*
 .gems
 .mkdocs.*
+.confctl
