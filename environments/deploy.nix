@@ -32,7 +32,6 @@ in
   };
 
   environment.systemPackages = with pkgs; [
-    morph
     screen
     git
     nix-prefetch-scripts
