@@ -56,6 +56,8 @@
     (import <vpsadminos/os/overlays/vpsadmin.nix> <vpsadmin>)
   ];
 
+  os.channel-registration.enable = false;
+
   networking = {
     firewall.extraCommands =
       let
