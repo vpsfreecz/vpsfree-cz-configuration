@@ -1,11 +1,9 @@
-{ config, pkgs, lib, confLib, ... }:
+{ config, pkgs, lib, confLib, swpins, ... }:
 let
   proxy = confLib.findConfig {
     cluster = config.cluster;
     name = "org.vpsadminos/containers/proxy";
   };
-
-  swpins = import ../../../../swpins { name = "www.int.vpsadminos.org"; inherit lib pkgs; };
 
   docsOs = swpins.vpsadminos-runtime-deps;
 
