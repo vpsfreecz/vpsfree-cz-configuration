@@ -2,8 +2,8 @@
 with lib;
 {
   time.timeZone = "Europe/Amsterdam";
+
   networking = {
-    domain = "vpsfree.cz";
     search = ["vpsfree.cz" "prg.vpsfree.cz" "base48.cz"];
     nameservers = [ "172.16.9.90" "1.1.1.1" ];
   };
