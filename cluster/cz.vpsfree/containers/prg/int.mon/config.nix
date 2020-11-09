@@ -262,7 +262,8 @@ in {
         "--storage.tsdb.retention.time 365d"
         "--storage.tsdb.retention.size 200GB"
       ];
-      listenAddress = "0.0.0.0:${toString promPort}";
+      listenAddress = "0.0.0.0";
+      port = promPort;
       webExternalUrl = "https://mon.prg.vpsfree.cz/";
       scrapeConfigs = [
         {
