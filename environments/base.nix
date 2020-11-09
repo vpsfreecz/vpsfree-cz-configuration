@@ -1,4 +1,5 @@
-{ config, pkgs, confData, ... }:
+{ config, pkgs, lib, confData, swpins, ... }:
+with lib;
 {
   time.timeZone = "Europe/Amsterdam";
   networking = {
@@ -8,7 +9,12 @@
   };
 
   services.openssh.enable = true;
+
   nix.useSandbox = true;
+
+  nix.nixPath = [
+    "nixpkgs=${swpins.nixpkgs}"
+  ] ++ (optional (hasAttr "vpsadminos" swpins) "vpsadminos=${swpins.vpsadminos}");
 
   environment.systemPackages = with pkgs; [
     wget
