@@ -2,23 +2,17 @@
 let
   alertsPrg = confLib.findConfig {
     cluster = config.cluster;
-    domain = "cz.vpsfree";
-    location = "prg";
-    name = "int.alerts";
+    name = "cz.vpsfree/containers/prg/int.alerts";
   };
 
   monPrg = confLib.findConfig {
     cluster = config.cluster;
-    domain = "cz.vpsfree";
-    location = "prg";
-    name = "int.mon";
+    name = "cz.vpsfree/containers/prg/int.mon";
   };
 
   grafanaPrg = confLib.findConfig {
     cluster = config.cluster;
-    domain = "cz.vpsfree";
-    location = "prg";
-    name = "int.grafana";
+    name = "cz.vpsfree/containers/prg/int.grafana";
   };
 in {
   imports = [
