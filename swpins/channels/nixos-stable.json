@@ -1,19 +1,30 @@
 {
   "nixpkgs": {
-    "type": "git",
+    "type": "git-rev",
     "nix_options": {
       "fetchSubmodules": false,
-      "update": "refs/heads/nixos-20.03",
+      "update": {
+        "auto": false,
+        "interval": 3600,
+        "ref": "refs/heads/nixos-20.03"
+      },
       "url": "https://github.com/NixOS/nixpkgs"
     },
     "state": {
-      "rev": "a4f8cec54dcf77b322947117e9b9a0c444bcb17d"
+      "rev": "a4f8cec54dcf77b322947117e9b9a0c444bcb17d",
+      "date": "2020-11-09T08:47:24+01:00"
     },
     "fetcher": {
-      "type": "zip",
+      "type": "git-rev",
       "options": {
-        "url": "https://github.com/NixOS/nixpkgs/archive/a4f8cec54dcf77b322947117e9b9a0c444bcb17d.tar.gz",
-        "sha256": "0wf9dz754wb8j1g19pdbj13kb1vrfg8hh5sfc39f0m6ifw16wwfp"
+        "rev": "a4f8cec54dcf77b322947117e9b9a0c444bcb17d",
+        "wrapped_fetcher": {
+          "type": "zip",
+          "options": {
+            "url": "https://github.com/NixOS/nixpkgs/archive/a4f8cec54dcf77b322947117e9b9a0c444bcb17d.tar.gz",
+            "sha256": "0wf9dz754wb8j1g19pdbj13kb1vrfg8hh5sfc39f0m6ifw16wwfp"
+          }
+        }
       }
     }
   }
