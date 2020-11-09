@@ -155,6 +155,8 @@
 
   system.secretsDir = toString /secrets/image/secrets;
 
+  system.storeOverlaySize = "4G";
+
   programs.bash.promptInit = ''
     # Provide a nice prompt if the terminal supports it.
     if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
