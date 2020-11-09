@@ -22,12 +22,9 @@ let
     d: d.config.container != null
   ) (confLib.getClusterDeployments config.cluster);
 
-  reverseDomain = domain: concatStringsSep "." (reverseList (splitString "." domain));
-
   containerInhibitRules = map (ct:
     let
-      realLocation = if isNull ct.config.host.location then "global" else ct.config.host.location;
-      ctData = confData.vpsadmin.containers.${reverseDomain ct.config.host.domain}.${realLocation}.${reverseDomain ct.config.host.name};
+      ctData = confData.vpsadmin.containers.${ct.config.host.fqdn};
     in {
       target_match = {
         fqdn = "${ct.config.host.fqdn}";
