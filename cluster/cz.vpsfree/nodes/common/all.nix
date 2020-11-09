@@ -155,7 +155,7 @@
 
   system.secretsDir = toString /secrets/image/secrets;
 
-  system.storeOverlaySize = "4G";
+  system.storeOverlaySize = "6G";
 
   programs.bash.promptInit = ''
     # Provide a nice prompt if the terminal supports it.
