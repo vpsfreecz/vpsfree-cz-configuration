@@ -62,18 +62,18 @@
       "url": "https://github.com/vpsfreecz/vpsadminos"
     },
     "state": {
-      "rev": "f0161dd81af9abf0712b828b8f0f76cf3971100f",
-      "date": "2020-11-09T14:13:46+01:00"
+      "rev": "2473c975f019cbf3829be2a01105d629381b945a",
+      "date": "2020-11-09T18:28:14+01:00"
     },
     "fetcher": {
       "type": "git-rev",
       "options": {
-        "rev": "f0161dd81af9abf0712b828b8f0f76cf3971100f",
+        "rev": "2473c975f019cbf3829be2a01105d629381b945a",
         "wrapped_fetcher": {
           "type": "zip",
           "options": {
-            "url": "https://github.com/vpsfreecz/vpsadminos/archive/f0161dd81af9abf0712b828b8f0f76cf3971100f.tar.gz",
-            "sha256": "1zkbgbjzf4rxy6j9rwmvi2ndaa4mbld1s5gisnpq98m0hxij9kxz"
+            "url": "https://github.com/vpsfreecz/vpsadminos/archive/2473c975f019cbf3829be2a01105d629381b945a.tar.gz",
+            "sha256": "1y3gqih4j2qsr7lbxcwx94k92446r2z3p5155zpnivcs04zvdalg"
           }
         }
       }
