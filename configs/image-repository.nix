@@ -55,8 +55,8 @@
       };
 
       fedora = {
-        "31" = {};
-        "32" = { tags = [ "latest" "stable" ]; };
+        "32" = {};
+        "33" = { tags = [ "latest" "stable" ]; };
       };
 
       gentoo.rolling = { name = "gentoo"; tags = [ "latest" "stable" ]; };
