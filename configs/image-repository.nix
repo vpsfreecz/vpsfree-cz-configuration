@@ -92,6 +92,11 @@
         keep = 4;
       }
       {
+        distribution = "centos";
+        version = "stream-\\d+";
+        keep = 4;
+      }
+      {
         distribution = "debian";
         version = "testing-\\d+";
         keep = 4;
