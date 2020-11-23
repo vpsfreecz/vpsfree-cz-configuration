@@ -31,7 +31,7 @@ in {
     };
 
     host = {
-      name = "node1";
+      name = "node15";
       location = "prg";
       domain = "vpsfree.cz";
     };
