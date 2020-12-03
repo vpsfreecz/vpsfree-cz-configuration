@@ -18,4 +18,8 @@
       };
     };
   };
+
+  swapDevices = [
+    { device = "/dev/nvme4n1p2"; }
+  ];
 }
