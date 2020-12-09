@@ -16,7 +16,6 @@
       log = [
         { mirror = true; devices = [ "sda1" "sdb1" ]; }
       ];
-      cache = [ "sda2" "sdb2" ];
       partition = {
         sda = {
           p1 = { sizeGB=10; };
@@ -29,4 +28,9 @@
       };
     };
   };
+
+  swapDevices = [
+    { label = "swap1"; }
+    { label = "swap2"; }
+  ];
 }
