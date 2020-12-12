@@ -5,6 +5,7 @@
   ./cz.vpsfree/containers/prg/int.mon/module.nix
   ./cz.vpsfree/containers/prg/log/module.nix
   ./cz.vpsfree/containers/prg/proxy/module.nix
+  ./cz.vpsfree/containers/prg/tor-relay/module.nix
   ./cz.vpsfree/machines/build/module.nix
   ./cz.vpsfree/machines/pxe/module.nix
   ./cz.vpsfree/nodes/pgnd/node1/module.nix
