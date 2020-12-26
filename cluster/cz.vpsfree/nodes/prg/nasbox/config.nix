@@ -2,6 +2,7 @@
 {
   imports = [
     ../../common/storage.nix
+    ../../common/netboot.nix
   ];
 
   vpsadmin.netInterfaces = [ "oneg0" "oneg1" ];
