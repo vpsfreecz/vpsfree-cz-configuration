@@ -128,10 +128,10 @@
   "ns2.prg.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node8.prg.vpsfree.cz";
-      id = 109;
+      fqdn = "node9.prg.vpsfree.cz";
+      id = 110;
       location = "prg";
-      name = "node8";
+      name = "node9";
     };
   };
   "ns2.vpsfree.cz" = {
@@ -159,6 +159,15 @@
       id = 108;
       location = "prg";
       name = "node7";
+    };
+  };
+  "tor-relay.vpsfree.cz" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node8.prg.vpsfree.cz";
+      id = 109;
+      location = "prg";
+      name = "node8";
     };
   };
   "www.int.vpsadminos.org" = {
