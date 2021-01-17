@@ -6,5 +6,8 @@
     container.id = 18115;
     host = { name = "tor-relay"; domain = "vpsfree.cz"; };
     addresses.primary = { address = "37.205.8.191"; prefix = 32; };
+    services = {
+      node-exporter = {};
+    };
   };
 }
