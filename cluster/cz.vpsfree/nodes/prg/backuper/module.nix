@@ -29,7 +29,7 @@ in {
     };
 
     netboot = {
-      enable = true;
+      enable = false;
       macs = [
         "00:25:90:2f:a3:ac"
         "00:25:90:2f:a3:ad"
