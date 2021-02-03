@@ -20,6 +20,7 @@
   ./cz.vpsfree/nodes/prg/node20/module.nix
   ./cz.vpsfree/nodes/prg/node7/module.nix
   ./cz.vpsfree/nodes/prg/node8/module.nix
+  ./cz.vpsfree/nodes/prg/node9/module.nix
   ./cz.vpsfree/nodes/stg/node1/module.nix
   ./org.vpsadminos/containers/int.bb.master/module.nix
   ./org.vpsadminos/containers/int.bb.nixos01/module.nix
