@@ -1,20 +1,9 @@
 { config, lib, pkgs, ...}:
 {
   imports = [
-    ./hardware.nix
     ../../common/storage.nix
-    # ../../common/netboot.nix
+    ../../common/netboot.nix
   ];
-
-  boot.supportedFilesystems = [ "zfs" ];
-  networking.hostId = "c7a89823";
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.devices = [
-    "/dev/disk/by-id/wwn-0x5e83a97e71bd0af8"
-    "/dev/disk/by-id/wwn-0x5e83a97e60d6c045"
-  ];
-  boot.kernelParams = [ "nolive" ];
 
   vpsadmin.netInterfaces = [ "oneg0" "oneg1" ];
   vpsadmin.consoleHost = "172.16.0.5";
@@ -30,8 +19,6 @@
   boot.zfs.devNodes = [];
 
   boot.zfs.pools = {
-    rpool = {};
-
     storage = {
       guid = "5841452050336007819";
 
