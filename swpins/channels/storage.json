@@ -40,14 +40,14 @@
       "url": "https://github.com/vpsfreecz/vpsadmin"
     },
     "state": {
-      "rev": "3c4e26ec55a65ad2f4ce33a8960f5d5d4e8d942d",
-      "date": "2021-02-03T13:05:17+01:00"
+      "rev": "19e15bb45d90ba8725244fd1c0191d69a9a16dd7",
+      "date": "2021-03-03T07:26:44+01:00"
     },
     "fetcher": {
       "type": "zip",
       "options": {
-        "url": "https://github.com/vpsfreecz/vpsadmin/archive/3c4e26ec55a65ad2f4ce33a8960f5d5d4e8d942d.tar.gz",
-        "sha256": "1wlvmswqfzspl7bf6m6h5w3bpz2xi1yhxjijy5njyzx6vbcgzbq1"
+        "url": "https://github.com/vpsfreecz/vpsadmin/archive/19e15bb45d90ba8725244fd1c0191d69a9a16dd7.tar.gz",
+        "sha256": "18850nbx66lm1kdb9vrmqipxcshh3zg6rgb86w1xb4dcf72ab5n0"
       }
     }
   },
@@ -63,18 +63,18 @@
       "url": "https://github.com/vpsfreecz/vpsadminos"
     },
     "state": {
-      "rev": "a7097badbafb29efd11e495df8546067a0d06637",
-      "date": "2021-02-03T13:06:08+01:00"
+      "rev": "e8b66e94925845b18007dd2f848a4e4b3b5b6c33",
+      "date": "2021-03-03T07:25:23+01:00"
     },
     "fetcher": {
       "type": "git-rev",
       "options": {
-        "rev": "a7097badbafb29efd11e495df8546067a0d06637",
+        "rev": "e8b66e94925845b18007dd2f848a4e4b3b5b6c33",
         "wrapped_fetcher": {
           "type": "zip",
           "options": {
-            "url": "https://github.com/vpsfreecz/vpsadminos/archive/a7097badbafb29efd11e495df8546067a0d06637.tar.gz",
-            "sha256": "1hs65azpziqgwsldj4afk005pwjwvyyq919hzfl0qh5hiniv424r"
+            "url": "https://github.com/vpsfreecz/vpsadminos/archive/e8b66e94925845b18007dd2f848a4e4b3b5b6c33.tar.gz",
+            "sha256": "12q863iy6qhnwkm1qmv0b3771szmzaz0d0ycrsp7m34bbxgajgl0"
           }
         }
       }
