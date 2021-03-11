@@ -1,0 +1,31 @@
+{
+  "vpsadminos": {
+    "type": "git-rev",
+    "nix_options": {
+      "fetchSubmodules": false,
+      "update": {
+        "auto": false,
+        "interval": 3600,
+        "ref": "refs/heads/staging"
+      },
+      "url": "https://github.com/vpsfreecz/vpsadminos"
+    },
+    "state": {
+      "rev": "a4c4018cc1154d8532fef7f0ceb59e7fd26760b9",
+      "date": "2021-03-11T18:04:01+01:00"
+    },
+    "fetcher": {
+      "type": "git-rev",
+      "options": {
+        "rev": "a4c4018cc1154d8532fef7f0ceb59e7fd26760b9",
+        "wrapped_fetcher": {
+          "type": "zip",
+          "options": {
+            "url": "https://github.com/vpsfreecz/vpsadminos/archive/a4c4018cc1154d8532fef7f0ceb59e7fd26760b9.tar.gz",
+            "sha256": "1h928a58c7cn49vbpiva6igr0f6q3p7456ydnz077q89yn76r5sv"
+          }
+        }
+      }
+    }
+  }
+}
