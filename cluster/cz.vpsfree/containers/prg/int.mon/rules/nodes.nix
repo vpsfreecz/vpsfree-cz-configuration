@@ -132,6 +132,25 @@
       }
 
       {
+        alert = "HypervisorLongHighIoWait";
+        expr = ''(avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 10 and on(instance) time() - node_boot_time_seconds > 3600'';
+        for = "6h";
+        labels = {
+          alertclass = "iowait";
+          severity = "warning";
+        };
+        annotations = {
+          summary = "Long-term high CPU iowait (instance {{ $labels.instance }})";
+          description = ''
+            CPU iowait is > 10% for too long
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "StorageHighCpuLoad";
         expr = ''100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="storage"}[5m])) * 100) > 80'';
         for = "15m";
