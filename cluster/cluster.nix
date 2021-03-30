@@ -12,6 +12,7 @@
   ./cz.vpsfree/nodes/prg/backuper/module.nix
   ./cz.vpsfree/nodes/prg/nasbox/module.nix
   ./cz.vpsfree/nodes/prg/node1/module.nix
+  ./cz.vpsfree/nodes/prg/node11/module.nix
   ./cz.vpsfree/nodes/prg/node13/module.nix
   ./cz.vpsfree/nodes/prg/node15/module.nix
   ./cz.vpsfree/nodes/prg/node16/module.nix
