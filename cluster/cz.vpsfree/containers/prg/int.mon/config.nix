@@ -67,6 +67,8 @@ let
         pingConfigs = map (d: {
           targets = [ d.config.host.fqdn ];
           labels = {
+            alias = getAlias d.config.host;
+            fqdn = d.config.host.fqdn;
             domain = d.config.host.domain;
             location = realLocation d.config.host.location;
             os = d.config.spin;
@@ -98,6 +100,8 @@ let
         pingConfigs = map (d: {
           targets = [ d.config.host.fqdn ];
           labels = {
+            alias = getAlias d.config.host;
+            fqdn = d.config.host.fqdn;
             domain = d.config.host.domain;
             location = ensureLocation d.config.host.location;
             os = d.config.spin;
@@ -127,6 +131,8 @@ let
         pingConfigs = map (d: {
           targets = [ d.config.host.fqdn ];
           labels = {
+            alias = getAlias d.config.host;
+            fqdn = d.config.host.fqdn;
             domain = d.config.host.domain;
             location = ensureLocation d.config.host.location;
             role = d.config.node.role;
