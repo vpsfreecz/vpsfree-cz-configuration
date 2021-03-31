@@ -12,7 +12,11 @@
     },
     "state": {
       "rev": "d15a31f88a261281cd7c79038ae860c5ed95507d",
-      "date": "2020-11-09T08:46:24+01:00"
+      "date": "2021-03-31T20:07:23+02:00"
+    },
+    "info": {
+      "rev": "d15a31f88a261281cd7c79038ae860c5ed95507d",
+      "sha256": "038iqfwmppnxq6aa89qm6k98lhwg686bmc9qjifibddm8pcp2wd0"
     },
     "fetcher": {
       "type": "git-rev",
