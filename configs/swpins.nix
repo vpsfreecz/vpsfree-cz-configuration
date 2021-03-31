@@ -40,12 +40,6 @@ let
   vpsadminDevel = vpsadminBranch "devel";
 in {
   confctl.swpins.channels = {
-    production = {
-      nixpkgs = nixpkgsUnstable;
-      vpsadminos = vpsadminosMaster;
-      vpsadmin = vpsadminMaster;
-    };
-
     storage = {
       nixpkgs = nixpkgsUnstable;
       vpsadminos = vpsadminosMaster;
