@@ -31,6 +31,8 @@ let
 
   vpsadminosMaster = osBranch "master";
 
+  vpsadminosStaging = osBranch "staging";
+
   vpsadminosProd21_03 = osBranch "prod-21.03";
 
   vpsadminMaster = vpsadminBranch "master";
@@ -50,7 +52,7 @@ in {
 
     staging = {
       nixpkgs = nixpkgsUnstable;
-      vpsadminos = vpsadminosMaster;
+      vpsadminos = vpsadminosStaging;
       vpsadmin = vpsadminMaster;
     };
 
