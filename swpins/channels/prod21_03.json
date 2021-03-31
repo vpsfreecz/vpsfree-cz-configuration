@@ -12,7 +12,11 @@
     },
     "state": {
       "rev": "89281dd1dfed6839610f0ccad0c0e493606168fe",
-      "date": "2021-02-28T21:57:39+01:00"
+      "date": "2021-03-31T19:58:56+02:00"
+    },
+    "info": {
+      "rev": "89281dd1dfed6839610f0ccad0c0e493606168fe",
+      "sha256": "14jwgdqbhxf9581z9afzjzj0r0maw3m7227gn5bpk4fn8057vs5s"
     },
     "fetcher": {
       "type": "git-rev",
@@ -41,7 +45,11 @@
     },
     "state": {
       "rev": "19e15bb45d90ba8725244fd1c0191d69a9a16dd7",
-      "date": "2021-02-28T21:54:12+01:00"
+      "date": "2021-03-31T19:59:29+02:00"
+    },
+    "info": {
+      "rev": "19e15bb45d90ba8725244fd1c0191d69a9a16dd7",
+      "sha256": "18850nbx66lm1kdb9vrmqipxcshh3zg6rgb86w1xb4dcf72ab5n0"
     },
     "fetcher": {
       "type": "zip",
@@ -64,7 +72,11 @@
     },
     "state": {
       "rev": "b4adfd5be9157bda5c285b122e524b70142542c8",
-      "date": "2021-03-21T18:51:25+01:00"
+      "date": "2021-03-31T19:59:42+02:00"
+    },
+    "info": {
+      "rev": "b4adfd5be9157bda5c285b122e524b70142542c8",
+      "sha256": "0ar7qxaxbr5a05alz7mrhd7xckz6grvc7b5ksn0hbvpg9qqgzjvn"
     },
     "fetcher": {
       "type": "git-rev",
