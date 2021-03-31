@@ -33,11 +33,7 @@ let
 
   vpsadminosProd21_03 = osBranch "prod-21.03";
 
-  vpsadminosDevel = osBranch "devel";
-
   vpsadminMaster = vpsadminBranch "master";
-
-  vpsadminDevel = vpsadminBranch "devel";
 in {
   confctl.swpins.channels = {
     storage = {
@@ -67,8 +63,6 @@ in {
     os-master = { vpsadminos = osBranch "master"; };
 
     os-staging = { vpsadminos = osBranch "staging"; };
-
-    os-devel = { vpsadminos = osBranch "devel"; };
 
     os-runtime-deps = { vpsadminos-runtime-deps = osBranch "osctl-env-exec"; };
 
