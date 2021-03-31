@@ -38,12 +38,6 @@ let
   vpsadminMaster = vpsadminBranch "master";
 in {
   confctl.swpins.channels = {
-    playground = {
-      nixpkgs = nixpkgsUnstable;
-      vpsadminos = vpsadminosMaster;
-      vpsadmin = vpsadminMaster;
-    };
-
     staging = {
       nixpkgs = nixpkgsUnstable;
       vpsadminos = vpsadminosStaging;
