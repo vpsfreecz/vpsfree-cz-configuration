@@ -3,11 +3,20 @@
     "type": "git-rev",
     "nix_options": {
       "fetchSubmodules": false,
-      "update": "refs/heads/osctl-env-exec",
+      "update": {
+        "auto": false,
+        "interval": 3600,
+        "ref": "refs/heads/osctl-env-exec"
+      },
       "url": "https://github.com/vpsfreecz/vpsadminos"
     },
     "state": {
-      "rev": "369289feee60c129187d99396f3fa7082711280e"
+      "rev": "369289feee60c129187d99396f3fa7082711280e",
+      "date": "2021-03-31T20:02:36+02:00"
+    },
+    "info": {
+      "rev": "369289feee60c129187d99396f3fa7082711280e",
+      "sha256": "17a0917vwpqrnqcpm9wni1w9l6rhdfqygfvq17ljj79d7aqvyjfj"
     },
     "fetcher": {
       "type": "git-rev",
