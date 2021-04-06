@@ -26,6 +26,10 @@
     defaultVendor = "vpsadminos";
 
     images = {
+      almalinux = {
+        "8" = { tags = [ "latest" "stable" ]; };
+      };
+
       alpine = {
         "3.10" = {};
         "3.11" = {};
