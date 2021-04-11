@@ -21,70 +21,81 @@ let
   };
 in {
   cluster."cz.vpsfree/nodes/prg/node11" = rec {
-    spin = "vpsadminos";
-
-    swpins.channels = [ "prod21_03" ];
-
-    node = {
-      id = 112;
-      role = "hypervisor";
-    };
-
+    spin = "openvz";
+    node.role = "hypervisor";
     host = {
       name = "node11";
       location = "prg";
       domain = "vpsfree.cz";
     };
+    addresses.primary = { address = "172.16.0.21"; prefix = 23; };
+    vzNode.role = "hypervisor";
+    services.node-exporter = {};
 
-    netboot = {
-      enable = true;
-      macs = [
-        "00:25:90:fc:3f:2c"
-        "00:25:90:fc:3f:2d"
-      ];
-    };
+    # spin = "vpsadminos";
 
-    addresses = with allAddresses; {
-      inherit primary;
-      v4 = teng0.v4 ++ teng1.v4;
-      v6 = teng0.v6 ++ teng1.v6;
-    };
+    # swpins.channels = [ "prod21_03" ];
 
-    osNode = {
-      networking = {
-        interfaces = {
-          names = {
-            teng0 = "0c:c4:7a:bd:61:0c";
-            teng1 = "0c:c4:7a:bd:61:0d";
-          };
-          addresses = {
-            inherit (allAddresses) teng0 teng1;
-          };
-        };
+    # node = {
+    #   id = 112;
+    #   role = "hypervisor";
+    # };
 
-        bird = {
-          as = 4200000020;
-          routerId = "172.16.0.21";
-          bgpNeighbours = {
-            v4 = [
-              { address = "172.16.253.77"; as = 4200000901; }
-              { address = "172.16.252.77"; as = 4200000902; }
-            ];
-            v6 = [
-              { address = "2a03:3b40:42:0:20::1"; as = 4200000901; }
-              { address = "2a03:3b40:42:1:20::1"; as = 4200000902; }
-            ];
-          };
-        };
+    # host = {
+    #   name = "node11";
+    #   location = "prg";
+    #   domain = "vpsfree.cz";
+    # };
 
-        virtIP = addresses.primary;
-      };
-    };
+    # netboot = {
+    #   enable = true;
+    #   macs = [
+    #     "00:25:90:fc:3f:2c"
+    #     "00:25:90:fc:3f:2d"
+    #   ];
+    # };
 
-    services = {
-      node-exporter = {};
-      osctl-exporter = {};
-      vpsadmin-console = {};
-    };
+    # addresses = with allAddresses; {
+    #   inherit primary;
+    #   v4 = teng0.v4 ++ teng1.v4;
+    #   v6 = teng0.v6 ++ teng1.v6;
+    # };
+
+    # osNode = {
+    #   networking = {
+    #     interfaces = {
+    #       names = {
+    #         teng0 = "0c:c4:7a:bd:61:0c";
+    #         teng1 = "0c:c4:7a:bd:61:0d";
+    #       };
+    #       addresses = {
+    #         inherit (allAddresses) teng0 teng1;
+    #       };
+    #     };
+
+    #     bird = {
+    #       as = 4200000020;
+    #       routerId = "172.16.0.21";
+    #       bgpNeighbours = {
+    #         v4 = [
+    #           { address = "172.16.253.77"; as = 4200000901; }
+    #           { address = "172.16.252.77"; as = 4200000902; }
+    #         ];
+    #         v6 = [
+    #           { address = "2a03:3b40:42:0:20::1"; as = 4200000901; }
+    #           { address = "2a03:3b40:42:1:20::1"; as = 4200000902; }
+    #         ];
+    #       };
+    #     };
+
+    #     virtIP = addresses.primary;
+    #   };
+    # };
+
+    # services = {
+    #   node-exporter = {};
+    #   osctl-exporter = {};
+    #   vpsadmin-console = {};
+    # };
   };
 }
