@@ -66,19 +66,6 @@
       services.node-exporter = {};
     };
 
-    "cz.vpsfree/nodes/prg/node10" = {
-      spin = "openvz";
-      node.role = "hypervisor";
-      host = {
-        name = "node10";
-        location = "prg";
-        domain = "vpsfree.cz";
-      };
-      addresses.primary = { address = "172.16.0.20"; prefix = 23; };
-      vzNode.role = "hypervisor";
-      services.node-exporter = {};
-    };
-
     "cz.vpsfree/nodes/prg/node12" = {
       spin = "openvz";
       node.role = "hypervisor";
