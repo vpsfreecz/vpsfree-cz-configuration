@@ -1,4 +1,4 @@
-{ pkgs, lib, confLib, config, confData, deploymentInfo, ... }:
+{ pkgs, lib, confLib, config, confData, confMachine, ... }:
 with lib;
 let
   monPrg = confLib.findConfig {
@@ -16,7 +16,7 @@ let
     name = "cz.vpsfree/containers/prg/proxy";
   };
 
-  alertmanagerPort = deploymentInfo.services.alertmanager.port;
+  alertmanagerPort = confMachine.services.alertmanager.port;
 
   allContainers = filter (
     d: d.config.container != null

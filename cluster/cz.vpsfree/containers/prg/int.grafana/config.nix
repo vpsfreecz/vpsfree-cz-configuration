@@ -1,11 +1,11 @@
-{ pkgs, lib, confLib, config, deploymentInfo, ... }:
+{ pkgs, lib, confLib, config, confMachine, ... }:
 let
   proxyPrg = confLib.findConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };
 
-  grafanaPort = deploymentInfo.services.grafana.port;
+  grafanaPort = confMachine.services.grafana.port;
 in {
   imports = [
     ../../../../../environments/base.nix

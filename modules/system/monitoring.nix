@@ -1,4 +1,4 @@
-{ lib, config, pkgs, deploymentInfo, confLib, ... }:
+{ lib, config, pkgs, confMachine, confLib, ... }:
 with lib;
 let
   cfg = config.system.monitoring;
@@ -7,7 +7,7 @@ let
 
   monitorings = filter (d: d.config.monitoring.isMonitor) allDeployments;
 
-  exporterPort = deploymentInfo.services.node-exporter.port;
+  exporterPort = confMachine.services.node-exporter.port;
 in {
   options = {
     system.monitoring = {
@@ -20,7 +20,7 @@ in {
 
   config = mkMerge [
     {
-      system.monitoring.enable = mkDefault deploymentInfo.monitoring.enable;
+      system.monitoring.enable = mkDefault confMachine.monitoring.enable;
     }
     (mkIf cfg.enable {
       networking.firewall.extraCommands = concatStringsSep "\n" (map (d: ''
@@ -38,8 +38,8 @@ in {
             "interrupts"
             "textfile"
             "processes"
-          ] ++ (optionals (deploymentInfo.spin == "nixos") [ "systemd" "logind" ])
-            ++ (optionals (deploymentInfo.spin == "vpsadminos") [ "runit" "nfs" ])
+          ] ++ (optionals (confMachine.spin == "nixos") [ "systemd" "logind" ])
+            ++ (optionals (confMachine.spin == "vpsadminos") [ "runit" "nfs" ])
             ++ (optionals (!config.boot.isContainer) [ "hwmon" "mdadm" "ksmd" ]);
         };
       };

@@ -1,9 +1,9 @@
-{ config, pkgs, lib, confLib, deploymentInfo, ... }:
+{ config, pkgs, lib, confLib, confMachine, ... }:
 with lib;
 let
-  rsyslogTcpPort = deploymentInfo.services.graylog-rsyslog-tcp.port;
-  rsyslogUdpPort = deploymentInfo.services.graylog-rsyslog-udp.port;
-  gelfPort = deploymentInfo.services.graylog-gelf.port;
+  rsyslogTcpPort = confMachine.services.graylog-rsyslog-tcp.port;
+  rsyslogUdpPort = confMachine.services.graylog-rsyslog-udp.port;
+  gelfPort = confMachine.services.graylog-gelf.port;
 
   loggedAddresses = filter (a:
     a.config.logging.enable

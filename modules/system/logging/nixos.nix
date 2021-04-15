@@ -1,7 +1,7 @@
-{ lib, config, pkgs, deploymentInfo, confLib, ... }:
+{ lib, config, pkgs, confMachine, confLib, ... }:
 with lib;
 let
-  shared = import ./shared.nix { inherit lib config deploymentInfo confLib; };
+  shared = import ./shared.nix { inherit lib config confMachine confLib; };
 in {
   inherit (shared) options;
 

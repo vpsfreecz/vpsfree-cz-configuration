@@ -1,4 +1,4 @@
-{ config, lib, pkgs, confData, deploymentInfo, confLib, ...}:
+{ config, lib, pkgs, confData, confMachine, confLib, ...}:
 {
   imports = [
     ../../../../environments/base.nix
@@ -61,7 +61,7 @@
   networking = {
     firewall.extraCommands =
       let
-        nodeCfg = deploymentInfo;
+        nodeCfg = confMachine;
         nfsCfg = config.services.nfs.server;
         nodeExporterCfg = config.services.prometheus.exporters.node;
         osctlExporterCfg = config.osctl.exporter;

@@ -1,4 +1,4 @@
-{ pkgs, lib, confLib, config, deploymentInfo, ... }:
+{ pkgs, lib, confLib, config, confMachine, ... }:
 with lib;
 let
   alertsPrg = confLib.findConfig {
@@ -16,8 +16,8 @@ let
     name = "cz.vpsfree/containers/prg/proxy";
   };
 
-  promPort = deploymentInfo.services.prometheus.port;
-  exporterPort = deploymentInfo.services.node-exporter.port;
+  promPort = confMachine.services.prometheus.port;
+  exporterPort = confMachine.services.node-exporter.port;
 
   allDeployments = confLib.getClusterDeployments config.cluster;
 
@@ -39,7 +39,7 @@ let
     monitorings =
       let
         deps = filter (d:
-          d.config.monitoring.isMonitor && d.config.host.fqdn != deploymentInfo.host.fqdn
+          d.config.monitoring.isMonitor && d.config.host.fqdn != confMachine.host.fqdn
         ) monitoredDeployments;
       in {
         exporterConfigs = [
@@ -49,9 +49,9 @@ let
               "localhost:${toString exporterPort}"
             ];
             labels = {
-              alias = getAlias deploymentInfo.host;
-              fqdn = deploymentInfo.host.fqdn;
-            } // deploymentInfo.monitoring.labels;
+              alias = getAlias confMachine.host;
+              fqdn = confMachine.host.fqdn;
+            } // confMachine.monitoring.labels;
           }
         ] ++ (flatten (map (d: {
           targets = [

@@ -1,7 +1,7 @@
-{ config, lib, confLib, confData, deploymentInfo, ... }:
+{ config, lib, confLib, confData, confMachine, ... }:
 with lib;
 let
-    cfg = deploymentInfo;
+    cfg = confMachine;
 
     mapEachIp = fn: addresses:
       flatten (mapAttrsToList (ifname: ips:
@@ -41,15 +41,15 @@ let
     '';
   }) neighbours);
 in {
-  config = mkIf (deploymentInfo.osNode != null) {
+  config = mkIf (confMachine.osNode != null) {
     vpsadmin.nodeId = cfg.node.id;
-    vpsadmin.consoleHost = mkDefault deploymentInfo.addresses.primary.address;
+    vpsadmin.consoleHost = mkDefault confMachine.addresses.primary.address;
     vpsadmin.netInterfaces = mkDefault (lib.attrNames cfg.osNode.networking.interfaces.addresses);
 
     services.udev.extraRules = confLib.mkNetUdevRules cfg.osNode.networking.interfaces.names;
-    services.rsyslogd.hostName = "${deploymentInfo.name}.${deploymentInfo.host.location}";
+    services.rsyslogd.hostName = "${confMachine.name}.${confMachine.host.location}";
 
-    networking.hostName = deploymentInfo.host.fqdn;
+    networking.hostName = confMachine.host.fqdn;
     networking.custom = ''
       ${concatStringsSep "\n" (mapEachIp (ifname: v: addr: ''
       ip -${toString v} addr add ${addr.string} dev ${ifname}
@@ -136,6 +136,6 @@ in {
     ];
 
     system.monitoring.enable = true;
-    osctl.exporter.port = deploymentInfo.services.osctl-exporter.port;
+    osctl.exporter.port = confMachine.services.osctl-exporter.port;
   };
 }
