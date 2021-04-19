@@ -39,6 +39,24 @@ let
   intervalRoutes = [
     {
       match = {
+        frequency = "weekly";
+      };
+      repeat_interval = "7d";
+    }
+    {
+      match = {
+        frequency = "3d";
+      };
+      repeat_interval = "3d";
+    }
+    {
+      match = {
+        frequency = "2d";
+      };
+      repeat_interval = "2d";
+    }
+    {
+      match = {
         frequency = "daily";
       };
       repeat_interval = "24h";
