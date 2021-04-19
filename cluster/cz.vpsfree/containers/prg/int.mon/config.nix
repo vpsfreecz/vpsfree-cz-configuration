@@ -481,6 +481,7 @@ in {
         ./rules/nodes.nix
         ./rules/infra.nix
         ./rules/dns.nix
+        ./rules/smartmon.nix
         ./rules/time-of-day.nix
         ./rules/meet.nix
       ]);
