@@ -1,16 +1,16 @@
 { stdenvNoCC, lib, fetchFromGitHub, bash, smartmontools }:
 let
-  rev = "414fb44693444cb96a55c7152cdd84d531888e1f";
+  rev = "80884d276984420c6f358c35b9140f246ecb0946";
   shortRev = builtins.substring 0 7 rev;
 in stdenvNoCC.mkDerivation rec {
   pname = "node-exporter-textfile-collector-scripts";
   version = shortRev;
 
   src = fetchFromGitHub {
-    owner = "prometheus-community";
+    owner = "vpsfreecz";
     repo = "node-exporter-textfile-collector-scripts";
     inherit rev;
-    sha256 = "sha256:13ja3l78bb47xhdfsmsim5sqggb9avg3x872jqah1m7jm9my7m98";
+    sha256 = "sha256:0fn070g3hwclbjfclilcy0146nv0i92sxqaj5gc212nibk609r81";
   };
 
   buildInputs = [
