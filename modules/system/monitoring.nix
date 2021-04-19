@@ -8,6 +8,12 @@ let
   monitorings = filter (d: d.config.monitoring.isMonitor) allDeployments;
 
   exporterPort = confMachine.services.node-exporter.port;
+
+  smartmon = pkgs.writeScript "smartmon.sh-wrapper" ''
+    ${pkgs.node-exporter-textfile-collector-scripts}/bin/smartmon.sh > /run/metrics/smartmon.prom.$$
+    mv /run/metrics/smartmon.prom.$$ /run/metrics/smartmon.prom
+  '';
+
 in {
   options = {
     system.monitoring = {
@@ -43,6 +49,11 @@ in {
             ++ (optionals (!config.boot.isContainer) [ "hwmon" "mdadm" "ksmd" ]);
         };
       };
+    })
+    (mkIf (cfg.enable && confMachine.spin == "vpsadminos") {
+      services.cron.systemCronJobs = [
+        "0 9 * * * root ${smartmon}"
+      ];
     })
   ];
 }
