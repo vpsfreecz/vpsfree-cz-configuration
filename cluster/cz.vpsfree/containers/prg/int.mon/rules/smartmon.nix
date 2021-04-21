@@ -59,15 +59,19 @@
 
       {
         alert = "DiskHighRawReadErrorRate";
-        expr = ''smartmon_raw_read_error_rate_raw_value > 10'';
+        expr = ''
+          delta(smartmon_raw_read_error_rate_raw_value[2d]) > 0
+          and delta(smartmon_raw_read_error_rate_raw_value[1d]) > 0
+          and delta(smartmon_raw_read_error_rate_raw_value[1d] offset 1d) > 0
+        '';
         labels = {
           severity = "warning";
-          frequency = "weekly";
+          frequency = "daily";
         };
         annotations = {
           summary = "Raw read error rate detected (instance {{ $labels.instance }})";
           description = ''
-            SMART reported Raw_Read_Error_Rate
+            SMART reported Raw_Read_Error_Rate rising for two days in row
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
