@@ -3,9 +3,9 @@ with lib;
 let
   cfg = config.system.monitoring;
 
-  allDeployments = confLib.getClusterDeployments config.cluster;
+  allMachines = confLib.getClusterMachines config.cluster;
 
-  monitorings = filter (d: d.config.monitoring.isMonitor) allDeployments;
+  monitorings = filter (d: d.config.monitoring.isMonitor) allMachines;
 
   exporterPort = confMachine.services.node-exporter.port;
 

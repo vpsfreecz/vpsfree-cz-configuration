@@ -19,8 +19,8 @@ let
   alertmanagerPort = confMachine.services.alertmanager.port;
 
   allContainers = filter (
-    d: d.config.container != null
-  ) (confLib.getClusterDeployments config.cluster);
+    m: m.config.container != null
+  ) (confLib.getClusterMachines config.cluster);
 
   containerInhibitRules = map (ct:
     let

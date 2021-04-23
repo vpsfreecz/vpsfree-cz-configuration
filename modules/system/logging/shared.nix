@@ -5,9 +5,9 @@ let
 in rec {
   cfg = topLevelConfig.system.logging;
 
-  deployments = confLib.getClusterDeployments topLevelConfig.cluster;
+  machines = confLib.getClusterMachines topLevelConfig.cluster;
 
-  loggers = filter (d: d.config.logging.isLogger) deployments;
+  loggers = filter (d: d.config.logging.isLogger) machines;
 
   locationLoggers = filter (d: d.config.host.location == confMachine.host.location) loggers;
 
