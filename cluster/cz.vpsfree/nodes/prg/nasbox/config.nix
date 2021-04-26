@@ -14,9 +14,13 @@
     nproc = 16;
     udp = true;
   };
-  services.zfs.autoScrub.interval = "0 4 1 */2 *";
 
   boot.zfs.pools.storage = {
     guid = "2575935829831167981";
+
+    scrub = {
+      enable = true;
+      interval = "0 4 1 */2 *";
+    };
   };
 }

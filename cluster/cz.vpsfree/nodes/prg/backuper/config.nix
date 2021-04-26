@@ -10,8 +10,6 @@
 
   boot.kernelModules = [ "8021q" ];
 
-  services.zfs.autoScrub.interval = "0 4 */30 * *";
-
   # The storage pool on backuper is in some weird state, where it can be seen
   # as two pools with the same name, one faulted with missing devices and one
   # as it should be. This issue manifests whenever zpool import -d is used, so
@@ -21,6 +19,11 @@
   boot.zfs.pools = {
     storage = {
       guid = "5841452050336007819";
+
+      scrub = {
+        enable = true;
+        interval = "0 4 */30 * *";
+      };
 
       layout = [
         { type = "raidz1";

@@ -20,6 +20,12 @@
           canmount = "off";
         };
       };
+
+      scrub = {
+        enable = true;
+        interval = "0 4 1-7 * *";
+        command = ''[ "$(LC_ALL=C date '+\%a')" = "Sat" ] && zpool scrub tank'';
+      };
     };
   };
 

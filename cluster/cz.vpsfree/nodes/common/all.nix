@@ -121,6 +121,8 @@
       '';
   };
 
+  services.zfs.autoScrub.enable = false;
+
   services.nfs.server = {
     enable = true;
     nfsd.port = 2049;
