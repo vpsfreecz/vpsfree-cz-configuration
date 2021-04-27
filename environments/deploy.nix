@@ -32,6 +32,7 @@ in
   };
 
   environment.systemPackages = with pkgs; [
+    asciinema
     screen
     git
     nix-prefetch-scripts
