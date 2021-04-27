@@ -9,24 +9,24 @@
       install = true;
       wipe = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" "sdh" ];
       layout = [
-        { type = "mirror"; devices = [ "sda" "sdb" ]; }
         { type = "mirror"; devices = [ "sdc" "sdd" ]; }
         { type = "mirror"; devices = [ "sdg" "sdh" ]; }
+        { type = "mirror"; devices = [ "sdi" "sdj" ]; }
       ];
       log = [
-        { mirror = true; devices = [ "sde1" "sdf1" ]; }
+        { mirror = true; devices = [ "sda1" "sdb1" ]; }
       ];
       cache = [
-        "sde3"
-        "sdf3"
+        "sda3"
+        "sdb3"
       ];
       partition = {
-        sde = {
+        sda = {
           p1 = { sizeGB=10; };
           p2 = { sizeGB=214; };
           p3 = {};
         };
-        sdf = {
+        sdb = {
           p1 = { sizeGB=10; };
           p2 = { sizeGB=214; };
           p3 = {};
