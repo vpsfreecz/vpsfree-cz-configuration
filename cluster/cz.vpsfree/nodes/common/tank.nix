@@ -10,6 +10,8 @@
       datasets = {
         "/".properties = {
           compression = "on";
+          dnodesize = "auto";
+          recordsize = "1M";
           xattr = "sa";
         };
         "ct".properties = {
