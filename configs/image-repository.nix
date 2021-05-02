@@ -31,7 +31,6 @@
       };
 
       alpine = {
-        "3.10" = {};
         "3.11" = {};
         "3.12" = {};
         "3.13" = { tags = [ "latest" "stable" ]; };
@@ -46,7 +45,6 @@
       };
 
       debian = {
-        "8" = {};
         "9" = {};
         "10" = { tags = [ "latest" "stable" ]; };
         "testing" = { tags = [ "testing" ]; };
@@ -82,7 +80,6 @@
       slackware."14.2" = { tags = [ "latest" "stable" ]; };
 
       ubuntu = {
-        "16.04" = {};
         "18.04" = {};
         "20.04" = { tags = [ "latest" "stable" ]; };
       };
