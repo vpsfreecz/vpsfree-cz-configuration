@@ -75,6 +75,10 @@
         "tumbleweed" = { tags = [ "latest-tumbleweed" ]; };
       };
 
+      rocky = {
+        "8" = { tags = [ "latest" ]; };
+      };
+
       slackware."14.2" = { tags = [ "latest" "stable" ]; };
 
       ubuntu = {
