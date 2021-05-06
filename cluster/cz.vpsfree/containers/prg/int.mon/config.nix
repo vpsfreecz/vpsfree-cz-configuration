@@ -575,7 +575,7 @@ in {
             prober: http
             timeout: 5s
             http:
-              valid_http_versions: ["HTTP/1.1", "HTTP/2"]
+              valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
               method: GET
               headers:
                 Host: vpsfree.cz
@@ -584,7 +584,7 @@ in {
             prober: http
             timeout: 5s
             http:
-              valid_http_versions: ["HTTP/1.1", "HTTP/2"]
+              valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
               method: GET
               headers:
                 Host: vpsfree.org
@@ -593,7 +593,7 @@ in {
             prober: http
             timeout: 5s
             http:
-              valid_http_versions: ["HTTP/1.1", "HTTP/2"]
+              valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
               method: GET
               headers:
                 Host: meet.vpsfree.cz
