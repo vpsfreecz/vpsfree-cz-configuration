@@ -410,6 +410,68 @@ in {
         }
       ) ++ [
         {
+          job_name = "vpsfree-cz-web";
+          scrape_interval = "300s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "vpsfree_cz_http_2xx" ];
+          };
+          static_configs = [
+            {
+              targets = [ "https://vpsfree.cz/prihlaska/fyzicka-osoba/" ];
+              labels = {
+                alias = "vpsfree.cz";
+                type = "vpsfree-web";
+              };
+            }
+          ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        }
+        {
+          job_name = "vpsfree-org-web";
+          scrape_interval = "300s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "vpsfree_org_http_2xx" ];
+          };
+          static_configs = [
+            {
+              targets = [ "https://vpsfree.org/registration/fyzicka-osoba/" ];
+              labels = {
+                alias = "vpsfree.org";
+                type = "vpsfree-web";
+              };
+            }
+          ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        }
+        {
           job_name = "meet-jvbs";
           scrape_interval = "30s";
           static_configs = scrapeConfigs.jitsiMeet.jvbConfigs;
@@ -483,6 +545,7 @@ in {
         ./rules/smartmon.nix
         ./rules/time-of-day.nix
         ./rules/meet.nix
+        ./rules/vpsfree-web.nix
       ]);
     };
 
@@ -508,6 +571,24 @@ in {
               query_name: vpsfree.cz
               query_type: A
               transport_protocol: tcp
+          vpsfree_cz_http_2xx:
+            prober: http
+            timeout: 5s
+            http:
+              valid_http_versions: ["HTTP/1.1", "HTTP/2"]
+              method: GET
+              headers:
+                Host: vpsfree.cz
+              preferred_ip_protocol: ip4
+          vpsfree_org_http_2xx:
+            prober: http
+            timeout: 5s
+            http:
+              valid_http_versions: ["HTTP/1.1", "HTTP/2"]
+              method: GET
+              headers:
+                Host: vpsfree.org
+              preferred_ip_protocol: ip4
           meet_http_2xx:
             prober: http
             timeout: 5s
