@@ -37,6 +37,17 @@ let
 
   vpsadminMaster = vpsadminBranch "master";
 in {
+  confctl.swpins.core.pins = {
+    nixpkgs = {
+      type = "git-rev";
+      git-rev = {
+        url = "https://github.com/NixOS/nixpkgs";
+        update.ref = "refs/heads/nixos-unstable";
+        update.auto = false;
+      };
+    };
+  };
+
   confctl.swpins.channels = {
     staging = {
       nixpkgs = nixpkgsUnstable;
