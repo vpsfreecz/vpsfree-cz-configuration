@@ -30,7 +30,7 @@
   };
 
   swapDevices = [
-    { label = "swap1"; }
-    { label = "swap2"; }
+    # { label = "swap1"; }
+    # { label = "swap2"; }
   ];
 }

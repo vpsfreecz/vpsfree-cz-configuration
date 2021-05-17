@@ -33,7 +33,7 @@
   };
 
   swapDevices = [
-    { device = "/dev/sda2"; }
-    { device = "/dev/sdb2"; }
+    # { device = "/dev/sda2"; }
+    # { device = "/dev/sdb2"; }
   ];
 }
