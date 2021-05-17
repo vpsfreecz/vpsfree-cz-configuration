@@ -24,7 +24,7 @@ in {
         # Allow access from ${net.location} @ ${net.address}/${toString net.prefix}
         iptables -A nixos-fw -p tcp -s ${net.address}/${toString net.prefix} --dport ${toString rsyslogTcpPort} -j nixos-fw-accept
         iptables -A nixos-fw -p udp -s ${net.address}/${toString net.prefix} --dport ${toString rsyslogUdpPort} -j nixos-fw-accept
-        iptables -A nixos-fw -p udp ${net.address}/${toString net.prefix} --dport ${toString gelfPort} -j nixos-fw-accept
+        iptables -A nixos-fw -p udp -s ${net.address}/${toString net.prefix} --dport ${toString gelfPort} -j nixos-fw-accept
       '') confData.vpsadmin.networks.management.ipv4}
 
       ### Individual machines
