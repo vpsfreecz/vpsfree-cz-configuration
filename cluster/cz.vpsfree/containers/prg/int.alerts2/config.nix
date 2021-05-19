@@ -7,7 +7,7 @@
 
   clusterconf.alerter = {
     enable = true;
-    externalUrl = "https://alerts.prg.vpsfree.cz/";
+    externalUrl = "https://alerts2.prg.vpsfree.cz/";
     allowedMachines = [
       "cz.vpsfree/containers/prg/proxy"
       "cz.vpsfree/containers/prg/log"
