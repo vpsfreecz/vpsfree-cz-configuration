@@ -1,13 +1,13 @@
 { pkgs, lib, config, confLib, ... }:
 let
-  alertsPrg = confLib.findConfig {
+  alerts1Prg = confLib.findConfig {
     cluster = config.cluster;
-    name = "cz.vpsfree/containers/prg/int.alerts";
+    name = "cz.vpsfree/containers/prg/int.alerts1";
   };
 
-  monPrg = confLib.findConfig {
+  mon1Prg = confLib.findConfig {
     cluster = config.cluster;
-    name = "cz.vpsfree/containers/prg/int.mon";
+    name = "cz.vpsfree/containers/prg/int.mon1";
   };
 
   grafanaPrg = confLib.findConfig {
@@ -39,18 +39,20 @@ in {
     recommendedTlsSettings = true;
 
     virtualHosts = {
-      "alerts.prg.vpsfree.cz" = {
+      "alerts1.prg.vpsfree.cz" = {
+        serverAliases = [ "alerts.prg.vpsfree.cz" ];
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/private/nginx/mon.htpasswd";
-        locations."/".proxyPass = "http://${alertsPrg.services.alertmanager.address}:${toString alertsPrg.services.alertmanager.port}";
+        locations."/".proxyPass = "http://${alerts1Prg.services.alertmanager.address}:${toString alerts1Prg.services.alertmanager.port}";
       };
 
-      "mon.prg.vpsfree.cz" = {
+      "mon1.prg.vpsfree.cz" = {
+        serverAliases = [ "mon.prg.vpsfree.cz" ];
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/private/nginx/mon.htpasswd";
-        locations."/".proxyPass = "http://${monPrg.services.prometheus.address}:${toString monPrg.services.prometheus.port}";
+        locations."/".proxyPass = "http://${mon1Prg.services.prometheus.address}:${toString mon1Prg.services.prometheus.port}";
       };
 
       "grafana.prg.vpsfree.cz" = {
