@@ -65,10 +65,10 @@
         nfsCfg = config.services.nfs.server;
         nodeExporterCfg = config.services.prometheus.exporters.node;
         osctlExporterCfg = config.osctl.exporter;
-        monPrg = confLib.findConfig {
-          cluster = config.cluster;
-          name = "cz.vpsfree/containers/prg/int.mon";
-        };
+        monitors =
+          lib.filter
+            (m: m.config.monitoring.isMonitor)
+            (confLib.getClusterMachines config.cluster);
         sshCfg = config.services.openssh;
         sshRules = map (port:
           "iptables -A nixos-fw -p tcp --dport ${toString port} -j nixos-fw-accept"
@@ -82,11 +82,13 @@
         # sshd
         ${lib.concatStringsSep "\n" sshRules}
 
-        # node_exporter
-        iptables -A nixos-fw -p tcp --dport ${toString nodeExporterCfg.port} -s ${monPrg.addresses.primary.address} -j nixos-fw-accept
+        ${lib.concatMapStringsSep "\n" (m: ''
+        # node_exporter from ${m.name}
+        iptables -A nixos-fw -p tcp --dport ${toString nodeExporterCfg.port} -s ${m.config.addresses.primary.address} -j nixos-fw-accept
 
-        # osctl-exporter
-        iptables -A nixos-fw -p tcp --dport ${toString osctlExporterCfg.port} -s ${monPrg.addresses.primary.address} -j nixos-fw-accept
+        # osctl-exporter from ${m.name}
+        iptables -A nixos-fw -p tcp --dport ${toString osctlExporterCfg.port} -s ${m.config.addresses.primary.address} -j nixos-fw-accept
+        '') monitors}
 
         # rpcbind
         iptables -A nixos-fw -p tcp --dport 111 -j nixos-fw-accept
