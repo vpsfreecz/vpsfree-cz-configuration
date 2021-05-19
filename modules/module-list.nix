@@ -5,6 +5,7 @@ let
   ];
 
   nixos = [
+    ./clusterconf/monitor
     ./services/monitoring/prometheus/rules.nix
     ./services/sachet.nix
     ./system/logging/nixos.nix
