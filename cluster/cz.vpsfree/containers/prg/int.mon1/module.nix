@@ -11,5 +11,6 @@
       prometheus = {};
     };
     monitoring.isMonitor = true;
+    tags = [ "monitor" ];
   };
 }

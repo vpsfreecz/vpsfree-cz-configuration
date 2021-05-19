@@ -10,5 +10,6 @@
       alertmanager = {};
       node-exporter = {};
     };
+    tags = [ "alerter" ];
   };
 }
