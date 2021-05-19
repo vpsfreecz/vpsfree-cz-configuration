@@ -5,9 +5,11 @@ let
 
   alertmanagerPort = confMachine.services.alertmanager.port;
 
-  allContainers = filter (
-    m: m.config.container != null
-  ) (confLib.getClusterMachines config.cluster);
+  allMachines = confLib.getClusterMachines config.cluster;
+
+  allMonitors = filter (m: m.config.monitoring.isMonitor) allMachines;
+
+  allContainers = filter (m: m.config.container != null) allMachines;
 
   containerInhibitRules = map (ct:
     let
@@ -132,6 +134,13 @@ in {
 
     networking = {
       firewall.extraCommands = concatStringsSep "\n" (
+        (map (machine:
+          ''
+            # Allow access to alertmanager from monitor on ${machine.name}
+            iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${machine.config.addresses.primary.address} -j nixos-fw-accept
+          ''
+          ) allMonitors)
+        ++
         (map (machine:
           let
             m = confLib.findConfig {
