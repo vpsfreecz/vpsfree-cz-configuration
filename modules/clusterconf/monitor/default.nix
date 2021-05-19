@@ -45,7 +45,6 @@ let
           }
         ] ++ (flatten (map (m: {
           targets = [
-            "${m.config.host.fqdn}:${toString m.config.services.prometheus.port}"
             "${m.config.host.fqdn}:${toString m.config.services.node-exporter.port}"
           ];
           labels = {
