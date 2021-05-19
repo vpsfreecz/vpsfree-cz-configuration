@@ -41,8 +41,8 @@ let
           }
         ] ++ (flatten (map (m: {
           targets = [
-            "${m.config.host.fqdn}:${toString m.services.prometheus.port}"
-            "${m.config.host.fqdn}:${toString m.services.node-exporter.port}"
+            "${m.config.host.fqdn}:${toString m.config.services.prometheus.port}"
+            "${m.config.host.fqdn}:${toString m.config.services.node-exporter.port}"
           ];
           labels = {
             alias = getAlias m.config.host;
@@ -56,7 +56,7 @@ let
             alias = getAlias m.config.host;
             fqdn = m.config.host.fqdn;
             domain = m.config.host.domain;
-            location = realLocation m.config.host.location;
+            location = ensureLocation m.config.host.location;
             os = m.config.spin;
           };
         }) machines;
