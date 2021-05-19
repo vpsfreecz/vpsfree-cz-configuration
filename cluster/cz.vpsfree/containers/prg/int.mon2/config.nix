@@ -18,5 +18,9 @@
       "cz.vpsfree/containers/prg/proxy"
       "cz.vpsfree/containers/prg/int.grafana"
     ];
+    monitorMachines = [
+      "cz.vpsfree/nodes/stg/node1"
+      "cz.vpsfree/containers/prg/int.mon1"
+    ];
   };
 }

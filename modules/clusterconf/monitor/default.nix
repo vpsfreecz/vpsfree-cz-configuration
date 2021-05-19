@@ -8,7 +8,11 @@ let
 
   allMachines = confLib.getClusterMachines config.cluster;
 
-  monitoredMachines = filter (m: m.config.monitoring.enable) allMachines;
+  monitoredMachines =
+    if isNull cfg.monitorMachines then
+      filter (m: m.config.monitoring.enable) allMachines
+    else
+      filter (m: elem m.name cfg.monitorMachines) allMachines;
 
   getAlias = host: "${host.name}${optionalString (!isNull host.location) ".${host.location}"}";
   ensureLocation = location: if location == null then "global" else location;
@@ -225,6 +229,14 @@ in {
         description = ''
           List of confctl machine names that are allowed to access this monitor
           internally
+        '';
+      };
+
+      monitorMachines = mkOption {
+        type = types.nullOr (types.listOf types.str);
+        default = null;
+        description = ''
+          If set, monitor only the selected machines
         '';
       };
     };
