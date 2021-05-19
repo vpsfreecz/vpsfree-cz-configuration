@@ -2,7 +2,7 @@
 [
   ./cz.vpsfree/containers/prg/int.alerts/module.nix
   ./cz.vpsfree/containers/prg/int.grafana/module.nix
-  ./cz.vpsfree/containers/prg/int.mon/module.nix
+  ./cz.vpsfree/containers/prg/int.mon1/module.nix
   ./cz.vpsfree/containers/prg/log/module.nix
   ./cz.vpsfree/containers/prg/proxy/module.nix
   ./cz.vpsfree/containers/prg/tor-relay/module.nix
