@@ -5,6 +5,7 @@ let
   ];
 
   nixos = [
+    ./clusterconf/alerter
     ./clusterconf/monitor
     ./services/monitoring/prometheus/rules.nix
     ./services/sachet.nix
