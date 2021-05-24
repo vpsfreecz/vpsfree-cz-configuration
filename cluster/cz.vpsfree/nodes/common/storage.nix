@@ -9,8 +9,8 @@
   boot.zfs.pools.storage = {
     datasets = {
       "/".properties = {
-        dnodesize = "auto";
-        recordsize = "1M";
+        dnodesize = "legacy";
+        recordsize = "128k";
         xattr = "sa";
       };
       "reservation".properties = {
