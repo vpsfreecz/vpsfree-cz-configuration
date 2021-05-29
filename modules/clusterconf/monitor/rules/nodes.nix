@@ -319,6 +319,46 @@
           '';
         };
       }
+
+      {
+        alert = "VpsLowFreeSpace";
+        expr = ''(node_filesystem_avail_bytes{job="nodes",mountpoint=~"^(/tank/ct/.+)|(/vz/private/.+)"} / node_filesystem_size_bytes) * 100 < 5'';
+        for = "10m";
+        labels = {
+          alertclass = "vpsdiskspace";
+          severity = "warning";
+          frequency = "6h";
+        };
+        annotations = {
+          summary = "Not enough free space (instance {{ $labels.instance }})";
+          description = ''
+            VPS uses more than 95% of available space
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "VpsCritFreeSpace";
+        expr = ''node_filesystem_avail_bytes{job="nodes",mountpoint=~"^(/tank/ct/.+)|(/vz/private/.+)"} < 256 * 1024 * 1024'';
+        for = "2m";
+        labels = {
+          alertclass = "vpsdiskspace";
+          severity = "critical";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Not enough free space (instance {{ $labels.instance }})";
+          description = ''
+            VPS has less than 256 MB of diskspace left
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 
