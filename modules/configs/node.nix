@@ -129,12 +129,6 @@ in {
         '') cfg.osNode.networking.bird.bgpNeighbours.v6}
       '';
 
-    boot.kernelParams = optionals cfg.osNode.serial.enable [
-      "console=tty0"
-      "console=ttyS0,${toString cfg.osNode.serial.baudRate}"
-      "panic=-1"
-    ];
-
     system.monitoring.enable = true;
     osctl.exporter.port = confMachine.services.osctl-exporter.port;
   };
