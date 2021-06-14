@@ -24,6 +24,7 @@ in {
   };
 
   users.users.push = {
+    isSystemUser = true;
     shell = pkgs.bash;
     openssh.authorizedKeys.keys = [
       "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPgg6hoXJIMRJZiVULL8Ve3NweaiHPymiMgSQxFt7pFaLqACK4kxj+gKBg89V6TtEqHeHcI8fOV1ildGzzXNCGI= bbworker@nixos01.int.vpsadminos.org"
