@@ -11,15 +11,17 @@
   services.tor = {
     enable = true;
     #controlPort = 9051;
-  };
-  services.tor.relay = {
-    enable = true;
-    role = "relay";
-    nickname = "relay0vpsfree0cz";
-    bandwidthRate = 26214400;
-    bandwidthBurst = 34078720;
-    port = 443;
-    exitPolicy = "reject *:*";
-    contactInfo = "martin.myska@vpsfree.cz";
+    relay = {
+      enable = true;
+      role = "relay";
+    };
+    settings = {
+      Nickname = "relay0vpsfree0cz";
+      BandwidthRate = 26214400;
+      BandwidthBurst = 34078720;
+      ORPort = 443;
+      ExitPolicy = "reject *:*";
+      ContactInfo = "martin.myska@vpsfree.cz";
+    };
   };
 }
