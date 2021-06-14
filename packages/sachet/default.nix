@@ -1,20 +1,19 @@
-{ buildGoPackage, fetchFromGitHub, stdenv }:
+{ buildGoPackage, fetchFromGitHub, lib }:
 let
   owner = "messagebird";
   repo = "sachet";
-  rev = "01cbd6f1ef9a2b80feae8c75c78e5cc9a78929c6";
+  rev = "43e67bdffd9de9229c844f3496bd448a7dfebe87";
 in buildGoPackage rec {
   name = "sachet-${version}";
-  version = stdenv.lib.substring 0 7 rev;
+  # version = lib.substring 0 7 rev;
+  version = "0.2.4";
 
   goPackagePath = "github.com/${owner}/${repo}";
 
   src = fetchFromGitHub {
     inherit owner repo rev;
-    sha256 = "03nm59j66dzc6b3c484v400kgnrjsglv0lksp3i9q2jp0ppyc9zx";
+    sha256 = "sha256:10dxlw0n2b742xsdg1sc8wxy4bjscs897lwfkdzxw18csqm1hffi";
   };
-
-  goDeps = ./deps.nix;
 
   buildFlags = "--tags release";
 }
