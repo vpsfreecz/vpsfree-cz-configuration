@@ -84,6 +84,7 @@ let
     ln -s ${buildMan "converter"} $out/converter
     ln -s ${buildMan "osup"} $out/osup
     ln -s ${buildMan "svctl"} $out/svctl
+    ln -s ${buildMan "test-runner"} $out/test-runner
   '';
 
   refGems = pkgs.runCommand "ref-gems" {
@@ -93,7 +94,7 @@ let
     chmod -R +w vpsadminos
     mkdir $out
     pushd vpsadminos
-      for gem in libosctl osctl osctl-exportfs osctl-image osctl-repo osctld converter svctl; do
+      for gem in libosctl osctl osctl-exportfs osctl-image osctl-repo osctld converter svctl test-runner; do
         pushd $gem
           mkdir -p $out/$gem
           YARD_OUTPUT=$out/$gem osctl-env-exec rake yard
