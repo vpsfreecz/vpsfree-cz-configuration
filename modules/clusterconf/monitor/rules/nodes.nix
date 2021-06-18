@@ -347,7 +347,7 @@
         labels = {
           alertclass = "vpsdiskspace";
           severity = "fatal";
-          frequency = "hourly";
+          frequency = "10m";
         };
         annotations = {
           summary = "Not enough free space (instance {{ $labels.instance }})";
