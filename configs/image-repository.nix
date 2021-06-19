@@ -64,7 +64,7 @@
       gentoo.rolling = { name = "gentoo"; tags = [ "latest" "stable" ]; };
 
       nixos = {
-        "20.09" = { tags = [ "latest" "stable" ]; };
+        "21.05" = { tags = [ "latest" "stable" ]; };
         "unstable" = { tags = [ "unstable" ]; };
       };
 
