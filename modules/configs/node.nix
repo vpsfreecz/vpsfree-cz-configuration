@@ -42,9 +42,11 @@ let
   }) neighbours);
 in {
   config = mkIf (confMachine.osNode != null) {
-    vpsadmin.nodeId = cfg.node.id;
-    vpsadmin.consoleHost = mkDefault confMachine.addresses.primary.address;
-    vpsadmin.netInterfaces = mkDefault (lib.attrNames cfg.osNode.networking.interfaces.addresses);
+    vpsadmin.nodectld = {
+      nodeId = cfg.node.id;
+      consoleHost = mkDefault confMachine.addresses.primary.address;
+      netInterfaces = mkDefault (lib.attrNames cfg.osNode.networking.interfaces.addresses);
+    };
 
     services.udev.extraRules = confLib.mkNetUdevRules cfg.osNode.networking.interfaces.names;
     services.rsyslogd.hostName = "${confMachine.name}.${confMachine.host.location}";
