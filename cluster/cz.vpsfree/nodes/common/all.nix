@@ -53,9 +53,7 @@
   # to be able to include ipmicfg
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.overlays = (import ../../../../overlays) ++ [
-    (import <vpsadminos/os/overlays/vpsadmin.nix> <vpsadmin>)
-  ];
+  nixpkgs.overlays = import ../../../../overlays;
 
   os.channel-registration.enable = false;
 
