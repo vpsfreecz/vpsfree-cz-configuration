@@ -1,7 +1,9 @@
 # .gitignore
 
+/network-config/unencrypted
 /attic
 *.nixops-*
 .gems
 .mkdocs.*
 .confctl
+.*.swp
