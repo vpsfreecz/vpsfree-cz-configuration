@@ -433,6 +433,86 @@
           '';
         };
       }
+
+      {
+        alert = "VpsStartingTooLong";
+        expr = ''osctl_container_state_starting{job="nodes"} == 1'';
+        for = "15m";
+        labels = {
+          alertclass = "vpsstate";
+          severity = "critical";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "VPS is taking too long to start (instance {{ $labels.instance }})";
+          description = ''
+            VPS is taking too long to start
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "VpsAborting";
+        expr = ''osctl_container_state_aborting{job="nodes"} == 1'';
+        for = "15m";
+        labels = {
+          alertclass = "vpsstate";
+          severity = "critical";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "VPS is taking too long to abort (instance {{ $labels.instance }})";
+          description = ''
+            VPS is taking too long to abort
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "VpsError";
+        expr = ''osctl_container_state_aborting{job="nodes"} == 1'';
+        for = "5m";
+        labels = {
+          alertclass = "vpsstate";
+          severity = "critical";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "VPS is in an error state (instance {{ $labels.instance }})";
+          description = ''
+            VPS is in an error state
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "VpsFrozen";
+        expr = ''osctl_container_state_freezing{job="nodes"} == 1 or on(instance) osctl_container_state_frozen == 1'';
+        for = "10m";
+        labels = {
+          alertclass = "vpsstate";
+          severity = "critical";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "VPS is in an error state (instance {{ $labels.instance }})";
+          description = ''
+            VPS is in an error state
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 
