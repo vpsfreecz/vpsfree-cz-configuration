@@ -355,8 +355,8 @@
       }
 
       {
-        alert = "VpsCritFreeSpace";
-        expr = ''node_filesystem_avail_bytes{job="nodes",mountpoint=~"^(/tank/ct/.+)|(/vz/private/.+)"} < 256 * 1024 * 1024'';
+        alert = "VpsVzCritFreeSpace";
+        expr = ''node_filesystem_avail_bytes{job="nodes",mountpoint=~"^/vz/private/.+"} < 256 * 1024 * 1024'';
         for = "2m";
         labels = {
           alertclass = "vpsdiskspace";
@@ -375,8 +375,48 @@
       }
 
       {
-        alert = "VpsFatalFreeSpace";
-        expr = ''node_filesystem_avail_bytes{job="nodes",mountpoint=~"^(/tank/ct/.+)|(/vz/private/.+)"} < 128 * 1024 * 1024'';
+        alert = "VpsVzFatalFreeSpace";
+        expr = ''node_filesystem_avail_bytes{job="nodes",mountpoint=~"^/vz/private/.+"} < 128 * 1024 * 1024'';
+        for = "10m";
+        labels = {
+          alertclass = "vpsdiskspace";
+          severity = "fatal";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "Not enough free space (instance {{ $labels.instance }})";
+          description = ''
+            VPS has less than 128 MB of diskspace left
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "VpsOsCritFreeSpace";
+        expr = ''osctl_container_dataset_avail_bytes{job="nodes"} < 256 * 1024 * 1024'';
+        for = "2m";
+        labels = {
+          alertclass = "vpsdiskspace";
+          severity = "critical";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Not enough free space (instance {{ $labels.instance }})";
+          description = ''
+            VPS has less than 256 MB of diskspace left
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "VpsOsFatalFreeSpace";
+        expr = ''osctl_container_dataset_avail_bytes{job="nodes"} < 128 * 1024 * 1024'';
         for = "10m";
         labels = {
           alertclass = "vpsdiskspace";
