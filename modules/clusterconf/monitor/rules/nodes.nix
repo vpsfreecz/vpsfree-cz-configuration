@@ -302,6 +302,40 @@
       }
 
       {
+        alert = "NodeCritUninterruptibleProcesses";
+        expr = ''node_processes_state{job="nodes",state="D"} > 250 and on(instance) time() - node_boot_time_seconds > 1800'';
+        for = "1m";
+        labels = {
+          alertclass = "processes_d";
+          severity = "critical";
+        };
+        annotations = {
+          summary = "Too many uninterruptible (D) processes (instance {{ $labels.instance }})";
+          description = ''
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeFatalUninterruptibleProcesses";
+        expr = ''node_processes_state{job="nodes",state="D"} > 400 and on(instance) time() - node_boot_time_seconds > 1800'';
+        for = "1m";
+        labels = {
+          alertclass = "processes_d";
+          severity = "fatal";
+        };
+        annotations = {
+          summary = "Too many uninterruptible (D) processes (instance {{ $labels.instance }})";
+          description = ''
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NoOsctlPoolImported";
         expr = ''osctl_pool_count{job="nodes",role="hypervisor",state="active"} == 0'';
         for = "15m";
