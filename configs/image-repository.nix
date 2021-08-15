@@ -46,7 +46,8 @@
 
       debian = {
         "9" = {};
-        "10" = { tags = [ "latest" "stable" ]; };
+        "10" = {};
+        "11" = { tags = [ "latest" "stable" ]; };
         "testing" = { tags = [ "testing" ]; };
         "unstable" = { tags = [ "unstable" ]; };
       };
