@@ -15,7 +15,6 @@ let
   ];
 
   vpsadminos = [
-    ./configs/node.nix
     ./system/logging/vpsadminos.nix
     ./system/serial-console.nix
   ];
