@@ -80,7 +80,7 @@ User.connect_hook(:create) do |ret, user|
     # Give the user 10 days to pay
     append_t(Transactions::Utils::NoOp, args: find_node_id) do |t|
       t.edit(user, expiration_date: Time.now + 10 * 24 * 60 * 60)
-      t.edit(user.current_state, reason: 'Waiting for payment of the membership fee')
+      t.edit(user.current_object_state, reason: 'Waiting for payment of the membership fee')
     end
   end
 
