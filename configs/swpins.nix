@@ -19,9 +19,9 @@ let
   };
 
   vpsadminBranch = branch: {
-    type = "git";
+    type = "git-rev";
 
-    git = {
+    git-rev = {
       url = "https://github.com/vpsfreecz/vpsadmin";
       update.ref = "refs/heads/${branch}";
     };
