@@ -9,9 +9,7 @@
       install = true;
       wipe = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" "sdh" ];
       layout = [
-        { type = "mirror"; devices = [ "sdc" "sdd" ]; }
-        { type = "mirror"; devices = [ "sde" "sdf" ]; }
-        { type = "mirror"; devices = [ "sdg" "sdh" ]; }
+        { type = "raidz"; devices = [ "sdc" "sdd" "sde" "sdf" "sdg" "sdh" ]; }
       ];
       log = [
         { mirror = true; devices = [ "sda1" "sdb1" ]; }
