@@ -1,26 +1,26 @@
 { config, lib, confLib, confData, confMachine, ... }:
 with lib;
 let
-    cfg = confMachine;
+  cfg = confMachine;
 
-    mapEachIp = fn: addresses:
-      flatten (mapAttrsToList (ifname: ips:
-        (map (addr: fn ifname 4 addr) ips.v4)
-        ++
-        (map (addr: fn ifname 6 addr) ips.v6)
-      ) addresses);
+  mapEachIp = fn: addresses:
+    flatten (mapAttrsToList (ifname: ips:
+      (map (addr: fn ifname 4 addr) ips.v4)
+      ++
+      (map (addr: fn ifname 6 addr) ips.v6)
+    ) addresses);
 
-    allNetworks = confData.vpsadmin.networks.containers;
+  allNetworks = confData.vpsadmin.networks.containers;
 
-    importNetworkFilter = ipVer:
-      let
-        networks = allNetworks.${"ipv${toString ipVer}"};
-        list = map (net: "${net.address}/${toString net.prefix}+") networks;
-      in ''
-        net ~ [ ${concatStringsSep ", " list} ]
-      '';
+  importNetworkFilter = ipVer:
+    let
+      networks = allNetworks.${"ipv${toString ipVer}"};
+      list = map (net: "${net.address}/${toString net.prefix}+") networks;
+    in ''
+      net ~ [ ${concatStringsSep ", " list} ]
+    '';
 
-    importInterfaceFilter = ipVer: optionalString (cfg.osNode.networking.interfaces.addresses != {}) (
+  importInterfaceFilter = ipVer: optionalString (cfg.osNode.networking.interfaces.addresses != {}) (
     let
       ifconds = concatMapStringsSep " || " (v: "ifname = \"${v}\"") (attrNames cfg.osNode.networking.interfaces.addresses);
       netLen = {
@@ -71,6 +71,7 @@ in {
     networking.bird = mkIf cfg.osNode.networking.bird.enable {
       enable = true;
       routerId = cfg.osNode.networking.bird.routerId;
+
       protocol.kernel = {
         learn = true;
         persist = true;
@@ -87,16 +88,19 @@ in {
           };
         '';
       };
+
       protocol.bfd = {
         enable = cfg.osNode.networking.bird.bfdInterfaces != "";
         interfaces."${cfg.osNode.networking.bird.bfdInterfaces}" = {};
       };
+
       protocol.bgp = makeBirdBgp cfg.osNode.networking.bird.bgpNeighbours.v4;
     };
 
     networking.bird6 = mkIf cfg.osNode.networking.bird.enable {
       enable = true;
       routerId = cfg.osNode.networking.bird.routerId;
+
       protocol.kernel = {
         learn = true;
         persist = true;
@@ -112,10 +116,12 @@ in {
           };
         '';
       };
+
       protocol.bfd = {
         enable = cfg.osNode.networking.bird.bfdInterfaces != "";
         interfaces."${cfg.osNode.networking.bird.bfdInterfaces}" = {};
       };
+
       protocol.bgp = makeBirdBgp cfg.osNode.networking.bird.bgpNeighbours.v6;
     };
 
