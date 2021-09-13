@@ -3,6 +3,10 @@ with lib;
 let
   cfg = confMachine;
 
+  useBird = cfg.osNode.networking.bird.enable;
+  isBGP = useBird && cfg.osNode.networking.bird.routingProtocol == "bgp";
+  isOSPF = useBird && cfg.osNode.networking.bird.routingProtocol == "ospf";
+
   mapEachIp = fn: addresses:
     flatten (mapAttrsToList (ifname: ips:
       (map (addr: fn ifname 4 addr) ips.v4)
@@ -68,13 +72,14 @@ in {
       ''}
     '';
 
-    networking.bird = mkIf cfg.osNode.networking.bird.enable {
+    networking.bird = mkIf useBird {
       enable = true;
       routerId = cfg.osNode.networking.bird.routerId;
 
       protocol.kernel = {
         learn = true;
         persist = true;
+        scanTime = mkIf isOSPF 2;
         extraConfig = ''
           export all;
           import filter {
@@ -89,21 +94,45 @@ in {
         '';
       };
 
-      protocol.bfd = {
+      protocol.device = {
+        scanTime = mkIf isOSPF 2;
+      };
+
+      protocol.bfd = mkIf isBGP {
         enable = cfg.osNode.networking.bird.bfdInterfaces != "";
         interfaces."${cfg.osNode.networking.bird.bfdInterfaces}" = {};
       };
 
-      protocol.bgp = makeBirdBgp cfg.osNode.networking.bird.bgpNeighbours.v4;
+      protocol.bgp = mkIf isBGP (makeBirdBgp cfg.osNode.networking.bird.bgpNeighbours.v4);
+
+      protocol.ospf = mkIf isOSPF {
+        ospf1 = {
+          extraConfig = ''
+            import all;
+            export all;
+          '';
+
+          area."0.0.0.0" = {
+            networks = confData.vpsadmin.networks.ospf.${confMachine.host.location}.ipv4;
+
+            interface = {
+              "bond200" = {};
+              "veth*" = {};
+              "virtip" = {};
+            };
+          };
+        };
+      };
     };
 
-    networking.bird6 = mkIf cfg.osNode.networking.bird.enable {
+    networking.bird6 = mkIf useBird {
       enable = true;
       routerId = cfg.osNode.networking.bird.routerId;
 
       protocol.kernel = {
         learn = true;
         persist = true;
+        scanTime = mkIf isOSPF 2;
         extraConfig = ''
           export all;
           import filter {
@@ -117,25 +146,57 @@ in {
         '';
       };
 
-      protocol.bfd = {
+      protocol.device = {
+        scanTime = mkIf isOSPF 2;
+      };
+
+      protocol.bfd = mkIf isBGP {
         enable = cfg.osNode.networking.bird.bfdInterfaces != "";
         interfaces."${cfg.osNode.networking.bird.bfdInterfaces}" = {};
       };
 
-      protocol.bgp = makeBirdBgp cfg.osNode.networking.bird.bgpNeighbours.v6;
+      protocol.bgp = mkIf isBGP (makeBirdBgp cfg.osNode.networking.bird.bgpNeighbours.v6);
+
+      protocol.ospf = mkIf isOSPF {
+        ospf1 = {
+          extraConfig = ''
+            import all;
+            export all;
+          '';
+
+          area."0.0.0.0" = {
+            networks = confData.vpsadmin.networks.ospf.${confMachine.host.location}.ipv6;
+
+            interface = {
+              "bond200" = {};
+              "veth*" = {};
+              "virtip" = {};
+            };
+          };
+        };
+      };
     };
 
     networking.firewall.extraCommands =
       let
-        port = toString config.serviceDefinitions.bird-bgp.port;
-      in optionalString cfg.osNode.networking.bird.enable ''
-        ${concatMapStringsSep "\n" (neigh: ''
-        iptables -A nixos-fw -p tcp -s ${neigh.address} --dport ${port} -j nixos-fw-accept
-        '') cfg.osNode.networking.bird.bgpNeighbours.v4}
-        ${concatMapStringsSep "\n" (neigh: ''
-        ip6tables -A nixos-fw -p tcp -s ${neigh.address} --dport ${port} -j nixos-fw-accept
-        '') cfg.osNode.networking.bird.bgpNeighbours.v6}
-      '';
+        bgpPort = toString config.serviceDefinitions.bird-bgp.port;
+
+        bgpRules = optionalString isBGP ''
+          ${concatMapStringsSep "\n" (neigh: ''
+          iptables -A nixos-fw -p tcp -s ${neigh.address} --dport ${bgpPort} -j nixos-fw-accept
+          '') cfg.osNode.networking.bird.bgpNeighbours.v4}
+          ${concatMapStringsSep "\n" (neigh: ''
+          ip6tables -A nixos-fw -p tcp -s ${neigh.address} --dport ${bgpPort} -j nixos-fw-accept
+          '') cfg.osNode.networking.bird.bgpNeighbours.v6}
+        '';
+
+        ospfProto = toString config.serviceDefinitions.bird-ospf.port;
+
+        ospfRules = optionalString isOSPF ''
+          iptables -A nixos-fw -p ${ospfProto} -j nixos-fw-accept
+          ip6tables -A nixos-fw -p ${ospfProto} -j nixos-fw-accept
+        '';
+      in concatStringsSep "\n\n" [ bgpRules ospfRules ];
 
     system.monitoring.enable = true;
     osctl.exporter.port = confMachine.services.osctl-exporter.port;

@@ -46,6 +46,12 @@ let
             description = "bird router ID";
           };
 
+          routingProtocol = mkOption {
+            type = types.enum [ "bgp" "ospf" ];
+            default = "bgp";
+            description = "Routing protocol";
+          };
+
           bgpNeighbours = {
             v4 = mkOption {
               type = types.listOf (types.submodule (bgpNeighbour 4));
@@ -65,6 +71,8 @@ let
             example = "teng*";
             default = "teng*";
           };
+
+          ospf = mkEnableOption "Enable OSPF routing using bird";
         };
 
         virtIP = mkOption {

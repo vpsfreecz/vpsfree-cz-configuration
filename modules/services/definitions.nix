@@ -38,6 +38,7 @@ in {
         port = 53;
         monitor = "dns-authoritative";
       };
+      bird-ospf.port = 89;
       bird-bgp.port = 179;
       buildbot-master.port = 8010;
       grafana.port = 3000;
