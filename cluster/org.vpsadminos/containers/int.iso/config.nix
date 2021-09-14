@@ -5,7 +5,7 @@ let
     name = "org.vpsadminos/containers/proxy";
   };
 
-  images = import <confctl/nix/lib/images.nix> {
+  images = import ../../../../lib/images.nix {
     inherit config lib pkgs confDir confLib confData;
   };
 
