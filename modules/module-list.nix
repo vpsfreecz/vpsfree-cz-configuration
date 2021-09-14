@@ -10,6 +10,7 @@ let
     ./clusterconf/alerter
     ./clusterconf/monitor
     ./services/monitoring/prometheus/rules.nix
+    ./services/netboot.nix
     ./services/sachet.nix
     ./system/logging/nixos.nix
   ];
