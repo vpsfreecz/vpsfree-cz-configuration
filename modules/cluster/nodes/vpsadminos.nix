@@ -37,12 +37,14 @@ let
           };
 
           as = mkOption {
-            type = types.ints.positive;
+            type = types.nullOr types.ints.positive;
+            default = null;
             description = "BGP AS for this node";
           };
 
           routerId = mkOption {
-            type = types.str;
+            type = types.nullOr types.str;
+            default = null;
             description = "bird router ID";
           };
 
@@ -77,6 +79,7 @@ let
 
         virtIP = mkOption {
           type = types.nullOr (types.submodule (confLib.mkOptions.addresses 4));
+          default = null;
           description = "Virtual IP for dummy interface";
           example = { address = "10.0.0.100"; prefix = 32; };
         };
