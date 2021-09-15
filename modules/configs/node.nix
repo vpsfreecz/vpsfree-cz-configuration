@@ -42,6 +42,7 @@ let
     extraConfig = ''
       export all;
       import all;
+      graceful restart;
     '';
   }) neighbours);
 in {
