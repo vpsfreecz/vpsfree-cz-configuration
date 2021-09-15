@@ -15,7 +15,7 @@ let
   symlinkItemsBoot = items: concatNl (mapAttrsToList (name: item: ''
     mkdir -p $out/boot/${name}
     for i in ${item.dir}/{kernel,bzImage,initrd}; do
-      ln -s $i $out/boot/${name}/$( basename $i)
+      [ -e "$i" ] && ln -s $i $out/boot/${name}/$( basename $i)
     done
   '') items);
 
