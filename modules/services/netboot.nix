@@ -102,7 +102,7 @@ let
       ${variants}
 
       LABEL mainmenu
-        MENU LABEL Main Menu
+        MENU LABEL < Main Menu
         KERNEL menu.c32
         APPEND pxelinux.cfg/default
     '';
@@ -119,7 +119,7 @@ let
 
   osMenuFragment = mapAttrsToList (name: item: ''
     LABEL ${name}
-      MENU LABEL ${name}
+      MENU LABEL ${name} >
       KERNEL menu.c32
       APPEND pxeserver/${name}.cfg
   '') cfg.vpsadminosItems;
@@ -128,7 +128,7 @@ let
     MENU TITLE vpsAdminOS
 
     LABEL mainmenu
-      MENU LABEL Main Menu
+      MENU LABEL < Main Menu
       KERNEL menu.c32
       APPEND pxelinux.cfg/default
 
@@ -147,7 +147,7 @@ let
     MENU TITLE NixOS
 
     LABEL mainmenu
-      MENU LABEL Main Menu
+      MENU LABEL < Main Menu
       KERNEL menu.c32
       APPEND pxelinux.cfg/default
 
@@ -161,12 +161,12 @@ let
     MENU TITLE ${config.networking.hostName}
 
     LABEL nixos
-      MENU LABEL NixOS
+      MENU LABEL NixOS >
       KERNEL menu.c32
       APPEND pxeserver/nixos.cfg
 
     LABEL vpsadminos
-      MENU LABEL vpsAdminOS
+      MENU LABEL vpsAdminOS >
       KERNEL menu.c32
       APPEND pxeserver/vpsadminos.cfg
 
