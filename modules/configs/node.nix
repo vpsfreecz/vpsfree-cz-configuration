@@ -91,6 +91,7 @@ in {
             else
               reject;
           };
+          merge paths yes;
         '';
       };
 
