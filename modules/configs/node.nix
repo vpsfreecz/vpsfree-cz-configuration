@@ -155,6 +155,8 @@ in {
         scanTime = mkIf isOSPF 2;
       };
 
+      protocol.direct.enable = isBGP;
+
       protocol.bfd = mkIf isBGP {
         enable = cfg.osNode.networking.bird.bfdInterfaces != "";
         interfaces."${cfg.osNode.networking.bird.bfdInterfaces}" = {};
