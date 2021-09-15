@@ -53,24 +53,59 @@ let
         APPEND httproot=http://${server}/${name}/root.squashfs systemConfig=${builtins.unsafeDiscardStringContext item.toplevel} ${toString item.kernelParams} runlevel=${runlevel} ${concatStringsSep " " kernelParams}
     '';
 
-  osFragment = name: item: ''
-    MENU TITLE ${name}
+  osFragment = name: item:
+    let
+      default = osFragmentVar {
+        inherit name item;
+        variant = "default";
+        label = "Default runlevel";
+      };
 
-    ${osFragmentVar { inherit name item; variant = "default"; label = "Default runlevel"; }}
+      nopools = osFragmentVar {
+        inherit name item;
+        variant = "nopools";
+        label = "Default runlevel without container imports";
+        kernelParams = [ "osctl.pools=0" ];
+      };
 
-    ${osFragmentVar { inherit name item; variant = "nopools"; label = "Default runlevel without container imports"; kernelParams = [ "osctl.pools=0" ]; }}
+      nostart = osFragmentVar {
+        inherit name item;
+        variant = "nostart";
+        label = "Default runlevel without container autostart";
+        kernelParams = [ "osctl.autostart=0" ];
+      };
 
-    ${osFragmentVar { inherit name item; variant = "nostart"; label = "Default runlevel without container autostart"; kernelParams = [ "osctl.autostart=0" ]; }}
+      rescue = osFragmentVar {
+        inherit name item;
+        variant = "rescue";
+        label = "Rescue runlevel (network and sshd)";
+        runlevel = "rescue";
+      };
 
-    ${osFragmentVar { inherit name item; variant = "rescue"; label = "Rescue runlevel (network and sshd)"; runlevel = "rescue"; }}
+      single = osFragmentVar {
+        inherit name item;
+        variant = "single";
+        label = "Single-user runlevel (console only)";
+        runlevel = "single";
+      };
 
-    ${osFragmentVar { inherit name item; variant = "single"; label = "Single-user runlevel (console only)"; runlevel = "single"; }}
+      variants = concatNl [
+        default
+        nopools
+        nostart
+        rescue
+        single
+      ];
+    in ''
+      MENU TITLE ${name}
 
-    LABEL mainmenu
-      MENU LABEL Main Menu
-      KERNEL menu.c32
-      APPEND pxelinux.cfg/default
-  '';
+      ${variants}
+
+      LABEL mainmenu
+        MENU LABEL Main Menu
+        KERNEL menu.c32
+        APPEND pxelinux.cfg/default
+    '';
 
   osItemIncludeConfigs = mapAttrs (name: item:
     pkgs.writeText "${name}.cfg" (osFragment name item)
