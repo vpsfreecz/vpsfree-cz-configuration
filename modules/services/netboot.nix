@@ -138,8 +138,8 @@ let
   nixosMenuFragment = mapAttrsToList (name: item: ''
     LABEL ${name}
       MENU LABEL ${item.menu or name}
-      LINUX boot/${server}/${name}/bzImage
-      INITRD boot/${server}/${name}/initrd
+      LINUX boot/${name}/bzImage
+      INITRD boot/${name}/initrd
       APPEND init=${builtins.unsafeDiscardStringContext item.toplevel}/init loglevel=7
   '') cfg.nixosItems;
 
