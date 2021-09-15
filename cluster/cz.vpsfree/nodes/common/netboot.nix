@@ -4,6 +4,11 @@
     "igb" "ixgbe" "tg3"
   ];
 
+  boot.initrd.network = {
+    enable = true;
+    useDHCP = true;
+  };
+
   environment.etc =
     let
       prefix = "/secrets/nodes/${ config.networking.hostName }/ssh";
