@@ -1,5 +1,9 @@
 { config, lib, pkgs, ...}:
 {
+  boot.initrd.kernelModules = [
+    "igb" "ixgbe" "tg3"
+  ];
+
   environment.etc =
     let
       prefix = "/secrets/nodes/${ config.networking.hostName }/ssh";
