@@ -73,8 +73,6 @@ let
             example = "teng*";
             default = "teng*";
           };
-
-          ospf = mkEnableOption "Enable OSPF routing using bird";
         };
 
         virtIP = mkOption {
