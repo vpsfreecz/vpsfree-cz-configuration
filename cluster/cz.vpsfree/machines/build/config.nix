@@ -15,7 +15,6 @@
   boot.initrd.availableKernelModules = [ "ehci_pci" "ahci" "usbhid" ];
   boot.kernelModules = [ "kvm-intel" "ipmi_si" "ipmi_devintf" ];
   boot.extraModulePackages = [ ];
-  boot.extraModprobeConfig = "options zfs zfs_arc_max=${toString (2 * 1024 * 1024 * 1024)}";
 
   boot.zfs.pools = {
     tank = {
