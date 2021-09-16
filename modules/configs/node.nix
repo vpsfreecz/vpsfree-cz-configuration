@@ -92,7 +92,6 @@ in {
             else
               reject;
           };
-          merge paths yes;
         '';
       };
 
@@ -147,7 +146,6 @@ in {
             else
               reject;
           };
-          merge paths yes;
         '';
       };
 
