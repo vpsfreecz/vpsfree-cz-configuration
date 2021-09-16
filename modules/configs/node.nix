@@ -121,7 +121,6 @@ in {
             interface = {
               "bond200" = {};
               "veth*" = {};
-              "virtip" = {};
             };
           };
         };
