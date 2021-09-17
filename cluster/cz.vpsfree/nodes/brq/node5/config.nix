@@ -39,7 +39,7 @@ in {
       ];
 
       log = [
-        { devices = [ "nvme0n1p1" ]; }
+        { mirror = false; devices = [ "nvme0n1p1" ]; }
       ];
 
       cache = [
