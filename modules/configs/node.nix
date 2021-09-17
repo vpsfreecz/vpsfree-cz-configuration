@@ -119,7 +119,7 @@ in {
             networks = confData.vpsadmin.networks.ospf.${confMachine.host.location}.ipv4;
 
             interface = {
-              "bond200" = {};
+              "bond0" = {};
               "veth*" = {};
             };
           };
@@ -172,7 +172,7 @@ in {
             networks = confData.vpsadmin.networks.ospf.${confMachine.host.location}.ipv6;
 
             interface = {
-              "bond200" = {};
+              "bond0" = {};
               "veth*" = {};
             };
           };
