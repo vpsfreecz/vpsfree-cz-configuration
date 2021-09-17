@@ -85,7 +85,7 @@ in {
           export all;
           import filter {
             if (${importNetworkFilter 4})
-               || (${importInterfaceFilter 4})
+               ${optionalString isBGP "|| (${importInterfaceFilter 4})"}
                ${optionalString (cfg.osNode.networking.virtIP != null) ''|| (ifname = "virtip")''}
             then
               accept;
@@ -139,7 +139,7 @@ in {
           export all;
           import filter {
             if (${importNetworkFilter 6})
-               || (${importInterfaceFilter 6})
+               ${optionalString isBGP "|| (${importInterfaceFilter 6})"}
             then
               accept;
             else
