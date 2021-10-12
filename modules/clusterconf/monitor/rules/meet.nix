@@ -7,7 +7,7 @@
         expr = ''up{job="meet-jvbs"} == 0'';
         for = "5m";
         labels = {
-          severity = "critical";
+          severity = "warning";
         };
         annotations = {
           summary = "Exporter down (instance {{ $labels.instance }})";
@@ -31,7 +31,7 @@
         expr = ''up{job="meet-jvbs-ping"} == 0'';
         for = "5m";
         labels = {
-          severity = "critical";
+          severity = "warning";
           frequency = "hourly";
         };
         annotations = {
@@ -47,9 +47,9 @@
       {
         alert = "MeetJvbDown";
         expr = ''probe_success{job="meet-jvbs-ping"} == 0'';
-        for = "30s";
+        for = "5m";
         labels = {
-          severity = "fatal";
+          severity = "warning";
           frequency = "5m";
         };
         annotations = {
@@ -73,7 +73,7 @@
         expr = ''up{job="meet-web"} == 0'';
         for = "5m";
         labels = {
-          severity = "critical";
+          severity = "warning";
           frequency = "hourly";
         };
         annotations = {
@@ -91,7 +91,7 @@
         expr = ''probe_success{job="meet-web"} == 0'';
         for = "120s";
         labels = {
-          severity = "fatal";
+          severity = "warning";
           frequency = "5m";
         };
         annotations = {
