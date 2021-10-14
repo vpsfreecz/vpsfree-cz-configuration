@@ -63,6 +63,10 @@ in {
       vpsadmin = vpsadminMaster;
     };
 
+    vpsadmin = {
+      vpsadmin = vpsadminMaster;
+    };
+
     os-master = { vpsadminos = osBranch "master"; };
 
     os-staging = { vpsadminos = osBranch "staging"; };

@@ -28,6 +28,8 @@ in {
   imports = [
     ../../../../../environments/base.nix
     ../../../../../profiles/ct.nix
+    ../../../vpsadmin/common/all.nix
+    ../../../vpsadmin/common/frontend.nix
   ];
 
   networking = {

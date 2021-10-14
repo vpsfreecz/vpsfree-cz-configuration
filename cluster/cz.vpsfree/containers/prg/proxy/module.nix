@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/containers/prg/proxy" = rec {
     spin = "nixos";
-    swpins.channels = [ "nixos-stable" "os-master" ];
+    swpins.channels = [ "nixos-stable" "os-master" "vpsadmin" ];
     container.id = 14096;
     host = { name = "proxy"; location = "prg"; domain = "vpsfree.cz"; };
     addresses = {
