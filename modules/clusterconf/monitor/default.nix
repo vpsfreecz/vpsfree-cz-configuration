@@ -552,6 +552,7 @@ in {
           ./rules/time-of-day.nix
           ./rules/meet.nix
           ./rules/vpsfree-web.nix
+          ./rules/systemd.nix
         ]);
       };
 
