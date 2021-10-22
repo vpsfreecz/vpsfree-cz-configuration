@@ -11,6 +11,7 @@ let
     ./clusterconf/monitor
     ./services/monitoring/prometheus/rules.nix
     ./services/netboot.nix
+    ./services/network-graphs
     ./services/sachet.nix
     ./system/logging/nixos.nix
   ];

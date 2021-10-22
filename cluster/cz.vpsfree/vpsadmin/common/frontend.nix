@@ -164,4 +164,10 @@ in {
       };
     };
   };
+
+  services.network-graphs = {
+    enable = true;
+    path = "network-graphs";
+    virtualHost = "vpsadmin.vpsfree.cz";
+  };
 }
