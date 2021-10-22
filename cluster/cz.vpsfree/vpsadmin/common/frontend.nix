@@ -107,12 +107,12 @@ in {
     enableACME = true;
 
     api = {
-      # production = {
-      #   domain = "api.vpsfree.cz";
-      #   backend = {
-      #     address = "unix:/run/haproxy/vpsadmin-api.sock";
-      #   };
-      # };
+      production = {
+        domain = "api.vpsfree.cz";
+        backend = {
+          address = "unix:/run/haproxy/vpsadmin-api.sock";
+        };
+      };
 
       maintenance = {
         domain = "api-admin.vpsfree.cz";
@@ -149,12 +149,12 @@ in {
     };
 
     webui = {
-      # production = {
-      #   domain = "vpsadmin.vpsfree.cz";
-      #   backend = {
-      #     address = "unix:/run/haproxy/vpsadmin-webui.sock";
-      #   };
-      # };
+      production = {
+        domain = "vpsadmin.vpsfree.cz";
+        backend = {
+          address = "unix:/run/haproxy/vpsadmin-webui.sock";
+        };
+      };
 
       maintenance = {
         domain = "vpsadmin-admin.vpsfree.cz";
