@@ -40,9 +40,8 @@ in {
     ];
 
     database = {
-      # host = db.addresses.primary.address;
-      host = "vpsadmin-db.vpsfree.cz";
-      user = "vpsadmin";
+      host = db.addresses.primary.address;
+      user = "vpsadmin-api";
       name = "vpsadmin";
       passwordFile = "/private/vpsadmin-db.pw";
       autoSetup = false;

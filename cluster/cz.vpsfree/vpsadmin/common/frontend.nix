@@ -51,9 +51,8 @@ in {
   vpsadmin.console-router = {
     enable = true;
     database = {
-      # host = db.addresses.primary.address;
-      host = "vpsadmin-db.vpsfree.cz";
-      user = "vpsadmin";
+      host = db.addresses.primary.address;
+      user = "vpsadmin-console";
       name = "vpsadmin";
       passwordFile = "/private/vpsadmin-db.pw";
     };
