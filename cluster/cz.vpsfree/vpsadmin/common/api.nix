@@ -49,4 +49,8 @@ in {
 
     rake.enableDefaultTasks = mkDefault false;
   };
+
+  environment.systemPackages = with pkgs; [
+    git
+  ];
 }
