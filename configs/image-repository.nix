@@ -41,7 +41,8 @@
       centos = {
         "7" = {};
         "8" = { tags = [ "latest" "stable" ]; };
-        "stream" = { tags = [ "latest-stream" ]; };
+        "8-stream" = { tags = [ "latest-8-stream" ]; };
+        "9-stream" = { tags = [ "latest-9-stream" "latest-stream" ]; };
       };
 
       debian = {
@@ -100,7 +101,12 @@
       }
       {
         distribution = "centos";
-        version = "stream-\\d+";
+        version = "8-stream-\\d+";
+        keep = 4;
+      }
+      {
+        distribution = "centos";
+        version = "9-stream-\\d+";
         keep = 4;
       }
       {
