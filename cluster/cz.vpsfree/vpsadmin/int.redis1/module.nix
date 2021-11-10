@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/vpsadmin/int.redis1" = rec {
     spin = "nixos";
-    swpins.channels = [ "nixos-stable" "os-master" "vpsadmin" ];
+    swpins.channels = [ "nixos-stable" "os-staging" "vpsadmin" ];
     container.id = 20277;
     host = { name = "redis1"; location = "int"; domain = "vpsfree.cz"; };
     addresses = {

@@ -2,7 +2,7 @@
 {
   cluster."org.vpsadminos/containers/proxy" = rec {
     spin = "nixos";
-    swpins.channels = [ "nixos-stable" "os-master" ];
+    swpins.channels = [ "nixos-stable" "os-staging" ];
     container.id = 14006;
     host = { name = "proxy"; domain = "vpsadminos.org"; };
     addresses = {

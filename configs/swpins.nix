@@ -67,8 +67,6 @@ in {
       vpsadmin = vpsadminMaster;
     };
 
-    os-master = { vpsadminos = osBranch "master"; };
-
     os-staging = { vpsadminos = osBranch "staging"; };
 
     os-runtime-deps = { vpsadminos-runtime-deps = osBranch "osctl-env-exec"; };
