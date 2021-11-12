@@ -14,6 +14,7 @@ in {
   users.users.${devUser} = {
     isNormalUser = true;
     createHome = false;
+    home = "/opt/vpsadmin-dev";
     openssh.authorizedKeys.keys = confData.sshKeys.admins;
   };
 
