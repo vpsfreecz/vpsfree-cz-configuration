@@ -42,7 +42,7 @@ let
 in {
   networking.firewall.extraCommands = concatMapStringsSep "\n" (m: ''
     iptables -A nixos-fw -p tcp -m tcp -s ${m.addresses.primary.address} --dport 5000 -j nixos-fw-accept
-  '') webuis;
+  '') (webuis ++ [ webuiDev ]);
 
   vpsadmin.download-mounter = {
     enable = true;
