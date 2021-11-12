@@ -61,8 +61,7 @@ in {
   vpsadmin.haproxy = {
     enable = true;
 
-    api = {
-      enable = true;
+    api.prod = {
       frontend.bind = [
         "unix@/run/haproxy/vpsadmin-api.sock mode 0666"
         "*:5000"
@@ -73,8 +72,7 @@ in {
       }) 8) apis);
     };
 
-    console-router = {
-      enable = true;
+    console-router.prod = {
       frontend.bind = [ "unix@/run/haproxy/vpsadmin-console-router.sock mode 0666" ];
       backends = [
         {
@@ -84,9 +82,8 @@ in {
       ];
     };
 
-    webui = {
-      enable = true;
-      frontend.bind = [ "unix@/run/haproxy/vpsadmin-webui.sock mode 0666" ];
+    webui.prod = {
+      frontend.bind = [ "unix@/run/haproxy/vpsadmin-webui-prod.sock mode 0666" ];
       backends = map (m: {
         host = m.addresses.primary.address;
         port = 80;
@@ -151,14 +148,14 @@ in {
       production = {
         domain = "vpsadmin.vpsfree.cz";
         backend = {
-          address = "unix:/run/haproxy/vpsadmin-webui.sock";
+          address = "unix:/run/haproxy/vpsadmin-webui-prod.sock";
         };
       };
 
       maintenance = {
         domain = "vpsadmin-admin.vpsfree.cz";
         backend = {
-          address = "unix:/run/haproxy/vpsadmin-webui.sock";
+          address = "unix:/run/haproxy/vpsadmin-webui-prod.sock";
         };
       };
     };
