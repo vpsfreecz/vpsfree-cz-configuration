@@ -9,6 +9,7 @@ in {
 
   environment.systemPackages = with pkgs; [
     git
+    phpPackages.composer
   ];
 
   users.users.${devUser} = {
