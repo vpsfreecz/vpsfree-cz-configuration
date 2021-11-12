@@ -134,6 +134,11 @@ in
 
   services.nginx = {
     enable = true;
+
+    appendConfig = ''
+      worker_processes auto;
+    '';
+
     virtualHosts = {
       "www.vpsadminos.org" = {
         root = docs;

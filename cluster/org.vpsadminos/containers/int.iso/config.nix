@@ -35,6 +35,11 @@ in {
 
   services.nginx = {
     enable = true;
+
+    appendConfig = ''
+      worker_processes auto;
+    '';
+
     virtualHosts = {
       "iso.vpsadminos.org" = {
         root = isoRoot;
