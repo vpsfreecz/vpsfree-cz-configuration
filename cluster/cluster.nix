@@ -32,6 +32,7 @@
   ./cz.vpsfree/vpsadmin/int.api2/module.nix
   ./cz.vpsfree/vpsadmin/int.db/module.nix
   ./cz.vpsfree/vpsadmin/int.redis1/module.nix
+  ./cz.vpsfree/vpsadmin/int.webui-dev/module.nix
   ./cz.vpsfree/vpsadmin/int.webui1/module.nix
   ./cz.vpsfree/vpsadmin/int.webui2/module.nix
   ./org.vpsadminos/containers/int.bb.master/module.nix

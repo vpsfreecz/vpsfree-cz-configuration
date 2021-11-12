@@ -26,6 +26,11 @@ let
     name = "cz.vpsfree/vpsadmin/int.webui2";
   };
 
+  webuiDev = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/vpsadmin/int.webui-dev";
+  };
+
   proxyPrg = confLib.findConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
@@ -82,12 +87,24 @@ in {
       ];
     };
 
-    webui.prod = {
-      frontend.bind = [ "unix@/run/haproxy/vpsadmin-webui-prod.sock mode 0666" ];
-      backends = map (m: {
-        host = m.addresses.primary.address;
-        port = 80;
-      }) webuis;
+    webui = {
+      prod = {
+        frontend.bind = [ "unix@/run/haproxy/vpsadmin-webui-prod.sock mode 0666" ];
+        backends = map (m: {
+          host = m.addresses.primary.address;
+          port = 80;
+        }) webuis;
+      };
+
+      dev = {
+        frontend.bind = [ "unix@/run/haproxy/vpsadmin-webui-dev.sock mode 0666" ];
+        backends = [
+          {
+            host = webuiDev.addresses.primary.address;
+            port = 80;
+          }
+        ];
+      };
     };
   };
 
@@ -158,7 +175,18 @@ in {
           address = "unix:/run/haproxy/vpsadmin-webui-prod.sock";
         };
       };
+
+      dev = {
+        domain = "vpsadmin-dev.vpsfree.cz";
+        backend = {
+          address = "unix:/run/haproxy/vpsadmin-webui-dev.sock";
+        };
+      };
     };
+  };
+
+  services.nginx.virtualHosts.${config.vpsadmin.frontend.webui.dev.virtualHost} = {
+    basicAuthFile = "/private/nginx/mon.htpasswd";
   };
 
   services.network-graphs = {

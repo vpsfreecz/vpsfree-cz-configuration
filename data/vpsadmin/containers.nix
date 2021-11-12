@@ -224,6 +224,15 @@
       name = "node8";
     };
   };
+  "webui-dev.int.vpsfree.cz" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node21.prg.vpsfree.cz";
+      id = 122;
+      location = "prg";
+      name = "node21";
+    };
+  };
   "webui1.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";

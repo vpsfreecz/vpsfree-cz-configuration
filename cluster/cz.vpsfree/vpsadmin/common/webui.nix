@@ -10,7 +10,7 @@ in {
 
     productionEnvironmentId = 1;
 
-    domain = "vpsadmin.vpsfree.cz";
+    domain = lib.mkDefault "vpsadmin.vpsfree.cz";
 
     api = {
       externalUrl = "https://api.vpsfree.cz";
