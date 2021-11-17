@@ -77,7 +77,7 @@
       };
 
       rocky = {
-        "8" = { tags = [ "latest" ]; };
+        "8" = { tags = [ "latest" "stable" ]; };
       };
 
       slackware."14.2" = { tags = [ "latest" "stable" ]; };
