@@ -31,7 +31,7 @@ DatasetInPool.connect_hook(:create) do |ret, dataset_in_pool|
     end
 
     # Add backup plan only for datasets in production environment
-    backup_envs = %w(Production Staging).map do |v|
+    backup_envs = %w(Production Playground Staging).map do |v|
       ::Environment.find_by!(label: v).id
     end
 
