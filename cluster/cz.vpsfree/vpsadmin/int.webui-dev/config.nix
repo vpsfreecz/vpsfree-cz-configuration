@@ -22,5 +22,6 @@ in {
   vpsadmin.webui = {
     sourceCodeDir = "${config.users.users.${devUser}.home}/vpsadmin/webui";
     domain = "vpsadmin-dev.vpsfree.cz";
+    errorReporting = "E_ALL";
   };
 }
