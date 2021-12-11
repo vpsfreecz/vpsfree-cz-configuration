@@ -49,8 +49,8 @@ in {
     elasticsearchHosts = [ "http://localhost:9200" ];
     extraConfig = ''
       http_bind_address = 127.0.0.1:${toString httpPort}
-      http_publish_uri  = https://log.int.prg.vpsfree.cz/
-      http_external_uri = https://log.int.prg.vpsfree.cz/
+      http_publish_uri  = http://log.int.prg.vpsfree.cz/
+      http_external_uri = http://log.int.prg.vpsfree.cz/
       '';
     plugins = [
       pkgs.graylogPlugins.alertmanager-callback
