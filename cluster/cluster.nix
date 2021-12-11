@@ -3,9 +3,9 @@
   ./cz.vpsfree/containers/prg/int.alerts1/module.nix
   ./cz.vpsfree/containers/prg/int.alerts2/module.nix
   ./cz.vpsfree/containers/prg/int.grafana/module.nix
+  ./cz.vpsfree/containers/prg/int.log/module.nix
   ./cz.vpsfree/containers/prg/int.mon1/module.nix
   ./cz.vpsfree/containers/prg/int.mon2/module.nix
-  ./cz.vpsfree/containers/prg/log/module.nix
   ./cz.vpsfree/containers/prg/proxy/module.nix
   ./cz.vpsfree/containers/prg/tor-relay/module.nix
   ./cz.vpsfree/machines/build/module.nix

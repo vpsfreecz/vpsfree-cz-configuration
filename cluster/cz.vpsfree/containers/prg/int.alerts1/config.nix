@@ -10,7 +10,7 @@
     externalUrl = "https://alerts.prg.vpsfree.cz/";
     allowedMachines = [
       "cz.vpsfree/containers/prg/proxy"
-      "cz.vpsfree/containers/prg/log"
+      "cz.vpsfree/containers/prg/int.log"
     ];
     clusterPeers = [
       "cz.vpsfree/containers/prg/int.alerts1"

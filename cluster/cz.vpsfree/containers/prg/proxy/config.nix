@@ -12,7 +12,7 @@ let
 
   logPrg = confLib.findConfig {
     cluster = config.cluster;
-    name = "cz.vpsfree/containers/prg/log";
+    name = "cz.vpsfree/containers/prg/int.log";
   };
 
   mon1Prg = confLib.findConfig {

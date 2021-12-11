@@ -80,7 +80,7 @@
       name = "node7";
     };
   };
-  "log.prg.vpsfree.cz" = {
+  "log.int.prg.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
       fqdn = "node11.prg.vpsfree.cz";
