@@ -10,11 +10,6 @@ let
     name = "cz.vpsfree/containers/prg/int.alerts2";
   };
 
-  logPrg = confLib.findConfig {
-    cluster = config.cluster;
-    name = "cz.vpsfree/containers/prg/int.log";
-  };
-
   mon1Prg = confLib.findConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/int.mon1";
@@ -56,14 +51,6 @@ in {
     recommendedTlsSettings = true;
 
     virtualHosts = {
-      "log.prg.vpsfree.cz" = {
-        serverAliases = [ "log.prg.vpsfree.cz" ];
-        enableACME = true;
-        forceSSL = true;
-        basicAuthFile = "/private/nginx/mon.htpasswd";
-        locations."/".proxyPass = "http://${logPrg.services.graylog-http.address}:${toString logPrg.services.graylog-http.port}";
-      };
-
       "alerts1.prg.vpsfree.cz" = {
         serverAliases = [ "alerts.prg.vpsfree.cz" ];
         enableACME = true;
