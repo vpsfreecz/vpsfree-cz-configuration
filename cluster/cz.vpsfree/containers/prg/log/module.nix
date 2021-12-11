@@ -19,6 +19,7 @@
     logging.isLogger = true;
     services = {
       graylog-gelf = {};
+      graylog-http = {};
       graylog-rsyslog-tcp = {};
       graylog-rsyslog-udp = {};
       node-exporter = {};
