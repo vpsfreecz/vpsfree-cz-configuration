@@ -1,4 +1,4 @@
-api do |server|
+VpsAdmin::API.configure do |server|
   server.extensions << HaveAPI::Extensions::ExceptionMailer.new(
     from: 'vpsadmin@vpsadmin.vpsfree.cz',
     to: 'aither@havefun.cz',
