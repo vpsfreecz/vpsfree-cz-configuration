@@ -23,6 +23,10 @@ in {
     port = config.serviceDefinitions.nix-serve.port;
   };
 
+  # Workaround for nix-serve error saying:
+  # nix-serve-start[415]: cannot determine user's home directory at ...
+  systemd.services.nix-serve.environment.HOME = "/var/empty";
+
   users.users.push = {
     isSystemUser = true;
     group = "push";
