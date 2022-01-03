@@ -44,6 +44,13 @@
 
   swapDevices = [ ];
 
+  boot.runSize = "50%";
+  boot.tmpOnTmpfs = true;
+  boot.tmpOnTmpfsSize = "50%";
+  services.logind.extraConfig = ''
+    RuntimeDirectorySize=50%
+  '';
+
   networking.useDHCP = false;
   networking.interfaces.enp1s0.ipv4.addresses = [{ address = "172.16.106.5"; prefixLength = 24; }];
   networking.defaultGateway = "172.16.106.1";
