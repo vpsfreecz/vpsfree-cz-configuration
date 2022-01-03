@@ -72,6 +72,7 @@ in {
     users.users = mkIf (cfg.user == defaultUser) {
       "${cfg.user}" = {
         isSystemUser = true;
+        group = cfg.group;
       };
     };
 
