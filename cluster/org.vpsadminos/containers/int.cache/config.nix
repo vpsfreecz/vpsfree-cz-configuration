@@ -25,12 +25,15 @@ in {
 
   users.users.push = {
     isSystemUser = true;
+    group = "push";
     shell = pkgs.bash;
     openssh.authorizedKeys.keys = [
       "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPgg6hoXJIMRJZiVULL8Ve3NweaiHPymiMgSQxFt7pFaLqACK4kxj+gKBg89V6TtEqHeHcI8fOV1ildGzzXNCGI= bbworker@nixos01.int.vpsadminos.org"
       "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLQOOwoJuS4XQ3Aa54S2yC+aN+wLAgyKnSqFew2N8jbgpL8LnjGRVkOtlCgBDV5tqHpUqx0vk1QgMOgQvQju/oY= bbworker@nixos02.bb.int.vpsadminos.org"
     ];
   };
+
+  users.groups.push = {};
 
   nix.trustedUsers = [ "root" "push" ];
 }
