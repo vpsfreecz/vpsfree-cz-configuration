@@ -167,7 +167,7 @@ let
     jitsiMeet = {
       jvbConfigs = flatten (mapAttrsToList (project: conf:
         mapAttrsToList (name: addr: {
-          targets = [ "${addr}:9100" ];
+          targets = [ "${addr}:${toString conf.jvbExporterPort}" ];
           labels = {
             alias = "meet-${name}";
             type = "meet-jvb";
