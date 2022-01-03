@@ -3,57 +3,59 @@
   imports = [
     ../../../../environments/base.nix
     ../../../../environments/deploy.nix
-    ../../../../configs/image-repository.nix
   ];
-
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.copyKernels = true;
-
-  boot.kernelParams = [ "nolive" ];
-  boot.initrd.availableKernelModules = [ "ehci_pci" "ahci" "usbhid" ];
-  boot.kernelModules = [ "kvm-intel" "ipmi_si" "ipmi_devintf" ];
-  boot.extraModulePackages = [ ];
-
-  boot.zfs.pools = {
-    tank = {
-      layout = [
-        { devices = [ "sda1" ]; }
-      ];
-    };
+  boot.loader.grub = {
+    enable = true;
+    zfsSupport = true;
+    efiSupport = true;
+    mirroredBoots = [
+      {
+        devices = [ "nodev" ];
+        path = "/boot1";
+      }
+      {
+        devices = [ "nodev" ];
+        path = "/boot2";
+      }
+    ];
   };
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.supportedFilesystems = [ "zfs" ];
+  boot.zfs.enableUnstable = true;
+  boot.zfs.devNodes = "/dev";
+
+  boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk" ];
+  boot.initrd.kernelModules = [ "virtio" "virtio_blk" ];
 
   fileSystems."/" =
-    { device = "tank/root";
+    { device = "rpool/root/nixos";
       fsType = "zfs";
     };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/7b877eb5-8ed4-475b-8739-5a740426e169";
-      fsType = "ext4";
+  fileSystems."/boot1" =
+    { device = "/dev/disk/by-uuid/683B-3A71";
+      fsType = "vfat";
+    };
+
+  fileSystems."/boot2" =
+    { device = "/dev/disk/by-uuid/6860-FBD8";
+      fsType = "vfat";
     };
 
   swapDevices = [ ];
 
-  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
-
-  # 00:25:90:96:8d:90
-  networking.static = {
-    enable = true;
-    ip = "172.16.254.4";
-    gw = "172.16.254.1";
-    route = "172.16.254.0/24";
-  };
+  networking.useDHCP = false;
+  networking.interfaces.enp1s0.ipv4.addresses = [{ address = "172.16.106.5"; prefixLength = 24; }];
+  networking.defaultGateway = "172.16.106.1";
+  networking.hostId = "c0c07e10";
 
   services.cron.mailto = "admin@lists.vpsfree.cz";
 
-  networking.lxcbr = true;
   networking.hostName = "build";
-  networking.dhcpd = true;
 
   nix = {
-    maxJobs = lib.mkDefault 16;
+    maxJobs = 128;
+    nrBuildUsers = 128;
     binaryCaches = [ "https://cache.vpsadminos.org" ];
     binaryCachePublicKeys = [ "cache.vpsadminos.org:wpIJlNZQIhS+0gFf1U3MC9sLZdLW3sh5qakOWGDoDrE=" ];
   };

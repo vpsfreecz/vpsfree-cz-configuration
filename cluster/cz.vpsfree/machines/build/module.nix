@@ -1,10 +1,10 @@
 { config, ... }:
 {
   cluster."cz.vpsfree/machines/build" = rec {
-    spin = "vpsadminos";
-    swpins.channels = [ "os-staging" "nixos-stable" ];
-    host = { name = "build"; domain = "vpsfree.cz"; };
-    addresses.primary = { address = "172.16.254.4"; prefix = 32; };
+    spin = "nixos";
+    swpins.channels = [ "nixos-stable" ];
+    host = { name = "build"; domain = "vpsfree.cz"; target = "172.16.106.5"; };
+    addresses.primary = { address = "172.16.106.5"; prefix = 24; };
     services.node-exporter = {};
   };
 }
