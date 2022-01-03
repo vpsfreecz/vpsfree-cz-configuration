@@ -16,8 +16,11 @@ in {
     isNormalUser = true;
     createHome = false;
     home = "/opt/vpsadmin-dev";
+    group = devUser;
     openssh.authorizedKeys.keys = confData.sshKeys.admins;
   };
+
+  users.groups.${devUser} = {};
 
   vpsadmin.webui = {
     sourceCodeDir = "${config.users.users.${devUser}.home}/vpsadmin/webui";
