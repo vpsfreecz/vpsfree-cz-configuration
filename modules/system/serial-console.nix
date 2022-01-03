@@ -5,7 +5,18 @@ let
 in {
   options = {
     system.serial-console = {
-      enable = mkEnableOption "Enable serial console output";
+      enable = mkOption {
+        default = true;
+        example = true;
+        description = "Whether to enable serial-console.";
+        type = lib.types.bool;
+      };
+
+      device = mkOption {
+        type = types.str;
+        description = "Device node in /dev";
+        default = "ttyS1";
+      };
 
       baudRate = mkOption {
         type = types.ints.positive;
@@ -18,7 +29,7 @@ in {
   config = mkIf cfg.enable {
     boot.kernelParams = [
       "console=tty0"
-      "console=ttyS0,${toString cfg.baudRate}"
+      "console=${cfg.device},${toString cfg.baudRate}"
       "panic=-1"
     ];
   };
