@@ -115,19 +115,6 @@ let
   inMenu = name: netbootitem: netbootitem // { menu = name; };
 
 in rec {
-  vpsadminosISO =
-    let
-      build = vpsadminosBuild {
-        modules = [{
-          imports = [
-            <vpsadminos/os/configs/iso.nix>
-          ];
-
-          system.secretsDir = null;
-        }];
-      };
-    in build.isoImage;
-
   # stock NixOS
   nixos = nixosNetboot { };
   nixosZfs = nixosNetboot {

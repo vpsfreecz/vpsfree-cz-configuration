@@ -36,12 +36,4 @@
   ./cz.vpsfree/vpsadmin/int.webui-dev/module.nix
   ./cz.vpsfree/vpsadmin/int.webui1/module.nix
   ./cz.vpsfree/vpsadmin/int.webui2/module.nix
-  ./org.vpsadminos/containers/int.bb.master/module.nix
-  ./org.vpsadminos/containers/int.bb.nixos01/module.nix
-  ./org.vpsadminos/containers/int.bb.nixos02/module.nix
-  ./org.vpsadminos/containers/int.cache/module.nix
-  ./org.vpsadminos/containers/int.images/module.nix
-  ./org.vpsadminos/containers/int.iso/module.nix
-  ./org.vpsadminos/containers/int.www/module.nix
-  ./org.vpsadminos/containers/proxy/module.nix
 ]
