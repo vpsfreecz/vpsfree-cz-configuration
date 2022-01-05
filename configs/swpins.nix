@@ -74,7 +74,5 @@ in {
     nixos-stable = { nixpkgs = nixpkgsBranch "nixos-21.11"; };
 
     "nixos-20.09" = { nixpkgs = nixpkgsBranch "nixos-20.09"; };
-
-    "nixos-19.03" = { nixpkgs = nixpkgsBranch "nixos-19.03"; };
   };
 }

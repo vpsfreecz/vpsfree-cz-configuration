@@ -2,19 +2,9 @@
 {
   cluster."cz.vpsfree/containers/prg/int.log" = rec {
     spin = "nixos";
-    swpins.channels = [ "nixos-19.03" ];
-    swpins.pins = {
-      vpsadminos = {
-        type = "git-rev";
-
-        git-rev = {
-          url = "https://github.com/vpsfreecz/vpsadminos";
-          update.ref = "41a176a346ff92ab14e6f46519947035ef9973d0";
-        };
-      };
-    };
+    swpins.channels = [ "nixos-stable" "os-staging" ];
     container.id = 14004;
-    host = { name = "log.int"; location = "prg"; domain = "vpsfree.cz"; };
+    host = { name = "log"; location = "int.prg"; domain = "vpsfree.cz"; };
     addresses.primary = { address = "172.16.4.1"; prefix = 32; };
     logging.isLogger = true;
     services = {
