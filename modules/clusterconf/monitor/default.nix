@@ -628,5 +628,9 @@ in {
           });
         };
     };
+
+    systemd.services."prometheus-blackbox-exporter".serviceConfig = {
+      CapabilityBoundingSet = [ "CAP_NET_RAW" ];
+    };
   };
 }
