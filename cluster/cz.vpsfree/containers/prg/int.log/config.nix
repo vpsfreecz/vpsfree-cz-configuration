@@ -52,9 +52,6 @@ in {
       http_publish_uri  = http://log.int.prg.vpsfree.cz/
       http_external_uri = http://log.int.prg.vpsfree.cz/
       '';
-    plugins = [
-      pkgs.graylogPlugins.alertmanager-callback
-    ];
   };
 
   services.elasticsearch = {
