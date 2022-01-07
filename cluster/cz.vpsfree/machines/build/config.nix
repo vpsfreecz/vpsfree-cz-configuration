@@ -28,7 +28,7 @@
   boot.initrd.kernelModules = [ "virtio" "virtio_blk" ];
 
   fileSystems."/" =
-    { device = "rpool/root/nixos";
+    { device = "rpool-build/root/nixos";
       fsType = "zfs";
     };
 
