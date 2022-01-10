@@ -59,6 +59,8 @@
   os.channel-registration.enable = false;
 
   networking = {
+    firewall.checkReversePath = false;
+
     firewall.extraCommands =
       let
         nodeCfg = confMachine;
