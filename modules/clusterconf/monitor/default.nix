@@ -543,7 +543,7 @@ in {
           }
         ];
 
-        ruleConfigs = flatten (map (v: import v) [
+        ruleConfigs = flatten ((map (v: import v) [
           ./rules/common.nix
           ./rules/nodes.nix
           ./rules/infra.nix
@@ -553,7 +553,9 @@ in {
           ./rules/meet.nix
           ./rules/vpsfree-web.nix
           ./rules/systemd.nix
-        ]);
+        ]) ++ (map (v: import v { inherit lib; }) [
+          ./rules/vpsadmin.nix
+        ]));
       };
 
       prometheus.exporters.blackbox =
