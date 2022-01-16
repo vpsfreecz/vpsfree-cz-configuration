@@ -2,10 +2,11 @@
 let
   chains = rec {
     backup = "TransactionChains::Dataset::Backup";
+    fullDownload = "TransactionChains::Dataset::FullDownload";
     vpsStart = "TransactionChains::Vps::Start";
     vpsRestart = "TransactionChains::Vps::Restart";
     vpsStop = "TransactionChains::Vps::Stop";
-    specials = [ backup vpsStart vpsRestart vpsStop ];
+    specials = [ backup fullDownload vpsStart vpsRestart vpsStop ];
   };
 in [
   {
@@ -123,6 +124,25 @@ in [
       {
         alert = "DatasetBackupDelayed";
         expr = ''vpsadmin_transaction_chain_queued_seconds{chain_type="${chains.backup}"} >= 12*60*60'';
+        labels = {
+          severity = "warning";
+          frequency = "1h";
+        };
+        annotations = {
+          summary = "Transaction chain {{ $labels.chain_id }} takes too long";
+          description = ''
+            Transaction chain {{ $labels.chain_id }} ({{ $labels.chain_type }})
+            is in state {{ $labels.chain_state }} for too long and is potentially
+            stuck.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "BackupDownloadDelayed";
+        expr = ''vpsadmin_transaction_chain_queued_seconds{chain_type="${chains.fullDownload}"} >= 12*60*60'';
         labels = {
           severity = "warning";
           frequency = "1h";
