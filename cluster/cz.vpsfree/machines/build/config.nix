@@ -66,7 +66,7 @@
   networking.hostName = "build";
 
   nix = {
-    maxJobs = 128;
+    maxJobs = 8;
     nrBuildUsers = 128;
     binaryCaches = [ "https://cache.vpsadminos.org" ];
     binaryCachePublicKeys = [ "cache.vpsadminos.org:wpIJlNZQIhS+0gFf1U3MC9sLZdLW3sh5qakOWGDoDrE=" ];
