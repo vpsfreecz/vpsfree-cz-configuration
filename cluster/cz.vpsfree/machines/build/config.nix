@@ -42,6 +42,11 @@
       fsType = "vfat";
     };
 
+  fileSystems."/var/build-tmp" =
+    { device = "rpool-build/tmp";
+      fsType = "zfs";
+    };
+
   swapDevices = [ ];
 
   boot.runSize = "50%";
