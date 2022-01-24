@@ -1,0 +1,101 @@
+{
+  "nixpkgs": {
+    "type": "git-rev",
+    "nix_options": {
+      "fetchSubmodules": false,
+      "update": {
+        "auto": false,
+        "interval": 3600,
+        "ref": "refs/heads/nixos-21.05"
+      },
+      "url": "https://github.com/NixOS/nixpkgs"
+    },
+    "state": {
+      "rev": "77aa71f66fd05d9e7b7d1c084865d703a8008ab7",
+      "date": "2022-01-24T17:48:39+01:00"
+    },
+    "info": {
+      "rev": "77aa71f66fd05d9e7b7d1c084865d703a8008ab7",
+      "sha256": "1ir7y1aamdvxj9g849c4kc1ansbk3s6xpiwvpfycv2lxi5bnf0k7"
+    },
+    "fetcher": {
+      "type": "git-rev",
+      "options": {
+        "rev": "77aa71f66fd05d9e7b7d1c084865d703a8008ab7",
+        "wrapped_fetcher": {
+          "type": "zip",
+          "options": {
+            "url": "https://github.com/NixOS/nixpkgs/archive/77aa71f66fd05d9e7b7d1c084865d703a8008ab7.tar.gz",
+            "sha256": "1ir7y1aamdvxj9g849c4kc1ansbk3s6xpiwvpfycv2lxi5bnf0k7"
+          }
+        }
+      }
+    }
+  },
+  "vpsadmin": {
+    "type": "git-rev",
+    "nix_options": {
+      "fetchSubmodules": false,
+      "update": {
+        "auto": false,
+        "interval": 3600,
+        "ref": "refs/heads/master"
+      },
+      "url": "https://github.com/vpsfreecz/vpsadmin"
+    },
+    "state": {
+      "rev": "8d7b4f34b863b1d2d1614f8bd49948f70fc39267",
+      "date": "2022-01-24T17:49:45+01:00"
+    },
+    "info": {
+      "rev": "8d7b4f34b863b1d2d1614f8bd49948f70fc39267",
+      "sha256": "02apfyvmvi6xzhnnff5m29issryaxijkiyaw9jbmgfy4g0w6g6kn"
+    },
+    "fetcher": {
+      "type": "git-rev",
+      "options": {
+        "rev": "8d7b4f34b863b1d2d1614f8bd49948f70fc39267",
+        "wrapped_fetcher": {
+          "type": "zip",
+          "options": {
+            "url": "https://github.com/vpsfreecz/vpsadmin/archive/8d7b4f34b863b1d2d1614f8bd49948f70fc39267.tar.gz",
+            "sha256": "02apfyvmvi6xzhnnff5m29issryaxijkiyaw9jbmgfy4g0w6g6kn"
+          }
+        }
+      }
+    }
+  },
+  "vpsadminos": {
+    "type": "git-rev",
+    "nix_options": {
+      "fetchSubmodules": false,
+      "update": {
+        "auto": false,
+        "interval": 3600,
+        "ref": "refs/heads/prod-22.01"
+      },
+      "url": "https://github.com/vpsfreecz/vpsadminos"
+    },
+    "state": {
+      "rev": "b7e9700ff36458f961c1fa44dd8a706e2bc60495",
+      "date": "2022-01-24T17:49:27+01:00"
+    },
+    "info": {
+      "rev": "b7e9700ff36458f961c1fa44dd8a706e2bc60495",
+      "sha256": "0hbs386qpg6p7jy43ac80lqfx6nvrndpn3ra3wbhn55r2m1vmnyj"
+    },
+    "fetcher": {
+      "type": "git-rev",
+      "options": {
+        "rev": "b7e9700ff36458f961c1fa44dd8a706e2bc60495",
+        "wrapped_fetcher": {
+          "type": "zip",
+          "options": {
+            "url": "https://github.com/vpsfreecz/vpsadminos/archive/b7e9700ff36458f961c1fa44dd8a706e2bc60495.tar.gz",
+            "sha256": "0hbs386qpg6p7jy43ac80lqfx6nvrndpn3ra3wbhn55r2m1vmnyj"
+          }
+        }
+      }
+    }
+  }
+}

@@ -35,8 +35,6 @@ let
 
   vpsadminosStaging = osBranch "staging";
 
-  vpsadminosProd21_09 = osBranch "prod-21.09";
-
   vpsadminMaster = vpsadminBranch "master";
 in {
   confctl.swpins.core.pins = {
@@ -57,9 +55,9 @@ in {
       vpsadmin = vpsadminMaster;
     };
 
-    prod21_09 = {
+    "prod-22.01" = {
       nixpkgs = nixpkgsStable;
-      vpsadminos = vpsadminosProd21_09;
+      vpsadminos = osBranch "prod-22.01";
       vpsadmin = vpsadminMaster;
     };
 
