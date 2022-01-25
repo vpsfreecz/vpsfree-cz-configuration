@@ -50,7 +50,7 @@ let
         MENU LABEL ${label}
         LINUX boot/${name}/kernel
         INITRD boot/${name}/initrd
-        APPEND httproot=http://${server}/${name}/root.squashfs systemConfig=${builtins.unsafeDiscardStringContext item.toplevel} ${toString item.kernelParams} runlevel=${runlevel} ${concatStringsSep " " kernelParams}
+        APPEND httproot=http://${server}/${name}/root.squashfs init=${builtins.unsafeDiscardStringContext item.toplevel}/init ${toString item.kernelParams} runlevel=${runlevel} ${concatStringsSep " " kernelParams}
     '';
 
   osFragment = name: item:
