@@ -6,7 +6,13 @@ let
     vpsStart = "TransactionChains::Vps::Start";
     vpsRestart = "TransactionChains::Vps::Restart";
     vpsStop = "TransactionChains::Vps::Stop";
-    specials = [ backup fullDownload vpsStart vpsRestart vpsStop ];
+    vpsMigrateVz = "TransactionChains::Vps::Migrate::VzToVz";
+    vpsMigrateOs = "TransactionChains::Vps::Migrate::OsToOs";
+    specials = [
+      backup fullDownload
+      vpsStart vpsRestart vpsStop
+      vpsMigrateVz vpsMigrateOs
+    ];
   };
 in [
   {
@@ -111,6 +117,25 @@ in [
         };
         annotations = {
           summary = "Transaction chain {{ $labels.chain_id }} takes too long to stop a VPS";
+          description = ''
+            Transaction chain {{ $labels.chain_id }} ({{ $labels.chain_type }})
+            is in state {{ $labels.chain_state }} for too long and is potentially
+            stuck.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "VpsMigrationDelayed";
+        expr = ''vpsadmin_transaction_chain_queued_seconds{chain_type=~"${chains.vpsMigrateVz}|${chains.vpsMigrateOs}"} >= 24*60*60'';
+        labels = {
+          severity = "warning";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "Transaction chain {{ $labels.chain_id }} takes too long to migrate a VPS";
           description = ''
             Transaction chain {{ $labels.chain_id }} ({{ $labels.chain_type }})
             is in state {{ $labels.chain_state }} for too long and is potentially
