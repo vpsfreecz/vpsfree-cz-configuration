@@ -80,7 +80,10 @@
         "8" = { tags = [ "latest" "stable" ]; };
       };
 
-      slackware."15.0" = { tags = [ "latest" "stable" ]; };
+      slackware = {
+        "15.0" = { tags = [ "latest" "stable" ]; };
+        "current" = { tags = [ "latest-current" ]; };
+      };
 
       ubuntu = {
         "18.04" = {};
@@ -132,6 +135,11 @@
       {
         distribution = "opensuse";
         version = "tumbleweed-\\d+";
+        keep = 4;
+      }
+      {
+        distribution = "slackware";
+        version = "current-\\d+";
         keep = 4;
       }
       {
