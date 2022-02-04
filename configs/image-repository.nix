@@ -80,7 +80,7 @@
         "8" = { tags = [ "latest" "stable" ]; };
       };
 
-      slackware."14.2" = { tags = [ "latest" "stable" ]; };
+      slackware."15.0" = { tags = [ "latest" "stable" ]; };
 
       ubuntu = {
         "18.04" = {};
