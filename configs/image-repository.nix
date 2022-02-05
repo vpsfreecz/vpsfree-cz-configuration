@@ -40,8 +40,7 @@
 
       centos = {
         "7" = {};
-        "8" = { tags = [ "latest" "stable" ]; };
-        "8-stream" = { tags = [ "latest-8-stream" ]; };
+        "8-stream" = { tags = [ "latest-8-stream" "latest" "stable" ]; };
         "9-stream" = { tags = [ "latest-9-stream" "latest-stream" ]; };
       };
 
