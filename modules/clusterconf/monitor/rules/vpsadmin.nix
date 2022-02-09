@@ -74,7 +74,7 @@ in [
         alert = "VpsStartDelayed";
         expr = ''vpsadmin_transaction_chain_queued_seconds{chain_type="${chains.vpsStart}"} >= 15*60'';
         labels = {
-          severity = "warning";
+          severity = "critical";
           frequency = "10m";
         };
         annotations = {
@@ -93,7 +93,7 @@ in [
         alert = "VpsRestartDelayed";
         expr = ''vpsadmin_transaction_chain_queued_seconds{chain_type="${chains.vpsRestart}"} >= 15*60'';
         labels = {
-          severity = "warning";
+          severity = "critical";
           frequency = "10m";
         };
         annotations = {
@@ -112,7 +112,7 @@ in [
         alert = "VpsStopDelayed";
         expr = ''vpsadmin_transaction_chain_queued_seconds{chain_type="${chains.vpsStop}"} >= 15*60'';
         labels = {
-          severity = "warning";
+          severity = "critical";
           frequency = "10m";
         };
         annotations = {
