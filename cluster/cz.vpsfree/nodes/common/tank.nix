@@ -1,8 +1,8 @@
 { config, lib, pkgs, ...}:
 {
   osctl.pools.tank = {
-    parallelStart = 4;
-    parallelStop = 20;
+    parallelStart = lib.mkDefault 4;
+    parallelStop = lib.mkDefault 20;
   };
 
   boot.zfs.pools = {

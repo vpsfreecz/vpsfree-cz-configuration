@@ -16,4 +16,8 @@
       };
     };
   };
+
+  osctl.pools.tank = {
+    parallelStart = 6;
+  };
 }

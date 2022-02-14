@@ -60,6 +60,10 @@ in {
     };
   };
 
+  osctl.pools.tank = {
+    parallelStart = 8;
+  };
+
   swapDevices = [
     # { label = "swap1"; }
   ];

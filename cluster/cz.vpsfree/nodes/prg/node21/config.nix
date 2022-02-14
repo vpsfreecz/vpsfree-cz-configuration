@@ -36,6 +36,11 @@
     };
   };
 
+  osctl.pools.tank = {
+    parallelStart = 10;
+    parallelStop = 30;
+  };
+
   swapDevices = [
     # { label = "swap1"; }
     # { label = "swap2"; }
