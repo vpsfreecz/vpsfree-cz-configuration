@@ -14,7 +14,10 @@ in
   nixpkgs.overlays = import ../overlays;
   nix = {
     useSandbox = true;
-    sandboxPaths = [ "/secrets/image/secrets" ];
+    sandboxPaths = [
+      "/nix/var/cache/ccache"
+      "/secrets/image/secrets"
+    ];
     buildCores = 0;
     extraOptions =
      ''
