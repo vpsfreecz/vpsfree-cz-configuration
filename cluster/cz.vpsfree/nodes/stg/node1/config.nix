@@ -22,8 +22,4 @@
   osctl.pools.tank = {
     parallelStart = 8;
   };
-
-  swapDevices = [
-    { device = "/dev/nvme4n1p2"; }
-  ];
 }
