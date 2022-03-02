@@ -127,7 +127,17 @@
       }
       {
         distribution = "gentoo";
-        version = "\\d+";
+        version = "openrc-\\d+";
+        keep = 4;
+      }
+      {
+        distribution = "gentoo";
+        version = "systemd-\\d+";
+        keep = 4;
+      }
+      {
+        distribution = "gentoo";
+        version = "musl-\\d+";
         keep = 4;
       }
       {
