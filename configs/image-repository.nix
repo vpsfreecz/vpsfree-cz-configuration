@@ -62,7 +62,11 @@
         "35" = { tags = [ "latest" "stable" ]; };
       };
 
-      gentoo.rolling = { name = "gentoo"; tags = [ "latest" "stable" ]; };
+      gentoo = {
+        openrc = { tags = [ "latest" "stable" "latest-openrc" "stable-openrc" ]; };
+        systemd = { tags = [ "latest-systemd" "stable-systemd" ]; };
+        musl = { tags = [ "latest-musl" "stable-musl" ]; };
+      };
 
       nixos = {
         "21.11" = { tags = [ "latest" "stable" ]; };
