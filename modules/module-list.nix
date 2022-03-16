@@ -9,6 +9,8 @@ let
   nixos = [
     ./clusterconf/alerter
     ./clusterconf/monitor
+    ./services/geminabox/gc.nix
+    ./services/geminabox/server.nix
     ./services/monitoring/prometheus/rules.nix
     ./services/netboot.nix
     ./services/network-graphs

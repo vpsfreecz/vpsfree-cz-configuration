@@ -41,6 +41,7 @@ in {
       bird-ospf.port = 89;
       bird-bgp.port = 179;
       buildbot-master.port = 8010;
+      geminabox.port = 8000;
       grafana.port = 3000;
       vpsadmin-console.port = 8081;
       prometheus.port = 9090;
