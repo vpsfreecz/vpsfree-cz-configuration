@@ -24,6 +24,11 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/int.grafana";
   };
+
+  rubygems = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/prg/int.rubygems";
+  };
 in {
   imports = [
     ../../../../../environments/base.nix
@@ -85,6 +90,12 @@ in {
         enableACME = true;
         forceSSL = true;
         locations."/".proxyPass = "http://${grafanaPrg.services.grafana.address}:${toString grafanaPrg.services.grafana.port}";
+      };
+
+      "rubygems.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://${rubygems.services.geminabox.address}:${toString rubygems.services.geminabox.port}";
       };
     };
   };
