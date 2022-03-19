@@ -15,6 +15,7 @@ let
     ./services/netboot.nix
     ./services/network-graphs
     ./services/sachet.nix
+    ./services/vpsfree-irc-bot.nix
     ./system/logging/nixos.nix
   ];
 
