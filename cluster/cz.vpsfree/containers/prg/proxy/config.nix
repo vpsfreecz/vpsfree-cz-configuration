@@ -29,6 +29,11 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/int.rubygems";
   };
+
+  vpsfbot = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/int.vpsfbot";
+  };
 in {
   imports = [
     ../../../../../environments/base.nix
@@ -96,6 +101,12 @@ in {
         enableACME = true;
         forceSSL = true;
         locations."/".proxyPass = "http://${rubygems.services.geminabox.address}:${toString rubygems.services.geminabox.port}";
+      };
+
+      "vpsfbot.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/gh-webhook".proxyPass = "http://${vpsfbot.addresses.primary.address}:8000";
       };
     };
   };
