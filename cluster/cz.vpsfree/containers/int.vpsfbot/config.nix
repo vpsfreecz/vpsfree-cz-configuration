@@ -137,32 +137,29 @@ in {
           port = 8000;
           channels = {
             "#vpsfree" = [
-              "vpsfreecz/web"
               "vpsfreecz/oficialni-dokumenty"
-              "vpsfreecz/vpsfree-mail-templates"
+              "vpsfreecz/vpsfree-client"
               "vpsfreecz/vpsfree-cz-configuration"
+              "vpsfreecz/vpsfree-mail-templates"
+              "vpsfreecz/web"
             ];
             "#vpsadminos" = [
-              "vpsfreecz/vpsadmin"
-              "vpsfreecz/vpsadminos"
-              "vpsfreecz/nixpkgs"
+              "vpsfreecz/confctl"
+              "vpsfreecz/haveapi"
+              "vpsfreecz/htop"
+              "vpsfreecz/linux"
               "vpsfreecz/lxc"
               "vpsfreecz/lxcfs"
-              "vpsfreecz/zfs"
-              "vpsfreecz/nixops"
-              "vpsfreecz/htop"
-              "vpsfreecz/vpsadminos-image-build-scripts"
-              "vpsfreecz/linux"
-              "vpsfreecz/haveapi"
-              "vpsfreecz/vpsadmin-go-client"
-              "vpsfreecz/pty-wrapper"
-              "vpsfreecz/data-prometheus"
-              "vpsfreecz/machine-check"
+              "vpsfreecz/machine-check-rb"
               "vpsfreecz/nixos-modules"
-              "vpsfreecz/haskell-zre"
               "vpsfreecz/terraform-provider-vpsadmin"
               "vpsfreecz/vpsfree-cz-configuration"
-              "vpsfreecz/confctl"
+              "vpsfreecz/vpsadmin"
+              "vpsfreecz/vpsadmin-go-client"
+              "vpsfreecz/vpsadminos"
+              "vpsfreecz/vpsadminos-image-build-scripts"
+              "vpsfreecz/vpsadminos-org-configuration"
+              "vpsfreecz/zfs"
             ];
           };
         };
