@@ -112,11 +112,11 @@ let
   '';
 in {
   imports = [
-    ../../../../../environments/base.nix
-    ../../../../../profiles/ct.nix
+    ../../../../environments/base.nix
+    ../../../../profiles/ct.nix
   ];
 
-  nixpkgs.overlays = import ../../../../../overlays;
+  nixpkgs.overlays = import ../../../../overlays;
 
   networking.firewall.extraCommands = ''
     # Allow access to geminabox from proxy.prg

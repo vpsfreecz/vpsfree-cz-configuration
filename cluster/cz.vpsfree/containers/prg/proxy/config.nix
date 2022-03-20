@@ -27,7 +27,7 @@ let
 
   rubygems = confLib.findConfig {
     cluster = config.cluster;
-    name = "cz.vpsfree/containers/prg/int.rubygems";
+    name = "cz.vpsfree/containers/int.rubygems";
   };
 
   vpsfbot = confLib.findConfig {
