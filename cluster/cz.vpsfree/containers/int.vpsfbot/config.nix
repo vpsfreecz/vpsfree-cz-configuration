@@ -47,6 +47,7 @@ in {
       "_netdev"
       "uid=${toString botUid}"
       "gid=${toString botGid}"
+      "allow_other"
       "reconnect"
       "ro"
     ];
