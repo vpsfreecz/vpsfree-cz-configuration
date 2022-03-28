@@ -89,15 +89,6 @@
       name = "node11";
     };
   };
-  "master.bb.int.vpsadminos.org" = {
-    node = {
-      domain = "vpsfree.cz";
-      fqdn = "node1.stg.vpsfree.cz";
-      id = 400;
-      location = "stg";
-      name = "node1";
-    };
-  };
   "mon1.int.prg.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
@@ -114,24 +105,6 @@
       id = 112;
       location = "prg";
       name = "node11";
-    };
-  };
-  "nixos01.bb.int.vpsadminos.org" = {
-    node = {
-      domain = "vpsfree.cz";
-      fqdn = "node1.stg.vpsfree.cz";
-      id = 400;
-      location = "stg";
-      name = "node1";
-    };
-  };
-  "nixos02.bb.int.vpsadminos.org" = {
-    node = {
-      domain = "vpsfree.cz";
-      fqdn = "node1.stg.vpsfree.cz";
-      id = 400;
-      location = "stg";
-      name = "node1";
     };
   };
   "ns1.brq.vpsfree.cz" = {
@@ -215,6 +188,15 @@
       name = "node21";
     };
   };
+  "rubygems.int.vpsfree.cz" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node19.prg.vpsfree.cz";
+      id = 120;
+      location = "prg";
+      name = "node19";
+    };
+  };
   "tor-relay.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
@@ -222,6 +204,15 @@
       id = 109;
       location = "prg";
       name = "node8";
+    };
+  };
+  "vpsfbot.int.vpsfree.cz" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node21.prg.vpsfree.cz";
+      id = 122;
+      location = "prg";
+      name = "node21";
     };
   };
   "webui-dev.int.vpsfree.cz" = {
