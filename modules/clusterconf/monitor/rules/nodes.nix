@@ -336,6 +336,23 @@
       }
 
       {
+        alert = "VpsWarnUninterruptibleProcesses";
+        expr = ''count by (fqdn) (osctl_container_processes_state{state="D"} > 5) > 5 and on(fqdn) time() - node_boot_time_seconds > 1800'';
+        for = "1m";
+        labels = {
+          alertclass = "vps_processes_d";
+          severity = "warning";
+        };
+        annotations = {
+          summary = "Too many VPS with uninterruptible (D) processes (instance {{ $labels.instance }})";
+          description = ''
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "KeyringHighKeys";
         expr = ''((sum by (instance) (kernel_keyring_users_qnkeys{job="nodes"})) / on (instance) sysctl_kernel_keys_maxkeys) * 100 >= 75'';
         for = "5m";
