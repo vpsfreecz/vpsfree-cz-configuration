@@ -12,7 +12,7 @@
         { type = "raidz2"; devices = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" "sdh" ]; }
       ];
       log = [
-        { devices = [ "nvme0n1p1" ]; }
+        { mirror = false; devices = [ "nvme0n1p1" ]; }
       ];
       partition = {
         nvme0n1 = {
