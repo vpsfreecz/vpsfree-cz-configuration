@@ -18,7 +18,7 @@
           acltype = "posixacl";
         };
         "reservation".properties = {
-          refreservation = "100G";
+          refreservation = lib.mkDefault "100G";
           canmount = "off";
         };
       };
