@@ -90,7 +90,8 @@
 
       ubuntu = {
         "18.04" = {};
-        "20.04" = { tags = [ "latest" "stable" ]; };
+        "20.04" = {};
+        "22.04" = { tags = [ "latest" "stable" ]; };
       };
 
       void = {
