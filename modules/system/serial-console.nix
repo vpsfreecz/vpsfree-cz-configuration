@@ -6,8 +6,7 @@ in {
   options = {
     system.serial-console = {
       enable = mkOption {
-        default = true;
-        example = true;
+        default = false;
         description = "Whether to enable serial-console.";
         type = lib.types.bool;
       };
