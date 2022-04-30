@@ -7,7 +7,7 @@ let
 
   nixToRuby = v:
     if isString v then
-      ''"${v}"''
+      if hasPrefix ":" v then v else ''"${v}"''
     else if isBool v then
       if v then "true" else "false"
     else if isFloat v then

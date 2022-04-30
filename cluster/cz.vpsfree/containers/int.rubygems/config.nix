@@ -130,6 +130,7 @@ in {
 
     settings = {
       rubygems_proxy = true;
+      rubygems_proxy_merge_strategy = ":combine_local_and_remote_gem_versions";
       allow_replace = false;
       allow_delete = false;
     };
