@@ -143,6 +143,24 @@
           '';
         };
       }
+      {
+        alert = "OsctlHealthCheckError";
+        expr = ''osctl_health_check_error_count > 0'';
+        for = "15m";
+        labels = {
+          severity = "warning";
+          frequency = "6h";
+        };
+        annotations = {
+          summary = "osctl health check detected errors (instance {{ $labels.instance }})";
+          description = ''
+            osctl health check detected errors
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 ]

@@ -433,6 +433,26 @@
       }
 
       {
+        alert = "NodeOsctldDown";
+        expr = ''osctld_up{job="nodes"} == 0 or on(instance) osctld_responsive == 0 or on(instance) osctld_initialized == 0'';
+        for = "5m";
+        labels = {
+          alertclass = "osctld";
+          severity = "critical";
+          frequency = "5m";
+        };
+        annotations = {
+          summary = "osctld down (instance {{ $labels.instance }})";
+          description = ''
+            osctld is down or not operational
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NoOsctlPoolImported";
         expr = ''osctl_pool_count{job="nodes",role="hypervisor",state="active"} == 0'';
         for = "15m";
