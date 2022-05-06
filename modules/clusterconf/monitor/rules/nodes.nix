@@ -355,7 +355,7 @@
       {
         alert = "KeyringHighKeys";
         expr = ''((sum by (instance) (kernel_keyring_users_qnkeys{job="nodes"})) / on (instance) sysctl_kernel_keys_maxkeys) * 100 >= 75'';
-        for = "5m";
+        for = "10m";
         labels = {
           alertclass = "keyring_keys";
           severity = "warning";
@@ -375,7 +375,7 @@
       {
         alert = "KeyringCritKeys";
         expr = ''((sum by (instance) (kernel_keyring_users_qnkeys{job="nodes"})) / on (instance) sysctl_kernel_keys_maxkeys) * 100 >= 90'';
-        for = "5m";
+        for = "10m";
         labels = {
           alertclass = "keyring_keys";
           severity = "critical";
@@ -395,7 +395,7 @@
       {
         alert = "KeyringHighBytes";
         expr = ''((sum by (instance) (kernel_keyring_users_qnbytes{job="nodes"})) / on (instance) sysctl_kernel_keys_maxbytes) * 100 >= 75'';
-        for = "5m";
+        for = "10m";
         labels = {
           alertclass = "keyring_bytes";
           severity = "warning";
@@ -415,7 +415,7 @@
       {
         alert = "KeyringCritBytes";
         expr = ''((sum by (instance) (kernel_keyring_users_qnbytes{job="nodes"})) / on (instance) sysctl_kernel_keys_maxbytes) * 100 >= 90'';
-        for = "5m";
+        for = "10m";
         labels = {
           alertclass = "keyring_bytes";
           severity = "critical";
