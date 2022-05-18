@@ -10,8 +10,10 @@
   ./cz.vpsfree/containers/prg/int.mon2/module.nix
   ./cz.vpsfree/containers/prg/proxy/module.nix
   ./cz.vpsfree/containers/prg/tor-relay/module.nix
+  ./cz.vpsfree/machines/brq/apu/module.nix
   ./cz.vpsfree/machines/build/module.nix
   ./cz.vpsfree/machines/build-old/module.nix
+  ./cz.vpsfree/machines/prg/apu/module.nix
   ./cz.vpsfree/machines/pxe/module.nix
   ./cz.vpsfree/nodes/brq/node5/module.nix
   ./cz.vpsfree/nodes/pgnd/node1/module.nix
