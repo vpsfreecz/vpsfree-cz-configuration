@@ -2,11 +2,11 @@
 let
 
   modemNetBringUp = pkgs.writers.writeBashBin "modem-network-bring-up" ''
-    ip link set down wwp0s19u1u3i4
-    echo Y > /sys/class/net/wwp0s19u1u3i4/qmi/raw_ip
-    ip link set up wwp0s19u1u3i4
+    ip link set down lte0
+    echo Y > /sys/class/net/lte0/qmi/raw_ip
+    ip link set up lte0
     qmicli --device=/dev/cdc-wdm0 --device-open-proxy --wds-start-network="ip-type=4,apn=gprsa.public" --client-no-release-cid
-    udhcpc -q -f -n -i wwp0s19u1u3i4
+    udhcpc -q -f -n -i lte0
     echo "nameserver 8.8.8.8" >> /etc/resolv.conf
   '';
 
@@ -32,6 +32,7 @@ in
     SUBSYSTEM=="tty", ATTRS{idVendor}=="2c7c", ATTRS{idProduct}=="0125", ENV{ID_USB_INTERFACE_NUM}=="01", SYMLINK+="ttyUSB-EC25-nmea"
     SUBSYSTEM=="tty", ATTRS{idVendor}=="2c7c", ATTRS{idProduct}=="0125", ENV{ID_USB_INTERFACE_NUM}=="02", SYMLINK+="ttyUSB-EC25-at", OWNER="smsd"
     SUBSYSTEM=="tty", ATTRS{idVendor}=="2c7c", ATTRS{idProduct}=="0125", ENV{ID_USB_INTERFACE_NUM}=="03", SYMLINK+="ttyUSB-EC25-modem"
+    SUBSYSTEM=="net", ACTION=="add", ENV{ID_VENDOR_ID}=="2c7c", ENV{ID_MODEL_ID}=="0125", TAG+="systemd", ENV{SYSTEMD_WANTS}="modemNet.service", NAME="lte0"
     SUBSYSTEM=="tty", ATTRS{serial}=="0001B337", OWNER="snajpa", GROUP="tty-vpsf-net", SYMLINK+="ttyUSB-prg-4-7-edg1-s4048"
     SUBSYSTEM=="tty", ATTRS{serial}=="0001C720", OWNER="snajpa", GROUP="tty-vpsf-net", SYMLINK+="ttyUSB-prg-4-7-tor1-s4048"
     SUBSYSTEM=="tty", ATTRS{serial}=="00013C0F", OWNER="snajpa", GROUP="tty-vpsf-net", SYMLINK+="ttyUSB-prg-4-7-tor2-s4048"
@@ -64,11 +65,12 @@ in
     enable = true;
     path = with pkgs; [ iproute2 libqmi busybox ];
     serviceConfig = {
-      Type = "simple";
+      Type = "oneshot";
       ExecStart = "${modemNetBringUp}/bin/modem-network-bring-up";
     };
-    wantedBy = [ "network.target" ];
-    after = [ "network-pre.target" ];
+    bindsTo = [ "sys-subsystem-net-devices-lte0.device" ];
+    after = [ "sys-subsystem-net-devices-lte0.device" ];
+    wantedBy = [ "multi-user.target" ];
   };
 
   services.openssh.enable = true;
