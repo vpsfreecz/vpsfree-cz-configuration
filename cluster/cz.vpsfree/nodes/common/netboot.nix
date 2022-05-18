@@ -7,6 +7,9 @@
   boot.initrd.network = {
     enable = true;
     useDHCP = true;
+    postCommands = ''
+      ntpd -q ${concatStringsMap " " (v: "-p ${v}") config.networking.chronyd.timeServers}
+    '';
   };
 
   environment.etc =
