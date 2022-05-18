@@ -84,8 +84,8 @@ in
 
   services.gammu-smsd = {
     enable = true;
-    path = "/dev/ttyUSB-EC25-at";
-    service = "files";
+    device.path = "/dev/ttyUSB-EC25-at";
+    backend.service = "files";
     extraConfig.smsd = ''
       CheckSecurity = 0
     '';
