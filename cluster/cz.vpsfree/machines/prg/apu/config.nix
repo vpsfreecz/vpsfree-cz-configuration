@@ -91,5 +91,7 @@ in
     '';
   };
 
+  systemd.services.gammu-smsd.after = [ "sys-subsystem-net-devices-lte0.device" ];
+
   system.stateVersion = "21.11";
 }
