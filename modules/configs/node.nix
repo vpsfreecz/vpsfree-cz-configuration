@@ -37,7 +37,6 @@ let
 
   makeBirdBgp = neighbours: listToAttrs (imap1 (i: neigh: nameValuePair "bgp${toString i}" {
     as = cfg.osNode.networking.bird.as;
-    nextHopSelf = true;
     neighbor = { "${neigh.address}" = neigh.as; };
     extraConfig = ''
       export all;
