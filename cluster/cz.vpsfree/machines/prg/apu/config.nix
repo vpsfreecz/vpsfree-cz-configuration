@@ -60,6 +60,8 @@ in
     { address = "172.16.0.0"; prefixLength = 12; via = "172.16.254.1"; }
   ];
 
+  networking.interfaces.lte0.useDHCP = false;
+
   systemd.services.modemNet = {
     description = "modemNet";
     enable = true;
@@ -80,9 +82,14 @@ in
     usbutils
   ];
 
-  services.gammu-smsd.enable = true;
-  services.gammu-smsd.device.path = "/dev/ttyUSB-EC25-at";
-  services.gammu-smsd.backend.service = "files";
+  services.gammu-smsd = {
+    enable = true;
+    path = "/dev/ttyUSB-EC25-at";
+    service = "files";
+    extraConfig.smsd = ''
+      CheckSecurity = 0
+    '';
+  };
 
   system.stateVersion = "21.11";
 }
