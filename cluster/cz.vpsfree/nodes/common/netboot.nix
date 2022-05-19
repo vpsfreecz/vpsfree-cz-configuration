@@ -8,7 +8,7 @@
     enable = true;
     useDHCP = true;
     postCommands = ''
-      ntpd -q ${lib.concatMapStringsSep " " (v: "-p ${v}") config.networking.chronyd.timeServers}
+      ntpd -q ${lib.concatMapStringsSep " " (v: "-p ${v}") config.networking.timeServers}
     '';
   };
 
