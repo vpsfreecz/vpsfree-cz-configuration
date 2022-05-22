@@ -92,6 +92,7 @@ let
         {
           _module.args = {
             inherit confLib confData;
+            confMachine = null;
             swpins = {
               nixpkgs = <nixpkgs>;
             };
