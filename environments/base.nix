@@ -22,12 +22,15 @@ with lib;
     screen
   ];
 
-  programs.bash.promptInit = ''
-    # Provide a nice prompt if the terminal supports it.
-    if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
-      PS1="[\[\e[1;31m\]\u\[\e[0;00m\]@\[\e[1;31m\]${confMachine.host.fqdn}\[\e[0;00m\]]\n \w \[\e[1;31m\]# \[\e[0;00m\]"
-    fi
-  '';
+  programs.bash.promptInit =
+    let
+      hostname = if confMachine == null then "\\H" else confMachine.host.fqdn;
+    in ''
+      # Provide a nice prompt if the terminal supports it.
+      if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
+        PS1="[\[\e[1;31m\]\u\[\e[0;00m\]@\[\e[1;31m\]${hostname}\[\e[0;00m\]]\n \w \[\e[1;31m\]# \[\e[0;00m\]"
+      fi
+    '';
 
   users.users.root.openssh.authorizedKeys.keys = with confData.sshKeys; admins ++ builders;
 }
