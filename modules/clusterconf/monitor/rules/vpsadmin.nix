@@ -19,6 +19,60 @@ in [
     name = "vpsadmin";
     rules = [
       {
+        alert = "VpsAdminApiNotActive";
+        expr = ''node_systemd_unit_state{name="vpsadmin-api.service",state="active"} == 0'';
+        for = "10m";
+        labels = {
+          severity = "warning";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "vpsadmin-api.service on {{ $labels.node_name }} is not active";
+          description = ''
+            vpsadmin-api.service on {{ $labels.node_name }} is not active
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "VpsAdminWebuiNotActive";
+        expr = ''node_systemd_unit_state{name="phpfpm-vpsadmin-webui.service",state="active"} == 0'';
+        for = "10m";
+        labels = {
+          severity = "warning";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "phpfpm-vpsadmin-webui.service on {{ $labels.node_name }} is not active";
+          description = ''
+            phpfpm-vpsadmin-webui.service on {{ $labels.node_name }} is not active
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "VpsAdminConsoleRouterNotActive";
+        expr = ''node_systemd_unit_state{name="vpsadmin-console-router.service",state="active"} == 0'';
+        for = "10m";
+        labels = {
+          severity = "warning";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "vpsadmin-console-router.service on {{ $labels.node_name }} is not active";
+          description = ''
+            vpsadmin-console-router.service on {{ $labels.node_name }} is not active
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NodeCtldUnresponsive";
         expr = ''vpsadmin_node_last_report_seconds{node_platform="vpsadminos"} >= 90'';
         labels = {
