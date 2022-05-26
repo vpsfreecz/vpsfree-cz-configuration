@@ -14,6 +14,13 @@ let
       vpsMigrateVz vpsMigrateOs
     ];
   };
+
+  # Attr names from ../http.nix
+  httpSites = {
+    "api_vpsfree_cz" = "ApiVpsfreeCz";
+    "console_vpsfree_cz" = "ConsoleVpsfreeCz";
+    "vpsadmin_vpsfree_cz" = "VpsadminVpsfreeCz";
+  };
 in [
   {
     name = "vpsadmin";
@@ -257,5 +264,47 @@ in [
         };
       }
     ];
+  }
+
+  {
+    name = "vpsadmin-front";
+    interval = "300s";
+    rules = lib.flatten (lib.mapAttrsToList (name: camel: [
+      {
+        alert = "${camel}ExporterDown";
+        expr = ''up{job="http_${name}"} == 0'';
+        for = "10m";
+        labels = {
+          severity = "critical";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Web exporter is down (instance {{ $labels.instance }})";
+          description = ''
+            Unable to check web availability
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "${camel}WebDown";
+        expr = ''probe_success{job="http_${name}"} == 0'';
+        for = "120s";
+        labels = {
+          severity = "critical";
+          frequency = "5m";
+        };
+        annotations = {
+          summary = "{{ $labels.instance }} web is down";
+          description = ''
+            {{ $labels.instance }} does not respond over HTTP
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+    ]) httpSites);
   }
 ]
