@@ -164,6 +164,53 @@ let
         }) authoritativeServices;
       };
 
+    http =
+      let
+        sites = import ./http.nix;
+      in {
+        jobs = mapAttrsToList (name: site: {
+          job_name = "http_${name}";
+          scrape_interval = "300s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "${name}_http_2xx" ];
+          };
+          static_configs = [
+            {
+              targets = site.targets;
+              labels = site.labels;
+            }
+          ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        }) sites;
+
+        blackboxModules = mapAttrs' (name: site: nameValuePair "${name}_http_2xx" {
+          prober = "http";
+          timeout = "5s";
+          http = {
+            valid_http_versions = [ "HTTP/1.1" "HTTP/2.0" ];
+            method = "GET";
+            headers = {
+              Host = site.host;
+            };
+            preferred_ip_protocol = "ip4";
+          };
+        }) sites;
+      };
+
     jitsiMeet = {
       jvbConfigs = flatten (mapAttrsToList (project: conf:
         mapAttrsToList (name: addr: {
@@ -404,69 +451,7 @@ in {
               }
             ];
           }
-        ) ++ [
-          {
-            job_name = "vpsfree-cz-web";
-            scrape_interval = "300s";
-            metrics_path = "/probe";
-            params = {
-              module = [ "vpsfree_cz_http_2xx" ];
-            };
-            static_configs = [
-              {
-                targets = [ "https://vpsfree.cz/prihlaska/fyzicka-osoba/" ];
-                labels = {
-                  alias = "vpsfree.cz";
-                  type = "vpsfree-web";
-                };
-              }
-            ];
-            relabel_configs = [
-              {
-                source_labels = [ "__address__" ];
-                target_label = "__param_target";
-              }
-              {
-                source_labels = [ "__param_target" ];
-                target_label = "instance";
-              }
-              {
-                target_label = "__address__";
-                replacement = "127.0.0.1:9115";
-              }
-            ];
-          }
-          {
-            job_name = "vpsfree-org-web";
-            scrape_interval = "300s";
-            metrics_path = "/probe";
-            params = {
-              module = [ "vpsfree_org_http_2xx" ];
-            };
-            static_configs = [
-              {
-                targets = [ "https://vpsfree.org/registration/fyzicka-osoba/" ];
-                labels = {
-                  alias = "vpsfree.org";
-                  type = "vpsfree-web";
-                };
-              }
-            ];
-            relabel_configs = [
-              {
-                source_labels = [ "__address__" ];
-                target_label = "__param_target";
-              }
-              {
-                source_labels = [ "__param_target" ];
-                target_label = "instance";
-              }
-              {
-                target_label = "__address__";
-                replacement = "127.0.0.1:9115";
-              }
-            ];
-          }
+        ) ++ scrapeConfigs.http.jobs ++ [
           {
             job_name = "meet-jvbs";
             scrape_interval = "30s";
@@ -582,30 +567,6 @@ in {
                 transport_protocol = "tcp";
               };
             };
-            vpsfree_cz_http_2xx = {
-              prober = "http";
-              timeout = "5s";
-              http = {
-                valid_http_versions = [ "HTTP/1.1" "HTTP/2.0" ];
-                method = "GET";
-                headers = {
-                  Host = "vpsfree.cz";
-                };
-                preferred_ip_protocol = "ip4";
-              };
-            };
-            vpsfree_org_http_2xx = {
-              prober = "http";
-              timeout = "5s";
-              http = {
-                valid_http_versions = [ "HTTP/1.1" "HTTP/2.0" ];
-                method = "GET";
-                headers = {
-                  Host = "vpsfree.org";
-                };
-                preferred_ip_protocol = "ip4";
-              };
-            };
           };
 
           meetModules = mapAttrs' (project: conf:
@@ -626,7 +587,7 @@ in {
           enable = true;
           listenAddress = "127.0.0.1";
           configFile = pkgs.writeText "blackbox.yml" (builtins.toJSON {
-            modules = staticModules // meetModules;
+            modules = staticModules // scrapeConfigs.http.blackboxModules // meetModules;
           });
         };
     };

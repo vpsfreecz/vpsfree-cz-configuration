@@ -5,7 +5,7 @@
     rules = [
       {
         alert = "VpsFreeCzExporterDown";
-        expr = ''up{job="vpsfree-cz-web"} == 0'';
+        expr = ''up{job="http_vpsfree_cz"} == 0'';
         for = "10m";
         labels = {
           severity = "critical";
@@ -23,7 +23,7 @@
 
       {
         alert = "VpsFreeOrgExporterDown";
-        expr = ''up{job="vpsfree-org-web"} == 0'';
+        expr = ''up{job="http_vpsfree_org"} == 0'';
         for = "10m";
         labels = {
           severity = "critical";
