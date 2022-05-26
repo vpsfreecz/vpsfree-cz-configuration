@@ -12,9 +12,6 @@ in {
   boot.initrd.network = {
     enable = true;
     useDHCP = true;
-    postCommands = ''
-      ntpd -q ${lib.concatMapStringsSep " " (v: "-p ${v}") config.networking.timeServers}
-    '';
   };
 
   # While crash dump is not limited to netbooted machines, in practice, all nodes
