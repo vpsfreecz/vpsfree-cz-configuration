@@ -29,9 +29,22 @@ in {
     SUBSYSTEM=="net", ACTION=="add", ENV{ID_VENDOR_ID}=="2c7c", ENV{ID_MODEL_ID}=="0125", TAG+="systemd", ENV{SYSTEMD_WANTS}="modemNet.service", NAME="lte0"
   '';
 
-  users.groups."tty-vpsf-net".members = [ "snajpa" ];
+  users.groups = {
+    "crashdump".members = [ "crashdump" ];
+    "tty-vpsf-net".members = [ "snajpa" ];
+  };
 
   users.users = {
+    crashdump = {
+      isNormalUser = true;
+      shell = null;
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINqqtUK0MaKpMVkUnzjwXYv/7jr1m0E02YqMulMXJmUm snajpa@snajpadev"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGZx+5fCM/NBwVZItoTTs6wv57yFcfipM1Xl7SOyn0sj snajpa@snajpabook.vpsfree.
+cz"
+      ];
+    };
+
     snajpa = {
       isNormalUser = true;
       openssh.authorizedKeys.keys = [
@@ -39,6 +52,24 @@ in {
       ];
     };
   };
+
+  system.activationScripts.crashDumpDir = {
+    text = ''
+      mkdir -p /var/crashdump || true
+      chown root:crashdump /var/crashdump
+      chmod 730 /var/crashdump
+      chmod g+s /var/crashdump
+    '';
+    deps = [];
+  };
+
+  services.atftpd = {
+    enable = true;
+    root = "/var/crashdump";
+    extraOptions = [ "--group crashdump" ];
+  };
+
+  networking.firewall.allowedUDPPorts = [ 69 ];
 
   networking.interfaces.lte0.useDHCP = false;
 
