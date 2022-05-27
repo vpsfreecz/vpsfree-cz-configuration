@@ -1,18 +1,18 @@
-{ buildGoPackage, fetchFromGitHub, lib }:
+{ buildGo117Package, fetchFromGitHub, lib }:
 let
-  owner = "messagebird";
+  owner = "vpsfreecz";
   repo = "sachet";
-  rev = "43e67bdffd9de9229c844f3496bd448a7dfebe87";
-in buildGoPackage rec {
+  rev = "d138f07bba0863fa9ccfbc93327fbd625a1917d3";
+in buildGo117Package rec {
   name = "sachet-${version}";
   # version = lib.substring 0 7 rev;
-  version = "0.2.4";
+  version = "vpsfree-0.3.2";
 
-  goPackagePath = "github.com/${owner}/${repo}";
+  goPackagePath = "github.com/messagebird/${repo}";
 
   src = fetchFromGitHub {
     inherit owner repo rev;
-    sha256 = "sha256:10dxlw0n2b742xsdg1sc8wxy4bjscs897lwfkdzxw18csqm1hffi";
+    sha256 = "sha256:1z5rv7c0yrg3kcyzsqkn9da2yw04ms527rsn15x24psp4fzb4h1q";
   };
 
   buildFlags = "--tags release";
