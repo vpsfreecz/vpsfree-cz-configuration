@@ -53,6 +53,7 @@ in {
       graylog-rsyslog-tcp.port = 11514;
       graylog-rsyslog-udp.port = 11515;
       graylog-gelf.port = 12201;
+      sachet.port = 9876;
       unbound = {
         port = 53;
         monitor = "dns-resolver";
