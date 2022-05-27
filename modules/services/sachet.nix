@@ -2,22 +2,20 @@
 with lib;
 let
   cfg = config.services.sachet;
+
   defaultUser = "sachet";
-  defaultGroup = "sachet";
+
+  defaultGroup = defaultUser;
+
+  configFile =
+    if cfg.configPath != null then
+      cfg.configPath
+    else
+      pkgs.writeText "sachet-config.json" (builtins.toJSON cfg.settings);
 in {
   options = {
     services.sachet = {
       enable = mkEnableOption "Enable sachet, SMS alerts for Prometheus' Alertmanager";
-
-      configPath = mkOption {
-        type = types.str;
-        description = ''
-          Path to the config file passed to sachet.
-
-          The config file contains access tokens to providers, so do not store
-          in in the Nix store.
-        '';
-      };
 
       listenAddress = mkOption {
         type = types.str;
@@ -50,10 +48,39 @@ in {
           Group to run as.
         '';
       };
+
+      configPath = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Path to the config file passed to sachet.
+
+          The config file contains access tokens to providers, so do not store
+          in in the Nix store.
+        '';
+      };
+
+      settings = mkOption {
+        type = types.attrs;
+        default = {};
+        description = ''
+          Create the config file from an attrset.
+
+          Note that these settings are publicly stored in the Nix store, so
+          it is not suitable for access tokens, passwords, etc.
+        '';
+      };
     };
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = (isNull cfg.configPath) || cfg.settings == {};
+        message = "Use either services.sachet.configPath or services.sachet.settings";
+      }
+    ];
+
     systemd.services.sachet = {
       description = "SMS alerts for Prometheus' Alertmanager";
       wantedBy = [ "multi-user.target" ];
@@ -62,7 +89,7 @@ in {
         Group = cfg.group;
         ExecStart = toString [
           "${pkgs.sachet}/bin/sachet"
-          "-config ${cfg.configPath}"
+          "-config ${configFile}"
           "-listen-address ${cfg.listenAddress}:${toString cfg.port}"
         ];
         Restart = "on-failure";
