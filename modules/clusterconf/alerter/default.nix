@@ -3,6 +3,16 @@ with lib;
 let
   cfg = config.clusterconf.alerter;
 
+  apuPrg = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/machines/prg/apu";
+  };
+
+  apuBrq = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/machines/brq/apu";
+  };
+
   alertmanagerPort = confMachine.services.alertmanager.port;
 
   allMachines = confLib.getClusterMachines config.cluster;
@@ -242,7 +252,7 @@ in {
             name = "team-sms";
             webhook_configs = [
               {
-                url = "http://localhost:9876/alert";
+                url = "http://127.0.0.1:5000/alert";
                 send_resolved = true;
               }
             ];
@@ -307,7 +317,48 @@ in {
       };
     };
 
+    # E-mail alerts are sent through a local SMTP
     services.postfix.enable = true;
+
+    # SMS alerts are primarily sent through sachet on apu.{brq, prg} equipped
+    # with SIM cards. Should those be unreachable, fall back to a local sachet
+    # connected to nexmo.
+    services.haproxy = {
+      enable = true;
+      config = ''
+        global
+          log stdout format short daemon
+          maxconn     4000
+
+        defaults
+          mode                    http
+          log                     global
+          option                  httplog
+          option                  dontlognull
+          option http-server-close
+          option forwardfor       except 127.0.0.0/8
+          option                  redispatch
+          retries                 3
+          timeout http-request    10s
+          timeout queue           1m
+          timeout connect         10s
+          timeout client          1m
+          timeout server          1m
+          timeout http-keep-alive 10s
+          timeout check           10s
+          maxconn                 3000
+
+        frontend api-prod
+          bind 127.0.0.1:5000
+          default_backend app-sachet
+
+        backend app-sachet
+          balance first
+          server apu-prg ${apuPrg.services.sachet.address}:${toString apuPrg.services.sachet.port} check maxconn 32
+          server apu-brq ${apuBrq.services.sachet.address}:${toString apuBrq.services.sachet.port} check maxconn 32
+          server nexmo localhost:${toString config.services.sachet.port} check maxconn 32
+      '';
+    };
 
     services.sachet = {
       enable = true;
