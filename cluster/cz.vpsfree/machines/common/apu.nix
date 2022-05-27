@@ -66,7 +66,7 @@ cz"
       chmod 730 /var/crashdump
       chmod g+s /var/crashdump
     '';
-    deps = [];
+    deps = [ "users" "groups" ];
   };
 
   services.atftpd = {
