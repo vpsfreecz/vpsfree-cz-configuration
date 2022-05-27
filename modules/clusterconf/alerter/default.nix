@@ -130,8 +130,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = import ../../../overlays;
-
     networking = {
       firewall.extraCommands = concatStringsSep "\n" (
         (map (machine:

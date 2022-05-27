@@ -116,8 +116,6 @@ in {
     ../../../../profiles/ct.nix
   ];
 
-  nixpkgs.overlays = import ../../../../overlays;
-
   networking.firewall.extraCommands = ''
     # Allow access to geminabox from proxy.prg
     iptables -A nixos-fw -p tcp --dport ${toString geminaboxPort} -s ${proxyPrg.addresses.primary.address} -j nixos-fw-accept

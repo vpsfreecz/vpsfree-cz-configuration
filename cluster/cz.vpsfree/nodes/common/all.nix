@@ -54,8 +54,6 @@
   # to be able to include ipmicfg
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.overlays = import ../../../../overlays;
-
   os.channel-registration.enable = false;
 
   networking = {

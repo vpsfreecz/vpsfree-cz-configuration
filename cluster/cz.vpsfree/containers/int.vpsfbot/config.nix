@@ -31,8 +31,6 @@ in {
     ../../../../profiles/ct.nix
   ];
 
-  nixpkgs.overlays = import ../../../../overlays;
-
   # Mount mailing list archives so that the bot can locate messages
   # Note that this requires that root's public key is authorized on prasiatko
   boot.postBootCommands = concatMapStringsSep "\n" (name: "mkdir -p ${mntLists}/${name}-list") mailingLists;

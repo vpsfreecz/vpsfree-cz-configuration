@@ -11,7 +11,6 @@ let
     };
 in
 {
-  nixpkgs.overlays = import ../overlays;
   nix = {
     useSandbox = true;
     sandboxPaths = [

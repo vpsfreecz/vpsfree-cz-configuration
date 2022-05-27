@@ -15,8 +15,6 @@ in {
     ../../../../../profiles/ct.nix
   ];
 
-  nixpkgs.overlays = import ../../../../../overlays;
-
   networking.firewall = {
     extraCommands = ''
       ### Allow access to graylog from vpn

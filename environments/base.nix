@@ -10,6 +10,8 @@ with lib;
 
   services.openssh.enable = true;
 
+  nixpkgs.overlays = import ../overlays;
+
   nix.useSandbox = true;
 
   nix.nixPath = [
