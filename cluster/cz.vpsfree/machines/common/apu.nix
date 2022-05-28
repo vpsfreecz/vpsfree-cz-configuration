@@ -1,4 +1,4 @@
-{ config, lib, pkgs, confLib, confMachine, ... }:
+{ config, lib, pkgs, confLib, confMachine, confData, ... }:
 with lib;
 let
 
@@ -75,21 +75,33 @@ cz"
     extraOptions = [ "--group crashdump" ];
   };
 
-  networking.firewall.allowedUDPPorts = [ 69 ];
-
   networking.interfaces.lte0.useDHCP = false;
 
-  networking.firewall.extraCommands = concatMapStringsSep "\n" (machine:
+  networking.firewall.extraCommands =
     let
-      alerter = confLib.findConfig {
-        cluster = config.cluster;
-        name = machine;
-      };
+      alerterRules = concatMapStringsSep "\n" (machine:
+        let
+          alerter = confLib.findConfig {
+            cluster = config.cluster;
+            name = machine;
+          };
+        in ''
+          # Allow access to sachet from ${machine}
+          iptables -A nixos-fw -p tcp --dport ${toString config.services.sachet.port} -s ${alerter.addresses.primary.address} -j nixos-fw-accept
+        ''
+      ) alerters;
+
+      tftpRules = concatMapStringsSep "\n" (net: ''
+        # Allow access from ${net.location} @ ${net.address}/${toString net.prefix}
+        iptables -A nixos-fw -p udp -s ${net.address}/${toString net.prefix} --dport 69 -j nixos-fw-accept
+      '') confData.vpsadmin.networks.management.ipv4;
     in ''
-      # Allow access to sachet from ${machine}
-      iptables -A nixos-fw -p tcp --dport ${toString config.services.sachet.port} -s ${alerter.addresses.primary.address} -j nixos-fw-accept
-    ''
-  ) alerters;
+      ### Alertmanagers to sachet
+      ${alerterRules}
+
+      ### TFTP for crashdump
+      ${tftpRules}
+    '';
 
   systemd.services.modemNet = {
     description = "modemNet";
