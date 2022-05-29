@@ -27,7 +27,8 @@
 
     images = {
       almalinux = {
-        "8" = { tags = [ "latest" "stable" ]; };
+        "8" = {};
+        "9" = { tags = [ "latest" "stable" ]; };
       };
 
       alpine = {
