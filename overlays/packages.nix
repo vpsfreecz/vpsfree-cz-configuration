@@ -8,5 +8,7 @@ self: super:
 
   sachet = super.callPackage ../packages/sachet {};
 
+  vpsf-status = super.callPackage ../packages/vpsf-status {};
+
   vpsfree-irc-bot = super.callPackage ../packages/vpsfree-irc-bot {};
 }
