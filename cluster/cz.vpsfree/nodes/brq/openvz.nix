@@ -3,7 +3,10 @@
   cluster = {
     "cz.vpsfree/nodes/brq/node1" = {
       spin = "openvz";
-      node.role = "hypervisor";
+      node = {
+        id = 210;
+        role = "hypervisor";
+      };
       host = {
         name = "node1";
         location = "brq";
@@ -16,7 +19,10 @@
 
     "cz.vpsfree/nodes/brq/node2" = {
       spin = "openvz";
-      node.role = "hypervisor";
+      node = {
+        id = 211;
+        role = "hypervisor";
+      };
       host = {
         name = "node2";
         location = "brq";
@@ -29,7 +35,10 @@
 
     "cz.vpsfree/nodes/brq/node3" = {
       spin = "openvz";
-      node.role = "hypervisor";
+      node = {
+        id = 212;
+        role = "hypervisor";
+      };
       host = {
         name = "node3";
         location = "brq";
@@ -42,7 +51,10 @@
 
     "cz.vpsfree/nodes/brq/node4" = {
       spin = "openvz";
-      node.role = "hypervisor";
+      node = {
+        id = 213;
+        role = "hypervisor";
+      };
       host = {
         name = "node4";
         location = "brq";
