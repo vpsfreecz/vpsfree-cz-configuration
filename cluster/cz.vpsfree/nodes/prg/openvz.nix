@@ -3,7 +3,10 @@
   cluster = {
     "cz.vpsfree/nodes/prg/node2" = {
       spin = "openvz";
-      node.role = "hypervisor";
+      node = {
+        id = 102;
+        role = "hypervisor";
+      };
       host = {
         name = "node2";
         location = "prg";
@@ -16,7 +19,10 @@
 
     "cz.vpsfree/nodes/prg/node3" = {
       spin = "openvz";
-      node.role = "hypervisor";
+      node = {
+        id = 103;
+        role = "hypervisor";
+      };
       host = {
         name = "node3";
         location = "prg";
@@ -29,7 +35,10 @@
 
     "cz.vpsfree/nodes/prg/node4" = {
       spin = "openvz";
-      node.role = "hypervisor";
+      node = {
+        id = 104;
+        role = "hypervisor";
+      };
       host = {
         name = "node4";
         location = "prg";
@@ -42,7 +51,10 @@
 
     "cz.vpsfree/nodes/prg/node5" = {
       spin = "openvz";
-      node.role = "hypervisor";
+      node = {
+        id = 105;
+        role = "hypervisor";
+      };
       host = {
         name = "node5";
         location = "prg";
@@ -55,7 +67,10 @@
 
     "cz.vpsfree/nodes/prg/node6" = {
       spin = "openvz";
-      node.role = "hypervisor";
+      node = {
+        id = 106;
+        role = "hypervisor";
+      };
       host = {
         name = "node6";
         location = "prg";
@@ -68,7 +83,10 @@
 
     "cz.vpsfree/nodes/prg/node12" = {
       spin = "openvz";
-      node.role = "hypervisor";
+      node = {
+        id = 113;
+        role = "hypervisor";
+      };
       host = {
         name = "node12";
         location = "prg";
@@ -81,7 +99,10 @@
 
     "cz.vpsfree/nodes/prg/node14" = {
       spin = "openvz";
-      node.role = "hypervisor";
+      node = {
+        id = 115;
+        role = "hypervisor";
+      };
       host = {
         name = "node14";
         location = "prg";
@@ -94,7 +115,10 @@
 
     "cz.vpsfree/nodes/prg/node17" = {
       spin = "openvz";
-      node.role = "hypervisor";
+      node = {
+        id = 118;
+        role = "hypervisor";
+      };
       host = {
         name = "node17";
         location = "prg";
