@@ -22,7 +22,9 @@
 
     scrub = {
       enable = true;
-      interval = "0 4 1 */2 *";
+      startIntervals = [ "0 23 1 */2 *" ];
+      pauseIntervals = [ "0 7 * * *" ];
+      resumeIntervals = [ "1 23 * * *" ];
     };
   };
 }
