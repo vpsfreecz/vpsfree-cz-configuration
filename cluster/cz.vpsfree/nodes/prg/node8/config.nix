@@ -2,6 +2,7 @@
 {
   imports = [
     ../common.nix
+    ../../common/tank-hdd.nix
   ];
 
   boot.zfs.pools = {
