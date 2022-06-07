@@ -24,7 +24,9 @@
 
       scrub = {
         enable = true;
-        interval = "0 4 */30 * *";
+        startIntervals = [ "0 7 */30 * *" ];
+        pauseIntervals = [ "0 1 * * *" ];
+        resumeIntervals = [ "0 7 * * *" ];
       };
 
       layout = [

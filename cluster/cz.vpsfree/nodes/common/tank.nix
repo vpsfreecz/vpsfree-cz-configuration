@@ -25,8 +25,8 @@
 
       scrub = {
         enable = true;
-        interval = "0 4 1-7 * *";
-        command = ''[ "$(LC_ALL=C date '+\%a')" = "Sat" ] && zpool scrub tank'';
+        startIntervals = [ "0 4 1-7 * *" ];
+        startCommand = ''[ "$(LC_ALL=C date '+\%a')" = "Sat" ] && scrubctl start tank'';
       };
     };
   };
