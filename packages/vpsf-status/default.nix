@@ -2,14 +2,14 @@
 let
   owner = "vpsfreecz";
   repo = "vpsf-status";
-  rev = "ceb9fde3778ec6f7b1c4b90d67d8722a6b125437";
+  rev = "634547790c4e2a70fa2d0aeec6ca61a6d71d7cf4";
 in buildGo117Module rec {
   name = "vpsf-status-${version}";
   version = lib.substring 0 7 rev;
 
   src = fetchFromGitHub {
     inherit owner repo rev;
-    sha256 = "sha256:0q10ybjrqmy712fack66zbc39bhknircq27vdrpjl0wchmfnyadz";
+    sha256 = "sha256:0jhggilrzgl26zpy9jhdk2ir4c7rwydnvlwcqj83cdnlhnp96bn3";
   };
 
   vendorSha256 = "sha256:1is1g69r3xpipcy1pk5dwjxw5ywyk2miqr06smg2hp89slkqswba";
