@@ -75,8 +75,8 @@
       };
 
       opensuse = {
-        "leap-15.2" = {};
-        "leap-15.3" = { tags = [ "latest" "stable" ]; };
+        "leap-15.3" = {};
+        "leap-15.4" = { tags = [ "latest" "stable" ]; };
         "tumbleweed" = { tags = [ "latest-tumbleweed" ]; };
       };
 
