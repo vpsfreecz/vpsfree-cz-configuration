@@ -539,6 +539,7 @@ in {
           ./rules/vpsfree-web.nix
           ./rules/systemd.nix
         ]) ++ (map (v: import v { inherit lib; }) [
+          ./rules/test.nix
           ./rules/vpsadmin.nix
         ]));
       };
