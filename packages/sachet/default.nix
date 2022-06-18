@@ -2,7 +2,7 @@
 let
   owner = "vpsfreecz";
   repo = "sachet";
-  rev = "d138f07bba0863fa9ccfbc93327fbd625a1917d3";
+  rev = "670ac3c7dfe7aa3152525a12959abe0066d578be";
 in buildGo117Package rec {
   name = "sachet-${version}";
   # version = lib.substring 0 7 rev;
@@ -12,7 +12,7 @@ in buildGo117Package rec {
 
   src = fetchFromGitHub {
     inherit owner repo rev;
-    sha256 = "sha256:1z5rv7c0yrg3kcyzsqkn9da2yw04ms527rsn15x24psp4fzb4h1q";
+    sha256 = "sha256-BOxdIhJySYywXhOdOzXIvpdugQlIjcpJSBrOcFRmrl8=";
   };
 
   buildFlags = "--tags release";
