@@ -11,4 +11,6 @@
     rake.enableDefaultTasks = true;
     # rake.tasks.payments-process.timer.enable = lib.mkForce false;
   };
+
+  system.stateVersion = "22.05";
 }

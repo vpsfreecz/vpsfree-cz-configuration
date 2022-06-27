@@ -27,4 +27,6 @@ in {
     domain = "vpsadmin-dev.vpsfree.cz";
     errorReporting = "E_ALL";
   };
+
+  system.stateVersion = "22.05";
 }
