@@ -30,4 +30,6 @@ in {
       org_name = "vpsFree.cz";
     };
   };
+
+  system.stateVersion = "22.05";
 }

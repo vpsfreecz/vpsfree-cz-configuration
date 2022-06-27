@@ -17,4 +17,6 @@
       "cz.vpsfree/containers/prg/int.alerts2"
     ];
   };
+
+  system.stateVersion = "22.05";
 }

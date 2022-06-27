@@ -23,4 +23,6 @@
       "cz.vpsfree/containers/prg/int.mon1"
     ];
   };
+
+  system.stateVersion = "22.05";
 }

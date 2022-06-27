@@ -24,4 +24,6 @@
       ContactInfo = "martin.myska@vpsfree.cz";
     };
   };
+
+  system.stateVersion = "22.05";
 }

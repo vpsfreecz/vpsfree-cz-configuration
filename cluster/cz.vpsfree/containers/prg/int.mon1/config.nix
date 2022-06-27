@@ -19,4 +19,6 @@
       "cz.vpsfree/containers/prg/int.grafana"
     ];
   };
+
+  system.stateVersion = "22.05";
 }
