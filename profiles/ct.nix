@@ -12,6 +12,6 @@
 
   security.acme = {
     acceptTerms = true;
-    email = "podpora@vpsfree.cz";
+    defaults.email = "podpora@vpsfree.cz";
   };
 }
