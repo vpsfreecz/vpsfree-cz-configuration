@@ -3,7 +3,7 @@
   imports = [
     ./hardware.nix
     ../../common/apu.nix
-    ../../common/vpsf-status.nix
+    ../../../../../configs/vpsf-status.nix
     ../../../../../environments/base.nix
   ];
 
