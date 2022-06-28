@@ -9,7 +9,7 @@
 
   services.udev.extraRules = ''
     SUBSYSTEM=="tty", ATTRS{serial}=="0001B337", OWNER="snajpa", GROUP="tty-vpsf-net", SYMLINK+="ttyUSB-prg-4-7-edg1-s4048"
-    SUBSYSTEM=="tty", ATTRS{serial}=="0001C720", OWNER="snajpa", GROUP="tty-vpsf-net", SYMLINK+="ttyUSB-prg-4-7-tor1-s4048"
+    SUBSYSTEM=="tty", ATTRS{serial}=="001333D5", OWNER="snajpa", GROUP="tty-vpsf-net", SYMLINK+="ttyUSB-prg-4-7-tor1-s4048"
     SUBSYSTEM=="tty", ATTRS{serial}=="00013C0F", OWNER="snajpa", GROUP="tty-vpsf-net", SYMLINK+="ttyUSB-prg-4-7-tor2-s4048"
     SUBSYSTEM=="tty", ATTRS{serial}=="000C5978", OWNER="snajpa", GROUP="tty-vpsf-net", SYMLINK+="ttyUSB-prg-14-7-edg2-s4048"
     SUBSYSTEM=="tty", ATTRS{serial}=="000CBF24", OWNER="snajpa", GROUP="tty-vpsf-net", SYMLINK+="ttyUSB-prg-14-7-tor1-s4048"
