@@ -7,7 +7,23 @@ let
     echo Y > /sys/class/net/lte0/qmi/raw_ip
     ip link set up lte0
     qmicli --device=/dev/cdc-wdm0 --device-open-proxy --wds-start-network="ip-type=4,apn=gprsa.public" --client-no-release-cid
-    udhcpc -q -f -n -i lte0
+
+    connected=n
+
+    for i in {1..10} ; do
+      if udhcpc -q -f -n -i lte0 ; then
+        connected=y
+        break
+      fi
+
+      sleep 10
+    done
+
+    if [[ "$connected" == "n" ]] ; then
+      echo "Unable to configure the modem"
+      exit 1
+    fi
+
     echo "nameserver 8.8.8.8" >> /etc/resolv.conf
   '';
 
