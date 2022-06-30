@@ -1,11 +1,23 @@
-{ config, pkgs, lib, confData, confMachine, swpins, ... }:
+{ config, pkgs, lib, confLib, confData, confMachine, swpins, ... }:
 with lib;
-{
+let
+  ns1Int = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/prg/int.ns1";
+  };
+
+  ns2Int = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/prg/int.ns2";
+  };
+
+  internalDnsAddresses = map (m: m.addresses.primary.address) [ ns1Int ns2Int ];
+in {
   time.timeZone = "Europe/Amsterdam";
 
   networking = {
     search = ["vpsfree.cz" "prg.vpsfree.cz" "base48.cz"];
-    nameservers = [ "172.16.9.90" "1.1.1.1" ];
+    nameservers = internalDnsAddresses ++ [ "1.1.1.1" ];
   };
 
   services.openssh.enable = true;
