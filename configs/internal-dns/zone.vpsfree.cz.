@@ -1,0 +1,231 @@
+$ORIGIN vpsfree.cz.
+$TTL 1H                  ; default expiration time of all resource records without their own TTL value
+@  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
+              2022063001 ; serial number of this zone file
+              1D         ; slave refresh (1 day)
+              2H         ; slave retry time in case of a problem (2 hours)
+              4W         ; slave expiration time (4 weeks)
+              1H         ; maximum caching time in case of failed lookups (1 hour)
+              )
+
+
+vpsfree.cz.                    IN   NS      ns1.int.prg.vpsfree.cz.
+vpsfree.cz.                    IN   NS      ns2.int.prg.vpsfree.cz.
+vpsfree.cz.                    IN   A       37.205.9.80
+vpsfree.cz.                    IN   TXT     "v=spf1 a mx ptr ip4:83.167.228.42 ip6:2a01:430:17:1::33 a:vpsfree.cz a:mx1.vpsfree.cz a:mx2.vpsfree.cz a:prasiatko.vpsfree.cz a:vpsadmin.vpsfree.cz a:lists.vpsfree.cz a:mail.snajpa.net -all"
+ns1                            IN   A       77.93.223.251
+ns1                            IN   AAAA    2a01:430:17:1::ffff:179
+ns2                            IN   A       37.205.11.51
+ns2                            IN   AAAA    2a00:cb40:2::1:51
+ns1.int.prg                    IN   A       172.16.9.90
+ns2.int.prg                    IN   A       172.16.9.190
+
+; Misc
+blog                           IN   CNAME   proxy.vpsfree.cz.
+caladan                        IN   A       77.93.223.70
+conference                     IN   CNAME   prasiatko.vpsfree.cz.
+dev                            IN   CNAME   prasiatko.vpsfree.cz.
+flow                           IN   A       172.16.8.8
+foto                           IN   CNAME   kb
+im                             IN   A       37.205.9.40
+kb                             IN   CNAME   proxy.vpsfree.cz.
+kb.int                         IN   A       37.205.10.96
+lists                          IN   A       37.205.9.80
+lists                          IN   MX      10 mx1.vpsfree.cz.
+mail                           IN   CNAME   mx1.vpsfree.cz.
+mirror                         IN   CNAME   proxy.vpsfree.cz.
+mirror.int                     IN   A       185.8.165.222
+mx1                            IN   A       83.167.228.42
+mx1                            IN   AAAA    2a01:430:17:1::33
+mx2                            IN   A       37.205.11.114
+mx2                            IN   AAAA    2a00:cb40:2::1:95
+mxfilter                       IN   A       37.205.10.110
+mxproxy                        IN   A       37.205.9.45
+new                            IN   A       83.167.228.42
+paste                          IN   CNAME   proxy.vpsfree.cz.
+piwik                          IN   CNAME   prasiatko.vpsfree.cz.
+prasiatko                      IN   CNAME   proxy.vpsfree.cz.
+prasiatko.int                  IN   A       83.167.228.42
+proxy                          IN   A       37.205.9.80
+proxy                          IN   AAAA    2a01:430:17:1::ffff:149
+proxy.prg                      IN   A       37.205.14.61
+proxy.prg                      IN   AAAA    2a03:3b40:fe:35::1
+repo                           IN   A       37.205.10.38
+rt                             IN   CNAME   proxy.vpsfree.cz.
+rubygems                       IN   CNAME   proxy.prg.vpsfree.cz.
+rubygems.int                   IN   A       172.16.4.7
+tor-relay                      IN   AAAA    2a01:430:17:1::ffff:1281
+tor-relay                      IN   A       37.205.8.191
+tsdb                           IN   A       172.16.0.9
+utils                          IN   CNAME   proxy.vpsfree.cz.
+utils.int                      IN   A       37.205.8.141
+vpn                            IN   CNAME   vpn01.prg
+vpn01.prg                      IN   A       77.93.223.7
+vpn-mobile                     IN   A       77.93.223.8
+vpsfbot                        IN   CNAME   proxy.prg.vpsfree.cz.
+vpsfbot-dev                    IN   CNAME   im.vpsfree.cz.
+vpsfbot.int                    IN   A       172.16.4.8
+wiki                           IN   A       77.93.223.123
+www                            IN   CNAME   prasiatko.vpsfree.cz.
+
+; Management
+node1-mgmt.prg                 IN   A       172.16.101.103
+node2-mgmt.prg                 IN   A       172.16.101.102
+node3-mgmt.prg                 IN   A       172.16.101.30
+node4-mgmt.prg                 IN   A       172.16.101.104
+node5-mgmt.prg                 IN   A       172.16.101.105
+node6-mgmt.prg                 IN   A       172.16.101.106
+node7-mgmt.prg                 IN   A       172.16.101.28
+node8-mgmt.prg                 IN   A       172.16.101.29
+node9-mgmt.prg                 IN   A       172.16.101.109
+node10-mgmt.prg                IN   A       172.16.101.110
+node11-mgmt.prg                IN   A       172.16.101.111
+node12-mgmt.prg                IN   A       172.16.101.112
+node13-mgmt.prg                IN   A       172.16.101.113
+node14-mgmt.prg                IN   A       172.16.101.114
+node15-mgmt.prg                IN   A       172.16.101.115
+node16-mgmt.prg                IN   A       172.16.101.116
+node17-mgmt.prg                IN   A       172.16.101.117
+node18-mgmt.prg                IN   A       172.16.101.118
+node19-mgmt.prg                IN   A       172.16.101.120
+node20-mgmt.prg                IN   A       172.16.101.119
+node21-mgmt.prg                IN   A       172.16.101.121
+node22-mgmt.prg                IN   A       172.16.101.122
+backuper-mgmt.prg              IN   A       172.16.101.5
+nasbox-mgmt.prg                IN   A       172.16.101.6
+pxe-mgmt.prg                   IN   A       172.16.101.254
+build-old-mgmt.prg             IN   A       172.16.101.253
+node1-mgmt.pgnd                IN   A       172.16.101.101
+node1-mgmt.stg                 IN   A       172.16.101.44
+node1-mgmt.brq                 IN   A       172.19.101.20
+node2-mgmt.brq                 IN   A       172.19.101.21
+node3-mgmt.brq                 IN   A       172.19.101.22
+node4-mgmt.brq                 IN   A       172.19.101.23
+node5-mgmt.brq                 IN   A       172.19.101.24
+
+; Nodes
+node1.prg                      IN   A       172.16.0.10
+node2.prg                      IN   A       172.16.0.11
+node3.prg                      IN   A       172.16.0.12
+node4.prg                      IN   A       172.16.0.13
+node5.prg                      IN   A       172.16.0.14
+node6.prg                      IN   A       172.16.0.15
+node7.prg                      IN   A       172.16.0.17
+node8.prg                      IN   A       172.16.0.18
+node9.prg                      IN   A       172.16.0.19
+node10.prg                     IN   A       172.16.0.20
+node11.prg                     IN   A       172.16.0.21
+node12.prg                     IN   A       172.16.0.22
+node13.prg                     IN   A       172.16.0.23
+node14.prg                     IN   A       172.16.0.24
+node15.prg                     IN   A       172.16.0.25
+node16.prg                     IN   A       172.16.0.26
+node17.prg                     IN   A       172.16.0.27
+node18.prg                     IN   A       172.16.0.28
+node19.prg                     IN   A       172.16.0.29
+node20.prg                     IN   A       172.16.0.30
+node21.prg                     IN   A       172.16.0.31
+node22.prg                     IN   A       172.16.0.32
+backuper.prg                   IN   A       172.16.0.5
+nasbox.prg                     IN   A       172.16.0.6
+node1.pgnd                     IN   A       172.16.2.10
+node1.brq                      IN   A       172.19.0.10
+node2.brq                      IN   A       172.19.0.11
+node3.brq                      IN   A       172.19.0.12
+node4.brq                      IN   A       172.19.0.13
+node5.brq                      IN   A       172.19.0.14
+node1.stg                      IN   A       172.16.0.66
+
+; Machines
+apu.int.prg                    IN   A       172.16.254.254
+apu.int.brq                    IN   A       172.19.254.254
+build                          IN   A       172.16.106.5
+build-old                      IN   A       172.16.254.4
+devstation-mgmt.prg            IN   A       172.16.101.9
+devstation.prg                 IN   A       172.16.0.9
+pxe                            IN   A       172.16.254.5
+snajpaws                       IN   A       172.16.107.125
+
+; vpsAdmin
+db.int                         IN   A       172.16.9.127
+api1.int                       IN   A       172.16.9.128
+api2.int                       IN   A       172.16.9.129
+webui1.int                     IN   A       172.16.9.130
+webui2.int                     IN   A       172.16.9.131
+webui-dev.int                  IN   A       172.16.9.138
+redis1.int                     IN   A       172.16.9.132
+console                        IN   CNAME   proxy.prg.vpsfree.cz.
+console-admin                  IN   CNAME   proxy.prg.vpsfree.cz.
+api                            IN   CNAME   proxy.prg.vpsfree.cz.
+api-admin                      IN   CNAME   proxy.prg.vpsfree.cz.
+download                       IN   CNAME   proxy.prg.vpsfree.cz.
+download-admin                 IN   CNAME   proxy.prg.vpsfree.cz.
+vpsadmin                       IN   CNAME   proxy.prg.vpsfree.cz.
+vpsadmin-admin                 IN   CNAME   proxy.prg.vpsfree.cz.
+vpsadmin-dev                   IN   CNAME   proxy.prg.vpsfree.cz.
+vpsadmin-db                    IN   A       37.205.10.1
+vpsadmin.int                   IN   A       37.205.10.1
+
+; Monitoring
+log.prg                        IN   CNAME   proxy.prg.vpsfree.cz.
+mon.prg                        IN   CNAME   proxy.prg.vpsfree.cz.
+alerts.prg                     IN   CNAME   proxy.prg.vpsfree.cz.
+mon1.prg                       IN   CNAME   proxy.prg.vpsfree.cz.
+alerts1.prg                    IN   CNAME   proxy.prg.vpsfree.cz.
+mon2.prg                       IN   CNAME   proxy.prg.vpsfree.cz.
+alerts2.prg                    IN   CNAME   proxy.prg.vpsfree.cz.
+mon.int.prg                    IN   CNAME   mon1.int.prg.vpsfree.cz.
+alerts.int.prg                 IN   CNAME   alerts1.int.prg.vpsfree.cz.
+mon1.int.prg                   IN   A       172.16.4.10
+alerts1.int.prg                IN   A       172.16.4.11
+mon2.int.prg                   IN   A       172.16.4.18
+alerts2.int.prg                IN   A       172.16.4.19
+grafana.prg                    IN   CNAME   proxy.prg.vpsfree.cz.
+grafana.int.prg                IN   A       172.16.4.12
+log.int.prg                    IN   A       172.16.4.1
+ping                           IN   A       37.205.14.208
+
+; Meet
+pad                            IN   A       37.205.14.208
+conference.meet                IN   A       37.205.14.30
+conference.meet                IN   AAAA    2a03:3b40:fe:1e::1
+jicofo.meet                    IN   A       37.205.14.91
+jicofo.meet                    IN   AAAA    2a03:3b40:fe:40::1
+jvb1.meet                      IN   A       37.205.14.146
+jvb1.meet                      IN   AAAA    2a03:3b40:fe:59::1
+turn.meet                      IN   A       37.205.14.152
+turn.meet                      IN   AAAA    2a03:3b40:fe:76::1
+meet-dev                       IN   A       37.205.14.113
+meet                           IN   CNAME   meet-dev.vpsfree.cz.
+jitsi-videobridge.meet         IN   A       37.205.14.168
+jitsi-videobridge1.meet        IN   CNAME   jitsi-videobridge.meet.vpsfree.cz.
+jitsi-videobridge2.meet        IN   A       37.205.14.153
+jitsi-videobridge3.meet        IN   A       37.205.12.167
+jitsi-videobridge4.meet        IN   A       37.205.12.173
+jitsi-videobridge5.meet        IN   A       37.205.12.178
+jitsi-videobridge6.meet        IN   A       37.205.12.180
+jitsi-videobridge7.meet        IN   A       37.205.14.129
+jitsi-videobridge8.meet        IN   A       37.205.14.154
+jitsi-videobridge9.meet        IN   A       37.205.14.3
+jitsi-videobridge10.meet       IN   A       83.167.228.190
+jitsi-videobridge11.meet       IN   A       83.167.228.189
+jitsi-videobridge12.meet       IN   A       37.205.14.235
+jitsi-videobridge13.meet       IN   A       83.167.228.187
+jitsi-videobridge14.meet       IN   A       83.167.228.179
+jitsi-videobridge15.meet       IN   A       83.167.228.178
+jitsi-videobridge16.meet       IN   A       185.8.164.60
+jvb1                           IN   A       37.205.14.138
+jvb2                           IN   A       37.205.14.150
+jvb3                           IN   A       37.205.14.163
+jvb4                           IN   A       37.205.14.178
+jvb5                           IN   A       37.205.14.182
+jvb6                           IN   A       37.205.14.207
+jvb7                           IN   A       37.205.14.214
+jvb8                           IN   A       37.205.14.219
+jvb9                           IN   A       37.205.14.231
+jvb10                          IN   A       37.205.14.250
+jvb11                          IN   A       37.205.13.90
+
+; Playground
+$GENERATE 1-127 $.164.8.185.pgnd    IN    A    185.8.164.$
+$GENERATE 1-127 *.$.164.8.185.pgnd  IN    A    185.8.164.$
