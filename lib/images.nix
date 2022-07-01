@@ -99,7 +99,10 @@ let
             swpinsInfo = {};
           };
         })
-      ] ++ modules;
+      ] ++ (import <confctl/nix/modules/module-list.nix>).nixos
+        ++ [ ../modules/cluster ]
+        ++ (import ../cluster/module-list.nix)
+        ++ modules;
     }).config.system.build;
 
   nixosNetboot = {modules ? []}:
