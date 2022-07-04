@@ -2,17 +2,125 @@
 with lib;
 let
   cfg = confMachine;
+  birdCfg = cfg.osNode.networking.bird;
 
-  useBird = cfg.osNode.networking.bird.enable;
-  isBGP = useBird && cfg.osNode.networking.bird.routingProtocol == "bgp";
-  isOSPF = useBird && cfg.osNode.networking.bird.routingProtocol == "ospf";
+  useBird = birdCfg.enable;
+  isBGP = useBird && birdCfg.routingProtocol == "bgp";
+  isOSPF = useBird && birdCfg.routingProtocol == "ospf";
 
-  mapEachIp = fn: addresses:
-    flatten (mapAttrsToList (ifname: ips:
-      (map (addr: fn ifname 4 addr) ips.v4)
-      ++
-      (map (addr: fn ifname 6 addr) ips.v6)
-    ) addresses);
+  kernelScanTime = if isBGP then "10" else "2";
+  deviceScanTime = if isBGP then "1" else "2";
+
+  concatNl = concatStringsSep "\n";
+
+  birdConfig = ''
+    router id ${birdCfg.routerId};
+    log "${birdCfg.logFile}" ${birdCfg.logVerbosity};
+
+    protocol kernel kernel4 {
+      persist;
+      learn;
+      scan time ${kernelScanTime};
+
+      ipv4 {
+        export all;
+        import filter {
+          if (${importNetworkFilter 4})
+             ${optionalString isBGP "|| (${importInterfaceFilter 4})"}
+             ${optionalString (cfg.osNode.networking.virtIP != null) ''|| (ifname = "virtip")''}
+          then
+            accept;
+          else
+            reject;
+        };
+      };
+    }
+
+    protocol kernel kernel6 {
+      persist;
+      learn;
+      scan time ${kernelScanTime};
+
+      ipv6 {
+        export all;
+        import filter {
+          if (${importNetworkFilter 6})
+             ${optionalString isBGP "|| (${importInterfaceFilter 6})"}
+             ${optionalString (cfg.osNode.networking.virtIP != null) ''|| (ifname = "virtip")''}
+          then
+            accept;
+          else
+            reject;
+        };
+      };
+    }
+
+    protocol device {
+      scan time ${deviceScanTime};
+    }
+
+    ${optionalString isBGP ''
+    protocol direct {
+      ipv4;
+      ipv6;
+      interface "*";
+    }
+
+    ${bgpFragment "ipv4" birdCfg.bgpNeighbours.v4 0}
+
+    ${bgpFragment "ipv6" birdCfg.bgpNeighbours.v6 (length birdCfg.bgpNeighbours.v4)}
+
+    protocol bfd {
+      interface "teng*" {
+        min rx interval 10 ms;
+        min tx interval 100 ms;
+        idle tx interval 1000 ms;
+      };
+    }
+    ''}
+
+    ${optionalString isOSPF ''
+    ${ospfFragment "ipv4" 4}
+    ${ospfFragment "ipv6" 6}
+    ''}
+
+    ${birdCfg.extraConfig}
+  '';
+
+  bgpFragment = proto: neighbours: startIndex: concatNl (imap0 (i: neighbour: ''
+    protocol bgp bgp${toString (startIndex + i)} {
+      local as ${toString birdCfg.as};
+      neighbor ${neighbour.address} as ${toString neighbour.as};
+
+      ${proto} {
+        export all;
+        import all;
+      };
+
+      graceful restart;
+    }
+  '') neighbours);
+
+  ospfFragment = proto: i: ''
+    protocol ospf ${if proto == "ipv4" then "v2" else "v3"} ospf${toString i} {
+      area 0.0.0.0 {
+        networks {
+          ${concatMapStringsSep "\n      " (v: "${v};") confData.vpsadmin.networks.ospf.${confMachine.host.location}.${proto}}
+        };
+
+        interface "bond0" {
+        };
+
+        interface "veth*" {
+        };
+      };
+
+      ${proto} {
+        import all;
+        export all;
+      };
+    }
+  '';
 
   allNetworks = confData.vpsadmin.networks.containers;
 
@@ -34,123 +142,18 @@ let
     in ''
       (${ifconds}) && net.len = ${toString netLen.${"ipv${toString ipVer}"}}
     '');
-
-  makeBirdBgp = neighbours: listToAttrs (imap1 (i: neigh: nameValuePair "bgp${toString i}" {
-    as = cfg.osNode.networking.bird.as;
-    neighbor = { "${neigh.address}" = neigh.as; };
-    extraConfig = ''
-      export all;
-      import all;
-      graceful restart;
-    '';
-  }) neighbours);
 in {
   config = mkIf (confMachine.osNode != null) {
-    networking.bird = mkIf useBird {
+    services.bird2 = mkIf useBird {
       enable = true;
-      routerId = cfg.osNode.networking.bird.routerId;
 
-      protocol.kernel = {
-        learn = true;
-        persist = true;
-        scanTime = mkIf isOSPF 2;
-        extraConfig = ''
-          export all;
-          import filter {
-            if (${importNetworkFilter 4})
-               ${optionalString isBGP "|| (${importInterfaceFilter 4})"}
-               ${optionalString (cfg.osNode.networking.virtIP != null) ''|| (ifname = "virtip")''}
-            then
-              accept;
-            else
-              reject;
-          };
-        '';
-      };
+      preStartCommands = ''
+        touch ${birdCfg.logFile}
+        chown ${config.services.bird2.user}:${config.services.bird2.group} ${birdCfg.logFile}
+        chmod 660 ${birdCfg.logFile}
+      '';
 
-      protocol.device = {
-        scanTime = mkIf isOSPF 2;
-      };
-
-      protocol.direct.enable = isBGP;
-
-      protocol.bfd = mkIf isBGP {
-        enable = cfg.osNode.networking.bird.bfdInterfaces != "";
-        interfaces."${cfg.osNode.networking.bird.bfdInterfaces}" = {};
-      };
-
-      protocol.bgp = mkIf isBGP (makeBirdBgp cfg.osNode.networking.bird.bgpNeighbours.v4);
-
-      protocol.ospf = mkIf isOSPF {
-        ospf1 = {
-          extraConfig = ''
-            import all;
-            export all;
-          '';
-
-          area."0.0.0.0" = {
-            networks = confData.vpsadmin.networks.ospf.${confMachine.host.location}.ipv4;
-
-            interface = {
-              "bond0" = {};
-              "veth*" = {};
-            };
-          };
-        };
-      };
-    };
-
-    networking.bird6 = mkIf useBird {
-      enable = true;
-      routerId = cfg.osNode.networking.bird.routerId;
-
-      protocol.kernel = {
-        learn = true;
-        persist = true;
-        scanTime = mkIf isOSPF 2;
-        extraConfig = ''
-          export all;
-          import filter {
-            if (${importNetworkFilter 6})
-               ${optionalString isBGP "|| (${importInterfaceFilter 6})"}
-            then
-              accept;
-            else
-              reject;
-          };
-        '';
-      };
-
-      protocol.device = {
-        scanTime = mkIf isOSPF 2;
-      };
-
-      protocol.direct.enable = isBGP;
-
-      protocol.bfd = mkIf isBGP {
-        enable = cfg.osNode.networking.bird.bfdInterfaces != "";
-        interfaces."${cfg.osNode.networking.bird.bfdInterfaces}" = {};
-      };
-
-      protocol.bgp = mkIf isBGP (makeBirdBgp cfg.osNode.networking.bird.bgpNeighbours.v6);
-
-      protocol.ospf = mkIf isOSPF {
-        ospf1 = {
-          extraConfig = ''
-            import all;
-            export all;
-          '';
-
-          area."0.0.0.0" = {
-            networks = confData.vpsadmin.networks.ospf.${confMachine.host.location}.ipv6;
-
-            interface = {
-              "bond0" = {};
-              "veth*" = {};
-            };
-          };
-        };
-      };
+      config = birdConfig;
     };
 
     networking.firewall.extraCommands =

@@ -36,6 +36,16 @@ let
             description = "Enable BGP routing using bird";
           };
 
+          logFile = mkOption {
+            type = types.str;
+            default = "/var/log/bird.log";
+          };
+
+          logVerbosity = mkOption {
+            type = types.str;
+            default = "all";
+          };
+
           as = mkOption {
             type = types.nullOr types.ints.positive;
             default = null;
@@ -72,6 +82,16 @@ let
             description = "BFD interfaces match";
             example = "teng*";
             default = "teng*";
+          };
+
+          extraConfig = mkOption {
+            type = types.lines;
+            default = "";
+            description = ''
+              Extra lines appended to the BIRD Internet Routing Daemon
+              configuration file.
+              <link xlink:href='http://bird.network.cz/'/>
+            '';
           };
         };
 
