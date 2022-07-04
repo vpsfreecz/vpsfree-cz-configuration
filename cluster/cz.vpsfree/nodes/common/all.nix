@@ -2,8 +2,8 @@
 {
   imports = [
     <vpsadmin/nixos/modules/vpsadminos-modules.nix>
-    ../../../../modules/configs/node.nix
     ../../../../environments/base.nix
+    ../../../../configs/node
     ../../../../configs/munin-node.nix
   ];
 
