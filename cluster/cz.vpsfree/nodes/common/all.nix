@@ -50,7 +50,6 @@
     dstat
     strace
 
-    wireguard
     wireguard-tools
   ];
 
