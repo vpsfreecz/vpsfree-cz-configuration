@@ -1,17 +1,17 @@
 { config, pkgs, lib, confLib, confData, confMachine, swpins, ... }:
 with lib;
 let
-  ns1Int = confLib.findConfig {
+  ns1IntPrg = confLib.findConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/int.ns1";
   };
 
-  ns2Int = confLib.findConfig {
+  ns1IntBrq = confLib.findConfig {
     cluster = config.cluster;
-    name = "cz.vpsfree/containers/prg/int.ns2";
+    name = "cz.vpsfree/containers/brq/int.ns1";
   };
 
-  internalDnsAddresses = map (m: m.addresses.primary.address) [ ns1Int ns2Int ];
+  internalDnsAddresses = map (m: m.addresses.primary.address) [ ns1IntPrg ns1IntBrq ];
 in {
   time.timeZone = "Europe/Amsterdam";
 
