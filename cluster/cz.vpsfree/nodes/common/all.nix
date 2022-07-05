@@ -24,7 +24,10 @@
     "net.ipv6.neigh.default.gc_thresh3" = 16384;
   };
 
-  boot.extraModprobeConfig = "options zfs zfs_arc_min=34359738368";
+  boot.extraModprobeConfig = ''
+    options zfs zfs_arc_min=34359738368
+    options ixgbe allow_unsupported_sfp=1
+  '';
 
   vpsadminos.nix = true;
   environment.systemPackages = with pkgs; [
