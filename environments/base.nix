@@ -11,7 +11,17 @@ let
     name = "cz.vpsfree/containers/brq/int.ns1";
   };
 
-  internalDnsAddresses = map (m: m.addresses.primary.address) [ ns1IntPrg ns1IntBrq ];
+  defaultInternalDns = [ ns1IntPrg ns1IntBrq ];
+
+  internalDns =
+    if isNull confMachine then
+      defaultInternalDns
+    else if confMachine.host.location == "brq" then
+      [ ns1IntBrq ns1IntPrg ]
+    else
+      defaultInternalDns;
+
+  internalDnsAddresses = map (m: m.addresses.primary.address) internalDns;
 in {
   time.timeZone = "Europe/Amsterdam";
 
