@@ -6,8 +6,6 @@ let
     name = "cz.vpsfree/containers/prg/proxy";
   };
 
-  mntLists = "/mnt/lists";
-
   mailingLists = [ "community" "news" "outage" ];
 
   getUid = instance:
@@ -30,26 +28,6 @@ in {
     ../../../../environments/base.nix
     ../../../../profiles/ct.nix
   ];
-
-  # Mount mailing list archives so that the bot can locate messages
-  # Note that this requires that root's public key is authorized on prasiatko
-  boot.postBootCommands = concatMapStringsSep "\n" (name: "mkdir -p ${mntLists}/${name}-list") mailingLists;
-
-  system.fsPackages = with pkgs; [ sshfs ];
-
-  fileSystems = listToAttrs (map (name: nameValuePair "${mntLists}/${name}-list" {
-    device = "vpsfbot@prasiatko.int.vpsfree.cz:/var/lib/mailman/archives/private/${name}-list";
-    fsType = "fuse.sshfs";
-    options = [
-      "defaults"
-      "_netdev"
-      "uid=${toString botUid}"
-      "gid=${toString botGid}"
-      "allow_other"
-      "reconnect"
-      "ro"
-    ];
-  }) mailingLists);
 
   networking.firewall.extraCommands = ''
     # Allow access from im.vpsfree.cz
@@ -85,7 +63,6 @@ in {
         archive_dst = archiveDir;
 
         mailing_lists = {
-          archive_dir = mntLists;
           channels = [
             "#vpsfree"
           ];
