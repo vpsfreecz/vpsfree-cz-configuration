@@ -81,7 +81,8 @@
       };
 
       rocky = {
-        "8" = { tags = [ "latest" "stable" ]; };
+        "8" = {};
+        "9" = { tags = [ "latest" "stable" ]; };
       };
 
       slackware = {
