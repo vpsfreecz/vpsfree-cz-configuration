@@ -3,6 +3,8 @@
   imports = [
     ../../../../environments/base.nix
     ../../../../environments/deploy.nix
+
+    <vpsadminos/os/modules/services/misc/build-vpsadminos-container-image-repository/nixos.nix>
   ];
   boot.loader.grub = {
     enable = true;
@@ -70,6 +72,22 @@
     nrBuildUsers = 128;
     binaryCaches = [ "https://cache.vpsadminos.org" ];
     binaryCachePublicKeys = [ "cache.vpsadminos.org:wpIJlNZQIhS+0gFf1U3MC9sLZdLW3sh5qakOWGDoDrE=" ];
+  };
+
+  services.build-vpsadminos-container-image-repository.vpsadminos = {
+    enable = true;
+    osVm = {
+      memory = 10240;
+      cpus = 16;
+      cpu.cores = 16;
+      disks = [
+        { type = "file"; device = "sda.img"; size = "60G"; }
+      ];
+    };
+    postRunCommands = ''
+      ${pkgs.rsync}/bin/rsync -av --delete "${config.services.build-vpsadminos-container-image-repository.vpsadminos.repositoryDirectory}/" images.int.vpsadminos.org:/srv/images/
+    '';
+    systemd.timer.enable = true;
   };
 
   system.stateVersion = "22.05";
