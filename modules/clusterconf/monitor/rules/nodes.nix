@@ -56,12 +56,31 @@
       }
 
       {
-        alert = "HypervisorCritCpuLoad";
-        expr = ''100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
+        alert = "HypervisorCritOsCpuLoad";
+        expr = ''100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",os="vpsadminos"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
         labels = {
           alertclass = "cpuload";
           severity = "critical";
+        };
+        annotations = {
+          summary = "Critical CPU load (instance {{ $labels.instance }})";
+          description = ''
+            CPU load is > 90%
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "HypervisorCritVzCpuLoad";
+        expr = ''100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",os="openvz"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
+        for = "10m";
+        labels = {
+          alertclass = "cpuload";
+          severity = "warning";
         };
         annotations = {
           summary = "Critical CPU load (instance {{ $labels.instance }})";
