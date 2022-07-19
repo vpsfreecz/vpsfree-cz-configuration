@@ -3,7 +3,6 @@
   imports = [
     ../../../../environments/base.nix
     ../../../../environments/deploy.nix
-    ../../../../configs/image-repository.nix
   ];
 
   boot.loader.grub.enable = true;
