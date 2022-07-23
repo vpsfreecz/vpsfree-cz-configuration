@@ -85,7 +85,7 @@
       ];
     };
     postRunCommands = ''
-      ${pkgs.rsync}/bin/rsync -av --delete "${config.services.build-vpsadminos-container-image-repository.vpsadminos.repositoryDirectory}/" images.int.vpsadminos.org:/srv/images/
+      ${pkgs.rsync}/bin/rsync -av --delete -e ${pkgs.openssh}/bin/ssh "${config.services.build-vpsadminos-container-image-repository.vpsadminos.repositoryDirectory}/" images.int.vpsadminos.org:/srv/images/
     '';
     systemd.timer.enable = true;
   };
