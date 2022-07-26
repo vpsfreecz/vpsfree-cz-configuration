@@ -82,6 +82,18 @@
           presharedKeyFile = "/private/wireguard/preshared_keys/roman.psk";
           allowedIPs = [ "172.16.107.50/32" ];
         }
+
+        { # kerrycze - desktop
+          publicKey = "NxQwqOLW0GO5VTBdcHC5fanFkUZ1QpohBsUsFB+4LkU=";
+          presharedKeyFile = "/private/wireguard/preshared_keys/kerrycze.psk";
+          allowedIPs = [ "172.16.107.60/32" ];
+        }
+
+        { # kerrycze - laptop
+          publicKey = "+O+Mlk+MO0TmtHnjulD4n+B5XNKcn5C+cTPSalYbdl0=";
+          presharedKeyFile = "/private/wireguard/preshared_keys/kerrycze.psk";
+          allowedIPs = [ "172.16.107.61/32" ];
+        }
       ];
     };
   };
