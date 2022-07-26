@@ -18,19 +18,4 @@
       jvb11 = "37.205.13.90";
     };
   };
-
-  linuxdays = rec {
-    host = "meet.linuxdays.cz";
-    url = "https://${host}";
-    alias = host;
-    jvbExporterPorts = [ 9100 ];
-    videoBridges = {
-      "ld-jvb1" = "37.205.8.129";
-      "ld-jvb2" = "37.205.8.211";
-      "ld-jvb3" = "37.205.8.244";
-      "ld-jvb4" = "37.205.12.30";
-      "ld-jvb5" = "37.205.12.33";
-      "ld-jvb6" = "37.205.12.55";
-    };
-  };
 }
