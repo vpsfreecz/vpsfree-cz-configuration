@@ -4,7 +4,7 @@ let
   allMachines = confLib.getClusterMachines config.cluster;
 
   findNodes = loc:
-    filter (m: m.config.node != null && m.config.host.location == loc) allMachines;
+    filter (m: m.config.node != null && m.config.host.location == loc && m.config.monitoring.enable) allMachines;
 
   filterServices = machine: fn:
     let
