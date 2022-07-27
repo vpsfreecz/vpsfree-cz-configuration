@@ -81,6 +81,8 @@ in {
       };
     };
 
+    monitoring.enable = false;
+
     services = {
       node-exporter = {};
       osctl-exporter = {};

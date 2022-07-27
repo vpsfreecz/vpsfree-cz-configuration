@@ -126,6 +126,7 @@
       };
       addresses.primary = { address = "172.16.0.27"; prefix = 23; };
       vzNode.role = "hypervisor";
+      monitoring.enable = false;
       services.node-exporter = {};
     };
   };
