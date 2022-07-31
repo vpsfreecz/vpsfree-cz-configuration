@@ -165,8 +165,6 @@ download-admin                 IN   CNAME   proxy.prg.vpsfree.cz.
 vpsadmin                       IN   CNAME   proxy.prg.vpsfree.cz.
 vpsadmin-admin                 IN   CNAME   proxy.prg.vpsfree.cz.
 vpsadmin-dev                   IN   CNAME   proxy.prg.vpsfree.cz.
-vpsadmin-db                    IN   A       37.205.10.1
-vpsadmin.int                   IN   A       37.205.10.1
 
 ; Monitoring
 log.prg                        IN   CNAME   proxy.prg.vpsfree.cz.
