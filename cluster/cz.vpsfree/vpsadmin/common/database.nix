@@ -10,6 +10,11 @@ let
     name = "cz.vpsfree/vpsadmin/int.api2";
   };
 
+  vpsadmin1 = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/vpsadmin/int.vpsadmin1";
+  };
+
   proxyPrg = confLib.findConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
@@ -29,8 +34,8 @@ in {
         others = [
           "${api1.addresses.primary.address}/32"
           "${api2.addresses.primary.address}/32"
+          "${vpsadmin1.addresses.primary.address}/32"
           "${proxyPrg.addresses.primary.address}/32"
-          "172.16.8.5/32" # vpsadmin.int
           "37.205.8.141/32" # utils.vpsfree.cz
         ];
       in management ++ others;
