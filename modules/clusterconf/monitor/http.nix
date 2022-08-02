@@ -43,4 +43,13 @@
       type = "vpsadmin-webui";
     };
   };
+
+  "status_vpsf_cz" = {
+    targets = [ "https://status.vpsf.cz/" ];
+    host = "status.vpsf.cz";
+    labels = {
+      alias = "status.vpsf.cz";
+      type = "vpsf-status";
+    };
+  };
 }

@@ -56,6 +56,24 @@
           '';
         };
       }
+
+      {
+        alert = "VpsfStatusDown";
+        expr = ''probe_success{type="vpsf-status"} == 0'';
+        for = "120s";
+        labels = {
+          severity = "warning";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "status.vpsf.cz is down (instance {{ $labels.instance }})";
+          description = ''
+            {{ $labels.instance }} does not respond over HTTP
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 ]
