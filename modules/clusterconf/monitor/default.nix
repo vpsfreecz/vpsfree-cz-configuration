@@ -128,6 +128,26 @@ let
             os = m.config.spin;
           };
         }) machines;
+
+        mgmtPingConfigs = map (m:
+          let
+            makeMgmt = hostname:
+              let
+                parts = splitString "." hostname;
+              in concatStringsSep "." ([ "${elemAt parts 0}-mgmt" ] ++ (tail parts));
+
+            fqdn = makeMgmt m.config.host.fqdn;
+          in {
+            targets = [ fqdn ];
+            labels = {
+              alias = getAlias m.config.host;
+              fqdn = fqdn;
+              domain = m.config.host.domain;
+              location = ensureLocation m.config.host.location;
+              role = m.config.node.role;
+              os = m.config.spin;
+            };
+          }) machines;
       };
 
     dnsResolvers =
@@ -358,6 +378,30 @@ in {
               module = [ "icmp" ];
             };
             static_configs = scrapeConfigs.nodes.pingConfigs;
+            relabel_configs = [
+              {
+                source_labels = [ "__address__" ];
+                target_label = "__param_target";
+              }
+              {
+                source_labels = [ "__param_target" ];
+                target_label = "instance";
+              }
+              {
+                target_label = "__address__";
+                replacement = "127.0.0.1:9115";
+              }
+            ];
+          }
+        ) ++ (optional (scrapeConfigs.nodes.mgmtPingConfigs != [])
+          {
+            job_name = "nodes-mgmt-ping";
+            scrape_interval = "60s";
+            metrics_path = "/probe";
+            params = {
+              module = [ "icmp" ];
+            };
+            static_configs = scrapeConfigs.nodes.mgmtPingConfigs;
             relabel_configs = [
               {
                 source_labels = [ "__address__" ];

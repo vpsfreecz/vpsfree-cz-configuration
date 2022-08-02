@@ -671,4 +671,46 @@
       }
     ];
   }
+
+  {
+    name = "nodes-mgmt-ping";
+    interval = "30s";
+    rules = [
+      {
+        alert = "PingMgmtExporterDown";
+        expr = ''up{job="nodes-mgmt-ping"} == 0'';
+        for = "5m";
+        labels = {
+          severity = "warning";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Management ping exporter is down (instance {{ $labels.instance }})";
+          description = ''
+            Unable to check node management availability
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeMgmtDown";
+        expr = ''probe_success{job="nodes-mgmt-ping"} == 0'';
+        for = "120s";
+        labels = {
+          severity = "warning";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "Node management is down (instance {{ $labels.instance }})";
+          description = ''
+            {{ $labels.instance }} does not respond to ping
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+    ];
+  }
 ]
