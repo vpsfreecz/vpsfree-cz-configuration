@@ -531,6 +531,26 @@
       }
 
       {
+        alert = "VpsOsFatalFreeSpace";
+        expr = ''osctl_container_dataset_avail_bytes{alias="node22.prg"} < 256 * 1024 * 1024'';
+        for = "2m";
+        labels = {
+          alertclass = "vpsdiskspace";
+          severity = "fatal";
+          frequency = "2m";
+        };
+        annotations = {
+          summary = "Not enough free space (instance {{ $labels.instance }})";
+          description = ''
+            VPS has less than 256 MB of diskspace left
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "VpsStartingTooLong";
         expr = ''osctl_container_state_starting{job="nodes"} == 1'';
         for = "15m";
