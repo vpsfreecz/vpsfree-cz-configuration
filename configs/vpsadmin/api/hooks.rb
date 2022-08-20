@@ -108,16 +108,21 @@ User.connect_hook(:create) do |ret, user|
   uns = use_chain(TransactionChains::UserNamespace::Allocate, args: [user, 8])
 
   # Create default user namespace mapping
-  uns_map = UserNamespaceMap.create!(uns, 'Default map')
+  uns_map = UserNamespaceMap.create_chained!(uns, 'Default map')
 
-  UserNamespaceMapEntry.kinds.each_value do |kind|
-    UserNamespaceMapEntry.create!(
-      user_namespace_map: uns_map,
-      kind: kind,
-      vps_id: 0,
-      ns_id: 0,
-      count: uns.size,
-    )
+  append_t(Transactions::Utils::NoOp, args: find_node_id) do |t|
+    t.just_create(uns_map)
+    t.edit_before(uns_map.user_namespace_map_ugid, user_namespace_map_id: nil)
+
+    UserNamespaceMapEntry.kinds.each_value do |kind|
+      t.just_create(UserNamespaceMapEntry.create!(
+        user_namespace_map: uns_map,
+        kind: kind,
+        vps_id: 0,
+        ns_id: 0,
+        count: uns.size,
+      ))
+    end
   end
  
   ret
