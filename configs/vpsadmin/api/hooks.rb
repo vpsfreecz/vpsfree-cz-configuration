@@ -70,6 +70,84 @@ Vps.connect_hook(:create) do |ret, vps|
 
 end
 
+def get_netif_shaper_limit(netif)
+  if netif.vps_id
+    location = netif.vps.node.location
+  else
+    return nil
+  end
+
+  limit =
+    case location.label
+    when 'Praha', 'Playground', 'Staging'
+      300 * 1024 * 1024
+    when 'Brno'
+      300 * 1024 * 1024
+    else
+      fail "Unsupported location #{location.inspect}"
+    end
+
+  [limit, limit]
+end
+
+def set_netif_shaper_limit(netif)
+  max_tx, max_rx = get_netif_shaper_limit(netif)
+  return if max_tx.nil?
+
+  netif.update!(max_tx: max_tx, max_rx: max_rx)
+end
+
+NetworkInterface.connect_hook(:create) do |ret, netif|
+
+  set_netif_shaper_limit(netif)
+  ret
+
+end
+
+NetworkInterface.connect_hook(:morph) do |ret, netif, original_kind, target_kind|
+
+  if target_kind == 'veth_routed' && netif.vps.node_id == 400
+    max_tx, max_rx = get_netif_shaper_limit(netif)
+
+    if max_tx
+      append_t(
+        Transactions::NetworkInterface::SetShaper,
+        args: [netif],
+        kwargs: {
+          max_tx: max_tx,
+          max_rx: max_rx,
+      }) do |t|
+        t.edit(netif, max_tx: max_tx, max_rx: max_rx)
+      end
+    end
+  end
+
+  ret
+
+end
+
+NetworkInterface.connect_hook(:clone) do |ret, src_netif, dst_netif|
+
+  if src_netif.vps.node.location != dst_netif.vps.node.location && dst_netif.vps.node_id = 400
+    max_tx, max_rx = get_netif_shaper_limit(dst_netif)
+
+    if max_tx && (max_tx != dst_netif.max_tx || max_rx != dst_netif.max_rx)
+      append_t(
+        Transactions::NetworkInterface::SetShaper,
+        args: [dst_netif],
+        kwargs: {
+          max_tx: max_tx,
+          max_rx: max_rx,
+      }) do |t|
+        t.edit(dst_netif, max_tx: max_tx, max_rx: max_rx)
+      end
+    end
+  end
+
+  ret
+
+end
+
 User.connect_hook(:create) do |ret, user|
 
   if user.object_state == 'active'
