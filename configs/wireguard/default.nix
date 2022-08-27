@@ -29,14 +29,14 @@
       privateKeyFile = "/private/wireguard/private_key";
 
       peers = [
-        { # snajpa - ws
-          publicKey = "OjvzbXNnJEmTKwOqXrxs091OW6MOB+UUklTN5AWsGnY=";
+        { # snajpa - laptop
+          publicKey = "kvkin1ssGdwnRdRZExGiYryywNGy4+D84DJCgyIcXVI=";
           presharedKeyFile = "/private/wireguard/preshared_keys/snajpa.psk";
           allowedIPs = [ "172.16.107.10/32" ];
         }
 
-        { # snajpa - laptop
-          publicKey = "dEyobTgNPuTBp+Ufpn+ny8Al56htVofZfbJf7N+QuHE=";
+        { # snajpa - ws
+          publicKey = "OjvzbXNnJEmTKwOqXrxs091OW6MOB+UUklTN5AWsGnY=";
           presharedKeyFile = "/private/wireguard/preshared_keys/snajpa.psk";
           allowedIPs = [ "172.16.107.11/32" ];
         }
