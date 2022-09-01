@@ -29,7 +29,7 @@ let
 
   nixpkgsUnstable = nixpkgsBranch "nixos-unstable";
 
-  nixpkgsStable = nixpkgsBranch "nixos-21.05";
+  nixpkgsStable = nixpkgsBranch "nixos-22.05";
 
   vpsadminosMaster = osBranch "master";
 
@@ -55,9 +55,9 @@ in {
       vpsadmin = vpsadminMaster;
     };
 
-    "prod-22.01" = {
+    "prod-22.09" = {
       nixpkgs = nixpkgsStable;
-      vpsadminos = osBranch "prod-22.01";
+      vpsadminos = osBranch "prod-22.09";
       vpsadmin = vpsadminMaster;
     };
 

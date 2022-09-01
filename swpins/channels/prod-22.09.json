@@ -6,13 +6,13 @@
       "update": {
         "auto": false,
         "interval": 3600,
-        "ref": "refs/heads/nixos-unstable"
+        "ref": "refs/heads/nixos-22.05"
       },
       "url": "https://github.com/NixOS/nixpkgs"
     },
     "state": {
       "rev": "67e45078141102f45eff1589a831aeaa3182b41e",
-      "date": "2022-09-05T10:17:59+02:00"
+      "date": "2022-09-05T10:13:07+02:00"
     },
     "info": {
       "rev": "67e45078141102f45eff1589a831aeaa3182b41e",
@@ -45,7 +45,7 @@
     },
     "state": {
       "rev": "41e79a871ad0de9c181591d9cb7fedccdeb752a1",
-      "date": "2022-09-01T14:24:57+02:00"
+      "date": "2022-09-01T14:21:46+02:00"
     },
     "info": {
       "rev": "41e79a871ad0de9c181591d9cb7fedccdeb752a1",
@@ -72,13 +72,13 @@
       "update": {
         "auto": false,
         "interval": 3600,
-        "ref": "refs/heads/staging"
+        "ref": "refs/heads/prod-22.09"
       },
       "url": "https://github.com/vpsfreecz/vpsadminos"
     },
     "state": {
       "rev": "17d162409c469f0c292d94859f3ed5b174979822",
-      "date": "2022-09-05T10:19:58+02:00"
+      "date": "2022-09-05T10:19:56+02:00"
     },
     "info": {
       "rev": "17d162409c469f0c292d94859f3ed5b174979822",
