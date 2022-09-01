@@ -18,7 +18,7 @@ let
     ### Configuration
     REPO_URL="https://github.com/vpsfreecz/vpsadminos"
     REPO_DIR="${config.services.geminabox.stateDir}/gc/vpsadminos.git"
-    KEEP_BRANCHES="master staging devel devel-aither devel-snajpa osctl-env-exec"
+    KEEP_BRANCH_PATTERNS="master staging prod-* staging-* devel devel-aither devel-snajpa osctl-env-exec"
     KEEP_DAYS=30
     GEM_DIR="${config.services.geminabox.settings.data}/gems"
     TRASH_DIR="${config.services.geminabox.stateDir}/trash"
@@ -37,10 +37,17 @@ let
     cd "$REPO_DIR"
     ${pkgs.git}/bin/git fetch --all > /dev/null
 
+    # Build a list of branches
+    KEEP_BRANCH_NAMES=""
+
+    for branch in $KEEP_BRANCH_PATTERNS ; do
+      KEEP_BRANCH_NAMES="$KEEP_BRANCH_NAMES $(${pkgs.git}/bin/git branch --list "$branch" --format '%(refname:short)')"
+    done
+
     # Get a list of all existing builds
     BUILDS_FILE=`mktemp /tmp/gc.XXXXXX`
 
-    for commit in `${pkgs.git}/bin/git rev-list $KEEP_BRANCHES -- .build_id` ; do
+    for commit in `${pkgs.git}/bin/git rev-list $KEEP_BRANCH_NAMES -- .build_id` ; do
       ${pkgs.git}/bin/git show $commit:.build_id >> "$BUILDS_FILE"
     done
 
@@ -69,7 +76,7 @@ let
     ### Configuration
     REPO_URL="https://github.com/vpsfreecz/vpsadmin"
     REPO_DIR="${config.services.geminabox.stateDir}/gc/vpsadmin.git"
-    KEEP_BRANCHES="master devel"
+    KEEP_BRANCH_PATTERNS="master devel prod-* staging-*"
     KEEP_DAYS=30
     GEM_DIR="${config.services.geminabox.settings.data}/gems"
     TRASH_DIR="${config.services.geminabox.stateDir}/trash"
@@ -88,10 +95,17 @@ let
     cd "$REPO_DIR"
     ${pkgs.git}/bin/git fetch --all > /dev/null
 
+    # Build a list of branches
+    KEEP_BRANCH_NAMES=""
+
+    for branch in $KEEP_BRANCH_PATTERNS ; do
+      KEEP_BRANCH_NAMES="$KEEP_BRANCH_NAMES $(${pkgs.git}/bin/git branch --list "$branch" --format '%(refname:short)')"
+    done
+
     # Get a list of all existing builds
     BUILDS_FILE=`mktemp /tmp/gc.XXXXXX`
 
-    for commit in `${pkgs.git}/bin/git rev-list $KEEP_BRANCHES -- packages/nodectld/Gemfile.lock` ; do
+    for commit in `${pkgs.git}/bin/git rev-list $KEEP_BRANCH_NAMES -- packages/nodectld/Gemfile.lock` ; do
       ${pkgs.git}/bin/git show $commit:packages/nodectld/Gemfile.lock \
         | grep -xP "  nodectld \(= $GEM_VERSION_RX\)" \
         | grep -oP "$GEM_VERSION_RX" \
