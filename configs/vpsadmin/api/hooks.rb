@@ -72,6 +72,8 @@ end
 
 def get_netif_shaper_limit(netif)
   if netif.vps_id
+    return nil unless netif.vps.node.vpsadminos?
+
     location = netif.vps.node.location
   else
     return nil
