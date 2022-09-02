@@ -106,7 +106,7 @@ end
 
 NetworkInterface.connect_hook(:morph) do |ret, netif, original_kind, target_kind|
 
-  if target_kind == 'veth_routed' && netif.vps.node_id == 400
+  if target_kind == 'veth_routed'
     max_tx, max_rx = get_netif_shaper_limit(netif)
 
     if max_tx
@@ -128,7 +128,7 @@ end
 
 NetworkInterface.connect_hook(:clone) do |ret, src_netif, dst_netif|
 
-  if src_netif.vps.node.location != dst_netif.vps.node.location && dst_netif.vps.node_id == 400
+  if src_netif.vps.node.location != dst_netif.vps.node.location
     max_tx, max_rx = get_netif_shaper_limit(dst_netif)
 
     if max_tx && (max_tx != dst_netif.max_tx || max_rx != dst_netif.max_rx)
