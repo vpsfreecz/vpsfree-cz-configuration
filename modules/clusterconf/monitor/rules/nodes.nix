@@ -532,7 +532,7 @@
 
       {
         alert = "VpsOsFatalFreeSpace";
-        expr = ''osctl_container_dataset_avail_bytes{alias="node22.prg"} < 256 * 1024 * 1024'';
+        expr = ''osctl_container_dataset_avail_bytes{alias=~"node21.prg|node22.prg"} < 256 * 1024 * 1024'';
         for = "2m";
         labels = {
           alertclass = "vpsdiskspace";
