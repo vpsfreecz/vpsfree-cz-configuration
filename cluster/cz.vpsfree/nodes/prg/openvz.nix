@@ -113,22 +113,5 @@
       monitoring.enable = false;
       services.node-exporter = {};
     };
-
-    "cz.vpsfree/nodes/prg/node17" = {
-      spin = "openvz";
-      node = {
-        id = 118;
-        role = "hypervisor";
-      };
-      host = {
-        name = "node17";
-        location = "prg";
-        domain = "vpsfree.cz";
-      };
-      addresses.primary = { address = "172.16.0.27"; prefix = 23; };
-      vzNode.role = "hypervisor";
-      monitoring.enable = false;
-      services.node-exporter = {};
-    };
   };
 }
