@@ -15,6 +15,11 @@
       properties = {
         ashift = "12";
       };
+      datasets = {
+        "reservation".properties = {
+          refreservation = "800G";
+        };
+      };
     };
   };
 
