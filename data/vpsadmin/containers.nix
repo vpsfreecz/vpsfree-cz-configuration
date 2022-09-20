@@ -209,10 +209,10 @@
   "rubygems.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node19.prg.vpsfree.cz";
-      id = 120;
+      fqdn = "node23.prg.vpsfree.cz";
+      id = 124;
       location = "prg";
-      name = "node19";
+      name = "node23";
     };
   };
   "tor-relay.vpsfree.cz" = {
