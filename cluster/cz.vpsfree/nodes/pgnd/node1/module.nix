@@ -36,6 +36,8 @@ in {
       domain = "vpsfree.cz";
     };
 
+    tags = [ "playground" ];
+
     netboot = {
       enable = true;
       macs = [

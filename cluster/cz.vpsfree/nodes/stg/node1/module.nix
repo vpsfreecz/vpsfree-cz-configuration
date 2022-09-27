@@ -36,6 +36,8 @@ in {
       domain = "vpsfree.cz";
     };
 
+    tags = [ "staging" ];
+
     netboot = {
       enable = true;
       macs = [
