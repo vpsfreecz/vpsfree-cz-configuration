@@ -32,6 +32,7 @@
   ./cz.vpsfree/nodes/prg/node21/module.nix
   ./cz.vpsfree/nodes/prg/node22/module.nix
   ./cz.vpsfree/nodes/prg/node23/module.nix
+  ./cz.vpsfree/nodes/prg/node24/module.nix
   ./cz.vpsfree/nodes/prg/node7/module.nix
   ./cz.vpsfree/nodes/prg/node8/module.nix
   ./cz.vpsfree/nodes/prg/node9/module.nix
