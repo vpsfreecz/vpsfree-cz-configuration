@@ -126,7 +126,6 @@ in {
               "vpsfreecz/linux"
               "vpsfreecz/lxc"
               "vpsfreecz/lxcfs"
-              "vpsfreecz/machine-check-rb"
               "vpsfreecz/nixos-modules"
               "vpsfreecz/terraform-provider-vpsadmin"
               "vpsfreecz/vpsfree-cz-configuration"
