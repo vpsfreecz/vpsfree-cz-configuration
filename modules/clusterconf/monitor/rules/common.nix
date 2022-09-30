@@ -4,7 +4,7 @@
     rules = [
       {
         alert = "ZpoolListFailed";
-        expr = "zpool_list_success != 0";
+        expr = "zpool_list_success != 1";
         for = "5m";
         labels = {
           severity = "critical";
@@ -20,7 +20,7 @@
       }
       {
         alert = "ZpoolListParseError";
-        expr = "zpool_list_parse_success != 0";
+        expr = "zpool_list_parse_success != 1";
         labels = {
           severity = "warning";
         };
@@ -35,7 +35,7 @@
       }
       {
         alert = "DegradedZpool";
-        expr = "zpool_list_healt != 0";
+        expr = "zpool_list_health != 1";
         labels = {
           severity = "critical";
           frequency = "daily";
