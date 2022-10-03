@@ -3,6 +3,7 @@ let
   disabledNetifPlugins = lib.flatten (map (v: [ "if_${v}" "if_err_${v}" ]) [
     "dummy*"
     "eth*"
+    "ifbveth*"
     "osrtr*"
     "veth*"
     "erspan*"
