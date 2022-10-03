@@ -18,6 +18,7 @@ in {
       "df"
       "df_abs"
       "df_inode"
+      "meminfo"
       "munin_stats"
       "port_*"
       "swap"
