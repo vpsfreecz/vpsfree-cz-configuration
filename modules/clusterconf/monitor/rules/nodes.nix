@@ -262,6 +262,44 @@
       }
 
       {
+        alert = "NodeHighTxgCount";
+        expr = ''rate(zpool_txgs_count{job="nodes"}[5m]) * 60 >= 20'';
+        for = "2m";
+        labels = {
+          alertclass = "txgcount";
+          severity = "warning";
+        };
+        annotations = {
+          summary = "ZFS high TXG count per minute (instance {{ $labels.instance }})";
+          description = ''
+            ZFS makes more than 20 TXGs per minute
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeCritNoTxgs";
+        expr = ''rate(zpool_txgs_count{job="nodes"}[2m]) * 60 < 1'';
+        for = "1m";
+        labels = {
+          alertclass = "notxgs";
+          severity = "critical";
+        };
+        annotations = {
+          summary = "ZFS not making TXGs (instance {{ $labels.instance }})";
+          description = ''
+            ZFS makes less than 1 TXG per minute
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NodeHighLoad";
         expr = ''node_load5{job="nodes"} > 300 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "5m";
