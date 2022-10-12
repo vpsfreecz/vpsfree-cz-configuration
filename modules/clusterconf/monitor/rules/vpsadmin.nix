@@ -132,6 +132,24 @@ in [
       }
 
       {
+        alert = "VpsMigrationFatal";
+        expr = ''vpsadmin_transaction_chain_fatal{chain_type=~"${chains.vpsMigrateVz}|${chains.vpsMigrateOs}"} == 1'';
+        labels = {
+          severity = "fatal";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "Transaction chain {{ $labels.chain_id }} is in state fatal";
+          description = ''
+            Transaction chain {{ $labels.chain_id }} ({{ $labels.chain_type }})
+            is in state fatal and needs to be resolved.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "VpsStartDelayed";
         expr = ''vpsadmin_transaction_chain_queued_seconds{chain_type="${chains.vpsStart}"} >= 15*60'';
         labels = {
