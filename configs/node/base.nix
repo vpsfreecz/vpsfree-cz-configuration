@@ -11,10 +11,14 @@ let
     ) addresses);
 in {
   config = mkIf (confMachine.osNode != null) {
-    vpsadmin.nodectld = {
-      nodeId = cfg.node.id;
-      consoleHost = mkDefault confMachine.addresses.primary.address;
-      netInterfaces = mkDefault (lib.attrNames cfg.osNode.networking.interfaces.addresses);
+    vpsadmin.nodectld.settings = {
+      vpsadmin = {
+        node_id = cfg.node.id;
+        net_interfaces = mkDefault (lib.attrNames cfg.osNode.networking.interfaces.addresses);
+      };
+      console = {
+        host = mkDefault confMachine.addresses.primary.address;
+      };
     };
 
     services.udev.extraRules = confLib.mkNetUdevRules cfg.osNode.networking.interfaces.names;
