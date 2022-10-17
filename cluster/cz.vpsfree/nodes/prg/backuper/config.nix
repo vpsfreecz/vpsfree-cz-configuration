@@ -5,9 +5,13 @@
     ../../common/netboot.nix
   ];
 
-  vpsadmin.nodectld = {
-    netInterfaces = [ "oneg0" "oneg1" ];
-    consoleHost = "172.16.0.5";
+  vpsadmin.nodectld.settings = {
+    vpsadmin = {
+      net_interfaces = [ "oneg0" "oneg1" ];
+    };
+    console = {
+      host = "172.16.0.5";
+    };
   };
 
   boot.kernelModules = [ "8021q" ];

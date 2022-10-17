@@ -5,7 +5,7 @@
     ../common/mailer.nix
   ];
 
-  vpsadmin.nodectld.nodeId = 5;
+  vpsadmin.nodectld.settings.vpsadmin.node_id = 5;
 
   system.stateVersion = "22.05";
 }
