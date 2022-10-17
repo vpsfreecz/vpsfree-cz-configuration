@@ -51,6 +51,10 @@
     # { label = "swap2"; }
   ];
 
+  vpsadmin.nodectld.settings = {
+    vpsadmin.queues.zfs_send.threads = 5;
+  };
+
   # Workaround for a bug in kernel which causes node_exporter to get stuck
   # while reading power info from /sys.
   #
