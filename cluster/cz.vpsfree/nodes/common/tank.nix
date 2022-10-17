@@ -32,4 +32,13 @@
   };
 
   programs.bash.root.historyPools = [ "tank" ];
+
+  vpsadmin.nodectld.settings = {
+    mbuffer = {
+      receive = {
+        buffer_size = "1G";
+        start_writing_at = 80;
+      };
+    };
+  };
 }
