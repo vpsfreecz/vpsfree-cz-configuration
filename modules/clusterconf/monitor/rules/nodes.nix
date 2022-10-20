@@ -6,6 +6,7 @@
       {
         alert = "NodeExporterDown";
         expr = ''up{job="nodes"} == 0'';
+        for = "1m";
         labels = {
           severity = "critical";
           frequency = "2m";
