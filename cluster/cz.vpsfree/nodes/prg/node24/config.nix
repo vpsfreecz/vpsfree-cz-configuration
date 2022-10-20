@@ -28,6 +28,8 @@
     parallelStop = 40;
   };
 
+  osctld.cpuScheduler.enable = true;
+
   swapDevices = [
   ];
 

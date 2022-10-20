@@ -46,6 +46,8 @@
     parallelStop = 30;
   };
 
+  osctld.cpuScheduler.enable = true;
+
   swapDevices = [
     # { label = "swap1"; }
     # { label = "swap2"; }
