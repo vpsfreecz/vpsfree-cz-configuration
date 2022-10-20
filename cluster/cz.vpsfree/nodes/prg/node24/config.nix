@@ -30,4 +30,8 @@
 
   swapDevices = [
   ];
+
+  vpsadmin.nodectld.settings = {
+    vpsadmin.queues.zfs_send.threads = 6;
+  };
 }
