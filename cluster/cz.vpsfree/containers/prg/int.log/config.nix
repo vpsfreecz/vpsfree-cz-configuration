@@ -37,7 +37,7 @@ in {
       module(load="imtcp")
       input(type="imtcp" port="11514")
 
-      $template remote-incoming-logs, "/var/log/remote/%HOSTNAME%"
+      $template remote-incoming-logs, "/var/log/remote/%HOSTNAME%/log"
       *.* ?remote-incoming-logs
     '';
   };
@@ -46,7 +46,7 @@ in {
     enable = true;
     settings = {
       nodes = {
-        files = [ "/var/log/remote/cz.vpsfree/nodes/**/*" ];
+        files = [ "/var/log/remote/cz.vpsfree/nodes/**/log" ];
         frequency = "daily";
         rotate = 180;
         notifempty = true;
@@ -57,7 +57,7 @@ in {
       };
 
       machines = {
-        files = [ "/var/log/remote/cz.vpsfree/machines/**/*" ];
+        files = [ "/var/log/remote/cz.vpsfree/machines/**/log" ];
         frequency = "monthly";
         rotate = 13;
         notifempty = true;
@@ -68,7 +68,7 @@ in {
       };
 
       containers = {
-        files = [ "/var/log/remote/cz.vpsfree/containers/**/*" "/var/log/remote/cz.vpsfree/vpsadmin/**/*" ];
+        files = [ "/var/log/remote/cz.vpsfree/containers/**/log" "/var/log/remote/cz.vpsfree/vpsadmin/**/log" ];
         frequency = "monthly";
         rotate = 13;
         notifempty = true;
@@ -79,7 +79,7 @@ in {
       };
 
       others = {
-        files = [ "/var/log/remote/*" ];
+        files = [ "/var/log/remote/*/log" ];
         frequency = "monthly";
         rotate = 13;
         notifempty = true;
