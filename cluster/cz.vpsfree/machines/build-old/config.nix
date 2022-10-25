@@ -53,7 +53,5 @@
 
   nix = {
     maxJobs = 5;
-    binaryCaches = [ "https://cache.vpsadminos.org" ];
-    binaryCachePublicKeys = [ "cache.vpsadminos.org:wpIJlNZQIhS+0gFf1U3MC9sLZdLW3sh5qakOWGDoDrE=" ];
   };
 }
