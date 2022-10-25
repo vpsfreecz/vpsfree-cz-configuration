@@ -9,9 +9,13 @@ in {
     shared.config
 
     (mkIf shared.enable {
-      services.SystemdJournal2Gelf = {
+      services.rsyslogd = {
         enable = true;
-        graylogServer = "${shared.services.graylog-gelf.address}:${toString shared.services.graylog-gelf.port}";
+        extraConfig = ''
+          $LocalHostName ${confMachine.name}
+
+          *.* @@${shared.services.rsyslog-tcp.address}:${toString shared.services.rsyslog-tcp.port};RSYSLOG_SyslogProtocol23Format
+        '';
       };
     })
   ];

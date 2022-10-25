@@ -8,10 +8,8 @@
     addresses.primary = { address = "172.16.4.1"; prefix = 32; };
     logging.isLogger = true;
     services = {
-      graylog-gelf = {};
-      graylog-http = {};
-      graylog-rsyslog-tcp = {};
-      graylog-rsyslog-udp = {};
+      rsyslog-tcp = {};
+      rsyslog-udp = {};
       node-exporter = {};
     };
   };

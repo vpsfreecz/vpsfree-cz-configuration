@@ -10,7 +10,7 @@ in {
 
     (mkIf shared.enable {
       services.rsyslogd.forward = [
-        "${shared.services.graylog-rsyslog-tcp.address}:${toString shared.services.graylog-rsyslog-tcp.port}"
+        "${shared.services.rsyslog-tcp.address}:${toString shared.services.rsyslog-tcp.port}"
       ];
     })
   ];
