@@ -5,7 +5,9 @@
     swpins.channels = [ "nixos-stable" "os-staging" ];
     container.id = 18115;
     host = { name = "tor-relay"; domain = "vpsfree.cz"; };
-    addresses.primary = { address = "37.205.8.191"; prefix = 32; };
+    addresses = {
+      v4 = [ { address = "37.205.8.191"; prefix = 32; } ];
+    };
     services = {
       node-exporter = {};
     };

@@ -4,7 +4,9 @@
     spin = "nixos";
     swpins.channels = [ "nixos-stable" ];
     host = { name = "apu"; location = "int.prg"; domain = "vpsfree.cz"; target = "172.16.254.254"; };
-    addresses.primary = { address = "172.16.254.254"; prefix = 24; };
+    addresses = {
+      v4 = [ { address = "172.16.254.254"; prefix = 24; } ];
+    };
     tags = [ "apu" "vpsf-status" ];
     services = {
       node-exporter = {};

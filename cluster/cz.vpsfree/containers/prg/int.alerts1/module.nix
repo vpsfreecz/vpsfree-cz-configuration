@@ -5,7 +5,9 @@
     swpins.channels = [ "nixos-stable" "os-staging" ];
     container.id = 14077;
     host = { name = "alerts1"; location = "int.prg"; domain = "vpsfree.cz"; };
-    addresses.primary = { address = "172.16.4.11"; prefix = 32; };
+    addresses = {
+      v4 = [ { address = "172.16.4.11"; prefix = 32; } ];
+    };
     services = {
       alertmanager = {};
       node-exporter = {};

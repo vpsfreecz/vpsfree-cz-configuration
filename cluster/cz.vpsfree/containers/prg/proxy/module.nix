@@ -5,7 +5,9 @@
     swpins.channels = [ "nixos-stable" "os-staging" "vpsadmin" ];
     container.id = 14096;
     host = { name = "proxy"; location = "prg"; domain = "vpsfree.cz"; };
-    addresses.primary = { address = "172.16.9.140"; prefix = 32; };
+    addresses = {
+      v4 = [ { address = "172.16.9.140"; prefix = 32; } ];
+    };
     services.node-exporter = {};
   };
 }
