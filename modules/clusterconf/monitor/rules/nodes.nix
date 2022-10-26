@@ -693,10 +693,30 @@
       }
 
       {
-        alert = "NodeDown";
+        alert = "NodeDownCritical";
         expr = ''probe_success{job="nodes-ping"} == 0'';
         for = "30s";
         labels = {
+          alertclass = "nodedown";
+          severity = "critical";
+          frequency = "2m";
+        };
+        annotations = {
+          summary = "Node is down (instance {{ $labels.instance }})";
+          description = ''
+            {{ $labels.instance }} does not respond to ping
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeDownFatal";
+        expr = ''probe_success{job="nodes-ping"} == 0'';
+        for = "90s";
+        labels = {
+          alertclass = "nodedown";
           severity = "fatal";
           frequency = "2m";
         };
