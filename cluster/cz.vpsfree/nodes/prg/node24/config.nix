@@ -4,6 +4,10 @@
     ../common.nix
   ];
 
+  boot.kernel.sysctl = {
+    "kernel.syslog_ns_print_to_init_ns" = 0;
+  };
+
   boot.zfs.pools = {
     tank = {
       install = true;
