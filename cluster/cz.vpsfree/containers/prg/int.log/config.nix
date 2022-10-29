@@ -46,7 +46,7 @@ in {
     enable = true;
     settings = {
       nodes = {
-        files = [ "/var/log/remote/cz.vpsfree/nodes/**/log" ];
+        files = [ "/var/log/remote/cz.vpsfree/nodes/*/*/log" ];
         frequency = "daily";
         rotate = 180;
         notifempty = true;
@@ -57,7 +57,10 @@ in {
       };
 
       machines = {
-        files = [ "/var/log/remote/cz.vpsfree/machines/**/log" ];
+        files = [
+          "/var/log/remote/cz.vpsfree/machines/*/log"
+          "/var/log/remote/cz.vpsfree/machines/*/*/log"
+        ];
         frequency = "monthly";
         rotate = 13;
         notifempty = true;
@@ -68,7 +71,11 @@ in {
       };
 
       containers = {
-        files = [ "/var/log/remote/cz.vpsfree/containers/**/log" "/var/log/remote/cz.vpsfree/vpsadmin/**/log" ];
+        files = [
+          "/var/log/remote/cz.vpsfree/containers/*/log"
+          "/var/log/remote/cz.vpsfree/containers/*/*/log"
+          "/var/log/remote/cz.vpsfree/vpsadmin/*/log"
+        ];
         frequency = "monthly";
         rotate = 13;
         notifempty = true;
