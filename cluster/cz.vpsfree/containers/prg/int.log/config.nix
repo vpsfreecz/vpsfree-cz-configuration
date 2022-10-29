@@ -39,6 +39,8 @@ in {
 
       $template remote-incoming-logs, "/var/log/remote/%HOSTNAME%/log"
       *.* ?remote-incoming-logs
+
+      *.* |/var/log/rsyslog.pipe
     '';
   };
 
