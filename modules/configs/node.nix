@@ -57,7 +57,7 @@ in {
     };
 
     services.udev.extraRules = confLib.mkNetUdevRules cfg.osNode.networking.interfaces.names;
-    services.rsyslogd.hostName = "${confMachine.name}.${confMachine.host.location}";
+    services.rsyslogd.hostName = confMachine.name;
 
     networking.hostName = confMachine.host.fqdn;
     networking.custom = ''
