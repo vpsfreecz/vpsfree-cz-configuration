@@ -582,6 +582,7 @@ in {
           ./rules/meet.nix
           ./rules/vpsfree-web.nix
           ./rules/systemd.nix
+          ./rules/nodectld.nix
         ]) ++ (map (v: import v { inherit lib; }) [
           ./rules/test.nix
           ./rules/vpsadmin.nix
