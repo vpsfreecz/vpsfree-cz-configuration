@@ -51,6 +51,7 @@ in {
         files = [ "/var/log/remote/cz.vpsfree/nodes/*/*/log" ];
         frequency = "daily";
         rotate = 180;
+        dateext = true;
         notifempty = true;
         nocompress = true;
         postrotate = ''
@@ -65,6 +66,7 @@ in {
         ];
         frequency = "monthly";
         rotate = 13;
+        dateext = true;
         notifempty = true;
         nocompress = true;
         postrotate = ''
@@ -80,6 +82,7 @@ in {
         ];
         frequency = "monthly";
         rotate = 13;
+        dateext = true;
         notifempty = true;
         nocompress = true;
         postrotate = ''
@@ -91,6 +94,7 @@ in {
         files = [ "/var/log/remote/*/log" ];
         frequency = "monthly";
         rotate = 13;
+        dateext = true;
         notifempty = true;
         nocompress = true;
         maxsize = "512M";
