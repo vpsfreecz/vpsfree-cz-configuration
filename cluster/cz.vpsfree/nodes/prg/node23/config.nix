@@ -11,10 +11,10 @@
   boot.zfs.pools = {
     tank = {
       install = true;
-      wipe = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" "sdh" "sdi" "sdj" "sdk" "sdl" ];
+      wipe = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" "sdh" "sdi" "sdj" "sdk" "sdl" "sdm" "sdn" ];
       layout = [
-        { type = "raidz"; devices = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" ]; }
-        { type = "raidz"; devices = [ "sdg" "sdh" "sdi" "sdj" "sdk" "sdl" ]; }
+        { type = "raidz"; devices = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" ]; }
+        { type = "raidz"; devices = [ "sdh" "sdi" "sdj" "sdk" "sdl" "sdm" "sdn" ]; }
       ];
       properties = {
         ashift = "12";
