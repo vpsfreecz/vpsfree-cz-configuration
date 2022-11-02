@@ -490,6 +490,47 @@
       }
 
       {
+        alert = "KernelPtyWarn";
+        expr = ''sysctl_kernel_pty_nr >= 4096'';
+        for = "5m";
+        labels = {
+          alertclass = "pty_nr";
+          severity = "warning";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "High PTY count (instance {{ $labels.instance }})";
+          description = ''
+            More than 4096 allocated PTYs. 3600 PTYs are needed for 600 VPS, so
+            this is already high.
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "KernelPtyCrit";
+        expr = ''sysctl_kernel_pty_max - sysctl_kernel_pty_reserve - sysctl_kernel_pty_nr <= 1024'';
+        for = "5m";
+        labels = {
+          alertclass = "pty_nr";
+          severity = "critical";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Critical PTY count (instance {{ $labels.instance }})";
+          description = ''
+            Less than 1024 PTYs are available for container use.
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NodeOsctldDown";
         expr = ''osctld_up{job="nodes"} == 0 or on(instance) osctld_responsive == 0 or on(instance) osctld_initialized == 0'';
         for = "5m";
