@@ -22,7 +22,7 @@ let
     KEEP_DAYS=30
     GEM_DIR="${config.services.geminabox.settings.data}/gems"
     TRASH_DIR="${config.services.geminabox.stateDir}/trash"
-    GEM_NAME_RX="(libosctl|osctl|osctld|osctl-exporter|osctl-exportfs|osctl-image|osctl-repo|osup|svctl|test-runner)"
+    GEM_NAME_RX="(libosctl|osctl|osctld|osctl-exporter|osctl-exportfs|osctl-image|osctl-repo|osup|svctl|osvm|test-runner)"
     GEM_VERSION_RX="\d+\.\d+\.\d+\.build\d+\.gem"
     GEM_RX="''${GEM_NAME_RX}-''${GEM_VERSION_RX}"
     ###
