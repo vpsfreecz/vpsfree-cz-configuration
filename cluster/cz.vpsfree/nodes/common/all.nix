@@ -136,6 +136,21 @@
     lockdPort = 32769;
   };
 
+  osctld.settings = {
+    send_receive = {
+      send_mbuffer = {
+        block_size = "32k";
+        buffer_size = "512M";
+        start_writing_at = 0;
+      };
+      receive_mbuffer = {
+        block_size = "128k";
+        buffer_size = "1024M";
+        start_writing_at = 80;
+      };
+    };
+  };
+
   osctl.exporter.enable = true;
 
   services.openssh = {
