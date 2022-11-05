@@ -142,7 +142,7 @@
   osctld.settings = {
     send_receive = {
       send_mbuffer = {
-        block_size = "32k";
+        block_size = "128k";
         buffer_size = "512M";
         start_writing_at = 5;
       };
