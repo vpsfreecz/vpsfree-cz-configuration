@@ -144,7 +144,7 @@
       send_mbuffer = {
         block_size = "32k";
         buffer_size = "512M";
-        start_writing_at = 0;
+        start_writing_at = 5;
       };
       receive_mbuffer = {
         block_size = "128k";
