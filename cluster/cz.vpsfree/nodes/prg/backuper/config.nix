@@ -164,4 +164,6 @@
       ];
     };
   };
+
+  nodectld.settings.vpsadmin.queues.zfs_recv.threads = 48;
 }
