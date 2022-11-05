@@ -8,6 +8,7 @@
   vpsadmin.nodectld.settings = {
     vpsadmin = {
       net_interfaces = [ "oneg0" "oneg1" ];
+      queues.zfs_recv.threads = 48;
     };
     console = {
       host = "172.16.0.5";
@@ -164,6 +165,4 @@
       ];
     };
   };
-
-  nodectld.settings.vpsadmin.queues.zfs_recv.threads = 48;
 }
