@@ -282,7 +282,7 @@
 
       {
         alert = "NodeCritNoTxgs";
-        expr = ''rate(zpool_txgs_count{job="nodes"}[2m]) * 60 < 1'';
+        expr = ''rate(zpool_txgs_count{job="nodes"}[2m]) * 180 < 1'';
         for = "1m";
         labels = {
           alertclass = "notxgs";
@@ -291,7 +291,7 @@
         annotations = {
           summary = "ZFS not making TXGs (instance {{ $labels.instance }})";
           description = ''
-            ZFS makes less than 1 TXG per minute
+            ZFS made less than 1 TXG in three minutes
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
