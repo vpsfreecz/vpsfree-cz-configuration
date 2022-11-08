@@ -367,6 +367,7 @@ in {
           {
             job_name = "nodes";
             scrape_interval = "30s";
+            scrape_timeout = "30s";
             static_configs = scrapeConfigs.nodes.exporterConfigs;
           }
         ] ++ (optional (scrapeConfigs.nodes.pingConfigs != [])
