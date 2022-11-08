@@ -282,7 +282,7 @@
 
       {
         alert = "NodeCritNoTxgs";
-        expr = ''rate(zpool_txgs_count{job="nodes"}[2m]) * 180 < 1'';
+        expr = ''rate(zpool_txgs_count{job="nodes"}[5m]) * 180 < 1'';
         for = "1m";
         labels = {
           alertclass = "notxgs";
