@@ -260,6 +260,43 @@
           '';
         };
       }
+      {
+        alert = "HypervisorDnodeNearingLimit";
+        expr = ''node_zfs_arc_dnode_size{role="hypervisor",alias=~"node21.prg|node22.prg|node23.prg|node24.prg"} / node_zfs_arc_arc_dnode_limit * 100 > 75'';
+        for = "15m";
+        labels = {
+          alertclass = "dnodelimit";
+          severity = "warning";
+        };
+        annotations = {
+          summary = "ZFS dnode_size is nearing arc_dnode_limit (instance {{ $labels.instance }})";
+          description = ''
+            ZFS dnode_size is more than 75 % of arc_dnode_limit
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "HypervisorDnodeOverLimit";
+        expr = ''node_zfs_arc_dnode_size{role="hypervisor",alias=~"node21.prg|node22.prg|node23.prg|node24.prg"} > node_zfs_arc_arc_dnode_limit'';
+        for = "15m";
+        labels = {
+          alertclass = "dnodelimit";
+          severity = "critical";
+        };
+        annotations = {
+          summary = "ZFS dnode_size is greater than arc_dnode_limit (instance {{ $labels.instance }})";
+          description = ''
+            ZFS dnode_size is greater than arc_dnode_limit
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
 
       {
         alert = "NodeHighTxgCount";
