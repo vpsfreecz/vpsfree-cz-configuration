@@ -422,6 +422,7 @@ in {
           {
             job_name = "infra";
             scrape_interval = "60s";
+            scrape_timeout = "30s";
             static_configs = scrapeConfigs.infra.exporterConfigs;
           }
         ] ++ (optional (scrapeConfigs.infra.pingConfigs != [])
