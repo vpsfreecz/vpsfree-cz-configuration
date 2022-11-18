@@ -91,6 +91,8 @@ let
     protocol bgp bgp${toString (startIndex + i)} {
       local as ${toString birdCfg.as};
       neighbor ${neighbour.address} as ${toString neighbour.as};
+      ${optionalString (!isNull neighbour.keepaliveTime) "keepalive time ${toString neighbour.keepaliveTime};"}
+      ${optionalString (!isNull neighbour.holdTime) "hold time ${toString neighbour.holdTime};"}
 
       ${proto} {
         export all;

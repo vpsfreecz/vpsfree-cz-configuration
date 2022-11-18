@@ -135,6 +135,18 @@ let
         type = types.int;
         description = "BGP AS";
       };
+
+      keepaliveTime = mkOption {
+        type = types.nullOr types.int;
+        default = 60;
+        description = "BGP keepalive time, null for BIRD default";
+      };
+
+      holdTime = mkOption {
+        type = types.nullOr types.int;
+        default = 240;
+        description = "BGP hold time, null for BIRD default";
+      };
     };
   };
 in node
