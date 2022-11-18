@@ -152,17 +152,17 @@ VpsAdmin::API::Plugins::Monitoring.config do
   end
 
   monitor :unpaid_data_flow do
-    label 'Public IP traffic of unpaid users'
+    label 'IP traffic of unpaid users'
     desc 'Data transfer rate was faster than 200 Mbps for the last 30 or more minutes'
     period 30*60
     repeat 10*60
     access_level 90
 
     query do
-      ::IpTrafficLiveMonitor.select(
-          "#{::IpTrafficLiveMonitor.table_name}.*, SUM(public_bytes_out) AS bytes_all"
+      ::NetworkInterfaceMonitor.select(
+          "#{::NetworkInterfaceMonitor.table_name}.*, SUM(bytes_out) AS bytes_all"
       ).joins(
-          ip_address: {network_interface: {vps: [:vps_current_status, user: :user_account]}}
+          network_interface: {vps: [:vps_current_status, user: :user_account]}
       ).where(
           users: {object_state: ::User.object_states[:active]},
           user_accounts: {paid_until: nil},
@@ -171,7 +171,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       ).group('vpses.id')
     end
 
-    object { |mon| mon.ip_address.network_interface.vps }
+    object { |mon| mon.network_interface.vps }
     value { |mon| mon.bytes_all * 8 }
     check { |mon, v| v < 200*1024*1024 }
     action :alert_admins
@@ -252,12 +252,11 @@ VpsAdmin::API::Plugins::Monitoring.config do
     access_level 90
 
     query do
-      ::IpTrafficMonthlySummary.joins(:user).select(
-          "#{IpTrafficMonthlySummary.table_name}.*,
+      ::NetworkInterfaceMonthlyAccounting.joins(:user).select(
+          "#{NetworkInterfaceMonthlyAccounting.table_name}.*,
           (SUM(bytes_in) + SUM(bytes_out)) AS bytes_all"
       ).where(
           users: {object_state: ::User.object_states[:active]},
-          role: ::IpTrafficMonthlySummary.roles[:role_public],
       ).where(
           'year = YEAR(NOW()) AND month = MONTH(NOW())'
       ).group('user_id')
