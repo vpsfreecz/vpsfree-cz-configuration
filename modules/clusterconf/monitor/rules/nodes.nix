@@ -281,7 +281,7 @@
 
       {
         alert = "HypervisorDnodeOverLimit";
-        expr = ''node_zfs_arc_dnode_size{role="hypervisor",alias=~"node21.prg|node22.prg|node23.prg|node24.prg"} > node_zfs_arc_arc_dnode_limit'';
+        expr = ''node_zfs_arc_dnode_size{role="hypervisor",alias=~"node21.prg|node22.prg|node23.prg|node24.prg"} > node_zfs_arc_arc_dnode_limit * 1.1'';
         for = "15m";
         labels = {
           alertclass = "dnodelimit";
