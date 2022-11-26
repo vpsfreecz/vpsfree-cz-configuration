@@ -430,6 +430,24 @@
       }
 
       {
+        alert = "NodeWarnZombieProcesses";
+        expr = ''node_processes_state{job="nodes",state="Z"} > 10000'';
+        for = "5m";
+        labels = {
+          alertclass = "processes_z";
+          severity = "warning";
+          frequency = "6h";
+        };
+        annotations = {
+          summary = "Node has too many zombie processes (instance {{ $labels.instance }})";
+          description = ''
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "VpsWarnUninterruptibleProcesses";
         expr = ''count by (fqdn) (osctl_container_processes_state{state="D"} > 5) > 5 and on(fqdn) time() - node_boot_time_seconds > 1800'';
         for = "1m";
@@ -439,6 +457,24 @@
         };
         annotations = {
           summary = "Too many VPS with uninterruptible (D) processes (instance {{ $labels.instance }})";
+          description = ''
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "VpsWarnZombieProcesses";
+        expr = ''osctl_container_processes_state{state="Z"} > 10000'';
+        for = "5m";
+        labels = {
+          alertclass = "vps_processes_z";
+          severity = "warning";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "VPS has too many zombie processes (instance {{ $labels.instance }})";
           description = ''
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
