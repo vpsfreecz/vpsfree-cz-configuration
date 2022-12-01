@@ -27,14 +27,16 @@ in {
   networking.interfaces.enp1s0.useDHCP = false;
   networking.interfaces.enp1s0.ipv4.addresses = [
     { address = "172.16.254.254"; prefixLength = 24; }
+    { address = "172.16.254.253"; prefixLength = 24; }
   ];
   networking.interfaces.enp1s0.ipv4.routes = [
     { address = "172.16.0.0"; prefixLength = 12; via = "172.16.254.1"; }
   ];
 
   services.netboot = {
-    enable = false;
-    host = "172.16.254.254";
+    enable = true;
+    host = "172.16.254.253";
+    tftp.bindAddress = "172.16.254.253";
     inherit (images) nixosItems;
     vpsadminosItems = images.allNodes "vpsfree.cz";
     includeNetbootxyz = true;

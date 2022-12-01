@@ -87,7 +87,10 @@ in {
   services.atftpd = {
     enable = true;
     root = "/var/crashdump";
-    extraOptions = [ "--group crashdump" ];
+    extraOptions = [
+      "--bind-address ${confMachine.addresses.primary.address}"
+      "--group crashdump"
+    ];
   };
 
   networking.interfaces.lte0.useDHCP = false;
@@ -108,7 +111,7 @@ in {
 
       tftpRules = concatMapStringsSep "\n" (net: ''
         # Allow access from ${net.location} @ ${net.address}/${toString net.prefix}
-        iptables -A nixos-fw -p udp -s ${net.address}/${toString net.prefix} --dport 69 -j nixos-fw-accept
+        iptables -A nixos-fw -p udp -s ${net.address}/${toString net.prefix} -d ${confMachine.addresses.primary.address} --dport 69 -j nixos-fw-accept
       '') confData.vpsadmin.networks.management.ipv4;
     in ''
       ### Alertmanagers to sachet
