@@ -12,27 +12,35 @@ let
   # See https://wiki.syslinux.org/wiki/index.php?title=PXELINUX#Configuration
   transformMac = mac: replaceStrings [ ":" ] [ "-" ] mac;
 
-  cpItemsBoot = items: concatNl (mapAttrsToList (name: item: ''
+  deployItemsBoot = items: concatNl (mapAttrsToList (name: item: ''
     mkdir -p $out/boot/${name}
     for i in ${item.dir}/{kernel,bzImage,initrd}; do
-      [ -e "$i" ] && cp -L $i $out/boot/${name}/$( basename $i)
+      [ ! -e "$i" ] && continue
+      ${if cfg.copyItems then ''
+      cp -L $i $out/boot/${name}/$(basename $i)
+      '' else ''
+      ln -s $i $out/boot/${name}/$(basename $i)
+      ''}
     done
   '') items);
 
-  cpItemsRootfs = items: concatNl (mapAttrsToList (name: item: ''
+  deployItemsRootfs = items: concatNl (mapAttrsToList (name: item: ''
     mkdir -p $out/${name}
     for i in ${item.dir}/root.squashfs; do
-      # Copy the squashfs images to remove their dependencies on individual
-      # store paths
-      [ -e "$i" ] && cp -L $i $out/${name}/$( basename $i)
+      [ ! -e "$i" ] && continue
+      ${if cfg.copyItems then ''
+      cp -L $i $out/${name}/$(basename $i)
+      '' else ''
+      ln -s $i $out/${name}/$(basename $i)
+      ''}
     done
   '') items);
 
   nginxRoot = pkgs.runCommand "nginxroot" { buildInputs = [ pkgs.openssl ]; } ''
     mkdir -pv $out
 
-    ${cpItemsRootfs cfg.nixosItems}
-    ${cpItemsRootfs cfg.vpsadminosItems}
+    ${deployItemsRootfs cfg.nixosItems}
+    ${deployItemsRootfs cfg.vpsadminosItems}
   '';
 
   extractMapping = name: item:
@@ -212,8 +220,8 @@ let
     '') osItemIncludeConfigs)}
 
     # Links for kernels and initrd
-    ${cpItemsBoot cfg.nixosItems}
-    ${cpItemsBoot cfg.vpsadminosItems}
+    ${deployItemsBoot cfg.nixosItems}
+    ${deployItemsBoot cfg.vpsadminosItems}
   '';
 in
 {
@@ -258,6 +266,20 @@ in
       vpsadminosItems = mkOption {
         type = types.attrsOf types.unspecified;
         default = {};
+      };
+
+      copyItems = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          If enabled, kernel/initrd/squashfs images are copied to tftp/nginx
+          roots, so that dependencies on the contained store paths are dropped.
+
+          When deploying to a remote PXE server, you want this option to be enabled
+          to reduce the amount of data being transfered. If the PXE server
+          is running on the build machine itself, disabling this option will
+          make the build faster.
+        '';
       };
 
       extraMappings = mkOption {
