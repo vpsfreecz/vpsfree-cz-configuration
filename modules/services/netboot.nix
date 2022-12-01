@@ -12,28 +12,25 @@ let
   # See https://wiki.syslinux.org/wiki/index.php?title=PXELINUX#Configuration
   transformMac = mac: replaceStrings [ ":" ] [ "-" ] mac;
 
-  deployItemsBoot = items: concatNl (mapAttrsToList (name: item: ''
-    mkdir -p $out/boot/${name}
-    for i in ${item.dir}/{kernel,bzImage,initrd}; do
+  copyOrSymlink = name: item: type: pattern: pkgs.runCommand "netboot-${name}-${type}" {} ''
+    mkdir $out
+    for i in ${item.dir}/${pattern}; do
       [ ! -e "$i" ] && continue
       ${if cfg.copyItems then ''
-      cp -L $i $out/boot/${name}/$(basename $i)
+      cp -L $i $out/$(basename $i)
       '' else ''
-      ln -s $i $out/boot/${name}/$(basename $i)
+      ln -s $i $out/$(basename $i)
       ''}
     done
+  '';
+
+  deployItemsBoot = items: concatNl (mapAttrsToList (name: item: ''
+    mkdir -p $out/boot
+    ln -s ${copyOrSymlink name item "boot" "{kernel,bzImage,initrd}"} $out/boot/${name}
   '') items);
 
   deployItemsRootfs = items: concatNl (mapAttrsToList (name: item: ''
-    mkdir -p $out/${name}
-    for i in ${item.dir}/root.squashfs; do
-      [ ! -e "$i" ] && continue
-      ${if cfg.copyItems then ''
-      cp -L $i $out/${name}/$(basename $i)
-      '' else ''
-      ln -s $i $out/${name}/$(basename $i)
-      ''}
-    done
+    ln -s ${copyOrSymlink name item "rootfs" "root.squashfs"} $out/${name}
   '') items);
 
   nginxRoot = pkgs.runCommand "nginxroot" { buildInputs = [ pkgs.openssl ]; } ''
