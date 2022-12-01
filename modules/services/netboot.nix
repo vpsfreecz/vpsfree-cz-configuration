@@ -12,25 +12,27 @@ let
   # See https://wiki.syslinux.org/wiki/index.php?title=PXELINUX#Configuration
   transformMac = mac: replaceStrings [ ":" ] [ "-" ] mac;
 
-  symlinkItemsBoot = items: concatNl (mapAttrsToList (name: item: ''
+  cpItemsBoot = items: concatNl (mapAttrsToList (name: item: ''
     mkdir -p $out/boot/${name}
     for i in ${item.dir}/{kernel,bzImage,initrd}; do
-      [ -e "$i" ] && ln -s $i $out/boot/${name}/$( basename $i)
+      [ -e "$i" ] && cp -L $i $out/boot/${name}/$( basename $i)
     done
   '') items);
 
-  symlinkItemsRootfs = items: concatNl (mapAttrsToList (name: item: ''
+  cpItemsRootfs = items: concatNl (mapAttrsToList (name: item: ''
     mkdir -p $out/${name}
     for i in ${item.dir}/root.squashfs; do
-      ln -s $i $out/${name}/$( basename $i)
+      # Copy the squashfs images to remove their dependencies on individual
+      # store paths
+      [ -e "$i" ] && cp -L $i $out/${name}/$( basename $i)
     done
   '') items);
 
   nginxRoot = pkgs.runCommand "nginxroot" { buildInputs = [ pkgs.openssl ]; } ''
     mkdir -pv $out
 
-    ${symlinkItemsRootfs cfg.nixosItems}
-    ${symlinkItemsRootfs cfg.vpsadminosItems}
+    ${cpItemsRootfs cfg.nixosItems}
+    ${cpItemsRootfs cfg.vpsadminosItems}
   '';
 
   extractMapping = name: item:
@@ -210,8 +212,8 @@ let
     '') osItemIncludeConfigs)}
 
     # Links for kernels and initrd
-    ${symlinkItemsBoot cfg.nixosItems}
-    ${symlinkItemsBoot cfg.vpsadminosItems}
+    ${cpItemsBoot cfg.nixosItems}
+    ${cpItemsBoot cfg.vpsadminosItems}
   '';
 in
 {
