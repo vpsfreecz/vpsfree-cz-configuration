@@ -53,7 +53,7 @@ in {
 
   users.groups = {
     "crashdump".members = [ "crashdump" ];
-    "tty-vpsf-net".members = [ "snajpa" "dante" ];
+    "tty-vpsf-net".members = [ "snajpa" ];
   };
 
   users.users = {
@@ -70,12 +70,6 @@ in {
       isNormalUser = true;
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGZx+5fCM/NBwVZItoTTs6wv57yFcfipM1Xl7SOyn0sj snajpa@snajpabook.vpsfree.cz"
-      ];
-    };
-    dante = {
-      isNormalUser = true;
-      openssh.authorizedKeys.keys = [
-        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCv2+MmO2eiA/zEoaWL/hyueSZY1P+dOBX8Wa17EL8nmcaFFJbXNdeQj+/boBlVctZG8uvqyvGNs3wxKIrypd8Xet5TiEG04JaJhu+LvGb6DBdfB2KLxmZrgmfZ3q9tH3NxZgLeJdpe+/QQ5PBqPnpplqH2oaeG6LrmU1Z9JhAfAmHrVUUiJV6alTH5crYMBu+gQ0PwmM63pANyaXvB3/hbnHeq60vHSAdLLdPr7LBOLv+da1qy0Qg03kg7BJn3RNHO2mirT9W0WJYWgtB83NAAXRQO/jp9n7+oaHfSiXLAImXPX6n1HWkFTS/ZKvVlz6U3yFNca4Ihdr8J8+CYwXhe0+aU+7/CEXaofGtQaN5fCNOrzj/xJTR2n3/1iXkEzOCEpwad3vTMuKh0jcsdx5JgBQAnFgYfUC8C395lWxqlT7tIMBuQcCcbRqn02VAGU/076M7LvVoAJUTPhPOly/EYTfBOr+Y2a9o4F6j5Ogjv2LXtR275ujH9JfVl02b3yLs= dante@macbook.local"
       ];
     };
   };
