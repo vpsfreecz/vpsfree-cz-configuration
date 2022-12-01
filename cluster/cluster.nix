@@ -24,18 +24,11 @@
   ./cz.vpsfree/nodes/pgnd/node1/module.nix
   ./cz.vpsfree/nodes/prg/backuper/module.nix
   ./cz.vpsfree/nodes/prg/nasbox/module.nix
-  ./cz.vpsfree/nodes/prg/node1/module.nix
-  ./cz.vpsfree/nodes/prg/node10/module.nix
-  ./cz.vpsfree/nodes/prg/node11/module.nix
-  ./cz.vpsfree/nodes/prg/node13/module.nix
   ./cz.vpsfree/nodes/prg/node15/module.nix
   ./cz.vpsfree/nodes/prg/node21/module.nix
   ./cz.vpsfree/nodes/prg/node22/module.nix
   ./cz.vpsfree/nodes/prg/node23/module.nix
   ./cz.vpsfree/nodes/prg/node24/module.nix
-  ./cz.vpsfree/nodes/prg/node7/module.nix
-  ./cz.vpsfree/nodes/prg/node8/module.nix
-  ./cz.vpsfree/nodes/prg/node9/module.nix
   ./cz.vpsfree/nodes/stg/node1/module.nix
   ./cz.vpsfree/vpsadmin/int.api1/module.nix
   ./cz.vpsfree/vpsadmin/int.api2/module.nix
