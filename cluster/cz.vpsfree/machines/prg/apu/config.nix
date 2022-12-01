@@ -1,5 +1,12 @@
-{ config, pkgs, ... }:
-{
+{ config, pkgs, lib, confDir, confLib, confData, ... }:
+let
+  images = import ../../../../../lib/images.nix {
+    inherit config lib pkgs confDir confLib confData;
+    nixosModules = [
+      ../../../../../environments/base.nix
+    ];
+  };
+in {
   imports = [
     ./hardware.nix
     ../../common/apu.nix
@@ -24,6 +31,18 @@
   networking.interfaces.enp1s0.ipv4.routes = [
     { address = "172.16.0.0"; prefixLength = 12; via = "172.16.254.1"; }
   ];
+
+  services.netboot = {
+    enable = true;
+    host = "172.16.254.254";
+    inherit (images) nixosItems;
+    vpsadminosItems = images.allNodes "vpsfree.cz";
+    includeNetbootxyz = true;
+    allowedIPRanges = [
+      "172.16.254.0/24"
+      "172.19.254.0/24"
+    ];
+  };
 
   system.stateVersion = "21.11";
 }

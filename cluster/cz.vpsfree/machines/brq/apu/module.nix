@@ -7,7 +7,7 @@
     addresses = {
       v4 = [ { address = "172.19.254.254"; prefix = 24; } ];
     };
-    tags = [ "apu" ];
+    tags = [ "apu" "pxe" "pxe-brq" ];
     services = {
       node-exporter = {};
       sachet = {};
