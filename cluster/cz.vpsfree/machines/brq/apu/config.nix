@@ -31,7 +31,7 @@ in {
   ];
 
   services.netboot = {
-    enable = true;
+    enable = false;
     host = "172.19.254.254";
     inherit (images) nixosItems;
     vpsadminosItems = images.allNodes "vpsfree.cz";
