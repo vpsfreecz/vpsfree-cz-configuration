@@ -299,6 +299,14 @@ in
         default = [];
         example = "10.0.0.0/24";
       };
+
+      tftp.bindAddress = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          The address for the TFTP server to bind on
+        '';
+      };
     };
   };
 
@@ -307,14 +315,23 @@ in
       allowedTCPPorts = [ 80 ] ++ lib.optional cfg.acmeSSL 443;
 
       extraCommands = mkIf (cfg.allowedIPRanges != []) (concatNl (map (net: ''
-        iptables -A nixos-fw -p udp -s ${net} --dport 68 -j nixos-fw-accept
-        iptables -A nixos-fw -p udp -s ${net} --dport 69 -j nixos-fw-accept
+        # Allow access from ${net} for netboot
+        iptables -A nixos-fw -p udp -s ${net} ${optionalString (!isNull cfg.tftp.bindAddress) "-d ${cfg.tftp.bindAddress}"} --dport 68 -j nixos-fw-accept
+        iptables -A nixos-fw -p udp -s ${net} ${optionalString (!isNull cfg.tftp.bindAddress) "-d ${cfg.tftp.bindAddress}"} --dport 69 -j nixos-fw-accept
       '') cfg.allowedIPRanges));
     };
 
-    services.tftpd = {
-      enable = true;
-      path = tftpRoot;
+    systemd.services.netboot-atftpd = {
+      description = "TFTP Server for Netboot";
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+      # runs as nobody
+      serviceConfig.ExecStart = toString ([
+        "${pkgs.atftp}/sbin/atftpd"
+        "--daemon"
+        "--no-fork"
+      ] ++ (optional (!isNull cfg.tftp.bindAddress) [ "--bind-address" cfg.tftp.bindAddress ])
+        ++ [ tftpRoot ]);
     };
 
     services.nginx = {
