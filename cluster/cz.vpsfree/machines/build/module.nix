@@ -7,6 +7,7 @@
     addresses = {
       v4 = [ { address = "172.16.106.5"; prefix = 24; } ];
     };
+    tags = [ "build" "pxe" "pxe-primary" ];
     services.node-exporter = {};
   };
 }

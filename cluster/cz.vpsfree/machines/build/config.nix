@@ -1,5 +1,12 @@
-{ config, pkgs, lib, ... }:
-{
+{ config, pkgs, lib, confDir, confLib, confData, ... }:
+let
+  images = import ../../../../lib/images.nix {
+    inherit config lib pkgs confDir confLib confData;
+    nixosModules = [
+      ../../../../environments/base.nix
+    ];
+  };
+in {
   imports = [
     ../../../../environments/base.nix
     ../../../../environments/deploy.nix
@@ -86,6 +93,19 @@
       ${pkgs.rsync}/bin/rsync -av --delete -e ${pkgs.openssh}/bin/ssh "${config.services.build-vpsadminos-container-image-repository.vpsadminos.repositoryDirectory}/" images.int.vpsadminos.org:/srv/images/
     '';
     systemd.timer.enable = true;
+  };
+
+  services.netboot = {
+    enable = true;
+    host = "172.16.106.5";
+    inherit (images) nixosItems;
+    vpsadminosItems = images.allNodes "vpsfree.cz";
+    copyItems = false;
+    includeNetbootxyz = true;
+    allowedIPRanges = [
+      "172.16.254.0/24"
+      "172.19.254.0/24"
+    ];
   };
 
   system.stateVersion = "22.05";
