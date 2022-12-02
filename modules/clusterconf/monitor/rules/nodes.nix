@@ -703,6 +703,26 @@
       }
 
       {
+        alert = "VpsNoRefquotaSet";
+        expr = ''osctl_container_dataset_refquota_bytes{job="nodes"} == 0'';
+        for = "15m";
+        labels = {
+          alertclass = "vpsquota";
+          severity = "warning";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "VPS has no refquota set (instance {{ $labels.instance }})";
+          description = ''
+            VPS has no refquota set
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "VpsStartingTooLong";
         expr = ''osctl_container_state_starting{job="nodes"} == 1'';
         for = "15m";
