@@ -11,22 +11,22 @@
       "url": "https://github.com/NixOS/nixpkgs"
     },
     "state": {
-      "rev": "67e45078141102f45eff1589a831aeaa3182b41e",
-      "date": "2022-09-05T10:13:07+02:00"
+      "rev": "660e7737851506374da39c0fa550c202c824a17c",
+      "date": "2022-12-04T18:07:52+01:00"
     },
     "info": {
-      "rev": "67e45078141102f45eff1589a831aeaa3182b41e",
-      "sha256": "07d7zmn5jwwxfy1rl76pzp086z5swbblffpqynzphy2g684lpmii"
+      "rev": "660e7737851506374da39c0fa550c202c824a17c",
+      "sha256": "19vv89p2s8kcs7acjkfv473caxbfhxvy3vijkjg8bkwmgm1xvpya"
     },
     "fetcher": {
       "type": "git-rev",
       "options": {
-        "rev": "67e45078141102f45eff1589a831aeaa3182b41e",
+        "rev": "660e7737851506374da39c0fa550c202c824a17c",
         "wrapped_fetcher": {
           "type": "zip",
           "options": {
-            "url": "https://github.com/NixOS/nixpkgs/archive/67e45078141102f45eff1589a831aeaa3182b41e.tar.gz",
-            "sha256": "07d7zmn5jwwxfy1rl76pzp086z5swbblffpqynzphy2g684lpmii"
+            "url": "https://github.com/NixOS/nixpkgs/archive/660e7737851506374da39c0fa550c202c824a17c.tar.gz",
+            "sha256": "19vv89p2s8kcs7acjkfv473caxbfhxvy3vijkjg8bkwmgm1xvpya"
           }
         }
       }
@@ -72,27 +72,27 @@
       "update": {
         "auto": false,
         "interval": 3600,
-        "ref": "refs/heads/prod-22.09"
+        "ref": "refs/heads/prod-22.12"
       },
       "url": "https://github.com/vpsfreecz/vpsadminos"
     },
     "state": {
-      "rev": "2606df6267496e19d37416ef94c3bdce847f4d08",
-      "date": "2022-11-24T18:06:40+01:00"
+      "rev": "9151ea968d416954183b6a0588a67c1753cfc3cf",
+      "date": "2022-12-04T18:05:12+01:00"
     },
     "info": {
-      "rev": "2606df6267496e19d37416ef94c3bdce847f4d08",
-      "sha256": "071k249x3icywmb55kcld4jilbgx44364x19izy73q2xsly6qxc3"
+      "rev": "9151ea968d416954183b6a0588a67c1753cfc3cf",
+      "sha256": "14bqzngwylgimmlsn5jj5ggna9csk2ic2zqflzdrpdyda2r2wclc"
     },
     "fetcher": {
       "type": "git-rev",
       "options": {
-        "rev": "2606df6267496e19d37416ef94c3bdce847f4d08",
+        "rev": "9151ea968d416954183b6a0588a67c1753cfc3cf",
         "wrapped_fetcher": {
           "type": "zip",
           "options": {
-            "url": "https://github.com/vpsfreecz/vpsadminos/archive/2606df6267496e19d37416ef94c3bdce847f4d08.tar.gz",
-            "sha256": "071k249x3icywmb55kcld4jilbgx44364x19izy73q2xsly6qxc3"
+            "url": "https://github.com/vpsfreecz/vpsadminos/archive/9151ea968d416954183b6a0588a67c1753cfc3cf.tar.gz",
+            "sha256": "14bqzngwylgimmlsn5jj5ggna9csk2ic2zqflzdrpdyda2r2wclc"
           }
         }
       }
