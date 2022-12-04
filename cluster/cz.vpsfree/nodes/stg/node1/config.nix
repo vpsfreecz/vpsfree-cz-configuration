@@ -4,6 +4,7 @@
     ../common.nix
     ../../common/netboot.nix
     ../../common/tank.nix
+    ../../common/tunables-256g.nix
   ];
 
   boot.zfs.pools = {

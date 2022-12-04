@@ -7,6 +7,7 @@ in {
   imports = [
     ../common.nix
     ../../common/tank-hdd.nix
+    ../../common/tunables-256g.nix
   ];
 
   boot.kernelModules = [ "bonding" "8021q" ];

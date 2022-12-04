@@ -6,6 +6,7 @@ let
 in {
   imports = [
     ../common.nix
+    ../../common/tunables-512g.nix
   ];
 
   boot.initrd.kernelModules = [ "bnxt_en" ];

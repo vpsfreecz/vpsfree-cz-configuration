@@ -6,6 +6,7 @@ let
 in {
   imports = [
     ../common.nix
+    ../../common/tunables-256g.nix
   ];
 
   boot.kernelModules = [ "bonding" "8021q" ];

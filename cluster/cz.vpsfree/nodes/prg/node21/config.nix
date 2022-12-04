@@ -2,6 +2,7 @@
 {
   imports = [
     ../common.nix
+    ../../common/tunables-1t.nix
   ];
 
   boot.zfs.pools = {

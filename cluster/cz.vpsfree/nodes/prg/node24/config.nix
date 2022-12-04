@@ -2,6 +2,7 @@
 {
   imports = [
     ../common.nix
+    ../../common/tunables-2t.nix
   ];
 
   boot.kernel.sysctl = {
