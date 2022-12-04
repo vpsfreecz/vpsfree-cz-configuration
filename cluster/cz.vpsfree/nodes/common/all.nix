@@ -26,7 +26,6 @@
   };
 
   boot.extraModprobeConfig = ''
-    options zfs zfs_arc_min=34359738368
     options ixgbe allow_unsupported_sfp=1
   '';
 
