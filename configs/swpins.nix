@@ -69,6 +69,6 @@ in {
 
     nixos-unstable = { nixpkgs = nixpkgsBranch "nixos-unstable"; };
 
-    nixos-stable = { nixpkgs = nixpkgsBranch "nixos-22.05"; };
+    nixos-stable = { nixpkgs = nixpkgsBranch "nixos-22.11"; };
   };
 }
