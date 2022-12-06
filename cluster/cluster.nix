@@ -17,7 +17,6 @@
   ./cz.vpsfree/machines/build-old/module.nix
   ./cz.vpsfree/machines/prg/apu/module.nix
   ./cz.vpsfree/machines/prg/int.vpn/module.nix
-  ./cz.vpsfree/machines/pxe/module.nix
   ./cz.vpsfree/nodes/brq/node2/module.nix
   ./cz.vpsfree/nodes/brq/node4/module.nix
   ./cz.vpsfree/nodes/brq/node5/module.nix
