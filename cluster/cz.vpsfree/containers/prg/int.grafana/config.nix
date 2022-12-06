@@ -21,13 +21,17 @@ in {
 
   services.grafana = {
     enable = true;
-    addr = "0.0.0.0";
-    port = grafanaPort;
-    domain = "grafana.prg.vpsfree.cz";
-    rootUrl = "https://grafana.prg.vpsfree.cz/";
-    auth.anonymous = {
-      enable = true;
-      org_name = "vpsFree.cz";
+    settings = {
+      server = {
+        http_addr = "0.0.0.0";
+        http_port = grafanaPort;
+        domain = "grafana.prg.vpsfree.cz";
+        root_url = "https://grafana.prg.vpsfree.cz/";
+      };
+      "auth.anonymous" = {
+        enabled = true;
+        org_name = "vpsFree.cz";
+      };
     };
   };
 
