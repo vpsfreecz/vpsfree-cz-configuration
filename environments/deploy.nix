@@ -11,18 +11,15 @@ let
     };
 in
 {
-  nix = {
-    useSandbox = true;
-    sandboxPaths = [
+  nix.settings = {
+    sandbox = true;
+    extra-sandbox-paths = [
       "/nix/var/cache/ccache"
       "/secrets/image/secrets"
     ];
-    buildCores = 0;
-    extraOptions =
-     ''
-       gc-keep-outputs = true
-       gc-keep-derivations = true
-     '';
+    cores = 0;
+    gc-keep-outputs = true;
+    gc-keep-derivations = true;
   };
 
   environment.enableDebugInfo = true;
