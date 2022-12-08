@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2022120100 ; serial number of this zone file
+              2022120800 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -98,8 +98,7 @@ backuper-mgmt.prg              IN   A       172.16.101.5
 nasbox-mgmt.prg                IN   A       172.16.101.6
 pxe-mgmt.prg                   IN   A       172.16.101.254
 build-old-mgmt.prg             IN   A       172.16.101.253
-node1-mgmt.pgnd                IN   A       172.16.101.101
-node2-mgmt.pgnd                IN   A       172.16.101.117
+node1-mgmt.pgnd                IN   A       172.16.101.117
 node1-mgmt.stg                 IN   A       172.16.101.44
 node1-mgmt.brq                 IN   A       172.19.101.20
 node2-mgmt.brq                 IN   A       172.19.101.21
@@ -135,7 +134,6 @@ node24.prg                     IN   A       172.16.0.34
 backuper.prg                   IN   A       172.16.0.5
 nasbox.prg                     IN   A       172.16.0.6
 node1.pgnd                     IN   A       172.16.2.10
-node2.pgnd                     IN   A       172.16.2.11
 node1.brq                      IN   A       172.19.0.10
 node2.brq                      IN   A       172.19.0.11
 node3.brq                      IN   A       172.19.0.12
