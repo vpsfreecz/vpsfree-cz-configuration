@@ -80,7 +80,7 @@ in {
 
     systemd.tmpfiles.rules = [
       "d '${cfg.stateDir}' 0750 ${cfg.user} ${cfg.group} - -"
-      "p '${cfg.settings.syslog_pipe}' 0750 root ${cfg.group} - -"
+      "p '${cfg.settings.syslog_pipe}' 0640 root ${cfg.group} - -"
     ];
 
     systemd.services.syslog-exporter = {
