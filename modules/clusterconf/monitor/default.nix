@@ -608,6 +608,7 @@ in {
           ./rules/vpsfree-web.nix
           ./rules/systemd.nix
           ./rules/nodectld.nix
+          ./rules/syslog.nix
         ]) ++ (map (v: import v { inherit lib; }) [
           ./rules/test.nix
           ./rules/vpsadmin.nix
