@@ -65,6 +65,23 @@ let
         }) machines;
       };
 
+    loggers =
+      let
+        machines = filter (m:
+          m.config.logging.isLogger && m.config.host.fqdn != confMachine.host.fqdn
+        ) monitoredMachines;
+      in {
+        exporterConfigs = map (m: {
+          targets = [
+            "${m.config.host.fqdn}:${toString m.config.services.syslog-exporter.port}"
+          ];
+          labels = {
+            logger_alias = getAlias m.config.host;
+            logger_fqdn = m.config.host.fqdn;
+          };
+        }) machines;
+      };
+
     infra =
       let
         machines = filter (m:
@@ -364,6 +381,12 @@ in {
             ];
           }
         ) ++ [
+          {
+            job_name = "log";
+            scrape_interval = "60s";
+            static_configs = scrapeConfigs.loggers.exporterConfigs;
+          }
+        ] ++ [
           {
             job_name = "nodes";
             scrape_interval = "30s";
