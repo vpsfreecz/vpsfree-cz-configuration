@@ -8,6 +8,8 @@ self: super:
 
   sachet = super.callPackage ../packages/sachet {};
 
+  syslog-exporter = super.callPackage ../packages/syslog-exporter {};
+
   vpsf-status = super.callPackage ../packages/vpsf-status {};
 
   vpsfree-irc-bot = super.callPackage ../packages/vpsfree-irc-bot {};
