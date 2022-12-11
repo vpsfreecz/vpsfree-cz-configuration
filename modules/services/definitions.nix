@@ -49,6 +49,7 @@ in {
       nix-serve.port = 5000;
       node-exporter.port = 9100;
       osctl-exporter.port = 9101;
+      syslog-exporter.port = 9102;
       rsyslog-tcp.port = 11514;
       rsyslog-udp.port = 11515;
       sachet.port = 9876;

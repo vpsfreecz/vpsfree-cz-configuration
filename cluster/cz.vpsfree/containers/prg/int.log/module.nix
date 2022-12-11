@@ -13,6 +13,7 @@
       rsyslog-tcp = {};
       rsyslog-udp = {};
       node-exporter = {};
+      syslog-exporter = {};
     };
   };
 }

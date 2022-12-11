@@ -7,6 +7,20 @@ let
   loggedAddresses = filter (a:
     a.config.logging.enable
   ) (confLib.getAllAddressesOf config.cluster 4);
+
+  allMachines = confLib.getClusterMachines config.cluster;
+
+  getAlias = host: "${host.name}${optionalString (!isNull host.location) ".${host.location}"}";
+
+  syslogExporterHosts = listToAttrs (map (m: nameValuePair m.name {
+    alias = getAlias m.config.host;
+    fqdn = m.config.host.fqdn;
+    os = m.config.spin;
+  }) allMachines);
+
+  syslogExporterPort = confMachine.services.syslog-exporter.port;
+
+  monitorings = filter (d: d.config.monitoring.isMonitor) allMachines;
 in {
   imports = [
     ../../../../../environments/base.nix
@@ -28,6 +42,12 @@ in {
         iptables -A nixos-fw -p tcp -s ${a.address} --dport ${toString rsyslogTcpPort} -j nixos-fw-accept
         iptables -A nixos-fw -p udp -s ${a.address} --dport ${toString rsyslogUdpPort} -j nixos-fw-accept
       '') loggedAddresses}
+
+      ### Syslog-exporter
+      ${concatStringsSep "\n" (map (d: ''
+        # Allow access to syslog-exporter from ${d.config.host.fqdn}
+        iptables -A nixos-fw -p tcp -m tcp -s ${d.config.addresses.primary.address} --dport ${toString syslogExporterPort} -j nixos-fw-accept
+      '') monitorings)}
     '';
   };
 
@@ -40,8 +60,16 @@ in {
       $template remote-incoming-logs, "/var/log/remote/%HOSTNAME%/log"
       *.* ?remote-incoming-logs
 
-      *.* |/var/log/rsyslog.pipe
+      *.* |${config.services.syslog-exporter.settings.syslog_pipe}
     '';
+  };
+
+  services.syslog-exporter = {
+    enable = true;
+    settings = {
+      port = syslogExporterPort;
+      hosts = syslogExporterHosts;
+    };
   };
 
   services.logrotate = {
