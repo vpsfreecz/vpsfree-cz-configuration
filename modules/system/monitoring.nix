@@ -9,9 +9,11 @@ let
 
   exporterPort = confMachine.services.node-exporter.port;
 
+  textfileDir = "/run/metrics";
+
   smartmon = pkgs.writeScript "smartmon.sh-wrapper" ''
-    ${pkgs.node-exporter-textfile-collector-scripts}/bin/smartmon.sh > /run/metrics/smartmon.prom.$$
-    mv /run/metrics/smartmon.prom.$$ /run/metrics/smartmon.prom
+    ${pkgs.node-exporter-textfile-collector-scripts}/bin/smartmon.sh > ${textfileDir}/smartmon.prom.$$
+    mv ${textfileDir}/smartmon.prom.$$ ${textfileDir}/smartmon.prom
   '';
 
 in {
@@ -28,6 +30,7 @@ in {
     {
       system.monitoring.enable = mkDefault confMachine.monitoring.enable;
     }
+
     (mkIf cfg.enable {
       networking.firewall.extraCommands = concatStringsSep "\n" (map (d: ''
         # Allow access to node-exporter from ${d.config.host.fqdn}
@@ -38,19 +41,63 @@ in {
         node = {
           enable = true;
           port = exporterPort;
-          extraFlags = [ "--collector.textfile.directory=/run/metrics" ];
-          enabledCollectors = [
-            "vmstat"
-            "interrupts"
-            "textfile"
-            "processes"
-          ] ++ (optionals (confMachine.spin == "nixos") [ "systemd" "logind" ])
-            ++ (optionals (confMachine.spin == "vpsadminos") [ "runit" "nfs" ])
-            ++ (optionals (!config.boot.isContainer) [ "hwmon" "mdadm" "ksmd" ]);
         };
       };
     })
+
+    # NixOS machines
+    (mkIf (cfg.enable && confMachine.spin == "nixos" && !config.boot.isContainer) {
+      services.prometheus.exporters.node = {
+        extraFlags = [ "--collector.textfile.directory=${textfileDir}" ];
+        enabledCollectors = [
+          "hwmon"
+          "interrupts"
+          "ksmd"
+          "logind"
+          "mdadm"
+          "processes"
+          "systemd"
+          "textfile"
+          "vmstat"
+        ];
+      };
+    })
+
+    # NixOS containers
+    (mkIf (cfg.enable && confMachine.spin == "nixos" && config.boot.isContainer) {
+      services.prometheus.exporters.node = {
+        extraFlags = [
+          "--collector.disable-defaults"
+          "--collector.filesystem"
+          "--collector.loadavg"
+          "--collector.logind"
+          "--collector.meminfo"
+          "--collector.os"
+          "--collector.systemd"
+          "--collector.textfile"
+          "--collector.textfile.directory=${textfileDir}"
+          "--collector.uname"
+        ];
+      };
+    })
+
+    # vpsAdminOS nodes
     (mkIf (cfg.enable && confMachine.spin == "vpsadminos") {
+      services.prometheus.exporters.node = {
+        extraFlags = [ "--collector.textfile.directory=${textfileDir}" ];
+        enabledCollectors = [
+          "hwmon"
+          "interrupts"
+          "ksmd"
+          "mdadm"
+          "nfs"
+          "processes"
+          "runit"
+          "textfile"
+          "vmstat"
+        ];
+      };
+
       services.cron.systemCronJobs = [
         "0 9 * * * root ${smartmon}"
       ];
