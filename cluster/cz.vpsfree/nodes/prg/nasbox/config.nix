@@ -16,10 +16,7 @@
 
   boot.kernelModules = [ "8021q" ];
 
-  services.nfs.server.nfsd = {
-    nproc = 16;
-    udp = true;
-  };
+  services.nfs.server.nfsd.nproc = 16;
 
   boot.zfs.moduleParams.zfs = {
     "zfs_arc_min" = 48 * 1024*1024*1024;
