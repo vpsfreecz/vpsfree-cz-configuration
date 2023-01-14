@@ -7,7 +7,7 @@
 
   vpsadmin.nodectld.settings = {
     vpsadmin = {
-      net_interfaces = [ "oneg0" "oneg1" ];
+      net_interfaces = [ "teng0" "teng1" ];
     };
     console = {
       host = "172.16.0.6";
