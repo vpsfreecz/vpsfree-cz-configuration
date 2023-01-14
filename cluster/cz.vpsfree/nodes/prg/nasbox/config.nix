@@ -21,6 +21,11 @@
     udp = true;
   };
 
+  boot.zfs.moduleParams.zfs = {
+    "zfs_arc_min" = 48 * 1024*1024*1024;
+    "zfs_arc_max" = 128 * 1024*1024*1024;
+  };
+
   boot.zfs.pools.storage = {
     guid = "2575935829831167981";
 
