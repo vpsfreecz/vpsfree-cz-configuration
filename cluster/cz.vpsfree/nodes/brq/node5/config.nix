@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ...}:
+{ config, pkgs, lib, ... }:
 let
   bondIfaces = [ "teng0" "teng1" ];
   bondVlan = 200;

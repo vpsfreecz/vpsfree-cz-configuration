@@ -1,4 +1,4 @@
-{ config, lib, ...}:
+{ config, lib, ... }:
 {
   boot.kernel.sysctl = {
     "kernel.sched_cfs_bandwidth_slice_us" = 15000;

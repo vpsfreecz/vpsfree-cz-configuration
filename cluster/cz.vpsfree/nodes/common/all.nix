@@ -1,4 +1,4 @@
-{ config, lib, pkgs, confData, confMachine, confLib, ...}:
+{ config, lib, pkgs, confData, confMachine, confLib, ... }:
 {
   imports = [
     <vpsadmin/nixos/modules/vpsadminos-modules.nix>
