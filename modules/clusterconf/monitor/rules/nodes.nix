@@ -705,7 +705,7 @@
       {
         alert = "VpsNoRefquotaSet";
         expr = ''osctl_container_dataset_refquota_bytes{job="nodes"} == 0'';
-        for = "15m";
+        for = "12h";
         labels = {
           alertclass = "vpsquota";
           severity = "warning";
