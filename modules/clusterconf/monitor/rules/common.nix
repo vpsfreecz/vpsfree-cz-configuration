@@ -106,6 +106,72 @@
         };
       }
       {
+        alert = "ZpoolStatusFailed";
+        expr = "zpool_status_success != 1";
+        for = "5m";
+        labels = {
+          severity = "critical";
+        };
+        annotations = {
+          summary = "zpool status failed (instance {{ $labels.instance }})";
+          description = ''
+            An error occurred while running zpool status
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+      {
+        alert = "ZpoolStatusParseError";
+        expr = "zpool_status_parse_success != 1";
+        labels = {
+          severity = "warning";
+        };
+        annotations = {
+          summary = "Unexpected zpool status output (instance {{ $labels.instance }})";
+          description = ''
+            An error occurred while parsing output of zpool status
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+      {
+        alert = "ZpoolStatusVdevErrorsWarn";
+        expr = ''zpool_status_vdev_read_errors{vdev_state="online"} > 0 or on(instance, vdev_name) zpool_status_vdev_write_errors{vdev_state="online"} > 0 or on(instance, vdev_name) zpool_status_vdev_checksum_errors{vdev_state="online"} > 0'';
+        labels = {
+          alertclass = "zpool_vdev_errors";
+          severity = "warning";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Vdev is exhibiting errors (instance {{ $labels.instance }})";
+          description = ''
+            Vdev is exhibiting read/write/checksum errors
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+      {
+        alert = "ZpoolStatusVdevErrorsCrit";
+        expr = ''zpool_status_vdev_read_errors{vdev_state="online"} > 0 or on(instance, vdev_name) zpool_status_vdev_write_errors{vdev_state="online"} > 0 or on(instance, vdev_name) zpool_status_vdev_checksum_errors{vdev_state="online"} > 0'';
+        for = "24h";
+        labels = {
+          alertclass = "zpool_vdev_errors";
+          severity = "critical";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Vdev is exhibiting errors (instance {{ $labels.instance }})";
+          description = ''
+            Vdev is exhibiting read/write/checksum errors
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+      {
         alert = "FilesystemLowFreeSpace";
         expr = ''(node_filesystem_avail_bytes{mountpoint=~"^(/)|(/run)|(/nix/store)"} / node_filesystem_size_bytes) * 100 < 25'';
         for = "5m";
