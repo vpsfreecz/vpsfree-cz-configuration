@@ -4,24 +4,6 @@
     interval = "1h";
     rules = [
       {
-        alert = "DiskHighReallocatedSectorCount";
-        expr = ''smartmon_reallocated_sector_ct_raw_value > 0'';
-        labels = {
-          severity = "warning";
-          frequency = "weekly";
-        };
-        annotations = {
-          summary = "Reallocated sectors found (instance {{ $labels.instance }})";
-          description = ''
-            SMART reported Reallocated_Sector_Ct > 0
-
-            VALUE = {{ $value }}
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
-
-      {
         alert = "DiskLowAvailableReservedSpace";
         expr = ''smartmon_available_reservd_space_value < 75'';
         labels = {
@@ -50,28 +32,6 @@
           summary = "Reserved space is running out (instance {{ $labels.instance }})";
           description = ''
             SMART reported Available_Reservd_Space < 20
-
-            VALUE = {{ $value }}
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
-
-      {
-        alert = "DiskHighRawReadErrorRate";
-        expr = ''
-          delta(smartmon_raw_read_error_rate_raw_value[2d]) > 0
-          and delta(smartmon_raw_read_error_rate_raw_value[1d]) > 0
-          and delta(smartmon_raw_read_error_rate_raw_value[1d] offset 1d) > 0
-        '';
-        labels = {
-          severity = "warning";
-          frequency = "daily";
-        };
-        annotations = {
-          summary = "Raw read error rate detected (instance {{ $labels.instance }})";
-          description = ''
-            SMART reported Raw_Read_Error_Rate rising for two days in row
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
