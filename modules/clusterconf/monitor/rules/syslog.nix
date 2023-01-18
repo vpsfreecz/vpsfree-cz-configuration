@@ -89,6 +89,23 @@
       }
 
       {
+        alert = "KernelNullPointer";
+        expr = ''syslog_kernel_bug{type="nullptr"} == 1'';
+        labels = {
+          severity = "fatal";
+          frequency = "1m";
+        };
+        annotations = {
+          summary = "Kernel NULL pointer dereference has occurred (instance {{ $labels.instance }})";
+          description = ''
+            Kernel NULL pointer dereference has occurred
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "ZfsPanic";
         expr = ''syslog_zfs_panic == 1'';
         labels = {
