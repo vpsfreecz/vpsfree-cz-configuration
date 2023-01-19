@@ -4,7 +4,7 @@ GEM
     builder (3.2.4)
     daemons (1.4.1)
     eventmachine (1.2.7)
-    faraday (2.7.1)
+    faraday (2.7.3)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
@@ -19,15 +19,15 @@ GEM
     mustermann (2.0.2)
       ruby2_keywords (~> 0.0.1)
     nesty (1.0.2)
-    rack (2.2.4)
-    rack-protection (2.2.3)
+    rack (2.2.6.2)
+    rack-protection (2.2.4)
       rack
     reentrant_flock (0.1.1)
     ruby2_keywords (0.0.5)
-    sinatra (2.2.3)
+    sinatra (2.2.4)
       mustermann (~> 2.0)
       rack (~> 2.2)
-      rack-protection (= 2.2.3)
+      rack-protection (= 2.2.4)
       tilt (~> 2.0)
     thin (1.8.1)
       daemons (~> 1.0, >= 1.0.9)
@@ -43,4 +43,4 @@ DEPENDENCIES
   thin
 
 BUNDLED WITH
-   2.3.9
+   2.3.26
