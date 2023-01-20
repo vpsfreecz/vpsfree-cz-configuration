@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, confData, ... }:
 {
   imports = [
     ../../common/storage.nix
@@ -16,6 +16,12 @@
   };
 
   boot.kernelModules = [ "8021q" ];
+
+  # Allow access to NVME over TCP for devstation
+  networking.firewall.extraCommands = lib.concatMapStringsSep "\n" (net: ''
+    # Allow access to NVME over TCP from ${net.location} @ ${net.address}/${toString net.prefix}
+    iptables -A nixos-fw -p tcp -s ${net.address}/${toString net.prefix} --dport 4420 -j nixos-fw-accept
+  '') confData.vpsadmin.networks.management.ipv4;
 
   # The storage pool on backuper is in some weird state, where it can be seen
   # as two pools with the same name, one faulted with missing devices and one
