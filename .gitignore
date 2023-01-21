@@ -7,3 +7,4 @@
 .mkdocs.*
 .confctl
 .*.swp
+configs/node/kernels.json
