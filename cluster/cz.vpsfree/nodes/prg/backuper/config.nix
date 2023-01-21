@@ -15,7 +15,30 @@
     };
   };
 
-  boot.kernelModules = [ "8021q" ];
+  boot.kernelModules = [ "8021q" "nvmet" "nvmet-tcp" "configfs" ];
+
+  runit.services.nvme-target = {
+    run = ''
+      waitForService networking
+
+      mount -t configfs none /sys/kernel/config
+      mkdir /sys/kernel/config/nvmet/subsystems/devstation
+      cd /sys/kernel/config/nvmet/subsystems/devstation
+      echo 1 > attr_allow_any_host
+      mkdir namespaces/1
+      echo /dev/zvol/storage/nvme/devstation > namespaces/1/device_path
+      echo 1 > namespaces/1/enable
+      mkdir /sys/kernel/config/nvmet/ports/1
+      cd /sys/kernel/config/nvmet/ports/1
+      echo 172.16.0.5 > addr_traddr
+      echo tcp > addr_trtype
+      echo 4420 > addr_trsvcid
+      echo ipv4 > addr_adrfam
+      ln -s /sys/kernel/config/nvmet/subsystems/devstation subsystems/devstation
+    '';
+    oneShot = true;
+    onChange = "ignore";
+  };
 
   # Allow access to NVME over TCP for devstation
   networking.firewall.extraCommands = lib.concatMapStringsSep "\n" (net: ''
