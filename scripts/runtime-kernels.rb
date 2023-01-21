@@ -1,6 +1,6 @@
 require 'json'
 
-module UpdateNodeRuntimeKernels
+module RuntimeKernels
   class Script < ConfCtl::UserScript
     register
 
@@ -22,13 +22,13 @@ module UpdateNodeRuntimeKernels
           c.desc 'Assume the answer to confirmations is yes'
           c.switch %w(y yes)
 
-          c.action &ConfCtl::Cli::Command.run(c, RuntimeKernels, :update)
+          c.action &ConfCtl::Cli::Command.run(c, Command, :update)
         end
       end
     end
   end
 
-  class RuntimeKernels < ConfCtl::Cli::Cluster
+  class Command < ConfCtl::Cli::Cluster
     def update
       require_args!(optional: %w(machine-pattern))
 
