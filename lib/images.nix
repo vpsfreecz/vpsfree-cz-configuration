@@ -63,6 +63,7 @@ let
         modules = [
           {
             imports = [
+              ../configs/node/pxe-only.nix
               node.build.toplevel
             ];
           }

@@ -1,4 +1,4 @@
-{ config, lib, confLib, confData, confMachine, ... }:
+{ config, pkgs, lib, confLib, confData, confMachine, ... }:
 with lib;
 let
   cfg = confMachine;
@@ -9,8 +9,12 @@ let
       ++
       (map (addr: fn ifname 6 addr) ips.v6)
     ) addresses);
+
+  kernels = import ./kernels.nix { inherit pkgs; };
 in {
   config = mkIf (confMachine.osNode != null) {
+    boot.kernelVersion = mkDefault (kernels.getRuntimeKernelForMachine confMachine.name);
+
     vpsadmin.nodectld.settings = {
       vpsadmin = {
         node_id = cfg.node.id;
