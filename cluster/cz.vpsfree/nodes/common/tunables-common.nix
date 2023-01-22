@@ -19,7 +19,7 @@
 
   boot.zfs.moduleParams.zfs = {
     "zfs_arc_dnode_limit_percent" = 30;
-    "zfs_arc_meta_limit_percent" = 45;
+    "zfs_arc_meta_limit_percent" = 85;
     "zfs_per_txg_dirty_frees_percent" = 50;
     "zfs_vdev_async_read_max_active" = 16;
     "zfs_vdev_async_write_max_active" = 4;
