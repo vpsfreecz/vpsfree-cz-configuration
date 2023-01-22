@@ -4,8 +4,8 @@ let
   apiConfigRepo = pkgs.fetchFromGitHub {
     owner = "vpsfreecz";
     repo = "vpsadmin-config";
-    rev = "605779425bb37aa154f64d47721433be8623ba8e";
-    sha256 = "sha256-XJfvIfL8Liy95ZDFhiF35GlULs1rOAElAvFM/CQD7jE=";
+    rev = "4c963c1d414dc551cd902f5f2aa7b928dd1428dd";
+    sha256 = "sha256-YYCmztmmUEWpMiFOdk9vKWWaxNG4BJkoft+qX7vHntU=";
   };
 
   db = confLib.findConfig {
