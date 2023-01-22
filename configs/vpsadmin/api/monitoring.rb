@@ -160,7 +160,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
     query do
       ::NetworkInterfaceMonitor.select(
-          "#{::NetworkInterfaceMonitor.table_name}.*, SUM(bytes_out) AS bytes_all"
+          "#{::NetworkInterfaceMonitor.table_name}.*, SUM(bytes_out / delta) AS bytes_all"
       ).joins(
           network_interface: {vps: [:vps_current_status, user: :user_account]}
       ).where(
