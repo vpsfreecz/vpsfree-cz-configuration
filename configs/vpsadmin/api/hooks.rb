@@ -204,6 +204,6 @@ User.connect_hook(:create) do |ret, user|
       ))
     end
   end
- 
+
   ret
 end

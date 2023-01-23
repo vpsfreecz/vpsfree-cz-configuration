@@ -328,7 +328,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
     user { |dip| dip.dataset.user }
     action :alert_user_diskspace
   end
-  
+
   monitor :paid_cpu do
     label 'VPS CPU time'
     desc 'The VPS used more than 300% CPU for the last 3 or more days'
