@@ -7,14 +7,14 @@ DatasetInPool.connect_hook(:create) do |ret, dataset_in_pool|
     backup_pool = Pool.backup.take!
 
     dataset_in_pool.update!(
-        min_snapshots: 1,
-        max_snapshots: 1
+      min_snapshots: 1,
+      max_snapshots: 1
     )
 
     begin
       backup = DatasetInPool.create(
-          dataset: dataset_in_pool.dataset,
-          pool: backup_pool
+        dataset: dataset_in_pool.dataset,
+        pool: backup_pool
       )
 
       append(Transactions::Storage::CreateDataset, args: backup) do
@@ -25,8 +25,8 @@ DatasetInPool.connect_hook(:create) do |ret, dataset_in_pool|
       # Backup dataset already exists, we don't have to create it,
       # just recreate backup actions
       backup = DatasetInPool.find_by!(
-          dataset: dataset_in_pool.dataset,
-          pool: backup_pool
+        dataset: dataset_in_pool.dataset,
+        pool: backup_pool
       )
     end
 
@@ -50,12 +50,12 @@ DatasetInPool.connect_hook(:migrated) do |ret, from, to|
   if from.pool.node.location.environment.label == 'Playground' \
      && to.pool.node.location.environment.label == 'Production' \
      && !from.dataset_in_pool_plans.joins(
-             environment_dataset_plan: [:dataset_plan]
+           environment_dataset_plan: [:dataset_plan]
          ).exists?(dataset_plans: {name: :daily_backup})
     append(Transactions::Utils::NoOp, args: find_node_id) do
       VpsAdmin::API::DatasetPlans.plans[:daily_backup].register(
-          to,
-          confirmation: self
+        to,
+        confirmation: self
       )
     end
   end
@@ -166,22 +166,22 @@ User.connect_hook(:create) do |ret, user|
 
   # Create NAS dataset
   ds = ::Dataset.new(
-      name: user.id.to_s,
-      user: user,
-      user_editable: false,
-      user_create: true,
-      user_destroy: false,
-      confirmed: ::Dataset.confirmed(:confirm_create)
+    name: user.id.to_s,
+    user: user,
+    user_editable: false,
+    user_create: true,
+    user_destroy: false,
+    confirmed: ::Dataset.confirmed(:confirm_create)
   )
 
   dip = use_chain(TransactionChains::Dataset::Create, args: [
-      ::Pool.primary.take!,
-      nil,
-      [ds],
-      automount: false,
-      properties: {quota: 250*1024},
-      user: user,
-      label: 'nas',
+    ::Pool.primary.take!,
+    nil,
+    [ds],
+    automount: false,
+    properties: {quota: 250*1024},
+    user: user,
+    label: 'nas',
   ]).last
 
   # Assign user namespace block 8 * 65k uids

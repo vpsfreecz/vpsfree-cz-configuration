@@ -1,45 +1,45 @@
 MailTemplate.register :alert_role_event_state,
-    name: "alert_%{role}_%{event}_%{state}", params: {
-        role: 'user or admin',
-        event: 'name of event monitor',
-        state: 'event state',
-    }, vars: {
-        event: 'MonitoredEvent',
-        object: 'object associated with this event',
-        user: ::User,
-        base_url: 'URL to the web UI',
-    }, roles: %i(admin)
+  name: "alert_%{role}_%{event}_%{state}", params: {
+    role: 'user or admin',
+    event: 'name of event monitor',
+    state: 'event state',
+  }, vars: {
+    event: 'MonitoredEvent',
+    object: 'object associated with this event',
+    user: ::User,
+    base_url: 'URL to the web UI',
+  }, roles: %i(admin)
 
 MailTemplate.register :alert_role_diskspace_state_pool,
-    name: "alert_%{role}_diskspace_%{state}_%{pool}", params: {
-        role: 'user or admin',
-        state: 'event state',
-        pool: 'primary or hypervisor',
-    }, vars: {
-        event: 'MonitoredEvent',
-        dip: ::DatasetInPool,
-        ds: ::Dataset,
-        vps: '::Vps or nil',
-        user: ::User,
-        base_url: 'URL to the web UI',
-    }, roles: %i(admin)
+  name: "alert_%{role}_diskspace_%{state}_%{pool}", params: {
+    role: 'user or admin',
+    state: 'event state',
+    pool: 'primary or hypervisor',
+  }, vars: {
+    event: 'MonitoredEvent',
+    dip: ::DatasetInPool,
+    ds: ::Dataset,
+    vps: '::Vps or nil',
+    user: ::User,
+    base_url: 'URL to the web UI',
+  }, roles: %i(admin)
 
 VpsAdmin::API::Plugins::Monitoring.config do
   # Action definitions
   action :alert_user do |event|
     opts = {
-        params: {
-            role: :user,
-            event: event.monitor.name,
-            state: event.state == 'acknowledged' ? 'confirmed' : event.state,
-        },
+      params: {
+        role: :user,
+        event: event.monitor.name,
+        state: event.state == 'acknowledged' ? 'confirmed' : event.state,
+      },
+      user: event.user,
+      vars: {
+        event: event,
+        object: event.object,
         user: event.user,
-        vars: {
-            event: event,
-            object: event.object,
-            user: event.user,
-            base_url: ::SysConfig.get('webui', 'base_url'),
-        }
+        base_url: ::SysConfig.get('webui', 'base_url'),
+      }
     }
 
     if event.state == 'closed'
@@ -60,22 +60,22 @@ VpsAdmin::API::Plugins::Monitoring.config do
   action :alert_user_diskspace do |event|
     dip = event.object.primary_dataset_in_pool!
     opts = {
-        params: {
-            role: :user,
-            state: event.state == 'acknowledged' ? 'confirmed' : event.state,
-            pool: dip.pool.role,
-        },
+      params: {
+        role: :user,
+        state: event.state == 'acknowledged' ? 'confirmed' : event.state,
+        pool: dip.pool.role,
+      },
+      user: event.user,
+      vars: {
+        event: event,
+        dip: dip,
+        ds: event.object,
+        vps: dip.pool.role == 'hypervisor' ? ::Vps.find_by!(
+          dataset_in_pool: dip.dataset.root.primary_dataset_in_pool!,
+        ) : nil,
         user: event.user,
-        vars: {
-            event: event,
-            dip: dip,
-            ds: event.object,
-            vps: dip.pool.role == 'hypervisor' ? ::Vps.find_by!(
-              dataset_in_pool: dip.dataset.root.primary_dataset_in_pool!,
-            ) : nil,
-            user: event.user,
-            base_url: ::SysConfig.get('webui', 'base_url'),
-        }
+        base_url: ::SysConfig.get('webui', 'base_url'),
+      }
     }
 
     if event.state == 'closed'
@@ -95,16 +95,16 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
   action :alert_admins do |event|
     opts = {
-        params: {
-            role: :admin,
-            event: event.monitor.name,
-            state: event.state == 'acknowledged' ? 'confirmed' : event.state,
-        },
-        language: ::Language.take!,
-        vars: {
-            event: event,
-            base_url: ::SysConfig.get('webui', 'base_url'),
-        }
+      params: {
+        role: :admin,
+        event: event.monitor.name,
+        state: event.state == 'acknowledged' ? 'confirmed' : event.state,
+      },
+      language: ::Language.take!,
+      vars: {
+        event: event,
+        base_url: ::SysConfig.get('webui', 'base_url'),
+      }
     }
 
     if event.state == 'closed'
@@ -133,14 +133,14 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
     query do
       ::Vps.joins(
-          :vps_current_status, user: :user_account
+        :vps_current_status, user: :user_account
       ).includes(
-          :vps_current_status
+        :vps_current_status
       ).where(
-          users: {object_state: ::User.object_states[:active]},
-          user_accounts: {paid_until: nil},
-          vpses: {object_state: ::Vps.object_states[:active]},
-          vps_current_statuses: {status: true, is_running: true},
+        users: {object_state: ::User.object_states[:active]},
+        user_accounts: {paid_until: nil},
+        vpses: {object_state: ::Vps.object_states[:active]},
+        vps_current_statuses: {status: true, is_running: true},
       )
     end
 
@@ -160,14 +160,14 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
     query do
       ::NetworkInterfaceMonitor.select(
-          "#{::NetworkInterfaceMonitor.table_name}.*, SUM(bytes_out / delta) AS bytes_all"
+        "#{::NetworkInterfaceMonitor.table_name}.*, SUM(bytes_out / delta) AS bytes_all"
       ).joins(
-          network_interface: {vps: [:vps_current_status, user: :user_account]}
+        network_interface: {vps: [:vps_current_status, user: :user_account]}
       ).where(
-          users: {object_state: ::User.object_states[:active]},
-          user_accounts: {paid_until: nil},
-          vpses: {object_state: ::Vps.object_states[:active]},
-          vps_current_statuses: {status: true, is_running: true},
+        users: {object_state: ::User.object_states[:active]},
+        user_accounts: {paid_until: nil},
+        vpses: {object_state: ::Vps.object_states[:active]},
+        vps_current_statuses: {status: true, is_running: true},
       ).group('vpses.id')
     end
 
@@ -187,20 +187,20 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
     query do
       ::DatasetInPool.joins(
-          :pool, dataset: [:user]
+        :pool, dataset: [:user]
       ).joins(
-          'LEFT JOIN vpses ON vpses.dataset_in_pool_id = dataset_in_pools.id'
+        'LEFT JOIN vpses ON vpses.dataset_in_pool_id = dataset_in_pools.id'
       ).includes(
-          :pool, :dataset_properties, dataset: :user
+        :pool, :dataset_properties, dataset: :user
       ).where(
-          users: {object_state: ::User.object_states[:active]},
-          pools: {role: [
-              ::Pool.roles[:primary],
-              ::Pool.roles[:hypervisor],
-          ]},
+        users: {object_state: ::User.object_states[:active]},
+        pools: {role: [
+          ::Pool.roles[:primary],
+          ::Pool.roles[:hypervisor],
+        ]},
       ).where(
-          'vpses.id IS NULL OR vpses.object_state  = ?',
-          ::Vps.object_states[:active]
+        'vpses.id IS NULL OR vpses.object_state  = ?',
+        ::Vps.object_states[:active]
       )
     end
 
@@ -227,13 +227,13 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
     query do
       ::Vps.joins(:vps_current_status, user: :user_account).where(
-          users: {object_state: ::User.object_states[:active]},
-          vpses: {object_state: ::Vps.object_states[:active]},
-          vps_current_statuses: {status: true, is_running: true},
+        users: {object_state: ::User.object_states[:active]},
+        vpses: {object_state: ::Vps.object_states[:active]},
+        vps_current_statuses: {status: true, is_running: true},
       ).includes(
-          :vps_current_status
+        :vps_current_status
       ).where.not(
-          user_accounts: {paid_until: nil},
+        user_accounts: {paid_until: nil},
       )
     end
 
@@ -253,12 +253,12 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
     query do
       ::NetworkInterfaceMonthlyAccounting.joins(:user).select(
-          "#{NetworkInterfaceMonthlyAccounting.table_name}.*,
-          (SUM(bytes_in) + SUM(bytes_out)) AS bytes_all"
+        "#{NetworkInterfaceMonthlyAccounting.table_name}.*,
+        (SUM(bytes_in) + SUM(bytes_out)) AS bytes_all"
       ).where(
-          users: {object_state: ::User.object_states[:active]},
+        users: {object_state: ::User.object_states[:active]},
       ).where(
-          'year = YEAR(NOW()) AND month = MONTH(NOW())'
+        'year = YEAR(NOW()) AND month = MONTH(NOW())'
       ).group('user_id')
     end
 
