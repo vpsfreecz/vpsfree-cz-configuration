@@ -277,6 +277,17 @@ let
         };
       }) confData.meet;
     };
+
+    ipv6Tunnels = {
+      pingConfigs = mapAttrsToList (ipv: addr: {
+        targets = [ addr ];
+        labels = {
+          alias = "ipv6tunnels-${ipv}";
+          type = "ipv6tunnel";
+          address = addr;
+        };
+      }) { ipv4 = "77.93.223.5"; ipv6 = "2a03:3b40:1::5"; };
+    };
   };
 in {
   options = {
@@ -549,6 +560,29 @@ in {
               }
             ];
           }
+          {
+            job_name = "ipv6-tunnels-ping";
+            scrape_interval = "15s";
+            metrics_path = "/probe";
+            params = {
+              module = [ "icmp" ];
+            };
+            static_configs = scrapeConfigs.ipv6Tunnels.pingConfigs;
+            relabel_configs = [
+              {
+                source_labels = [ "__address__" ];
+                target_label = "__param_target";
+              }
+              {
+                source_labels = [ "__param_target" ];
+                target_label = "instance";
+              }
+              {
+                target_label = "__address__";
+                replacement = "127.0.0.1:9115";
+              }
+            ];
+          }
         ] ++ (
           mapAttrsToList (project: conf: {
             job_name = "meet-web-${project}";
@@ -609,6 +643,7 @@ in {
           ./rules/systemd.nix
           ./rules/nodectld.nix
           ./rules/syslog.nix
+          ./rules/ipv6-tunnels.nix
         ]) ++ (map (v: import v { inherit lib; }) [
           ./rules/test.nix
           ./rules/vpsadmin.nix
