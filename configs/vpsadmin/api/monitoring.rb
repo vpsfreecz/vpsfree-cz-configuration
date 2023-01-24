@@ -224,6 +224,8 @@ VpsAdmin::API::Plugins::Monitoring.config do
         msg_id = "<vpsadmin-monitoring-alert-#{event.id}-confirmed@vpsadmin.vpsfree.cz>"
       end
 
+      opts[:message_id] = msg_id
+
       mail(:alert_user_zombie_processes_state, opts)
 
       event.action_state ||= {}
