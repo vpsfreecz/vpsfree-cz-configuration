@@ -79,6 +79,12 @@ in {
           "--collector.uname"
         ];
       };
+
+      # The node_exporter module sets this only when systemd is in enabledCollectors.
+      # Since we're configuring the collectors manually to reduce node_exporter's
+      # footprint, the condition does not match and the collector does not have
+      # access to systemd's dbus socket.
+      systemd.services.prometheus-node-exporter.serviceConfig.RestrictAddressFamilies = [ "AF_UNIX" ];
     })
 
     # vpsAdminOS nodes
