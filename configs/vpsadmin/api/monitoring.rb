@@ -282,7 +282,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
     end
 
     object { |mon| mon.network_interface.vps }
-    value { |mon| mon.bytes_all * 8 }
+    value { |mon| (mon.bytes_all * 8).to_i }
     check { |mon, v| v < 200*1024*1024 }
     action :alert_admins
   end
@@ -402,7 +402,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
     end
 
     value do |vps|
-      vps.zombie_process_count
+      vps.zombie_process_count.to_i
     end
 
     check do |vps, value|
