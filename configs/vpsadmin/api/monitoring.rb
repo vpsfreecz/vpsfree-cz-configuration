@@ -196,7 +196,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       event.action_state['restart_planned'] = true
       event.save!
 
-    else
+    elsif !%w(acknowledged ignored).include?(event.state)
       # Alert the user about too many zombies once per day
       last_alert =
         if event.action_state && event.action_state['last_alert']
@@ -386,6 +386,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
     period 1*60*60
     repeat 1*60*60 # repeat is further controlled by the called action
     skip_acknowledged false
+    skip_ignored false
 
     query do
       ::Vps
