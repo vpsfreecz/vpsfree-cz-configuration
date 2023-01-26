@@ -70,14 +70,8 @@ Vps.connect_hook(:create) do |ret, vps|
 
 end
 
-def get_netif_shaper_limit(netif)
-  if netif.vps_id
-    return nil unless netif.vps.node.vpsadminos?
-
-    location = netif.vps.node.location
-  else
-    return nil
-  end
+def get_vps_shaper_limit(vps)
+  location = vps.node.location
 
   limit =
     case location.label
@@ -90,6 +84,14 @@ def get_netif_shaper_limit(netif)
     end
 
   [limit, limit]
+end
+
+def get_netif_shaper_limit(netif)
+  if netif.vps_id
+    get_vps_shaper_limit(netif.vps)
+  else
+    nil
+  end
 end
 
 def set_netif_shaper_limit(netif)
@@ -142,6 +144,29 @@ NetworkInterface.connect_hook(:clone) do |ret, src_netif, dst_netif|
           max_rx: max_rx,
       }) do |t|
         t.edit(dst_netif, max_tx: max_tx, max_rx: max_rx)
+      end
+    end
+  end
+
+  ret
+
+end
+
+NetworkInterface.connect_hook(:migrate) do |ret, netif, dst_vps|
+
+  if netif.vps.node.location != dst_vps.node.location
+    max_tx, max_rx = get_vps_shaper_limit(dst_vps)
+
+    if max_tx && (max_tx != netif.max_tx || max_rx != netif.max_rx)
+      append_t(
+        Transactions::NetworkInterface::SetShaper,
+        args: [netif],
+        kwargs: {
+          vps: dst_vps,
+          max_tx: max_tx,
+          max_rx: max_rx,
+      }) do |t|
+        t.edit(netif, max_tx: max_tx, max_rx: max_rx)
       end
     end
   end
