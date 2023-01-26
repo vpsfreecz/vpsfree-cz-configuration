@@ -34,6 +34,11 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.vpsfbot";
   };
+
+  utils = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/int.utils";
+  };
 in {
   imports = [
     ../../../../../environments/base.nix
@@ -107,6 +112,13 @@ in {
         enableACME = true;
         forceSSL = true;
         locations."/gh-webhook".proxyPass = "http://${vpsfbot.addresses.primary.address}:8000";
+      };
+
+      "utils.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        basicAuthFile = "/private/nginx/mon.htpasswd";
+        locations."/".proxyPass = "http://${utils.addresses.primary.address}:80";
       };
     };
   };

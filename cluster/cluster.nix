@@ -2,6 +2,7 @@
 [
   ./cz.vpsfree/containers/brq/int.ns1/module.nix
   ./cz.vpsfree/containers/int.rubygems/module.nix
+  ./cz.vpsfree/containers/int.utils/module.nix
   ./cz.vpsfree/containers/int.vpsfbot/module.nix
   ./cz.vpsfree/containers/prg/int.alerts1/module.nix
   ./cz.vpsfree/containers/prg/int.alerts2/module.nix
