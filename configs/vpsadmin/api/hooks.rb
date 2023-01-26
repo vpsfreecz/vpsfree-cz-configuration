@@ -76,7 +76,7 @@ def get_vps_shaper_limit(vps)
   limit =
     case location.label
     when 'Praha', 'Playground', 'Staging'
-      300 * 1024 * 1024
+      1000 * 1024 * 1024
     when 'Brno'
       300 * 1024 * 1024
     else
