@@ -19,6 +19,11 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };
+
+  utils = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/int.utils";
+  };
 in {
   vpsadmin.database = {
     enable = true;
@@ -36,7 +41,7 @@ in {
           "${api2.addresses.primary.address}/32"
           "${vpsadmin1.addresses.primary.address}/32"
           "${proxyPrg.addresses.primary.address}/32"
-          "37.205.8.141/32" # utils.vpsfree.cz
+          "${utils.addresses.primary.address}/32"
         ];
       in management ++ others;
   };
