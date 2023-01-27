@@ -248,6 +248,19 @@ let
         }) sites;
       };
 
+    outboundNet = {
+      pingConfigs = map (addr: {
+        targets = [ addr ];
+        labels = {
+          alias = "outbound-net";
+          address = addr;
+        };
+      }) [
+        "37.9.169.172" # websupport.sk, ~8ms
+        "93.188.1.250" # loopia.se, ~30ms
+      ];
+    };
+
     jitsiMeet = {
       jvbConfigs = flatten (mapAttrsToList (project: conf:
         mapAttrsToList (name: addr: {
@@ -561,6 +574,29 @@ in {
             ];
           }
           {
+            job_name = "outbound-net-ping";
+            scrape_interval = "15s";
+            metrics_path = "/probe";
+            params = {
+              module = [ "icmp" ];
+            };
+            static_configs = scrapeConfigs.outboundNet.pingConfigs;
+            relabel_configs = [
+              {
+                source_labels = [ "__address__" ];
+                target_label = "__param_target";
+              }
+              {
+                source_labels = [ "__param_target" ];
+                target_label = "instance";
+              }
+              {
+                target_label = "__address__";
+                replacement = "127.0.0.1:9115";
+              }
+            ];
+          }
+          {
             job_name = "ipv6-tunnels-ping";
             scrape_interval = "15s";
             metrics_path = "/probe";
@@ -643,6 +679,7 @@ in {
           ./rules/systemd.nix
           ./rules/nodectld.nix
           ./rules/syslog.nix
+          ./rules/outbound-net.nix
           ./rules/ipv6-tunnels.nix
         ]) ++ (map (v: import v { inherit lib; }) [
           ./rules/test.nix
