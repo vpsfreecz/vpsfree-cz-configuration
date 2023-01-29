@@ -48,6 +48,14 @@ MailTemplate.register :alert_user_zombie_processes_restart,
     base_url: 'URL to the web UI',
   }, roles: %i(admin)
 
+MailTemplate.register :alert_user_vps_in_rescue,
+  name: "alert_user_vps_in_rescue", vars: {
+    event: 'MonitoredEvent',
+    vps: ::Vps,
+    user: ::User,
+    base_url: 'URL to the web UI',
+  }, roles: %i(admin)
+
 VpsAdmin::API::Plugins::Monitoring.config do
   # Action definitions
   action :alert_user do |event|
@@ -234,6 +242,22 @@ VpsAdmin::API::Plugins::Monitoring.config do
     end
   end
 
+  action :alert_user_vps_in_rescue do |event|
+    next if event.state == 'closed'
+
+    opts = {
+      user: event.user,
+      vars: {
+        event: event,
+        vps: event.object,
+        user: event.user,
+        base_url: ::SysConfig.get('webui', 'base_url'),
+      }
+    }
+
+    mail(:alert_user_vps_in_rescue, opts)
+  end
+
   # Monitors
   ## Unpaid users
   monitor :unpaid_cpu do
@@ -413,5 +437,36 @@ VpsAdmin::API::Plugins::Monitoring.config do
     end
 
     action :alert_user_zombie_processes
+  end
+
+  monitor :vps_in_rescue_mode do
+    label 'VPS in rescue mode'
+    desc 'VPS is in rescue mode for too long'
+    check_count 1
+    repeat 24*60*60
+
+    query do
+      ::Vps.joins(:vps_current_status, :user).where(
+        users: {object_state: ::User.object_states[:active]},
+        vpses: {object_state: ::Vps.object_states[:active]},
+        vps_current_statuses: {status: true, is_running: true},
+      ).includes(
+        :vps_current_status
+      )
+    end
+
+    value do |vps|
+      vps.vps_current_status.uptime
+    end
+
+    check do |vps, value|
+      if vps.vps_current_status.in_rescue_mode
+        value < 24*60*60
+      else
+        true
+      end
+    end
+
+    action :alert_user_vps_in_rescue
   end
 end
