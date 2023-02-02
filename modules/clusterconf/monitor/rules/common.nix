@@ -155,8 +155,7 @@
       }
       {
         alert = "ZpoolStatusVdevErrorsCrit";
-        expr = ''zpool_status_vdev_read_errors{vdev_state="online"} > 0 or on(instance, vdev_name) zpool_status_vdev_write_errors{vdev_state="online"} > 0 or on(instance, vdev_name) zpool_status_vdev_checksum_errors{vdev_state="online"} > 0'';
-        for = "24h";
+        expr = ''zpool_status_vdev_read_errors{vdev_state="online"} > 10 or on(instance, vdev_name) zpool_status_vdev_write_errors{vdev_state="online"} > 0 or on(instance, vdev_name) zpool_status_vdev_checksum_errors{vdev_state="online"} > 10'';
         labels = {
           alertclass = "zpool_vdev_errors";
           severity = "critical";
