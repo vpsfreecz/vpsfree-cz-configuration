@@ -171,6 +171,40 @@
         };
       }
       {
+        alert = "VdevLogErrorsWarn";
+        expr = ''zfs_vdevlog_vdev_read_errors > 100 or on(instance, vdev_guid) zfs_vdevlog_vdev_write_errors > 0 or on(instance, vdev_guid) zfs_vdevlog_vdev_checksum_errors > 100'';
+        labels = {
+          alertclass = "vdevlog_errors";
+          severity = "warning";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Vdev is exhibiting longstanding errors (instance {{ $labels.instance }})";
+          description = ''
+            Vdev is exhibiting longstanding read/write/checksum errors
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+      {
+        alert = "VdevLogErrorsCrit";
+        expr = ''zfs_vdevlog_vdev_read_errors > 100 or on(instance, vdev_guid) zfs_vdevlog_vdev_write_errors > 5 or on(instance, vdev_guid) zfs_vdevlog_vdev_checksum_errors > 100'';
+        labels = {
+          alertclass = "vdevlog_errors";
+          severity = "critical";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Vdev is exhibiting longstanding errors (instance {{ $labels.instance }})";
+          description = ''
+            Vdev is exhibiting longstanding read/write/checksum errors
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+      {
         alert = "FilesystemLowFreeSpace";
         expr = ''(node_filesystem_avail_bytes{mountpoint=~"^(/)|(/run)|(/nix/store)"} / node_filesystem_size_bytes) * 100 < 25'';
         for = "5m";
