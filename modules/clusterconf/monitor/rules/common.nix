@@ -172,7 +172,7 @@
       }
       {
         alert = "VdevLogErrorsWarn";
-        expr = ''zfs_vdevlog_vdev_read_errors > 100 or on(instance, vdev_guid) zfs_vdevlog_vdev_write_errors > 0 or on(instance, vdev_guid) zfs_vdevlog_vdev_checksum_errors > 100'';
+        expr = ''zfs_vdevlog_vdev_read_errors{vdev_state="online"} > 100 or on(instance, vdev_guid, vdev_state) zfs_vdevlog_vdev_write_errors > 0 or on(instance, vdev_guid, vdev_state) zfs_vdevlog_vdev_checksum_errors > 100'';
         labels = {
           alertclass = "vdevlog_errors";
           severity = "warning";
@@ -189,7 +189,7 @@
       }
       {
         alert = "VdevLogErrorsCrit";
-        expr = ''zfs_vdevlog_vdev_read_errors > 100 or on(instance, vdev_guid) zfs_vdevlog_vdev_write_errors > 5 or on(instance, vdev_guid) zfs_vdevlog_vdev_checksum_errors > 100'';
+        expr = ''zfs_vdevlog_vdev_read_errors{vdev_state="online"} > 100 or on(instance, vdev_guid, vdev_state) zfs_vdevlog_vdev_write_errors > 5 or on(instance, vdev_guid, vdev_state) zfs_vdevlog_vdev_checksum_errors > 100'';
         labels = {
           alertclass = "vdevlog_errors";
           severity = "critical";
