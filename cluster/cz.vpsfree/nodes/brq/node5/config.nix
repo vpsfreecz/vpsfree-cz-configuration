@@ -22,6 +22,10 @@ in {
       ip link add link ${ifc} name ${ifc}.${toString bondVlan} master bond0 type vlan id ${toString bondVlan}
     '')}
 
+    # Keep teng0 down, as these NICs are buggy and cause packet loss when both
+    # of them are up.
+    ip link set teng0 down
+
     ip link set bond0 up
     ip addr add ${bondIP} dev bond0
   '';
