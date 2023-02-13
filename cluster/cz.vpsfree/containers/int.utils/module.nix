@@ -11,5 +11,6 @@
     services = {
       node-exporter = {};
     };
+    tags = [ "auto-update" ];
   };
 }

@@ -12,6 +12,6 @@
       alertmanager = {};
       node-exporter = {};
     };
-    tags = [ "alerter" ];
+    tags = [ "alerter" "auto-update" ];
   };
 }

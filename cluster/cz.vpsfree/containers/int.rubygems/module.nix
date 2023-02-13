@@ -12,5 +12,6 @@
       geminabox = {};
       node-exporter = {};
     };
+    tags = [ "auto-update" ];
   };
 }

@@ -15,5 +15,6 @@
       node-exporter = {};
       syslog-exporter = {};
     };
+    tags = [ "auto-update" ];
   };
 }

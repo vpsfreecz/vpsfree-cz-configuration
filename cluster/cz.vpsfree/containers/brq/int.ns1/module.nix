@@ -13,6 +13,6 @@
       node-exporter = {};
       prometheus = {};
     };
-    tags = [ "dns" "internal-dns" ];
+    tags = [ "dns" "internal-dns" "manual-update" ];
   };
 }

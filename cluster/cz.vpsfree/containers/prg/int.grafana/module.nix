@@ -12,5 +12,6 @@
       grafana = {};
       node-exporter = {};
     };
+    tags = [ "auto-update" ];
   };
 }

@@ -13,6 +13,6 @@
       prometheus = {};
     };
     monitoring.isMonitor = true;
-    tags = [ "monitor" ];
+    tags = [ "monitor" "auto-update" ];
   };
 }
