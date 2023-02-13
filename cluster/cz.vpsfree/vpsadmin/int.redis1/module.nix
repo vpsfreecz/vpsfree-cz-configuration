@@ -9,6 +9,6 @@
       v4 = [ { address = "172.16.9.132"; prefix = 32; } ];
     };
     services.node-exporter = {};
-    tags = [ "vpsadmin" "redis" ];
+    tags = [ "vpsadmin" "redis" "vpsadmin-noupdate" ];
   };
 }

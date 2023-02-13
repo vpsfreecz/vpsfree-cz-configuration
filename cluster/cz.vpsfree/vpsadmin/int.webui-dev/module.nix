@@ -9,6 +9,6 @@
       v4 = [ { address = "172.16.9.138"; prefix = 32; } ];
     };
     services.node-exporter = {};
-    tags = [ "vpsadmin" "webui" ];
+    tags = [ "vpsadmin" "webui" "vpsadmin-updateable" ];
   };
 }
