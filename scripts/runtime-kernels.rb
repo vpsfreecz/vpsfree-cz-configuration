@@ -4,6 +4,20 @@ module RuntimeKernels
   class Script < ConfCtl::UserScript
     register
 
+    def setup_hooks(hooks)
+      hooks.subscribe(:cluster_deploy) do |machines:, **kwargs|
+        os_machines = machines.select { |_, machine| machine.spin == 'vpsadminos' }
+        next if os_machines.empty?
+
+        puts Rainbow('Updating runtime kernel information...').bright
+
+        state = State.new
+        state.update(os_machines)
+
+        puts
+      end
+    end
+
     def setup_cli(app)
       app.desc 'Manage node runtime kernel versions'
       app.command 'runtime-kernels' do |rk|
@@ -39,6 +53,13 @@ module RuntimeKernels
         list_machines(machines)
       end
 
+      state = State.new
+      state.update(machines)
+    end
+  end
+
+  class State
+    def update(machines)
       saved_kernels = load_json
       results = {}
       errors = {}
