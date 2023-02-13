@@ -9,6 +9,6 @@
       v4 = [ { address = "172.16.9.129"; prefix = 32; } ];
     };
     services.node-exporter = {};
-    tags = [ "vpsadmin" "api" "vpsadmin-updateable" ];
+    tags = [ "vpsadmin" "api" "auto-update" ];
   };
 }

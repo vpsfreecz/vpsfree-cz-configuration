@@ -9,6 +9,6 @@
       v4 = [ { address = "172.16.9.145"; prefix = 32; } ];
     };
     services.node-exporter = {};
-    tags = [ "vpsadmin" "mailer" "vpsadmin-updateable" ];
+    tags = [ "vpsadmin" "mailer" "auto-update" ];
   };
 }
