@@ -217,7 +217,6 @@ User.connect_hook(:create) do |ret, user|
 
   append_t(Transactions::Utils::NoOp, args: find_node_id) do |t|
     t.just_create(uns_map)
-    t.edit_before(uns_map.user_namespace_map_ugid, user_namespace_map_id: nil)
 
     UserNamespaceMapEntry.kinds.each_value do |kind|
       t.just_create(UserNamespaceMapEntry.create!(
