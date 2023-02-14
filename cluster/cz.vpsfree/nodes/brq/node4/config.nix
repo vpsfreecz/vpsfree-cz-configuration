@@ -71,4 +71,8 @@ in {
     # { label = "swap1"; }
     # { label = "swap2"; }
   ];
+
+  vpsadmin.nodectld.settings = {
+    vpsadmin.net_interfaces = [ "bond0" ];
+  };
 }

@@ -70,4 +70,8 @@ in {
   swapDevices = [
     # { label = "swap1"; }
   ];
+
+  vpsadmin.nodectld.settings = {
+    vpsadmin.net_interfaces = [ "bond0" ];
+  };
 }
