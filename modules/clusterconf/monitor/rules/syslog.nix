@@ -106,6 +106,23 @@
       }
 
       {
+        alert = "KernelEmergencyWarn";
+        expr = ''syslog_kernel_emergency == 1'';
+        labels = {
+          severity = "warning";
+          frequency = "1h";
+        };
+        annotations = {
+          summary = "Kernel emergency message detected (instance {{ $labels.instance }})";
+          description = ''
+            Kernel emergency message has been detected
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "ZfsPanic";
         expr = ''syslog_zfs_panic == 1'';
         labels = {
