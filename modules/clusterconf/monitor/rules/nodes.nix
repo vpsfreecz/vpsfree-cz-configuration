@@ -337,6 +337,25 @@
       }
 
       {
+        alert = "NodeFatalNoTxgs";
+        expr = ''rate(zpool_txgs_count{job="nodes"}[2m]) * 240 < 1'';
+        for = "1m";
+        labels = {
+          alertclass = "notxgs";
+          severity = "fatal";
+        };
+        annotations = {
+          summary = "ZFS not making TXGs (instance {{ $labels.instance }})";
+          description = ''
+            ZFS made less than 1 TXG in four minutes
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NodeHighLoad";
         expr = ''node_load5{job="nodes"} > 300 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "5m";
