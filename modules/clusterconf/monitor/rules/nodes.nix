@@ -324,6 +324,7 @@
         labels = {
           alertclass = "notxgs";
           severity = "critical";
+          frequency = "2m";
         };
         annotations = {
           summary = "ZFS not making TXGs (instance {{ $labels.instance }})";
@@ -343,6 +344,7 @@
         labels = {
           alertclass = "notxgs";
           severity = "fatal";
+          frequency = "2m";
         };
         annotations = {
           summary = "ZFS not making TXGs (instance {{ $labels.instance }})";
@@ -361,6 +363,7 @@
         labels = {
           alertclass = "nowrites";
           severity = "fatal";
+          frequency = "2m";
         };
         annotations = {
           summary = "Block devices not showing any writes (instance {{ $labels.instance }})";
@@ -379,6 +382,7 @@
         labels = {
           alertclass = "nowrites";
           severity = "fatal";
+          frequency = "2m";
         };
         annotations = {
           summary = "Block devices not showing any writes (instance {{ $labels.instance }})";
@@ -397,6 +401,7 @@
         labels = {
           alertclass = "nowrites";
           severity = "fatal";
+          frequency = "2m";
         };
         annotations = {
           summary = "Block devices not showing any writes (instance {{ $labels.instance }})";
