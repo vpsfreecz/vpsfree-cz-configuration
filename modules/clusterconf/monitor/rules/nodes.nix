@@ -356,6 +356,60 @@
       }
 
       {
+        alert = "HypervisorFatalNoSsdWrites";
+        expr = ''sum by (alias) (increase(node_disk_written_bytes_total{job="nodes",role="hypervisor",storage_type=~"hdd|ssd",device=~"sd.+"}[1m])) == 0'';
+        labels = {
+          alertclass = "nowrites";
+          severity = "fatal";
+        };
+        annotations = {
+          summary = "Block devices not showing any writes (instance {{ $labels.instance }})";
+          description = ''
+            Block devices not showing any writes
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "HypervisorFatalNoNvmeWrites";
+        expr = ''sum by (alias) (increase(node_disk_written_bytes_total{job="nodes",role="hypervisor",storage_type="nvme",device=~"nvme.+"}[1m])) == 0'';
+        labels = {
+          alertclass = "nowrites";
+          severity = "fatal";
+        };
+        annotations = {
+          summary = "Block devices not showing any writes (instance {{ $labels.instance }})";
+          description = ''
+            Block devices not showing any writes
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "StorageFatalNoDiskWrites";
+        expr = ''sum by (alias) (increase(node_disk_written_bytes_total{job="nodes",role="storage",storage_type=~"hdd|ssd",device=~"sd.+"}[5m])) == 0'';
+        labels = {
+          alertclass = "nowrites";
+          severity = "fatal";
+        };
+        annotations = {
+          summary = "Block devices not showing any writes (instance {{ $labels.instance }})";
+          description = ''
+            Block devices not showing any writes
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NodeHighLoad";
         expr = ''node_load5{job="nodes"} > 300 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "5m";
