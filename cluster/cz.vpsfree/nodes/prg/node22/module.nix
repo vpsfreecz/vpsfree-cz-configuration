@@ -28,6 +28,7 @@ in {
     node = {
       id = 123;
       role = "hypervisor";
+      storageType = "ssd";
     };
 
     host = {

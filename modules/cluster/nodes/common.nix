@@ -14,5 +14,12 @@ with lib;
         Node role
       '';
     };
+
+    storageType = mkOption {
+      type = types.enum [ "hdd" "ssd" "nvme" ];
+      description = ''
+        Main storage type, used for monitoring checks
+      '';
+    };
   };
 }

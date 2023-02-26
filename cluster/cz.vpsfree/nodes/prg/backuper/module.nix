@@ -20,6 +20,7 @@ in {
     node = {
       id = 160;
       role = "storage";
+      storageType = "hdd";
     };
 
     host = {

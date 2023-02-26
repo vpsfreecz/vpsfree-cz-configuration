@@ -131,6 +131,7 @@ let
             type = "node";
             os = m.config.spin;
             role = m.config.node.role;
+            storage_type = m.config.node.storageType;
           } // m.config.monitoring.labels;
         }) machines;
 

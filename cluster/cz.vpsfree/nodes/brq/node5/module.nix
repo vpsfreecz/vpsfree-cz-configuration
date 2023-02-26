@@ -8,6 +8,7 @@
     node = {
       id = 214;
       role = "hypervisor";
+      storageType = "ssd";
     };
 
     host = {
