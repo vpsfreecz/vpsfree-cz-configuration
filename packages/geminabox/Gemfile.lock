@@ -4,7 +4,7 @@ GEM
     builder (3.2.4)
     daemons (1.4.1)
     eventmachine (1.2.7)
-    faraday (2.7.3)
+    faraday (2.7.4)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
@@ -19,7 +19,7 @@ GEM
     mustermann (2.0.2)
       ruby2_keywords (~> 0.0.1)
     nesty (1.0.2)
-    rack (2.2.6.2)
+    rack (2.2.6.4)
     rack-protection (2.2.4)
       rack
     reentrant_flock (0.1.1)
@@ -33,7 +33,7 @@ GEM
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
       rack (>= 1, < 3)
-    tilt (2.0.11)
+    tilt (2.1.0)
 
 PLATFORMS
   x86_64-linux
