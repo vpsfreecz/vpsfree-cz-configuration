@@ -356,7 +356,7 @@ in {
           balance first
           server apu-prg ${apuPrg.services.sachet.address}:${toString apuPrg.services.sachet.port} check maxconn 32
           server apu-brq ${apuBrq.services.sachet.address}:${toString apuBrq.services.sachet.port} check maxconn 32
-          server nexmo localhost:${toString config.services.sachet.port} check maxconn 32
+          server nexmo 127.0.0.1:${toString config.services.sachet.port} check maxconn 32
       '';
     };
 
