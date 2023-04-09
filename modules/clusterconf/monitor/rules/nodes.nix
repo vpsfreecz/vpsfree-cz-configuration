@@ -260,9 +260,10 @@
           '';
         };
       }
+
       {
         alert = "HypervisorDnodeNearingLimit";
-        expr = ''node_zfs_arc_dnode_size{role="hypervisor",alias=~"node21.prg|node22.prg|node23.prg|node24.prg"} / node_zfs_arc_arc_dnode_limit * 100 > 75'';
+        expr = ''node_zfs_arc_dnode_size{role="hypervisor",alias=~"node21.prg|node22.prg|node23.prg|node24.prg"} / node_zfs_arc_arc_dnode_limit * 100 > 95'';
         for = "15m";
         labels = {
           alertclass = "dnodelimit";
@@ -281,7 +282,7 @@
 
       {
         alert = "HypervisorDnodeOverLimit";
-        expr = ''node_zfs_arc_dnode_size{role="hypervisor",alias=~"node21.prg|node22.prg|node23.prg|node24.prg"} > node_zfs_arc_arc_dnode_limit * 1.1'';
+        expr = ''node_zfs_arc_dnode_size{role="hypervisor",alias=~"node21.prg|node22.prg|node23.prg|node24.prg"} > node_zfs_arc_arc_dnode_limit'';
         for = "15m";
         labels = {
           alertclass = "dnodelimit";
