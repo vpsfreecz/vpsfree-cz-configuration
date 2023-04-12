@@ -21,12 +21,19 @@
     run = ''
       waitForService networking
 
+      zvol=/dev/zvol/storage/nvme/devstation
+
+      until [ -b "$zvol" ] ; do
+        echo "Waiting for $zvol"
+        sleep 1
+      done
+
       mount -t configfs none /sys/kernel/config
       mkdir /sys/kernel/config/nvmet/subsystems/devstation
       cd /sys/kernel/config/nvmet/subsystems/devstation
       echo 1 > attr_allow_any_host
       mkdir namespaces/1
-      echo /dev/zvol/storage/nvme/devstation > namespaces/1/device_path
+      echo $zvol > namespaces/1/device_path
       echo 1 > namespaces/1/enable
       mkdir /sys/kernel/config/nvmet/ports/1
       cd /sys/kernel/config/nvmet/ports/1
