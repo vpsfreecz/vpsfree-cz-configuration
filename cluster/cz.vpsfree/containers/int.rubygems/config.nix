@@ -107,7 +107,7 @@ let
 
     for commit in `${pkgs.git}/bin/git rev-list $KEEP_BRANCH_NAMES -- packages/nodectld/Gemfile.lock` ; do
       ${pkgs.git}/bin/git show $commit:packages/nodectld/Gemfile.lock \
-        | grep -xP "  nodectld \(= $GEM_VERSION_RX\)" \
+        | grep -xP "  nodectld \(= $GEM_VERSION_RX\)(!)?" \
         | grep -oP "$GEM_VERSION_RX" \
         >> "$BUILDS_FILE"
     done
