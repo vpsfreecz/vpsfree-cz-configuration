@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2023012600 ; serial number of this zone file
+              2023050400 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -21,6 +21,7 @@ ns1.int.prg                    IN   A       172.16.9.90
 ns1.int.brq                    IN   A       172.19.9.90
 
 ; Misc
+bepasty                        IN   CNAME   proxy.prg.vpsfree.cz.
 blog                           IN   CNAME   proxy.vpsfree.cz.
 caladan                        IN   A       77.93.223.70
 conference                     IN   CNAME   prasiatko.vpsfree.cz.
@@ -43,7 +44,8 @@ mxfilter                       IN   A       37.205.10.110
 mxproxy                        IN   A       37.205.9.45
 new                            IN   A       83.167.228.42
 paste                          IN   CNAME   proxy.vpsfree.cz.
-paste.int                      IN   A       37.205.8.141
+paste.int                      IN   A       172.16.9.157
+paste-old.int                  IN   A       37.205.8.141
 piwik                          IN   CNAME   prasiatko.vpsfree.cz.
 prasiatko                      IN   CNAME   proxy.vpsfree.cz.
 prasiatko.int                  IN   A       83.167.228.42

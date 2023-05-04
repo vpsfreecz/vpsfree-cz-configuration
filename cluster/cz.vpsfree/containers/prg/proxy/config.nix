@@ -35,6 +35,11 @@ let
     name = "cz.vpsfree/containers/int.vpsfbot";
   };
 
+  paste = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/int.paste";
+  };
+
   utils = confLib.findConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.utils";
@@ -112,6 +117,12 @@ in {
         enableACME = true;
         forceSSL = true;
         locations."/gh-webhook".proxyPass = "http://${vpsfbot.addresses.primary.address}:8000";
+      };
+
+      "bepasty.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://${paste.services.bepasty.address}:${toString paste.services.bepasty.port}";
       };
 
       "utils.vpsfree.cz" = {
