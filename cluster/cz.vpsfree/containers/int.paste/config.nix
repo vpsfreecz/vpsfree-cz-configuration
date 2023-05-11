@@ -21,6 +21,8 @@ in {
     servers."bepasty.vpsfree.cz" = {
       bind = "0.0.0.0:${toString confMachine.services.bepasty.port}";
 
+      defaultPermissions = "read,create";
+
       extraConfig = ''
         MAX_ALLOWED_FILE_SIZE = 16 * 1024 * 1024
 
