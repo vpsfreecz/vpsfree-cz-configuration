@@ -13,5 +13,15 @@
       bepasty = {};
     };
     tags = [ "auto-update" ];
+
+    swpins.pins = {
+      "nixpkgs" = {
+        type = "git-rev";
+        git-rev = {
+          url = "https://github.com/aither64/nixpkgs";
+          update.ref = "refs/heads/bepasty-1.1.0";
+        };
+      };
+    };
   };
 }
