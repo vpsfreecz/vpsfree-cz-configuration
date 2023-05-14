@@ -101,7 +101,7 @@ let
           };
         })
       ] ++ (import <confctl/nix/modules/module-list.nix>).nixos
-        ++ [ ../modules/cluster ]
+        ++ [ ../modules/cluster ../modules/programs/bepastyrb.nix ]
         ++ (import ../cluster/module-list.nix)
         ++ modules;
     }).config.system.build;
