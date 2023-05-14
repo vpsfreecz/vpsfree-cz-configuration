@@ -46,6 +46,4 @@ in
       '')
 
   ];
-
-  programs.bepastyrb.enable = true;
 }

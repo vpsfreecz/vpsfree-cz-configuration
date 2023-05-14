@@ -56,5 +56,7 @@ in {
       fi
     '';
 
+  programs.bepastyrb.enable = true;
+
   users.users.root.openssh.authorizedKeys.keys = with confData.sshKeys; admins ++ builders;
 }
