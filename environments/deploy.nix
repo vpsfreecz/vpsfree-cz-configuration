@@ -47,6 +47,5 @@ in
 
   ];
 
-  programs.havesnippet.enable = true;
   programs.bepastyrb.enable = true;
 }
