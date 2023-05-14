@@ -1,6 +1,7 @@
 let
   shared = [
     ./cluster
+    ./programs/bepastyrb.nix
     ./programs/havesnippet.nix
     ./services/definitions.nix
     ./system/monitoring.nix

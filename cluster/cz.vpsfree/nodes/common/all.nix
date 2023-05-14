@@ -188,6 +188,7 @@
   system.storeOverlaySize = "6G";
 
   programs.havesnippet.enable = true;
+  programs.bepastyrb.enable = true;
 
   services.haveged.enable = true;
 }

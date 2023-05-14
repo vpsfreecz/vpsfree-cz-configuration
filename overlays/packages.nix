@@ -6,6 +6,8 @@ self: super:
 
   node-exporter-textfile-collector-scripts = super.callPackage ../packages/node-exporter-textfile-collector-scripts.nix {};
 
+  ruby-bepasty-client = super.callPackage ../packages/ruby-bepasty-client {};
+
   sachet = super.callPackage ../packages/sachet {};
 
   syslog-exporter = super.callPackage ../packages/syslog-exporter {};
