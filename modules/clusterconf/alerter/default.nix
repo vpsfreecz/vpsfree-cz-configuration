@@ -189,9 +189,9 @@ in {
       webExternalUrl = cfg.externalUrl;
       configuration = {
         global = {
-          smtp_smarthost = "mx1.vpsfree.cz:465";
+          smtp_smarthost = "mx1.vpsfree.cz:25";
           smtp_from = "alertmanager@vpsfree.cz";
-          smtp_require_tls = true;
+          smtp_require_tls = false;
         };
         route = {
           group_by = [ "alertname" "alias" ];
