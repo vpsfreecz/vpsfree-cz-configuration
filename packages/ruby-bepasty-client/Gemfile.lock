@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    ruby-bepasty-client (1.0.2)
+    ruby-bepasty-client (1.0.3)
 
 PLATFORMS
   x86_64-linux
