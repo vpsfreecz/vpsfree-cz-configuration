@@ -189,9 +189,9 @@ in {
       webExternalUrl = cfg.externalUrl;
       configuration = {
         global = {
-          smtp_smarthost = "localhost:25";
+          smtp_smarthost = "mx1.vpsfree.cz:465";
           smtp_from = "alertmanager@vpsfree.cz";
-          smtp_require_tls = false;
+          smtp_require_tls = true;
         };
         route = {
           group_by = [ "alertname" "alias" ];
@@ -316,9 +316,6 @@ in {
         ] ++ containerInhibitRules;
       };
     };
-
-    # E-mail alerts are sent through a local SMTP
-    services.postfix.enable = true;
 
     # SMS alerts are primarily sent through sachet on apu.{brq, prg} equipped
     # with SIM cards. Should those be unreachable, fall back to a local sachet
