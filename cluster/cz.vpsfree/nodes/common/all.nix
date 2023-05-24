@@ -1,4 +1,16 @@
 { config, lib, pkgs, confData, confMachine, confLib, ... }:
+let
+  bpftraceGit = config.boot.kernelPackages.bpftrace.overrideAttrs (oldAttrs: rec {
+    version = "0.14.git";
+    src = pkgs.fetchFromGitHub {
+      owner = "iovisor";
+      repo = "bpftrace";
+      rev = "5d181c82acba400ec64e8d95c57cdb509f7cc57a";
+      sha256 = "sha256-qZuJbtMLyrjrEK3pHUi/c+5Qw8xOYKS8QWNPrpVku0A=";
+    };
+    patches = [];
+  });
+in
 {
   imports = [
     <vpsadmin/nixos/modules/vpsadminos-modules.nix>
@@ -32,6 +44,7 @@
 
   vpsadminos.nix = true;
   environment.systemPackages = with pkgs; [
+    bpftraceGit
     dmidecode
     # Constantly broken
     # ipmicfg
@@ -46,7 +59,6 @@
 
     # debug stuff
     # config.boot.kernelPackages.bcc
-    config.boot.kernelPackages.bpftrace
     config.boot.kernelPackages.perf
     dstat
     strace
