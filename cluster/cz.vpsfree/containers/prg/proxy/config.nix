@@ -75,14 +75,14 @@ in {
         serverAliases = [ "alerts.prg.vpsfree.cz" ];
         enableACME = true;
         forceSSL = true;
-        basicAuthFile = "/private/nginx/mon.htpasswd";
+        basicAuthFile = "/private/nginx/alerts.htpasswd";
         locations."/".proxyPass = "http://${alerts1Prg.services.alertmanager.address}:${toString alerts1Prg.services.alertmanager.port}";
       };
 
       "alerts2.prg.vpsfree.cz" = {
         enableACME = true;
         forceSSL = true;
-        basicAuthFile = "/private/nginx/mon.htpasswd";
+        basicAuthFile = "/private/nginx/alerts.htpasswd";
         locations."/".proxyPass = "http://${alerts2Prg.services.alertmanager.address}:${toString alerts2Prg.services.alertmanager.port}";
       };
 
