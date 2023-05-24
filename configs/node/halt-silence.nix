@@ -39,7 +39,7 @@ in {
         echo "Silencing fqdn=${confMachine.host.fqdn} on $alerter"
         ${pkgs.prometheus-alertmanager}/bin/amtool silence add \
           --alertmanager.url=$alerter \
-          --timeout=10s \
+          --timeout=5s \
           --author=$USER@${confMachine.host.fqdn} \
           --comment="$comment" \
           --duration=20m \
