@@ -88,6 +88,27 @@ let
             });
         };
       };
+
+      config = mkMerge [
+        (mkIf (config.spin == "vpsadminos") {
+          healthChecks = {
+            machineCommands = [
+              { command = [ "osctl" "ping" ]; }
+              { command = [ "nodectl" "ping" ]; }
+            ];
+          };
+        })
+
+        (mkIf (config.spin == "nixos") {
+          healthChecks = {
+            systemd.unitProperties = {
+              "firewall.service" = [
+                { property = "ActiveState"; value = "active"; }
+              ];
+            };
+          };
+        })
+      ];
     };
 
   container =
