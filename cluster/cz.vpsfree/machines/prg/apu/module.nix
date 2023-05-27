@@ -16,5 +16,17 @@
       node-exporter = {};
       sachet = {};
     };
+
+    buildGenerations = {
+      min = 10;
+      max = 20;
+      maxAge = 180*24*60*60;
+    };
+
+    hostGenerations = {
+      min = 40;
+      max = 80;
+      maxAge = 360*24*60*60;
+    };
   };
 }
