@@ -91,6 +91,17 @@ let
 
       config = mkMerge [
         (mkIf (config.spin == "vpsadminos") {
+          buildGenerations = {
+            min = mkDefault 1;
+            max = mkDefault 1;
+          };
+
+          hostGenerations = {
+            min = mkDefault 3;
+            max = mkDefault 6;
+            maxAge = mkDefault (360*24*60*60);
+          };
+
           healthChecks = {
             machineCommands = [
               { command = [ "osctl" "ping" ]; }
@@ -100,6 +111,17 @@ let
         })
 
         (mkIf (config.spin == "nixos") {
+          buildGenerations = {
+            min = mkDefault 1;
+            max = mkDefault 1;
+          };
+
+          hostGenerations = {
+            min = mkDefault 6;
+            max = mkDefault 30;
+            maxAge = mkDefault (60*24*60*60);
+          };
+
           healthChecks = {
             systemd.unitProperties = {
               "firewall.service" = [
