@@ -42,7 +42,6 @@ in
     options ixgbe allow_unsupported_sfp=1
   '';
 
-  vpsadminos.nix = true;
   environment.systemPackages = with pkgs; [
     bpftraceGit
     dmidecode
