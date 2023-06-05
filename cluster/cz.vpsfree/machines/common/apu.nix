@@ -135,7 +135,7 @@ in {
   };
 
   services.openssh.enable = true;
-  services.openssh.permitRootLogin = "yes";
+  services.openssh.settings.PermitRootLogin = "yes";
   environment.systemPackages = with pkgs; [
     modemNetBringUp
     usbutils
