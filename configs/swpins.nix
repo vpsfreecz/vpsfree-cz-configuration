@@ -55,9 +55,9 @@ in {
       vpsadmin = vpsadminMaster;
     };
 
-    "prod-22.12" = {
+    "prod-23.06" = {
       nixpkgs = nixpkgsStable;
-      vpsadminos = osBranch "prod-22.12";
+      vpsadminos = osBranch "prod-23.06";
       vpsadmin = vpsadminMaster;
     };
 
