@@ -78,7 +78,16 @@ let
           let
             hn = osBuild.config.networking.hostName;
             nn = if (hn != "") then hn else "unnamed";
-          in "vpsadminos-netboot-${nn}-${osBuild.config.system.osLabel}";
+
+            # Compatibility with vpsAdminOS < 23.05 where vpsadminos.label does
+            # not exist and we have the old osLabel option.
+            # TODO: remove this when we'll no longer have any < 23.05 nodes.
+            label =
+              if hasAttr "osLabel" osBuild.config.system then
+                osBuild.config.system.osLabel
+              else
+                osBuild.config.system.vpsadminos.label;
+          in "vpsadminos-netboot-${nn}-${label}";
         paths = with osBuild.config.system.build; [ dist ];
       };
       macs = node.config.netboot.macs or [];
