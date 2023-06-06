@@ -59,8 +59,8 @@ in {
   swapDevices = [ ];
 
   boot.runSize = "50%";
-  boot.tmpOnTmpfs = true;
-  boot.tmpOnTmpfsSize = "50%";
+  boot.tmp.useTmpfs = true;
+  boot.tmp.tmpfsSize = "50%";
   services.logind.extraConfig = ''
     RuntimeDirectorySize=50%
   '';
