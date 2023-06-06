@@ -75,7 +75,7 @@ in {
   networking.hostName = "build";
 
   nix = {
-    maxJobs = 8;
+    settings.max-jobs = 8;
     nrBuildUsers = 128;
   };
 
