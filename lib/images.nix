@@ -72,7 +72,7 @@ let
       };
     in {
       toplevel = osBuild.config.system.build.toplevel;
-      kernelParams = osBuild.config.system.build.kernelParams;
+      kernelParams = osBuild.config.boot.kernelParams;
       dir = pkgs.symlinkJoin {
         name =
           let
