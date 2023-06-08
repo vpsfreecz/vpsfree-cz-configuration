@@ -106,6 +106,23 @@
       }
 
       {
+        alert = "KernelGeneralProtectionFault";
+        expr = ''syslog_kernel_gpf == 1'';
+        labels = {
+          severity = "fatal";
+          frequency = "1m";
+        };
+        annotations = {
+          summary = "Kernel general protection fault has occurred (instance {{ $labels.instance }})";
+          description = ''
+            Kernel general protection fault has occurred
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "KernelEmergencyWarn";
         expr = ''syslog_kernel_emergency == 1'';
         labels = {
