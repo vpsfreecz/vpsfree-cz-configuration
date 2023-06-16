@@ -110,6 +110,19 @@ let
           };
         })
 
+        (mkIf (config.spin == "vpsadminos" && config.node != null && config.node.role == "hypervisor") {
+          healthChecks = {
+            machineCommands = [
+              {
+                command = [ "osctl" "pool" "show" "-H" "-o" "state" "tank" ];
+                standardOutput.match = "active\n\n";
+                timeout = 600;
+                cooldown = 5;
+              }
+            ];
+          };
+        })
+
         (mkIf (config.spin == "nixos") {
           buildGenerations = {
             min = mkDefault 1;
