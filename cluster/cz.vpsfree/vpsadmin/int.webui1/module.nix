@@ -10,5 +10,17 @@
     };
     services.node-exporter = {};
     tags = [ "vpsadmin" "webui" "auto-update" ];
+
+    healthChecks = {
+      systemd.unitProperties = {
+        "phpfpm-vpsadmin-webui.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+
+        "nginx.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+      };
+    };
   };
 }

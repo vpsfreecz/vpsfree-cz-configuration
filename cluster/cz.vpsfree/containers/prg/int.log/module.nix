@@ -16,5 +16,17 @@
       syslog-exporter = {};
     };
     tags = [ "auto-update" ];
+
+    healthChecks = {
+      systemd.unitProperties = {
+        "syslog.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+
+        "syslog-exporter.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+      };
+    };
   };
 }

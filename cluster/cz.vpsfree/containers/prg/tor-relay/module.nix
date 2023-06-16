@@ -12,5 +12,13 @@
       node-exporter = {};
     };
     tags = [ "auto-update" ];
+
+    healthChecks = {
+      systemd.unitProperties = {
+        "tor.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+      };
+    };
   };
 }

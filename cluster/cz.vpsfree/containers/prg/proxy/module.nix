@@ -10,5 +10,17 @@
     };
     services.node-exporter = {};
     tags = [ "vpsadmin" "manual-update" ];
+
+    healthChecks = {
+      systemd.unitProperties = {
+        "nginx.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+
+        "vpsadmin-console-router.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+      };
+    };
   };
 }

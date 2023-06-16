@@ -10,5 +10,13 @@
     };
     services.node-exporter = {};
     tags = [ "vpsadmin" "redis" "manual-update" ];
+
+    healthChecks = {
+      systemd.unitProperties = {
+        "redis-vpsadmin.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+      };
+    };
   };
 }

@@ -12,5 +12,13 @@
       node-exporter = {};
     };
     tags = [ "auto-update" ];
+
+    healthChecks = {
+      systemd.unitProperties = {
+        "vpsfree-irc-bot-libera.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+      };
+    };
   };
 }

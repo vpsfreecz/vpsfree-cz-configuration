@@ -11,10 +11,24 @@
     addresses = {
       v4 = [ { address = "172.19.254.254"; prefix = 24; } ];
     };
+
     tags = [ "apu" "pxe" "pxe-secondary" ];
+
     services = {
       node-exporter = {};
       sachet = {};
+    };
+
+    healthChecks = {
+      systemd.unitProperties = {
+        "netboot-atftpd.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+
+        "sachet.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+      };
     };
 
     buildGenerations = {

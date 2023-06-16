@@ -10,5 +10,13 @@
     };
     services.node-exporter = {};
     tags = [ "vpsadmin" "db" "manual-update" ];
+
+    healthChecks = {
+      systemd.unitProperties = {
+        "mysql.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+      };
+    };
   };
 }

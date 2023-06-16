@@ -10,5 +10,13 @@
     };
     services.node-exporter = {};
     tags = [ "vpsadmin" "mailer" "auto-update" ];
+
+    healthChecks = {
+      systemd.unitProperties = {
+        "vpsadmin-nodectld.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+      };
+    };
   };
 }

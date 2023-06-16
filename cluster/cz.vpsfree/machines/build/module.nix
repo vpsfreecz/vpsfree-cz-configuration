@@ -10,6 +10,14 @@
     tags = [ "build" "pxe" "pxe-primary" ];
     services.node-exporter = {};
 
+    healthChecks = {
+      systemd.unitProperties = {
+        "netboot-atftpd.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+      };
+    };
+
     buildGenerations = {
       min = 10;
       max = 20;

@@ -14,6 +14,14 @@
     };
     tags = [ "auto-update" ];
 
+    healthChecks = {
+      systemd.unitProperties = {
+        "bepasty-server-bepasty.vpsfree.cz-gunicorn.service" = [
+          { property = "ActiveState"; value = "active"; }
+        ];
+      };
+    };
+
     swpins.pins = {
       "nixpkgs" = {
         type = "git-rev";
