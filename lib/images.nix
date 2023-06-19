@@ -134,6 +134,7 @@ in rec {
   nixosZfs = nixosNetboot {
     modules = [
       {
+        imports = nixosModules;
         boot.supportedFilesystems = [ "zfs" ];
       }
     ];
