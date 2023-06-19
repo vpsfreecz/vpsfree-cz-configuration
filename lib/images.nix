@@ -4,9 +4,12 @@
 , confDir
 , confLib
 , confData
+, confMachine
 , nixosModules ? [] }:
 with lib;
 let
+  selfName = confMachine.name;
+
   machines = confLib.getClusterMachines config.cluster;
 
   machineAttrs = listToAttrs (map (d: nameValuePair d.config.host.fqdn d) machines);
@@ -20,7 +23,7 @@ let
   selectNodes = filter: mapAttrs (k: v: nodeImage v) (filterNodes filter);
 
   # allows to build vpsadminos with specific
-  vpsadminosCustom = {modules ? [], vpsadminos, nixpkgs, vpsadmin}:
+  vpsadminosCustom = { name, modules ? [], vpsadminos, nixpkgs, vpsadmin }:
     let
       # this is fed into scopedImport so vpsadminos sees correct <nixpkgs> everywhere
       overrides = {
@@ -34,15 +37,15 @@ let
         builtins = builtins // overrides;
       };
     in
-      builtins.scopedImport overrides (vpsadminos + "/os/") {
+      builtins.trace "${selfName}: evaluating ${name}" (builtins.scopedImport overrides (vpsadminos + "/os/") {
         pkgs = nixpkgs;
         system = "x86_64-linux";
         configuration = {};
         modules = modules;
-      };
+      });
 
-  vpsadminos = {modules ? [], ...}@args: vpsadminosCustom {
-    inherit modules;
+  vpsadminos = { name, modules ? [], ... }@args: vpsadminosCustom {
+    inherit name modules;
     vpsadminos = args.vpsadminos or <vpsadminos>;
     nixpkgs = args.nixpkgs or <nixpkgs>;
     vpsadmin = args.vpsadmin or null;
@@ -60,6 +63,7 @@ let
         lib = confLib.coreLib;
       };
       osBuild = vpsadminos {
+        name = node.name;
         modules = [
           {
             imports = [
@@ -93,8 +97,8 @@ let
       macs = node.config.netboot.macs or [];
     };
 
-  nixosBuild = {modules ? []}:
-    (import <nixpkgs/nixos/lib/eval-config.nix> {
+  nixosBuild = { name, modules ? [] }:
+    builtins.trace "${selfName}: evaluating ${name}" (import <nixpkgs/nixos/lib/eval-config.nix> {
       system = "x86_64-linux";
       modules = [
         <nixpkgs/nixos/modules/installer/netboot/netboot-minimal.nix>
@@ -117,9 +121,9 @@ let
         ++ modules;
     }).config.system.build;
 
-  nixosNetboot = {modules ? []}:
+  nixosNetboot = { name, modules ? [] }:
     let
-      build = nixosBuild { inherit modules; };
+      build = nixosBuild { inherit name modules; };
     in {
       toplevel = build.toplevel;
       dir = pkgs.symlinkJoin {
@@ -131,9 +135,10 @@ let
   inMenu = name: netbootitem: netbootitem // { menu = name; };
 
 in rec {
-  nixos = nixosNetboot { };
+  nixos = nixosNetboot { name = "NixOS"; };
 
   nixosZfs = nixosNetboot {
+    name = "NixOS with ZFS";
     modules = [
       {
         imports = nixosModules;
@@ -143,6 +148,7 @@ in rec {
   };
 
   nixosZfsSSH = nixosNetboot {
+    name = "NixOS with ZFS and SSH";
     modules = [
       {
         imports = nixosModules;
