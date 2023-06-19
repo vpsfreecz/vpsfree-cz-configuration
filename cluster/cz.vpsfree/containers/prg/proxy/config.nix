@@ -119,7 +119,8 @@ in {
         locations."/gh-webhook".proxyPass = "http://${vpsfbot.addresses.primary.address}:8000";
       };
 
-      "bepasty.vpsfree.cz" = {
+      "paste.vpsfree.cz" = {
+        serverAliases = [ "bepasty.vpsfree.cz" ];
         enableACME = true;
         forceSSL = true;
         locations."/".proxyPass = "http://${paste.services.bepasty.address}:${toString paste.services.bepasty.port}";

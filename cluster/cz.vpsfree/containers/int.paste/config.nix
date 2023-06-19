@@ -18,7 +18,7 @@ in {
 
   services.bepasty = {
     enable = true;
-    servers."bepasty.vpsfree.cz" = {
+    servers."paste.vpsfree.cz" = {
       bind = "0.0.0.0:${toString confMachine.services.bepasty.port}";
 
       defaultPermissions = "read,create";

@@ -16,7 +16,7 @@
 
     healthChecks = {
       systemd.unitProperties = {
-        "bepasty-server-bepasty.vpsfree.cz-gunicorn.service" = [
+        "bepasty-server-paste.vpsfree.cz-gunicorn.service" = [
           { property = "ActiveState"; value = "active"; }
         ];
       };
