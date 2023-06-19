@@ -129,21 +129,24 @@ let
   inMenu = name: netbootitem: netbootitem // { menu = name; };
 
 in rec {
-  # stock NixOS
   nixos = nixosNetboot { };
+
   nixosZfs = nixosNetboot {
-    modules = [ {
+    modules = [
+      {
         boot.supportedFilesystems = [ "zfs" ];
-      } ];
+      }
+    ];
   };
 
   nixosZfsSSH = nixosNetboot {
-    modules = [ {
+    modules = [
+      {
         imports = nixosModules;
         boot.supportedFilesystems = [ "zfs" ];
-        # enable ssh
         systemd.services.sshd.wantedBy = lib.mkForce [ "multi-user.target" ];
-      } ];
+      }
+    ];
   };
 
   nixosItems = {
