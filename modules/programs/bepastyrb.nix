@@ -19,7 +19,7 @@ in
           options = {
             server = mkOption {
               type = types.str;
-              default = "https://bepasty.vpsfree.cz";
+              default = "https://paste.vpsfree.cz";
               description = "URL to the bepasty server.";
             };
 
