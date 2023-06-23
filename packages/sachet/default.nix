@@ -15,5 +15,5 @@ in buildGoPackage rec {
     sha256 = "sha256-BOxdIhJySYywXhOdOzXIvpdugQlIjcpJSBrOcFRmrl8=";
   };
 
-  buildFlags = "--tags release";
+  tags = [ "release" ];
 }
