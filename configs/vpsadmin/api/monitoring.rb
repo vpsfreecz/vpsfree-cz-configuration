@@ -56,6 +56,15 @@ MailTemplate.register :alert_user_vps_in_rescue,
     base_url: 'URL to the web UI',
   }, roles: %i(admin)
 
+MailTemplate.register :alert_dataset_over_quota,
+  name: "alert_dataset_over_quota", vars: {
+    dataset: ::Dataset,
+    expansion: ::DatasetExpansion,
+    vps: ::Vps,
+    user: ::User,
+    base_url: 'URL to the web UI',
+  }, roles: %i(admin)
+
 VpsAdmin::API::Plugins::Monitoring.config do
   # Action definitions
   action :alert_user do |event|
@@ -256,6 +265,24 @@ VpsAdmin::API::Plugins::Monitoring.config do
     }
 
     mail(:alert_user_vps_in_rescue, opts)
+  end
+
+  action :alert_dataset_over_quota do |event|
+    next if event.state == 'closed'
+
+    opts = {
+      user: event.user,
+      vars: {
+        event: event,
+        dataset: event.object.dataset,
+        expansion: event.object,
+        vps: event.object.vps,
+        user: event.user,
+        base_url: ::SysConfig.get('webui', 'base_url'),
+      }
+    }
+
+    mail(:alert_dataset_over_quota, opts)
   end
 
   # Monitors
@@ -468,5 +495,34 @@ VpsAdmin::API::Plugins::Monitoring.config do
     end
 
     action :alert_user_vps_in_rescue
+  end
+
+  monitor :expanded_datasets do
+    label 'Dataset over quota'
+    desc 'Dataset is temporarily expanded'
+    period 12*60*60
+    repeat 24*60*60
+
+    query do
+      ::DatasetExpansion.includes(dataset: :user).joins(:vps).where(
+        state: 'active',
+        enable_notifications: true,
+        vpses: {object_state: ::Vps.object_states[:active]},
+      )
+    end
+
+    user do |exp|
+      exp.dataset.user
+    end
+
+    value do |exp|
+      exp.dataset.refquota
+    end
+
+    check do |exp, value|
+      exp.dataset.referenced < exp.original_refquota
+    end
+
+    action :alert_dataset_over_quota
   end
 end
