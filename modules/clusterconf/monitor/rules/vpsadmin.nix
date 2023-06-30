@@ -281,6 +281,78 @@ in [
           '';
         };
       }
+
+      {
+        alert = "DatasetExpansionCountWarn";
+        expr = ''vpsadmin_dataset_expansion_count > 3'';
+        labels = {
+          severity = "warning";
+          frequency = "6h";
+        };
+        annotations = {
+          summary = "VPS {{ $labels.vps_id }} on {{ $labels.vps_node }} expanded >3 times";
+          description = ''
+            Dataset {{ $labels.dataset_name }} in VPS {{ $labels.vps_id }} on {{ $labels.vps_node }}
+            is expanded more than 3 times.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "DatasetExpansionCountCrit";
+        expr = ''vpsadmin_dataset_expansion_count > 5'';
+        labels = {
+          severity = "critical";
+          frequency = "6h";
+        };
+        annotations = {
+          summary = "VPS {{ $labels.vps_id }} on {{ $labels.vps_node }} expanded >5 times";
+          description = ''
+            Dataset {{ $labels.dataset_name }} in VPS {{ $labels.vps_id }} on {{ $labels.vps_node }}
+            is expanded more than 5 times.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "DatasetExpansionSpaceWarn";
+        expr = ''vpsadmin_dataset_expansion_added_bytes > 100*1024*1024*1024'';
+        labels = {
+          severity = "warning";
+          frequency = "6h";
+        };
+        annotations = {
+          summary = "VPS {{ $labels.vps_id }} on {{ $labels.vps_node }} given >100G";
+          description = ''
+            Dataset {{ $labels.dataset_name }} in VPS {{ $labels.vps_id }} on {{ $labels.vps_node }}
+            uses more than 100G of extra space.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "DatasetExpansionTimeWarn";
+        expr = ''vpsadmin_dataset_expansion_seconds > 30*24*60*60'';
+        labels = {
+          severity = "warning";
+          frequency = "6h";
+        };
+        annotations = {
+          summary = "VPS {{ $labels.vps_id }} on {{ $labels.vps_node }} is expanded for too long";
+          description = ''
+            Dataset {{ $labels.dataset_name }} in VPS {{ $labels.vps_id }} on {{ $labels.vps_node }}
+            is expanded for more than a month.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 
