@@ -24,4 +24,11 @@
   boot.kernelParams = [
     "intel_idle.max_cstate=1"
   ];
+
+  vpsadmin.nodectld.settings = {
+    storage = {
+      status_interval = 900;
+      update_interval = 600;
+    };
+  };
 }
