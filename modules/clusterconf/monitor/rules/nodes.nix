@@ -75,25 +75,6 @@
       }
 
       {
-        alert = "HypervisorCritVzCpuLoad";
-        expr = ''100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",os="openvz"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
-        for = "10m";
-        labels = {
-          alertclass = "cpuload";
-          severity = "warning";
-        };
-        annotations = {
-          summary = "Critical CPU load (instance {{ $labels.instance }})";
-          description = ''
-            CPU load is > 90%
-
-            VALUE = {{ $value }}
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
-
-      {
         alert = "HypervisorHighIoWait";
         expr = ''(avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 20 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
@@ -695,26 +676,6 @@
           summary = "No osctl pool in use (instance {{ $labels.instance }})";
           description = ''
             No osctl pool is imported into osctld
-
-            VALUE = {{ $value }}
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
-
-      {
-        alert = "VpsVzCritFreeSpace";
-        expr = ''node_filesystem_avail_bytes{job="nodes",mountpoint=~"^/vz/private/.+"} < 256 * 1024 * 1024'';
-        for = "2m";
-        labels = {
-          alertclass = "vpsdiskspace";
-          severity = "critical";
-          frequency = "hourly";
-        };
-        annotations = {
-          summary = "Not enough free space (instance {{ $labels.instance }})";
-          description = ''
-            VPS has less than 256 MB of diskspace left
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}

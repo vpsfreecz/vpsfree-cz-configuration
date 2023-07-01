@@ -6,12 +6,11 @@ let
     vpsStart = "TransactionChains::Vps::Start";
     vpsRestart = "TransactionChains::Vps::Restart";
     vpsStop = "TransactionChains::Vps::Stop";
-    vpsMigrateVz = "TransactionChains::Vps::Migrate::VzToVz";
     vpsMigrateOs = "TransactionChains::Vps::Migrate::OsToOs";
     specials = [
       backup fullDownload
       vpsStart vpsRestart vpsStop
-      vpsMigrateVz vpsMigrateOs
+      vpsMigrateOs
     ];
   };
 
@@ -133,7 +132,7 @@ in [
 
       {
         alert = "VpsMigrationFatal";
-        expr = ''vpsadmin_transaction_chain_fatal{chain_type=~"${chains.vpsMigrateVz}|${chains.vpsMigrateOs}"} == 1'';
+        expr = ''vpsadmin_transaction_chain_fatal{chain_type="${chains.vpsMigrateOs}"} == 1'';
         labels = {
           severity = "fatal";
           frequency = "10m";
@@ -208,7 +207,7 @@ in [
 
       {
         alert = "VpsMigrationDelayed";
-        expr = ''vpsadmin_transaction_chain_queued_seconds{chain_type=~"${chains.vpsMigrateVz}|${chains.vpsMigrateOs}"} >= 24*60*60'';
+        expr = ''vpsadmin_transaction_chain_queued_seconds{chain_type="${chains.vpsMigrateOs}"} >= 24*60*60'';
         labels = {
           severity = "warning";
           frequency = "10m";
