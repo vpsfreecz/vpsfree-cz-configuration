@@ -36,8 +36,8 @@
     };
 
     buildGenerations = {
-      min = 10;
-      max = 20;
+      min = 5;
+      max = 10;
       maxAge = 180*24*60*60;
     };
 
