@@ -686,7 +686,7 @@
       {
         alert = "VpsOsCritFreeSpace";
         expr = ''osctl_container_dataset_avail_bytes{job="nodes"} < 256 * 1024 * 1024'';
-        for = "2m";
+        for = "5m";
         labels = {
           alertclass = "vpsdiskspace";
           severity = "critical";
@@ -706,6 +706,26 @@
       {
         alert = "VpsOsFatalFreeSpace";
         expr = ''osctl_container_dataset_avail_bytes{alias=~"node21.prg|node22.prg|node23.prg|node24.prg"} < 256 * 1024 * 1024'';
+        for = "5m";
+        labels = {
+          alertclass = "vpsdiskspace";
+          severity = "fatal";
+          frequency = "2m";
+        };
+        annotations = {
+          summary = "Not enough free space (instance {{ $labels.instance }})";
+          description = ''
+            VPS has less than 256 MB of diskspace left
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "VpsOsFatalFreeSpaceNode23";
+        expr = ''osctl_container_dataset_avail_bytes{alias="node23.prg"} < 256 * 1024 * 1024'';
         for = "2m";
         labels = {
           alertclass = "vpsdiskspace";
