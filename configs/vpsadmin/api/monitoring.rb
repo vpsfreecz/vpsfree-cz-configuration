@@ -56,8 +56,8 @@ MailTemplate.register :alert_user_vps_in_rescue,
     base_url: 'URL to the web UI',
   }, roles: %i(admin)
 
-MailTemplate.register :alert_dataset_over_quota,
-  name: "alert_dataset_over_quota", vars: {
+MailTemplate.register :alert_vps_dataset_over_quota,
+  name: "alert_vps_dataset_over_quota", vars: {
     dataset: ::Dataset,
     expansion: ::DatasetExpansion,
     vps: ::Vps,
@@ -267,7 +267,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
     mail(:alert_user_vps_in_rescue, opts)
   end
 
-  action :alert_dataset_over_quota do |event|
+  action :alert_vps_dataset_over_quota do |event|
     next if event.state == 'closed'
 
     opts = {
@@ -282,7 +282,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       }
     }
 
-    mail(:alert_dataset_over_quota, opts)
+    mail(:alert_vps_dataset_over_quota, opts)
   end
 
   # Monitors
@@ -523,6 +523,6 @@ VpsAdmin::API::Plugins::Monitoring.config do
       exp.dataset.referenced < exp.original_refquota
     end
 
-    action :alert_dataset_over_quota
+    action :alert_vps_dataset_over_quota
   end
 end
