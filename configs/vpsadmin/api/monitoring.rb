@@ -274,9 +274,9 @@ VpsAdmin::API::Plugins::Monitoring.config do
       user: event.user,
       vars: {
         event: event,
-        dataset: event.object.dataset,
-        expansion: event.object,
-        vps: event.object.vps,
+        dataset: event.object,
+        expansion: event.object.dataset_expansion,
+        vps: event.object.dataset_expansion.vps,
         user: event.user,
         base_url: ::SysConfig.get('webui', 'base_url'),
       }
@@ -497,30 +497,34 @@ VpsAdmin::API::Plugins::Monitoring.config do
     action :alert_user_vps_in_rescue
   end
 
-  monitor :expanded_datasets do
-    label 'Dataset over quota'
-    desc 'Dataset is temporarily expanded'
+  monitor :vps_dataset_expansions do
+    label 'VPS dataset over quota'
+    desc 'VPS dataset is temporarily expanded'
     period 12*60*60
     repeat 24*60*60
 
     query do
-      ::DatasetExpansion.includes(dataset: :user).joins(:vps).where(
-        state: 'active',
-        enable_notifications: true,
+      ::Dataset.includes(:user, :dataset_expansion).joins(dataset_expansion: :vps).where(
+        dataset_expansions: {
+          state: 'active',
+          enable_notifications: true,
+        },
         vpses: {object_state: ::Vps.object_states[:active]},
+      ).where.not(
+        dataset_expansion: nil,
       )
     end
 
-    user do |exp|
-      exp.dataset.user
+    user do |ds|
+      ds.user
     end
 
-    value do |exp|
-      exp.dataset.refquota
+    value do |ds|
+      ds.refquota
     end
 
-    check do |exp, value|
-      exp.dataset.referenced < exp.original_refquota
+    check do |ds, value|
+      ds.referenced < ds.dataset_expansion.original_refquota
     end
 
     action :alert_vps_dataset_over_quota
