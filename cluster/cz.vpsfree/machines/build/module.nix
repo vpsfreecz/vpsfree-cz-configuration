@@ -25,8 +25,8 @@
     };
 
     hostGenerations = {
-      min = 40;
-      max = 80;
+      min = 30;
+      max = 60;
       maxAge = 360*24*60*60;
     };
   };
