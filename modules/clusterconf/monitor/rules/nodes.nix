@@ -724,26 +724,6 @@
       }
 
       {
-        alert = "VpsOsFatalFreeSpaceNode23";
-        expr = ''osctl_container_dataset_avail_bytes{alias="node23.prg"} < 256 * 1024 * 1024'';
-        for = "2m";
-        labels = {
-          alertclass = "vpsdiskspace";
-          severity = "fatal";
-          frequency = "2m";
-        };
-        annotations = {
-          summary = "Not enough free space (instance {{ $labels.instance }})";
-          description = ''
-            VPS has less than 256 MB of diskspace left
-
-            VALUE = {{ $value }}
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
-
-      {
         alert = "VpsNoRefquotaSet";
         expr = ''osctl_container_dataset_refquota_bytes{job="nodes"} == 0'';
         for = "12h";
