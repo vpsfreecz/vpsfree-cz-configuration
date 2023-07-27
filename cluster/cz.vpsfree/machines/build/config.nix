@@ -86,7 +86,7 @@ in {
       cpus = 16;
       cpu.cores = 16;
       disks = [
-        { type = "file"; device = "sda.img"; size = "60G"; }
+        { type = "file"; device = "sda.img"; size = "60G"; create = true; }
       ];
     };
     postRunCommands = ''
