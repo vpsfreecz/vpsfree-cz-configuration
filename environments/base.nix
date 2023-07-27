@@ -44,6 +44,7 @@ in {
     wget
     vim
     screen
+    config.boot.kernelPackages.perf
   ];
 
   programs.bash.promptInit =
