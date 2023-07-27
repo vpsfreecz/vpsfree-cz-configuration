@@ -95,7 +95,7 @@ let
       ${optionalString (!isNull neighbour.holdTime) "hold time ${toString neighbour.holdTime};"}
 
       ${proto} {
-        export all;
+        export where source !~ [ RTS_BGP ];
         import all;
       };
 
