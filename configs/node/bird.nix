@@ -99,6 +99,8 @@ let
         import all;
       };
 
+      bfd graceful;
+
       graceful restart;
     }
   '') neighbours);
@@ -162,6 +164,8 @@ in {
       let
         bgpPort = toString config.serviceDefinitions.bird-bgp.port;
 
+        bfdPorts = [ 3784 4784 ];
+
         bgpRules = optionalString isBGP ''
           ${concatMapStringsSep "\n" (neigh: ''
           iptables -A nixos-fw -p tcp -s ${neigh.address} --dport ${bgpPort} -j nixos-fw-accept
@@ -171,12 +175,21 @@ in {
           '') cfg.osNode.networking.bird.bgpNeighbours.v6}
         '';
 
+        bfdRules = optionalString isBGP ''
+          ${concatMapStringsSep "\n" (neigh: concatMapStringsSep "\n" (bfdPort: ''
+          iptables -A nixos-fw -p udp -s ${neigh.address} --dport ${toString bfdPort} -j nixos-fw-accept
+          '') bfdPorts) cfg.osNode.networking.bird.bgpNeighbours.v4}
+          ${concatMapStringsSep "\n" (neigh: concatMapStringsSep "\n" (bfdPort: ''
+          ip6tables -A nixos-fw -p udp -s ${neigh.address} --dport ${toString bfdPort} -j nixos-fw-accept
+          '') bfdPorts) cfg.osNode.networking.bird.bgpNeighbours.v6}
+        '';
+
         ospfProto = toString config.serviceDefinitions.bird-ospf.port;
 
         ospfRules = optionalString isOSPF ''
           iptables -A nixos-fw -p ${ospfProto} -j nixos-fw-accept
           ip6tables -A nixos-fw -p ${ospfProto} -j nixos-fw-accept
         '';
-      in concatStringsSep "\n\n" [ bgpRules ospfRules ];
+      in concatStringsSep "\n\n" [ bgpRules bfdRules ospfRules ];
   };
 }
