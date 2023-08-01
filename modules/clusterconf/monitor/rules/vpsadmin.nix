@@ -352,6 +352,24 @@ in [
           '';
         };
       }
+
+      {
+        alert = "ExportHostIpOwnerMismatch";
+        expr = ''vpsadmin_export_host_ip_owner_mismatch == 1'';
+        labels = {
+          severity = "warning";
+          frequency = "1h";
+        };
+        annotations = {
+          summary = "Export {{ $labels.export_id }} of user {{ $labels.user_id }} has mismatching host IP owner";
+          description = ''
+            Export {{ $labels.export_id }} of user {{ $labels.user_id_id }} has mismatching
+            host IP owner.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 
