@@ -8,7 +8,10 @@
   vpsadmin.nodectld.settings = {
     vpsadmin = {
       net_interfaces = [ "teng0" "teng1" ];
-      queues.zfs_recv.threads = 48;
+      queues = {
+        storage.threads = 8;
+        zfs_recv.threads = 48;
+      };
     };
     console = {
       host = "172.16.0.5";
