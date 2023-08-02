@@ -24,6 +24,8 @@
   boot.zfs.pools.storage = {
     guid = "2575935829831167981";
 
+    install = true;
+
     scrub = {
       enable = true;
       startIntervals = [ "0 23 1 */2 *" ];

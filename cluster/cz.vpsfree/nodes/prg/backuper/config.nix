@@ -63,6 +63,8 @@
     storage = {
       guid = "5841452050336007819";
 
+      install = true;
+
       scrub = {
         enable = true;
         startIntervals = [ "0 7 */30 * *" ];
