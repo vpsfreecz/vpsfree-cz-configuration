@@ -62,6 +62,18 @@ let
     }
     {
       match = {
+        frequency = "12h";
+      };
+      repeat_interval = "12h";
+    }
+    {
+      match = {
+        frequency = "8h";
+      };
+      repeat_interval = "8h";
+    }
+    {
+      match = {
         frequency = "6h";
       };
       repeat_interval = "6h";
