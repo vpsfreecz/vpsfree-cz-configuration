@@ -504,12 +504,13 @@ VpsAdmin::API::Plugins::Monitoring.config do
     repeat 24*60*60
 
     query do
-      ::Dataset.includes(:user, :dataset_expansion).joins(dataset_expansion: :vps).where(
+      ::Dataset.includes(:user, :dataset_expansion).joins(:user, dataset_expansion: :vps).where(
         dataset_expansions: {
           state: 'active',
           enable_notifications: true,
         },
         vpses: {object_state: ::Vps.object_states[:active]},
+        users: {object_state: ::User.object_states[:active]},
       ).where.not(
         dataset_expansion: nil,
       )
