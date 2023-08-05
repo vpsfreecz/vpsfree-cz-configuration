@@ -336,17 +336,17 @@ in [
       }
 
       {
-        alert = "DatasetExpansionTimeWarn";
-        expr = ''vpsadmin_dataset_expansion_seconds > 30*24*60*60'';
+        alert = "DatasetExpansionDeadlineWarn";
+        expr = ''vpsadmin_dataset_expansion_deadline < time()'';
         labels = {
           severity = "warning";
-          frequency = "6h";
+          frequency = "12h";
         };
         annotations = {
           summary = "VPS {{ $labels.vps_id }} on {{ $labels.vps_node }} is expanded for too long";
           description = ''
             Dataset {{ $labels.dataset_name }} in VPS {{ $labels.vps_id }} on {{ $labels.vps_node }}
-            is expanded for more than a month.
+            has exceeded its deadline.
 
             LABELS: {{ $labels }}
           '';
