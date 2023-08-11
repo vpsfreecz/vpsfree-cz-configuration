@@ -300,7 +300,7 @@ let
           type = "ipv6tunnel";
           address = addr;
         };
-      }) { ipv4 = "77.93.223.5"; ipv6 = "2a03:3b40:1::5"; };
+      }) { ipv4 = "77.93.223.5"; ipv6 = "2a03:3b40:fe:33f::1"; };
     };
   };
 in {
