@@ -69,14 +69,6 @@ let
     ${bgpFragment "ipv4" birdCfg.bgpNeighbours.v4 0}
 
     ${bgpFragment "ipv6" birdCfg.bgpNeighbours.v6 (length birdCfg.bgpNeighbours.v4)}
-
-    protocol bfd {
-      interface "teng*" {
-        min rx interval 10 ms;
-        min tx interval 100 ms;
-        idle tx interval 1000 ms;
-      };
-    }
     ''}
 
     ${optionalString isOSPF ''
@@ -98,8 +90,6 @@ let
         export where source !~ [ RTS_BGP ];
         import all;
       };
-
-      bfd graceful;
 
       graceful restart;
     }
