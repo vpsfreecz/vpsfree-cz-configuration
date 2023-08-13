@@ -51,6 +51,10 @@ in {
       node-exporter.port = 9100;
       osctl-exporter.port = 9101;
       syslog-exporter.port = 9102;
+      ssh-exporter = {
+        port = 9103;
+        monitor = "ssh-exporter";
+      };
       rsyslog-tcp.port = 11514;
       rsyslog-udp.port = 11515;
       sachet.port = 9876;

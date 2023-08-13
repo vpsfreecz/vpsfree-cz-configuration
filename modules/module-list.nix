@@ -16,6 +16,7 @@ let
     ./services/network-graphs
     ./services/sachet.nix
     ./services/syslog-exporter.nix
+    ./services/ssh-exporter.nix
     ./services/vpsf-status.nix
     ./services/vpsfree-irc-bot.nix
     ./system/logging/nixos.nix

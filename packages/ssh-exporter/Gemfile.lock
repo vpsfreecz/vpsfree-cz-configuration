@@ -1,0 +1,27 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+
+GEM
+  remote: https://rubygems.vpsfree.cz/
+  specs:
+    daemons (1.4.1)
+    eventmachine (1.2.7)
+    prometheus-client (4.0.0)
+    rack (2.2.6.4)
+    ssh-exporter (0.1.0)
+      prometheus-client (~> 4.0.0)
+      thin (~> 1.8.1)
+    thin (1.8.2)
+      daemons (~> 1.0, >= 1.0.9)
+      eventmachine (~> 1.0, >= 1.0.4)
+      rack (>= 1, < 3)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  ssh-exporter!
+
+BUNDLED WITH
+   2.4.13

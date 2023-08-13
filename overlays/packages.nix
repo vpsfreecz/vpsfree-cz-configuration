@@ -10,6 +10,8 @@ self: super:
 
   syslog-exporter = super.callPackage ../packages/syslog-exporter {};
 
+  ssh-exporter = super.callPackage ../packages/ssh-exporter {};
+
   vpsf-status = super.callPackage ../packages/vpsf-status {};
 
   vpsfree-irc-bot = super.callPackage ../packages/vpsfree-irc-bot {};
