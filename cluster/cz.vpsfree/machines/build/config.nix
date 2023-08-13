@@ -10,6 +10,7 @@ in {
   imports = [
     ../../../../environments/base.nix
     ../../../../environments/deploy.nix
+    ../../../../configs/ssh-exporter.nix
 
     <vpsadminos/os/modules/services/misc/build-vpsadminos-container-image-repository/nixos.nix>
   ];
