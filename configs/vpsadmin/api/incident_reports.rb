@@ -217,22 +217,32 @@ END
   end
 
   handle_message do |mailbox, message|
-    if /^\[rt\.vpsfree\.cz \#\d+\] PROKI - upozorneni na nalezene incidenty/ =~ message.subject \
-      && message['X-RT-Originator'] == 'proki@csirt.cz'
-      proki = ProkiParser.new(mailbox, message)
-      next proki.parse
+    incidents =
+      if /^\[rt\.vpsfree\.cz \#\d+\] PROKI - upozorneni na nalezene incidenty/ =~ message.subject \
+        && message['X-RT-Originator'] == 'proki@csirt.cz'
+        proki = ProkiParser.new(mailbox, message)
+        proki.parse
 
-    elsif /^\[rt\.vpsfree\.cz \#\d+\] Your server [^ ]+ has been registered as an attack source$/ =~ message.subject \
-      && message['X-RT-Originator'] == 'info@bitninja.com'
-      bitninja = BitNinjaParser.new(mailbox, message)
-      next bitninja.parse
+      elsif /^\[rt\.vpsfree\.cz \#\d+\] Your server [^ ]+ has been registered as an attack source$/ =~ message.subject \
+        && message['X-RT-Originator'] == 'info@bitninja.com'
+        bitninja = BitNinjaParser.new(mailbox, message)
+        bitninja.parse
 
-    elsif /^\[rt\.vpsfree\.cz \#\d+\] \[LeakIX\] Critical security issue for / =~ message.subject \
-      && message['X-RT-Originator'] == 'apiguardian@leakix.net'
-      leakix = LeakIXParser.new(mailbox, message)
-      next leakix.parse
-    end
+      elsif /^\[rt\.vpsfree\.cz \#\d+\] \[LeakIX\] Critical security issue for / =~ message.subject \
+        && message['X-RT-Originator'] == 'apiguardian@leakix.net'
+        leakix = LeakIXParser.new(mailbox, message)
+        leakix.parse
+      else
+        []
+      end
 
-    []
+    VpsAdmin::API::IncidentReports::Result.new(
+      incidents: incidents,
+      reply: {
+        from: 'vpsadmin@vpsfree.cz',
+        #to: ['abuse-komentare@vpsfree.cz'],
+        to: ['aither@havefun.cz'],
+      },
+    )
   end
 end
