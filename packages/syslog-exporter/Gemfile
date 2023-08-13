@@ -1,2 +1,5 @@
-source 'https://rubygems.vpsfree.cz'
-gem 'syslog-exporter'
+source 'https://rubygems.org'
+
+source 'https://rubygems.vpsfree.cz' do
+  gem 'syslog-exporter'
+end
