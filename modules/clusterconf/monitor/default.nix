@@ -168,6 +168,20 @@ let
           }) machines;
       };
 
+    sshExporters =
+      let
+        sshExporterServices = flatten (map (m:
+          filterServices m (sv: sv.monitor == "ssh-exporter")
+        ) monitoredMachines);
+      in {
+        exporterConfigs = map (sv: {
+          targets = [ "${sv.config.address}:${toString sv.config.port}" ];
+          labels = {
+            service = "ssh-exporter";
+          };
+        }) sshExporterServices;
+      };
+
     dnsResolvers =
       let
         resolverServices = flatten (map (m:
@@ -496,6 +510,12 @@ in {
                 replacement = "127.0.0.1:9115";
               }
             ];
+          }
+        ) ++ (optional (scrapeConfigs.sshExporters.exporterConfigs != [])
+          {
+            job_name = "ssh-exporters";
+            scrape_interval = "30s";
+            static_configs = scrapeConfigs.sshExporters.exporterConfigs;
           }
         ) ++ (optional (scrapeConfigs.dnsResolvers.dnsProbes != [])
           {
