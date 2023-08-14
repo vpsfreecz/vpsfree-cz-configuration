@@ -32,8 +32,7 @@ VpsAdmin::API::IncidentReports.config do
 
   class ProkiParser < VpsAdmin::API::IncidentReports::Parser
     def parse
-      incidents = []
-      cache = {}
+      incidents = {}
 
       message.attachments.each do |attachment|
         next if !attachment.content_type.start_with?('application/zip')
@@ -55,13 +54,10 @@ VpsAdmin::API::IncidentReports.config do
                 next
               end
 
-              cache_key = "#{assignment.user_id}:#{assignment.vps_id}:#{assignment.ip_addr}:#{row['feed_name']}"
+              key = "#{assignment.user_id}:#{assignment.vps_id}:#{assignment.ip_addr}:#{row['feed_name']}"
+              incident = incidents[key]
 
-              if cache.has_key?(cache_key)
-                next
-              else
-                cache[cache_key] = true
-              end
+              next if incident && incident.detected_at > time
 
               text = <<END
 Česky:
@@ -101,7 +97,7 @@ END
                 end
               end
 
-              incidents << ::IncidentReport.create!(
+              incidents[key] = ::IncidentReport.new(
                 user_id: assignment.user_id,
                 vps_id: assignment.vps_id,
                 ip_address_assignment: assignment,
@@ -116,11 +112,19 @@ END
         end
       end
 
-      if incidents.empty?
+      incident_list = incidents.values.sort do |a, b|
+        a.detected_at <=> b.detected_at
+      end
+
+      incident_list.each do |incident|
+        incident.save!
+      end
+
+      if incident_list.empty?
         warn "PROKI: no incidents found"
       end
 
-      incidents
+      incident_list
     end
   end
 
