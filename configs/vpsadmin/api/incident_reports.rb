@@ -218,7 +218,7 @@ END
 
   handle_message do |mailbox, message|
     incidents =
-      if /^\[rt\.vpsfree\.cz \#\d+\] PROKI - upozorneni na nalezene incidenty/ =~ message.subject \
+      if /^\[rt\.vpsfree\.cz \#\d+\] PROKI \- upozorneni na nalezene incidenty/ =~ message.subject \
         && message['X-RT-Originator'] == 'proki@csirt.cz'
         proki = ProkiParser.new(mailbox, message)
         proki.parse
