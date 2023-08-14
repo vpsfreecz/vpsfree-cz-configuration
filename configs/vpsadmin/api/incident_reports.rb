@@ -233,6 +233,7 @@ END
         leakix = LeakIXParser.new(mailbox, message)
         leakix.parse
       else
+        warn "#{mailbox.label}: unidentified message subject=#{message.subject.inspect}, originator=#{message['X-RT-Originator'].inspect}"
         []
       end
 
