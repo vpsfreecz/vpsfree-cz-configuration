@@ -221,19 +221,21 @@ END
   end
 
   handle_message do |mailbox, message|
+    check_sender = ENV['CHECK_SENDER'] ? %w(y yes 1).include?(ENV['CHECK_SENDER']) : true
+
     incidents =
       if /^\[rt\.vpsfree\.cz \#\d+\] PROKI \- upozorneni na nalezene incidenty/ =~ message.subject \
-        && message['X-RT-Originator'] == 'proki@csirt.cz'
+        && (!check_sender || message['X-RT-Originator'] == 'proki@csirt.cz')
         proki = ProkiParser.new(mailbox, message)
         proki.parse
 
       elsif /^\[rt\.vpsfree\.cz \#\d+\] Your server [^ ]+ has been registered as an attack source$/ =~ message.subject \
-        && message['X-RT-Originator'] == 'info@bitninja.com'
+        && (!check_sender || message['X-RT-Originator'] == 'info@bitninja.com')
         bitninja = BitNinjaParser.new(mailbox, message)
         bitninja.parse
 
       elsif /^\[rt\.vpsfree\.cz \#\d+\] \[LeakIX\] Critical security issue for / =~ message.subject \
-        && message['X-RT-Originator'] == 'apiguardian@leakix.net'
+        && (!check_sender || message['X-RT-Originator'] == 'apiguardian@leakix.net')
         leakix = LeakIXParser.new(mailbox, message)
         leakix.parse
       else
