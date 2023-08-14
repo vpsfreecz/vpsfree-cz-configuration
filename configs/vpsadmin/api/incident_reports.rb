@@ -240,8 +240,7 @@ END
       incidents: incidents,
       reply: {
         from: 'vpsadmin@vpsfree.cz',
-        #to: ['abuse-komentare@vpsfree.cz'],
-        to: ['aither@havefun.cz'],
+        to: ['abuse-komentare@vpsfree.cz'],
       },
     )
   end
