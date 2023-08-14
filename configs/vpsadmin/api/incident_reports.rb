@@ -84,7 +84,11 @@ END
               raw = CSV.parse(row['raw'], col_sep: ',', quote_char: '"', row_sep: '\n', headers: true)
               raw.each do |raw_row|
                 raw_row.each do |k, v|
-                  text << sprintf("  %-18s: %s\n", k, v)
+                  begin
+                    text << sprintf("  %-18s: %s\n", k, v)
+                  rescue Encoding::CompatibilityError
+                    next
+                  end
                 end
               end
 
