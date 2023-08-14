@@ -103,6 +103,10 @@ END
         end
       end
 
+      if incidents.empty?
+        warn "PROKI: no incidents found"
+      end
+
       incidents
     end
   end
