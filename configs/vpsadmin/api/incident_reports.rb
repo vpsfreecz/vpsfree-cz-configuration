@@ -33,6 +33,7 @@ VpsAdmin::API::IncidentReports.config do
   class ProkiParser < VpsAdmin::API::IncidentReports::Parser
     def parse
       incidents = []
+      cache = {}
 
       message.attachments.each do |attachment|
         next if !attachment.content_type.start_with?('application/zip')
@@ -52,6 +53,14 @@ VpsAdmin::API::IncidentReports.config do
               if assignment.nil?
                 warn "PROKI: IP #{row['ip']} not found"
                 next
+              end
+
+              cache_key = "#{assignment.user_id}:#{assignment.vps_id}:#{assignment.ip_addr}:#{row['feed_name']}"
+
+              if cache.has_key?(cache_key)
+                next
+              else
+                cache[cache_key] = true
               end
 
               text = <<END
