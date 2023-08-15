@@ -83,6 +83,9 @@ in {
     systemd.services.ssh-exporter = {
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
+      path = with pkgs; [
+        openssh
+      ];
       environment.RACK_ENV = "production";
       serviceConfig = {
         Type = "simple";
