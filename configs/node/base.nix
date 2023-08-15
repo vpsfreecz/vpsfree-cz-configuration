@@ -51,6 +51,7 @@ in {
     users = {
       users.ssh-check = {
         isSystemUser = true;
+        shell = pkgs.bash;
         group = "ssh-check";
         openssh.authorizedKeys.keys = with confData.sshKeys; [ ssh-exporter ];
       };
