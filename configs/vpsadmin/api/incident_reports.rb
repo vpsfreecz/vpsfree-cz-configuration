@@ -257,6 +257,7 @@ END
 
   handle_message do |mailbox, message|
     check_sender = ENV['CHECK_SENDER'] ? %w(y yes 1).include?(ENV['CHECK_SENDER']) : true
+    processed = true
 
     incidents =
       if /^\[rt\.vpsfree\.cz \#\d+\] PROKI \- upozorneni na nalezene incidenty/ =~ message.subject \
@@ -275,6 +276,7 @@ END
         leakix.parse
       else
         warn "#{mailbox.label}: unidentified message subject=#{message.subject.inspect}, originator=#{message['X-RT-Originator']}"
+        processed = false
         []
       end
 
@@ -284,6 +286,7 @@ END
         from: 'vpsadmin@vpsfree.cz',
         to: ['abuse-komentare@vpsfree.cz'],
       },
+      processed: processed,
     )
   end
 end
