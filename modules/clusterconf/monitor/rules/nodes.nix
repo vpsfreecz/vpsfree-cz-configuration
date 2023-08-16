@@ -524,6 +524,144 @@
       }
 
       {
+        alert = "SshExporterDown";
+        expr = ''up{job="ssh-exporters"} == 0'';
+        for = "5m";
+        labels = {
+          severity = "critical";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "SSH exporter is down (instance {{ $labels.instance }})";
+          description = ''
+            SSH exporter is down, node SSH checks are not working.
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeSshDownCrit";
+        expr = ''ssh_host_up{job="ssh-exporters"} == 0'';
+        for = "2m";
+        labels = {
+          alertclass = "sshdown";
+          severity = "critical";
+          frequency = "2m";
+        };
+        annotations = {
+          summary = "Node not responding over SSH (instance {{ $labels.instance }})";
+          description = ''
+            Node is not responding over SSH
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeSshDownFatal";
+        expr = ''ssh_host_up{job="ssh-exporters"} == 0'';
+        for = "10m";
+        labels = {
+          alertclass = "sshdown";
+          severity = "fatal";
+          frequency = "2m";
+        };
+        annotations = {
+          summary = "Node not responding over SSH (instance {{ $labels.instance }})";
+          description = ''
+            Node is not responding over SSH
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeSshLoginWarn";
+        expr = ''ssh_host_check_seconds{job="ssh-exporters"} > 10'';
+        labels = {
+          alertclass = "sshtime";
+          severity = "warning";
+          frequency = "1h";
+        };
+        annotations = {
+          summary = "Node SSH login takes too long (instance {{ $labels.instance }})";
+          description = ''
+            Node SSH login takes too long
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeSshLoginCrit";
+        expr = ''ssh_host_check_seconds{job="ssh-exporters"} >= 30'';
+        for = "2m";
+        labels = {
+          alertclass = "sshtime";
+          severity = "critical";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "Node SSH login takes too long (instance {{ $labels.instance }})";
+          description = ''
+            Node SSH login takes too long
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeSshCritLoad";
+        expr = ''up{job="nodes"} == 0 and on (fqdn) ssh_host_load1 > 1000'';
+        for = "5m";
+        labels = {
+          alertclass = "sshload";
+          severity = "critical";
+          frequency = "5m";
+        };
+        annotations = {
+          summary = "Node loadavg is too high (instance {{ $labels.instance }})";
+          description = ''
+            Node load average fetched over SSH is too high
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeSshFatalLoad";
+        expr = ''up{job="nodes"} == 0 and on (fqdn) ssh_host_load1 > 2000'';
+        for = "5m";
+        labels = {
+          alertclass = "sshload";
+          severity = "fatal";
+          frequency = "5m";
+        };
+        annotations = {
+          summary = "Node loadavg is too high (instance {{ $labels.instance }})";
+          description = ''
+            Node load average fetched over SSH is too high
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "KeyringHighKeys";
         expr = ''((sum by (instance) (kernel_keyring_users_qnkeys{job="nodes"})) / on (instance) sysctl_kernel_keys_maxkeys) * 100 >= 75'';
         for = "10m";
