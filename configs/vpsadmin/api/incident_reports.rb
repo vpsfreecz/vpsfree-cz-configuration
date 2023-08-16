@@ -116,12 +116,30 @@ END
         a.detected_at <=> b.detected_at
       end
 
-      incident_list.each do |incident|
-        incident.save!
+      now = Time.now
+      proki_cooldown = ENV['PROKI_COOLDOWN'] ? ENV['PROKI_COOLDOWN'].to_i : 7*24*60*60
+
+      incident_list.select! do |incident|
+        existing = ::IncidentReport.where(
+          user_id: incident.user_id,
+          vps_id: incident.vps_id,
+          ip_address_assignment_id: incident.ip_address_assignment_id,
+          codename: incident.codename,
+        ).order('created_at DESC').take
+
+        if existing && existing.created_at + proki_cooldown > now
+          warn "PROKI: found previous incident ##{existing.id} for "+
+               "user=#{existing.user_id} vps=#{existing.vps_id} "+
+               "ip=#{existing.ip_address_assignment.ip_addr} code=#{existing.codename}"
+          next(false)
+        else
+          incident.save!
+          next(true)
+        end
       end
 
       if incident_list.empty?
-        warn "PROKI: no incidents found"
+        warn "PROKI: no new incidents found"
       end
 
       incident_list
