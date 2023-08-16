@@ -133,7 +133,7 @@ END
                "ip=#{existing.ip_address_assignment.ip_addr} code=#{existing.codename}"
           next(false)
         else
-          incident.save!
+          incident.save! unless dry_run?
           next(true)
         end
       end
@@ -189,7 +189,7 @@ END
         return []
       end
 
-      [::IncidentReport.create!(
+      incident = ::IncidentReport.new(
         user_id: assignment.user_id,
         vps_id: assignment.vps_id,
         ip_address_assignment: assignment,
@@ -197,7 +197,10 @@ END
         subject: subject,
         text: text,
         detected_at: time,
-      )]
+      )
+
+      incident.save! unless dry_run?
+      [incident]
     end
   end
 
@@ -243,7 +246,7 @@ END
         return []
       end
 
-      [::IncidentReport.create!(
+      incident = ::IncidentReport.new(
         user_id: assignment.user_id,
         vps_id: assignment.vps_id,
         ip_address_assignment: assignment,
@@ -251,28 +254,31 @@ END
         subject: subject,
         text: text,
         detected_at: time,
-      )]
+      )
+
+      incident.save! unless dry_run?
+      [incident]
     end
   end
 
-  handle_message do |mailbox, message|
+  handle_message do |mailbox, message, dry_run:|
     check_sender = ENV['CHECK_SENDER'] ? %w(y yes 1).include?(ENV['CHECK_SENDER']) : true
     processed = true
 
     incidents =
       if /^\[rt\.vpsfree\.cz \#\d+\] PROKI \- upozorneni na nalezene incidenty/ =~ message.subject \
         && (!check_sender || message['X-RT-Originator'].to_s == 'proki@csirt.cz')
-        proki = ProkiParser.new(mailbox, message)
+        proki = ProkiParser.new(mailbox, message, dry_run: dry_run)
         proki.parse
 
       elsif /^\[rt\.vpsfree\.cz \#\d+\] Your server [^ ]+ has been registered as an attack source$/ =~ message.subject \
         && (!check_sender || message['X-RT-Originator'].to_s == 'info@bitninja.com')
-        bitninja = BitNinjaParser.new(mailbox, message)
+        bitninja = BitNinjaParser.new(mailbox, message, dry_run: dry_run)
         bitninja.parse
 
       elsif /^\[rt\.vpsfree\.cz \#\d+\] \[LeakIX\] Critical security issue for / =~ message.subject \
         && (!check_sender || message['X-RT-Originator'].to_s == 'apiguardian@leakix.net')
-        leakix = LeakIXParser.new(mailbox, message)
+        leakix = LeakIXParser.new(mailbox, message, dry_run: dry_run)
         leakix.parse
       else
         warn "#{mailbox.label}: unidentified message subject=#{message.subject.inspect}, originator=#{message['X-RT-Originator']}"
