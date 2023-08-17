@@ -64,6 +64,9 @@ in {
       module(load="imtcp")
       input(type="imtcp" port="11514")
 
+      module(load="imudp")
+      input(type="imudp" port="11515")
+
       $template remote-incoming-logs, "/var/log/remote/%HOSTNAME%/log"
       *.* ?remote-incoming-logs
 
