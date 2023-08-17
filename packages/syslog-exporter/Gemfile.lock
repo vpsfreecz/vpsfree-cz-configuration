@@ -1,4 +1,8 @@
 GEM
+  remote: https://rubygems.org/
+  specs:
+
+GEM
   remote: https://rubygems.vpsfree.cz/
   specs:
     daemons (1.4.1)
@@ -17,7 +21,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  syslog-exporter
+  syslog-exporter!
 
 BUNDLED WITH
    2.4.13
