@@ -306,16 +306,23 @@ let
       }) confData.meet;
     };
 
-    ipv6Tunnels = {
-      pingConfigs = mapAttrsToList (ipv: addr: {
-        targets = [ addr ];
-        labels = {
-          alias = "ipv6tunnels-${ipv}";
-          type = "ipv6tunnel";
-          address = addr;
+    ipv6Tunnels =
+      let
+        ips = {
+          ipv4 = "77.93.223.5";
+          ipv6-interface = "2a03:3b40:fe:33f::1";
+          ipv6-tunnel = "2a03:3b40:200::200";
         };
-      }) { ipv4 = "77.93.223.5"; ipv6 = "2a03:3b40:fe:33f::1"; };
-    };
+      in {
+        pingConfigs = mapAttrsToList (ipv: addr: {
+          targets = [ addr ];
+          labels = {
+            alias = "ipv6tunnels-${ipv}";
+            type = "ipv6tunnel";
+            address = addr;
+          };
+        }) ips;
+      };
   };
 in {
   options = {
