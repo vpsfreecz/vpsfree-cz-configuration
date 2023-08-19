@@ -23,11 +23,11 @@ files.each do |name, url|
   dst = File.join(dir, name)
   dst_tmp = "#{dst}.new"
 
-  unless Kernel.system('curl', '-s', '-o', dst_tmp, url)
+  if Kernel.system('curl', '-s', '-o', dst_tmp, url)
+    File.rename(dst_tmp, dst)
+  else
     success = false
   end
-
-  File.rename(dst_tmp, dst)
 end
 
 exit(success)
