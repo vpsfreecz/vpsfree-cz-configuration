@@ -26,6 +26,7 @@ files.each do |name, url|
   if Kernel.system('curl', '-s', '-o', dst_tmp, url)
     File.rename(dst_tmp, dst)
   else
+    warn "Unable to fetch graph #{name} from #{url}"
     success = false
   end
 end
