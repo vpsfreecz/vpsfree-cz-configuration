@@ -286,6 +286,17 @@ in {
             equal = [ "fqdn" ];
           }
 
+          # Ignore NodeSshDown alerts when NodeDown is firing as well
+          {
+            target_match = {
+              alertclass = "sshdown";
+            };
+            source_match = {
+              alertclass = "nodedown";
+            };
+            equal = [ "fqdn" ];
+          }
+
           # Disable less-important alerts when more important alerts of the same
           # class are firing.
           {
