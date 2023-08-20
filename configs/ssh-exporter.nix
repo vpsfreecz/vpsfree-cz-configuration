@@ -14,6 +14,7 @@ let
     fqdn = m.config.host.fqdn;
     user = "ssh-check";
     private_key_file = "/secrets/ssh-exporter/id_ecdsa";
+    timeout = 45;
   }) allNodes);
 
   port = config.serviceDefinitions.ssh-exporter.port;
