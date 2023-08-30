@@ -261,6 +261,57 @@ END
     end
   end
 
+  class SpamCopParser < VpsAdmin::API::IncidentReports::Parser
+    include ParserUtils
+
+    def parse
+      body = message.decoded
+
+      if /^Email from ([^\s]+) \/ ([^$]+?)$/ !~ body
+        warn "SpamCop: IP / date not found"
+        return []
+      end
+
+      addr_str = $1
+      time_str = $2
+
+      begin
+        time = Date.rfc2822(time_str).to_time
+      rescue Date::Error => e
+        warn "SpamCop: invalid timestamp #{time_str.inspect}"
+        return []
+      end
+
+      assignment = find_ip_address_assignment(addr_str, time: time)
+
+      if assignment.nil?
+        warn "SpamCop: IP #{addr_str} not found"
+        return []
+      end
+
+      subject = strip_rt_prefix(message.subject)
+      text = strip_rt_header(body)
+
+      if body.empty?
+        warn "SpamCop: empty message body"
+        return []
+      end
+
+      incident = ::IncidentReport.new(
+        user_id: assignment.user_id,
+        vps_id: assignment.vps_id,
+        ip_address_assignment: assignment,
+        mailbox: mailbox,
+        subject: subject,
+        text: text,
+        detected_at: time,
+      )
+
+      incident.save! unless dry_run?
+      [incident]
+    end
+  end
+
   handle_message do |mailbox, message, dry_run:|
     check_sender = ENV['CHECK_SENDER'] ? %w(y yes 1).include?(ENV['CHECK_SENDER']) : true
     processed = true
@@ -280,6 +331,11 @@ END
         && (!check_sender || message['X-RT-Originator'].to_s == 'apiguardian@leakix.net')
         leakix = LeakIXParser.new(mailbox, message, dry_run: dry_run)
         leakix.parse
+
+      elsif /^\[rt\.vpsfree\.cz \#\d+\] \[SpamCop \(/ =~ message.subject \
+        && (!check_sender || message['X-RT-Originator'].to_s.end_with?('@reports.spamcop.net'))
+        spamcop = SpamCopParser.new(mailbox, message, dry_run: dry_run)
+        spamcop.parse
       else
         warn "#{mailbox.label}: unidentified message subject=#{message.subject.inspect}, originator=#{message['X-RT-Originator']}"
         processed = false
