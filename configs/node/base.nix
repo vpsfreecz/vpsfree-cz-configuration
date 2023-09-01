@@ -10,7 +10,7 @@ let
       (map (addr: fn ifname 6 addr) ips.v6)
     ) addresses);
 
-  kernels = import ./kernels.nix { inherit pkgs; };
+  kernels = import ./kernels.nix { inherit pkgs lib; };
 in {
   config = mkIf (confMachine.osNode != null) {
     boot.kernelVersion = mkDefault (kernels.getRuntimeKernelForMachine confMachine.name);
