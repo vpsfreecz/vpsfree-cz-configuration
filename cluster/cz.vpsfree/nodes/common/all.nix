@@ -29,7 +29,7 @@ in
   boot.extraModulePackages =
     lib.optional (lib.versionOlder config.boot.kernelPackages.kernel.version "5.6") config.boot.kernelPackages.wireguard;
 
-  boot.kernelParams = [ "slub_nomerge" ];
+  boot.kernelParams = [ "slub_nomerge" "amd_iommu=off" "iommu=off" ];
 
   boot.kernel.sysctl = {
     "kernel.printk" = 0;
