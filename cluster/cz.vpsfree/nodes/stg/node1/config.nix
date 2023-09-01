@@ -24,8 +24,5 @@
     parallelStart = 8;
   };
 
-  osctld.settings.cpu_scheduler = {
-    enable = true;
-    packages."0".cpu_mask = "4-9,20-29";
-  };
+  osctld.settings.cpu_scheduler.enable = true;
 }

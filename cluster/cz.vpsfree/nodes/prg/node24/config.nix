@@ -29,10 +29,7 @@
     parallelStop = 40;
   };
 
-  osctld.settings.cpu_scheduler = {
-    enable = true;
-    packages."0".cpu_mask = "8-63,136-191";
-  };
+  osctld.settings.cpu_scheduler.enable = true;
 
   swapDevices = [
   ];
