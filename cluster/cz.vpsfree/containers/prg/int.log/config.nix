@@ -123,6 +123,7 @@ in {
 
       containers = {
         files = [
+          "/var/log/messages"
           "/var/log/remote/cz.vpsfree/containers/*/log"
           "/var/log/remote/cz.vpsfree/containers/*/*/log"
           "/var/log/remote/cz.vpsfree/vpsadmin/*/log"
