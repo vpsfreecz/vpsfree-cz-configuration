@@ -89,6 +89,42 @@
       }
 
       {
+        alert = "LxcStartFailed";
+        expr = ''syslog_lxc_start_failed == 1'';
+        labels = {
+          severity = "critical";
+          frequency = "1m";
+        };
+        annotations = {
+          summary = "lxc-start has failed (instance {{ $labels.instance }})";
+          description = ''
+            lxc-start has failed to start a container.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "LxcStartNetnsLimit";
+        expr = ''syslog_lxc_start_netns_limit == 1'';
+        labels = {
+          alertclass = "lxcstartfail";
+          severity = "fatal";
+          frequency = "2m";
+        };
+        annotations = {
+          summary = "lxc-start has hit netns limit (instance {{ $labels.instance }})";
+          description = ''
+            lxc-start has failed to start a container due to network namespace
+            limit being reached, see sysctl user.max_net_namespaces.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "KernelNullPointer";
         expr = ''syslog_kernel_bug{type="nullptr"} == 1'';
         labels = {

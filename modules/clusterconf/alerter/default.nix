@@ -297,6 +297,17 @@ in {
             equal = [ "fqdn" ];
           }
 
+          # Ignore LxcStartFailed when a more concrete alert is firing
+          {
+            target_match = {
+              alertname = "LxcStartFailed";
+            };
+            source_match = {
+              alertclass = "lxcstartfail";
+            };
+            equal = [ "fqdn" "id" ];
+          }
+
           # Disable less-important alerts when more important alerts of the same
           # class are firing.
           {
