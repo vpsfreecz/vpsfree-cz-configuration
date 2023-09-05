@@ -276,7 +276,7 @@ END
       time_str = $2
 
       begin
-        time = Date.rfc2822(time_str).to_time
+        time = DateTime.rfc2822(time_str).to_time
       rescue Date::Error => e
         warn "SpamCop: invalid timestamp #{time_str.inspect}"
         return []
