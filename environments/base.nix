@@ -22,7 +22,13 @@ let
       defaultInternalDns;
 
   internalDnsAddresses = map (m: m.addresses.primary.address) internalDns;
+
+  adminSshKeys = flatten (mapAttrsToList (k: v: v.publicKeysForSsh) config.vpsfconf.admins);
 in {
+  imports = [
+    ../configs/admins.nix
+  ];
+
   time.timeZone = "Europe/Amsterdam";
 
   networking = {
@@ -59,5 +65,5 @@ in {
 
   programs.bepastyrb.enable = true;
 
-  users.users.root.openssh.authorizedKeys.keys = with confData.sshKeys; admins ++ builders;
+  users.users.root.openssh.authorizedKeys.keys = adminSshKeys ++ confData.sshKeys.builders;
 }

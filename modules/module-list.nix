@@ -4,6 +4,7 @@ let
     ./programs/bepastyrb.nix
     ./services/definitions.nix
     ./system/monitoring.nix
+    ./vpsfconf/admins.nix
   ];
 
   nixos = [
