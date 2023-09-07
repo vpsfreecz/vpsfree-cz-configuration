@@ -2,12 +2,11 @@
 let
   inherit (lib) mkOption types;
 
-  makeSshKeys = name: admin: map (pubkey: lib.concatStringsSep " " [
+  makeSshKeys = name: admin: map (pubkey: (lib.concatStringsSep "," [
     ''environment="VPSFCONF_ADMIN=${name}"''
     ''environment="VPSADMIN_USER_ID=${toString admin.vpsadmin.id}"''
     ''environment="VPSADMIN_USER_NAME=${admin.vpsadmin.name}"''
-    pubkey
-  ]) admin.publicKeys;
+  ]) + " " + pubkey) admin.publicKeys;
 
   makeInteractiveShellInit = admins:
     let
