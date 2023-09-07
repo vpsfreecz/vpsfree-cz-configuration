@@ -23,7 +23,7 @@ let
 
   internalDnsAddresses = map (m: m.addresses.primary.address) internalDns;
 
-  adminSshKeys = flatten (mapAttrsToList (k: v: v.publicKeysForSsh) config.vpsfconf.admins);
+  adminSshKeys = flatten (mapAttrsToList (k: v: v.authorizedKeys) config.vpsfconf.admins);
 in {
   imports = [
     ../configs/admins.nix

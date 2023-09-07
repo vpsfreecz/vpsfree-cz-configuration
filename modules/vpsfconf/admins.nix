@@ -2,7 +2,7 @@
 let
   inherit (lib) mkOption types;
 
-  makeSshKeys = name: admin: map (pubkey: (lib.concatStringsSep "," [
+  makeAuthorizedKeys = name: admin: map (pubkey: (lib.concatStringsSep "," [
     ''environment="VPSFCONF_ADMIN=${name}"''
     ''environment="VPSADMIN_USER_ID=${toString admin.vpsadmin.id}"''
     ''environment="VPSADMIN_USER_NAME=${admin.vpsadmin.name}"''
@@ -13,9 +13,7 @@ let
       withShell = lib.filterAttrs (name: admin: admin.interactiveShellInit != null) admins;
       script = name: admin: pkgs.writeText "admin-${name}.sh" admin.interactiveShellInit;
       fragments = lib.mapAttrsToList (name: admin: ''
-        if [ "$VPSADMIN_USER_ID" == "${toString admin.vpsadmin.id}" ] ; then
-          . ${script name admin}
-        fi
+        [ "$VPSADMIN_USER_ID" == "${toString admin.vpsadmin.id}" ] && . ${script name admin}
       '') withShell;
     in lib.concatStringsSep "\n" fragments;
 
@@ -48,7 +46,7 @@ let
           description = "SSH public keys";
         };
 
-        publicKeysForSsh = mkOption {
+        authorizedKeys = mkOption {
           type = types.listOf types.str;
           readOnly = true;
           description = lib.mdDoc ''
@@ -66,7 +64,7 @@ let
       };
 
       config = {
-        publicKeysForSsh = makeSshKeys name config;
+        authorizedKeys = makeAuthorizedKeys name config;
       };
     };
 in {
