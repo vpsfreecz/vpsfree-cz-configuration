@@ -116,7 +116,7 @@ let
           system.stateVersion = config.system.nixos.release;
         })
       ] ++ (import <confctl/nix/modules/module-list.nix>).nixos
-        ++ [ ../modules/cluster ../modules/programs/bepastyrb.nix ]
+        ++ [ ../modules/cluster ../modules/programs/bepastyrb.nix ../modules/vpsfconf/admins.nix ]
         ++ (import ../cluster/module-list.nix)
         ++ modules;
     }).config.system.build;
