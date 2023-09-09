@@ -730,6 +730,7 @@ in {
           ./rules/systemd.nix
           ./rules/nodectld.nix
           ./rules/syslog.nix
+          ./rules/ipmi.nix
           ./rules/outbound-net.nix
           ./rules/ipv6-tunnels.nix
         ]) ++ (map (v: import v { inherit lib; }) [
