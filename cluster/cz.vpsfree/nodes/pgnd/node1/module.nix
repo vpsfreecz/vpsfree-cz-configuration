@@ -85,6 +85,7 @@ in {
     };
 
     services = {
+      ipmi-exporter = {};
       node-exporter = {};
       osctl-exporter = {};
       vpsadmin-console = {};
