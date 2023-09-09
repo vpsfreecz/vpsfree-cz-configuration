@@ -135,6 +135,22 @@ let
           } // m.config.monitoring.labels;
         }) machines;
 
+        ipmiConfigs = map (m: {
+          targets = [
+            "${m.config.host.fqdn}:${toString m.config.services.ipmi-exporter.port}"
+          ];
+          labels = {
+            alias = getAlias m.config.host;
+            fqdn = m.config.host.fqdn;
+            domain = m.config.host.domain;
+            location = ensureLocation m.config.host.location;
+            type = "node";
+            os = m.config.spin;
+            role = m.config.node.role;
+            storage_type = m.config.node.storageType;
+          } // m.config.monitoring.labels;
+        }) machines;
+
         pingConfigs = map (m: {
           targets = [ m.config.host.fqdn ];
           labels = {
@@ -488,6 +504,13 @@ in {
             ];
           }
         ) ++ [
+          {
+            job_name = "nodes-ipmi";
+            scrape_interval = "120s";
+            scrape_timeout = "60s";
+            static_configs = scrapeConfigs.nodes.ipmiConfigs;
+          }
+        ] ++ [
           {
             job_name = "infra";
             scrape_interval = "60s";
