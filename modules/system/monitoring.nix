@@ -7,7 +7,9 @@ let
 
   monitorings = filter (d: d.config.monitoring.isMonitor) allMachines;
 
-  exporterPort = confMachine.services.node-exporter.port;
+  ipmiExporterPort = confMachine.services.ipmi-exporter.port;
+
+  nodeExporterPort = confMachine.services.node-exporter.port;
 
   textfileDir = "/run/metrics";
 
@@ -34,13 +36,13 @@ in {
     (mkIf cfg.enable {
       networking.firewall.extraCommands = concatStringsSep "\n" (map (d: ''
         # Allow access to node-exporter from ${d.config.host.fqdn}
-        iptables -A nixos-fw -p tcp -m tcp -s ${d.config.addresses.primary.address} --dport ${toString exporterPort} -j nixos-fw-accept
+        iptables -A nixos-fw -p tcp -m tcp -s ${d.config.addresses.primary.address} --dport ${toString nodeExporterPort} -j nixos-fw-accept
       '') monitorings);
 
       services.prometheus.exporters = {
         node = {
           enable = true;
-          port = exporterPort;
+          port = nodeExporterPort;
         };
       };
     })
@@ -89,19 +91,31 @@ in {
 
     # vpsAdminOS nodes
     (mkIf (cfg.enable && confMachine.spin == "vpsadminos") {
-      services.prometheus.exporters.node = {
-        extraFlags = [ "--collector.textfile.directory=${textfileDir}" ];
-        enabledCollectors = [
-          "hwmon"
-          "interrupts"
-          "ksmd"
-          "mdadm"
-          "nfs"
-          "processes"
-          "runit"
-          "textfile"
-          "vmstat"
-        ];
+      networking.firewall.extraCommands = concatStringsSep "\n" (map (d: ''
+        # Allow access to ipmi-exporter from ${d.config.host.fqdn}
+        iptables -A nixos-fw -p tcp -m tcp -s ${d.config.addresses.primary.address} --dport ${toString ipmiExporterPort} -j nixos-fw-accept
+      '') monitorings);
+
+      services.prometheus.exporters = {
+        ipmi = {
+          enable = true;
+          port = ipmiExporterPort;
+        };
+
+        node = {
+          extraFlags = [ "--collector.textfile.directory=${textfileDir}" ];
+          enabledCollectors = [
+            "hwmon"
+            "interrupts"
+            "ksmd"
+            "mdadm"
+            "nfs"
+            "processes"
+            "runit"
+            "textfile"
+            "vmstat"
+          ];
+        };
       };
 
       services.cron.systemCronJobs = [

@@ -48,6 +48,7 @@ in {
       prometheus.port = 9090;
       nginx.port = 80;
       nix-serve.port = 5000;
+      ipmi-exporter.port = 9290;
       node-exporter.port = 9100;
       osctl-exporter.port = 9101;
       syslog-exporter.port = 9102;
