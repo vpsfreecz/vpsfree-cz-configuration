@@ -60,26 +60,17 @@ in {
 
   services.rsyslogd = {
     enable = true;
-    defaultConfig = mkForce ''
-      template(name="remote-log-file" type="string" string="/var/log/remote/%HOSTNAME%/log")
-
-      ruleset(name="remote-file"){
-        action(type="omfile" dynaFile="remote-log-file")
-        call remote-pipe
-      }
-
-      ruleset(name="remote-pipe") {
-        action(type="ompipe" Pipe="${config.services.syslog-exporter.settings.syslog_pipe}")
-      }
-
+    extraConfig = ''
       module(load="imtcp")
-      input(type="imtcp" port="11514" ruleset="remote-file")
+      input(type="imtcp" port="11514")
 
       module(load="imudp")
-      input(type="imudp" port="11515" ruleset="remote-file")
+      input(type="imudp" port="11515")
 
-      *.*             -/var/log/messages
-      *.*             |${config.services.syslog-exporter.settings.syslog_pipe}
+      $template remote-incoming-logs, "/var/log/remote/%HOSTNAME%/log"
+      *.* ?remote-incoming-logs
+
+      *.* |${config.services.syslog-exporter.settings.syslog_pipe}
     '';
   };
 
