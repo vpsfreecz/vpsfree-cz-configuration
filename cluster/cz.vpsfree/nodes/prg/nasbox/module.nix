@@ -3,8 +3,8 @@ let
   allAddresses = {
     primary = { address = "172.16.0.6"; prefix = 32; };
     teng0 = {
-      v4 = [ { address = "172.16.251.26"; prefix = 30; } ];
-      v6 = [ { address = "2a03:3b40:42:2:07::2"; prefix = 80; } ];
+      v4 = [ { address = "172.16.253.58"; prefix = 30; } ];
+      v6 = [ { address = "2a03:3b40:42:0:15::2"; prefix = 80; } ];
     };
     teng1 = {
       v4 = [ { address = "172.16.252.58"; prefix = 30; } ];
@@ -62,11 +62,11 @@ in {
           routerId = "172.16.0.6";
           bgpNeighbours = {
             v4 = [
-              { address = "172.16.251.25"; as = 4200001901; }
+              { address = "172.16.253.57"; as = 4200001999; }
               { address = "172.16.252.57"; as = 4200001998; }
             ];
             v6 = [
-              { address = "2a03:3b40:42:2:07::1"; as = 4200001901; }
+              { address = "2a03:3b40:42:0:15::1"; as = 4200001999; }
               { address = "2a03:3b40:42:1:15::1"; as = 4200001998; }
             ];
           };
