@@ -12,7 +12,7 @@ now = Time.now.to_i
 day_ago = now - 24 * 60 * 60
 
 files = {
-  'edge1_prg_vpsfree.gif' => "http://172.16.100.2/graphs/iface/master-vlan128-uplink/daily.gif",
+  'edge1_prg_vpsfree.gif' => "http://172.16.100.2/graphs/iface/sfp28-12-master/daily.gif",
   'edge2_prg_vpsfree.gif' => "http://172.16.100.3/graphs/iface/sfp28-12-master/daily.gif",
   'rtr1_brq_vpsfree.gif' => "http://172.19.0.2/graphs/iface/sfpplus1-master/daily.gif",
   'rtr2_brq_vpsfree.gif' => "http://172.19.0.3/graphs/iface/sfpplus1-master/daily.gif"
