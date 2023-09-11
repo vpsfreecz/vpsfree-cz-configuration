@@ -60,7 +60,9 @@ in {
 
   services.rsyslogd = {
     enable = true;
-    extraConfig = ''
+    defaultConfig = mkForce ''
+      *.* -/var/log/messages
+
       module(load="imtcp")
       input(type="imtcp" port="11514")
 
@@ -85,6 +87,20 @@ in {
   services.logrotate = {
     enable = true;
     settings = {
+      local = {
+        files = [
+          "/var/log/messages"
+        ];
+        frequency = "daily";
+        rotate = 7;
+        dateext = true;
+        notifempty = true;
+        nocompress = true;
+        postrotate = ''
+          kill -HUP `cat /run/rsyslog.pid`
+        '';
+      };
+
       nodes = {
         files = [ "/var/log/remote/cz.vpsfree/nodes/*/*/log" ];
         frequency = "daily";
@@ -114,7 +130,6 @@ in {
 
       containers = {
         files = [
-          "/var/log/messages"
           "/var/log/remote/cz.vpsfree/containers/*/log"
           "/var/log/remote/cz.vpsfree/containers/*/*/log"
           "/var/log/remote/cz.vpsfree/vpsadmin/*/log"
