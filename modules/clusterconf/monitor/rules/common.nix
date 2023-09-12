@@ -260,6 +260,40 @@
           '';
         };
       }
+      {
+        alert = "MemoryCorrectableErrors";
+        expr = ''node_edac_correctable_errors_total > 0'';
+        labels = {
+          severity = "warning";
+          frequency = "1h";
+        };
+        annotations = {
+          summary = "EDAC reports correctable memory errors (instance {{ $labels.instance }})";
+          description = ''
+            EDAC reports correctable memory errors
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+      {
+        alert = "MemoryUncorrectableErrors";
+        expr = ''node_edac_uncorrectable_errors_total > 0'';
+        labels = {
+          severity = "fatal";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "EDAC reports uncorrectable memory errors (instance {{ $labels.instance }})";
+          description = ''
+            EDAC reports uncorrectable memory errors
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 ]
