@@ -26,7 +26,7 @@ let
 
   deployItemsBoot = items: concatNl (mapAttrsToList (name: item: ''
     mkdir -p $out/boot
-    ln -s ${copyOrSymlink name item "boot" "{kernel,bzImage,initrd}"} $out/boot/${name}
+    ln -s ${copyOrSymlink name item "boot" "{kernel,bzImage,initrd,microcode}"} $out/boot/${name}
   '') items);
 
   deployItemsRootfs = items: concatNl (mapAttrsToList (name: item: ''
@@ -56,7 +56,7 @@ let
       LABEL ${variant}
         MENU LABEL ${label}
         LINUX boot/${name}/kernel
-        INITRD boot/${name}/initrd
+        INITRD ${optionalString item.microcode "boot/${name}/microcode,"}boot/${name}/initrd
         APPEND httproot=http://${server}/${name}/root.squashfs init=${builtins.unsafeDiscardStringContext item.toplevel}/init ${toString item.kernelParams} runlevel=${runlevel} ${concatStringsSep " " kernelParams}
     '';
 

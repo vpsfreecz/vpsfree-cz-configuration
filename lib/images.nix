@@ -95,6 +95,8 @@ let
         paths = with osBuild.config.system.build; [ dist ];
       };
       macs = node.config.netboot.macs or [];
+
+      microcode = (hasAttr "cpu" osBuild.config.hardware) && (osBuild.config.hardware.cpu.intel.updateMicrocode || osBuild.config.hardware.cpu.amd.updateMicrocode);
     };
 
   nixosBuild = { name, modules ? [] }:
@@ -130,6 +132,7 @@ let
         name = "nixos_netboot";
         paths = with build; [ netbootRamdisk kernel netbootIpxeScript ];
       };
+      microcode = false;
     };
 
   inMenu = name: netbootitem: netbootitem // { menu = name; };
