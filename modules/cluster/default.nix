@@ -22,11 +22,6 @@ let
           default = null;
         };
 
-        vzNode = mkOption {
-          type = types.nullOr (types.submodule vzNode);
-          default = null;
-        };
-
         monitoring = {
           enable = mkOption {
             type = types.bool;
@@ -160,8 +155,6 @@ let
   node = import ./nodes/common.nix;
 
   osNode = (import ./nodes/vpsadminos.nix) args;
-
-  vzNode = (import ./nodes/openvz.nix) args;
 
   service =
     { config, ... }:

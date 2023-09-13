@@ -96,23 +96,6 @@ in [
       }
 
       {
-        alert = "VpsAdmindUnresponsive";
-        expr = ''vpsadmin_node_last_report_seconds{node_platform="openvz"} >= 90'';
-        labels = {
-          severity = "warning";
-          frequency = "15m";
-        };
-        annotations = {
-          summary = "vpsAdmind on {{ $labels.node_name }} is not responding";
-          description = ''
-            vpsAdmind on {{ $labels.node_name }} is not responding
-
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
-
-      {
         alert = "TransactionChainFatal";
         expr = ''vpsadmin_transaction_chain_fatal == 1'';
         labels = {
