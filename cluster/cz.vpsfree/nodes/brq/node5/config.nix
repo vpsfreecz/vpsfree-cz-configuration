@@ -63,10 +63,18 @@ in {
         ashift = "12";
       };
     };
+
+    tank-node4 = {
+      install = true;
+    };
   };
 
   osctl.pools.tank = {
-    parallelStart = 8;
+    parallelStart = 5;
+  };
+
+  osctl.pools.tank-node4 = {
+    parallelStart = 3;
   };
 
   swapDevices = [
