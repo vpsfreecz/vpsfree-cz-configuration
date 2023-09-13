@@ -71,10 +71,12 @@ in {
 
   osctl.pools.tank = {
     parallelStart = 5;
+    parallelStop = 12;
   };
 
   osctl.pools.tank-node4 = {
     parallelStart = 3;
+    parallelStop = 8;
   };
 
   swapDevices = [
