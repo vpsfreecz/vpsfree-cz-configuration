@@ -20,8 +20,8 @@
     netboot = {
       enable = true;
       macs = [
-        "b8:ca:3a:6f:ba:3c"
-        "b8:ca:3a:6f:ba:3d"
+        "ec:f4:bb:cf:f3:3c"
+        "ec:f4:bb:cf:f3:3d"
       ];
     };
 
@@ -33,11 +33,11 @@
       networking = {
         interfaces = {
           names = {
-            oneg0 = "b8:ca:3a:6f:ba:3c";
-            oneg1 = "b8:ca:3a:6f:ba:3d";
+            oneg0 = "ec:f4:bb:cf:f3:3c";
+            oneg1 = "ec:f4:bb:cf:f3:3d";
 
-            teng0 = "b8:ca:3a:6f:ba:38";
-            teng1 = "b8:ca:3a:6f:ba:3a";
+            teng0 = "ec:f4:bb:cf:f3:38";
+            teng1 = "ec:f4:bb:cf:f3:3a";
           };
         };
 
