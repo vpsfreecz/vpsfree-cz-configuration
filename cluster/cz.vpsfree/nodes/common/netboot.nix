@@ -18,14 +18,14 @@ in {
   # are netbooted and other systems do not use boot.initrd.network, which is
   # required to upload the crash dump.
   boot.consoleLogLevel = 8;
-  boot.crashDump = {
-    enable = true;
-    execAfterDump = ''
-      date=$(date +%Y%m%dT%H%M%S)
-      tftp -l /dmesg -r /${confMachine.host.fqdn}-dmesg-$date -p ${apuPrg.addresses.primary.address} || exit 1
-      reboot -f
-    '';
-  };
+  # boot.crashDump = {
+  #   enable = true;
+  #   execAfterDump = ''
+  #     date=$(date +%Y%m%dT%H%M%S)
+  #     tftp -l /dmesg -r /${confMachine.host.fqdn}-dmesg-$date -p ${apuPrg.addresses.primary.address} || exit 1
+  #     reboot -f
+  #   '';
+  # };
 
   environment.etc =
     let
