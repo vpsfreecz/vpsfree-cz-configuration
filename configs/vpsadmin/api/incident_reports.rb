@@ -18,7 +18,7 @@ VpsAdmin::API::IncidentReports.config do
       ret = ''
       append = false
 
-      body.split("\n").each do |line|
+      body.each_line do |line|
         if line.lstrip.start_with?('Ticket <URL: ')
           append = true
         elsif append
