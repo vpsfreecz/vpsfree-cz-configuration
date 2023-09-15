@@ -312,6 +312,73 @@ END
     end
   end
 
+  class UsGoParser < VpsAdmin::API::IncidentReports::Parser
+    include ParserUtils
+
+    def parse
+      if !message.multipart? || message.parts.length < 3
+        warn "USGO: expected a 3-part message, got #{message.parts.length} parts"
+        return []
+      end
+
+      feedback = message.parts[1].decoded
+
+      if /^Source-IP: ([^$]+?)$/ !~ feedback
+        warn "USGO: IP not found"
+        return []
+      end
+
+      addr_str = $1
+
+      if /^Received-Date: ([^\(]+)/ !~ feedback
+        warn "USGO: datetime not found"
+        return []
+      end
+
+      time_str = $1
+
+      begin
+        time = DateTime.rfc2822(time_str).to_time
+      rescue Date::Error => e
+        warn "USGO: invalid timestamp #{time_str.inspect}"
+        return []
+      end
+
+      assignment = find_ip_address_assignment(addr_str, time: time)
+
+      if assignment.nil?
+        warn "USGO: IP #{addr_str} not found"
+        return []
+      end
+
+      body = message.parts[0].decoded
+
+      subject = strip_rt_prefix(message.subject)
+      text = strip_rt_header(body)
+
+      spam_body = message.parts[2].decoded
+      text << "\n\nOffending message:\n\n#{spam_body}"
+
+      if body.empty?
+        warn "USGO: empty message body"
+        return []
+      end
+
+      incident = ::IncidentReport.new(
+        user_id: assignment.user_id,
+        vps_id: assignment.vps_id,
+        ip_address_assignment: assignment,
+        mailbox: mailbox,
+        subject: subject,
+        text: text,
+        detected_at: time,
+      )
+
+      incident.save! unless dry_run?
+      [incident]
+    end
+  end
+
   handle_message do |mailbox, message, dry_run:|
     check_sender = ENV['CHECK_SENDER'] ? %w(y yes 1).include?(ENV['CHECK_SENDER']) : true
     processed = true
@@ -336,6 +403,11 @@ END
         && (!check_sender || message['X-RT-Originator'].to_s.end_with?('@reports.spamcop.net'))
         spamcop = SpamCopParser.new(mailbox, message, dry_run: dry_run)
         spamcop.parse
+
+      elsif /^\[rt\.vpsfree\.cz \#\d+\] Abuse Feedback Report for / =~ message.subject \
+        && (!check_sender || message['X-RT-Originator'].to_s == 'DoNotReply@USGOabuse.net')
+        usgo = UsGoParser.new(mailbox, message, dry_run: dry_run)
+        usgo.parse
       else
         warn "#{mailbox.label}: unidentified message subject=#{message.subject.inspect}, originator=#{message['X-RT-Originator']}"
         processed = false
