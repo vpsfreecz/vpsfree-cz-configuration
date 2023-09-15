@@ -204,6 +204,58 @@ END
     end
   end
 
+  class Fail2BanParser < VpsAdmin::API::IncidentReports::Parser
+    include ParserUtils
+
+    def parse
+      body = message.decoded
+
+      if /^This is an email abuse report about the IP address (.+) generated at ([^$]+?)$/ !~ body
+        warn "Fail2Ban: IP / date not found"
+        return []
+      end
+
+      addr_str = $1
+      time_str = $2
+
+      begin
+        # Fri Sep 15 18:55:37 EEST 2023
+        time = DateTime.strptime(time_str, '%a %b %d %H:%M:%S %Z %Y').to_time
+      rescue Date::Error => e
+        warn "Fail2Ban: invalid timestamp #{time_str.inspect}"
+        return []
+      end
+
+      assignment = find_ip_address_assignment(addr_str, time: time)
+
+      if assignment.nil?
+        warn "Fail2Ban: IP #{addr_str} not found"
+        return []
+      end
+
+      subject = strip_rt_prefix(message.subject)
+      text = strip_rt_header(body)
+
+      if body.empty?
+        warn "Fail2Ban: empty message body"
+        return []
+      end
+
+      incident = ::IncidentReport.new(
+        user_id: assignment.user_id,
+        vps_id: assignment.vps_id,
+        ip_address_assignment: assignment,
+        mailbox: mailbox,
+        subject: subject,
+        text: text,
+        detected_at: time,
+      )
+
+      incident.save! unless dry_run?
+      [incident]
+    end
+  end
+
   class LeakIXParser < VpsAdmin::API::IncidentReports::Parser
     include ParserUtils
 
@@ -408,6 +460,11 @@ END
         && (!check_sender || message['X-RT-Originator'].to_s == 'DoNotReply@USGOabuse.net')
         usgo = UsGoParser.new(mailbox, message, dry_run: dry_run)
         usgo.parse
+
+      elsif /^\[rt\.vpsfree\.cz \#\d+\] Automatic abuse report for IP address / =~ message.subject \
+        && (!check_sender || message['X-RT-Originator'].start_with?('fail2ban@'))
+        f2b = Fail2BanParser.new(mailbox, message, dry_run: dry_run)
+        f2b.parse
       else
         warn "#{mailbox.label}: unidentified message subject=#{message.subject.inspect}, originator=#{message['X-RT-Originator']}"
         processed = false
