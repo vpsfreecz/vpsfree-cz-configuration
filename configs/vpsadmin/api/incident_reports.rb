@@ -462,7 +462,7 @@ END
         usgo.parse
 
       elsif /^\[rt\.vpsfree\.cz \#\d+\] Automatic abuse report for IP address / =~ message.subject \
-        && (!check_sender || message['X-RT-Originator'].start_with?('fail2ban@'))
+        && (!check_sender || message['X-RT-Originator'].to_s.start_with?('fail2ban@'))
         f2b = Fail2BanParser.new(mailbox, message, dry_run: dry_run)
         f2b.parse
       else
