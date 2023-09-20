@@ -90,5 +90,7 @@ in {
       osctl-exporter = {};
       vpsadmin-console = {};
     };
+
+    monitoring.enable = false;
   };
 }
