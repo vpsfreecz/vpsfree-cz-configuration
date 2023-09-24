@@ -1,0 +1,4 @@
+{ config, ... }:
+{
+  boot.kernelParams = [ "nosmt" ];
+}

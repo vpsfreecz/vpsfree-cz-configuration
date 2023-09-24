@@ -2,6 +2,7 @@
 {
   imports = [
     ../common.nix
+    ../../common/amd-dual-socket.nix
     ../../common/tunables-2t.nix
   ];
 
