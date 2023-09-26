@@ -743,7 +743,7 @@
 
       {
         alert = "KernelPtyWarn";
-        expr = ''sysctl_kernel_pty_nr >= 4096'';
+        expr = ''sysctl_kernel_pty_nr >= 6*600*2'';
         for = "5m";
         labels = {
           alertclass = "pty_nr";
@@ -753,8 +753,7 @@
         annotations = {
           summary = "High PTY count (instance {{ $labels.instance }})";
           description = ''
-            More than 4096 allocated PTYs. 3600 PTYs are needed for 600 VPS, so
-            this is already high.
+            More than 4096 allocated PTYs. In general, 6 PTYs are needed for 1 VPS.
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
