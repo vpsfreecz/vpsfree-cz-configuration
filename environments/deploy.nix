@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, confMachine, ... }:
 
 let
   customVim =
@@ -9,6 +9,13 @@ let
           start = [ vim-nix sensible ]; # load plugin on startup
         };
     };
+
+  httpConfigFile = pkgs.writeText "am-http-config.yml" (builtins.toJSON {
+    basic_auth = {
+      username = "build";
+      password_file = "/secrets/alertmanager-http-password";
+    };
+  });
 in
 {
   nix.settings = {
@@ -29,7 +36,17 @@ in
     vim = lib.mkForce "myvim";
   };
 
+  environment.etc = {
+    "amtool/config.yml".text = builtins.toJSON {
+      "alertmanager.url" = elemAt alerters 0;
+      "author" = confMachine.host.fqdn;
+      "require-comment" = false;
+      "http.config.file" = httpConfigFile;
+    };
+  };
+
   environment.systemPackages = with pkgs; [
+    alertmanager
     asciinema
     screen
     git
