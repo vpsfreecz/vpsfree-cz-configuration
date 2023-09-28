@@ -369,7 +369,7 @@
 
       {
         alert = "HypervisorFatalNoSsdWrites";
-        expr = ''sum by (alias) (increase(node_disk_written_bytes_total{job="nodes",role="hypervisor",storage_type=~"hdd|ssd",device=~"sd.+"}[1m])) == 0'';
+        expr = ''sum by (alias,fqdn) (increase(node_disk_written_bytes_total{job="nodes",role="hypervisor",storage_type=~"hdd|ssd",device=~"sd.+"}[1m])) == 0'';
         labels = {
           alertclass = "nowrites";
           severity = "fatal";
@@ -388,7 +388,7 @@
 
       {
         alert = "HypervisorFatalNoNvmeWrites";
-        expr = ''sum by (alias) (increase(node_disk_written_bytes_total{job="nodes",role="hypervisor",storage_type="nvme",device=~"nvme.+"}[1m])) == 0'';
+        expr = ''sum by (alias,fqdn) (increase(node_disk_written_bytes_total{job="nodes",role="hypervisor",storage_type="nvme",device=~"nvme.+"}[1m])) == 0'';
         labels = {
           alertclass = "nowrites";
           severity = "fatal";
