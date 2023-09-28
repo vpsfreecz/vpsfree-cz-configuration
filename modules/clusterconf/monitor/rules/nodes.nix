@@ -545,7 +545,7 @@
       {
         alert = "NodeSshDownCrit";
         expr = ''ssh_host_up{job="ssh-exporters"} == 0'';
-        for = "2m";
+        for = "10m";
         labels = {
           alertclass = "sshdown";
           severity = "critical";
@@ -565,7 +565,7 @@
       {
         alert = "NodeSshDownFatal";
         expr = ''ssh_host_up{job="ssh-exporters"} == 0'';
-        for = "10m";
+        for = "15m";
         labels = {
           alertclass = "sshdown";
           severity = "fatal";
