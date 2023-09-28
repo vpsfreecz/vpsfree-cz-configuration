@@ -14,7 +14,9 @@ amtool silence add --duration=5m "severity=~critical|fatal"
 confctl deploy -g current -t internal-dns --one-by-one --reboot '*' boot
 
 echo "Deploying VPN"
-confctl deploy --reboot cz.vpsfree/machines/prg/int.vpn boot
+confctl deploy -i --reboot cz.vpsfree/machines/prg/int.vpn boot
 
 echo "Deploying APUs"
-confctl deploy -t apu --reboot '*' boot
+confctl build -t apu
+confctl deploy -t apu -g current --copy-only -y
+confctl deploy -t apu -g current -i --one-by-one --reboot '*' boot
