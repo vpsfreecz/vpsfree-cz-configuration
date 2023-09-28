@@ -10,6 +10,11 @@ let
         };
     };
 
+  alerters = [
+    "https://alerts1.prg.vpsfree.cz"
+    "https://alerts2.prg.vpsfree.cz"
+  ];
+
   httpConfigFile = pkgs.writeText "am-http-config.yml" (builtins.toJSON {
     basic_auth = {
       username = "build";
@@ -38,7 +43,7 @@ in
 
   environment.etc = {
     "amtool/config.yml".text = builtins.toJSON {
-      "alertmanager.url" = elemAt alerters 0;
+      "alertmanager.url" = builtins.elemAt alerters 0;
       "author" = confMachine.host.fqdn;
       "require-comment" = false;
       "http.config.file" = httpConfigFile;
