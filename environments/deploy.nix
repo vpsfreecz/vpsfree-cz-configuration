@@ -51,7 +51,7 @@ in
   };
 
   environment.systemPackages = with pkgs; [
-    alertmanager
+    prometheus-alertmanager
     asciinema
     screen
     git
