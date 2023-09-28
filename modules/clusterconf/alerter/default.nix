@@ -297,6 +297,28 @@ in {
             equal = [ "fqdn" ];
           }
 
+          # Ignore disk write alerts when hypervisor is nearly empty
+          {
+            target_match = {
+              alertclass = "nowrites";
+            };
+            source_match = {
+              alertname = "HypervisorNearlyEmpty";
+            };
+            equal = [ "fqdn" ];
+          }
+
+          # Ignore fatal alerts when hypervisor is completely empty
+          {
+            target_match = {
+              severity = "fatal";
+            };
+            source_match = {
+              alertname = "HypervisorEmpty";
+            };
+            equal = [ "fqdn" ];
+          }
+
           # Ignore LxcStartFailed when a more concrete alert is firing
           {
             target_match = {
