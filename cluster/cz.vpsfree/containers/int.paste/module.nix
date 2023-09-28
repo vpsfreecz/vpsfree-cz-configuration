@@ -27,7 +27,7 @@
         type = "git-rev";
         git-rev = {
           url = "https://github.com/aither64/nixpkgs";
-          update.ref = "refs/heads/bepasty-1.1.0";
+          update.ref = "refs/heads/bepasty-1.2.0";
         };
       };
     };

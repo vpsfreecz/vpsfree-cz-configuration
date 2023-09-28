@@ -6,27 +6,27 @@
       "update": {
         "auto": false,
         "interval": 3600,
-        "ref": "refs/heads/bepasty-1.1.0"
+        "ref": "refs/heads/bepasty-1.2.0"
       },
       "url": "https://github.com/aither64/nixpkgs"
     },
     "state": {
-      "rev": "377446db83505e834985d414b797dd6ee24ebc2c",
-      "date": "2023-05-11T14:15:21+02:00"
+      "rev": "7a0a6eddce62ba47a8fb2d3db62d1eacb7fadc74",
+      "date": "2023-09-28T17:44:45+02:00"
     },
     "info": {
-      "rev": "377446db83505e834985d414b797dd6ee24ebc2c",
-      "sha256": "1gclpg3y5drfr5ih0m58xhivzy0alci2b96dkfs4dz9c6ihpy6ry"
+      "rev": "7a0a6eddce62ba47a8fb2d3db62d1eacb7fadc74",
+      "sha256": "071g6x1j11cmymspj292vjj9zw3kppfka3zv55hjzbm2kpq98zsh"
     },
     "fetcher": {
       "type": "git-rev",
       "options": {
-        "rev": "377446db83505e834985d414b797dd6ee24ebc2c",
+        "rev": "7a0a6eddce62ba47a8fb2d3db62d1eacb7fadc74",
         "wrapped_fetcher": {
           "type": "zip",
           "options": {
-            "url": "https://github.com/aither64/nixpkgs/archive/377446db83505e834985d414b797dd6ee24ebc2c.tar.gz",
-            "sha256": "1gclpg3y5drfr5ih0m58xhivzy0alci2b96dkfs4dz9c6ihpy6ry"
+            "url": "https://github.com/aither64/nixpkgs/archive/7a0a6eddce62ba47a8fb2d3db62d1eacb7fadc74.tar.gz",
+            "sha256": "071g6x1j11cmymspj292vjj9zw3kppfka3zv55hjzbm2kpq98zsh"
           }
         }
       }
