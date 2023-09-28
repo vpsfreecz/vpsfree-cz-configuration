@@ -20,19 +20,19 @@
   "api1.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
       location = "prg";
-      name = "node21";
+      name = "node24";
     };
   };
   "api2.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
       location = "prg";
-      name = "node21";
+      name = "node24";
     };
   };
   "cache.int.vpsadminos.org" = {
@@ -47,10 +47,10 @@
   "db.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
       location = "prg";
-      name = "node21";
+      name = "node24";
     };
   };
   "grafana.int.prg.vpsfree.cz" = {
@@ -110,37 +110,37 @@
   "ns1.brq.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node4.brq.vpsfree.cz";
-      id = 213;
+      fqdn = "node5.brq.vpsfree.cz";
+      id = 214;
       location = "brq";
-      name = "node4";
+      name = "node5";
     };
   };
   "ns1.int.brq.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node4.brq.vpsfree.cz";
-      id = 213;
+      fqdn = "node5.brq.vpsfree.cz";
+      id = 214;
       location = "brq";
-      name = "node4";
+      name = "node5";
     };
   };
   "ns1.int.prg.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node15.prg.vpsfree.cz";
-      id = 116;
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
       location = "prg";
-      name = "node15";
+      name = "node24";
     };
   };
   "ns1.prg.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node23.prg.vpsfree.cz";
+      id = 124;
       location = "prg";
-      name = "node21";
+      name = "node23";
     };
   };
   "ns1.vpsfree.cz" = {
@@ -155,10 +155,10 @@
   "ns2.brq.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node5.brq.vpsfree.cz";
-      id = 214;
+      fqdn = "node2.brq.vpsfree.cz";
+      id = 211;
       location = "brq";
-      name = "node5";
+      name = "node2";
     };
   };
   "ns2.prg.vpsfree.cz" = {
@@ -191,10 +191,10 @@
   "proxy.prg.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
       location = "prg";
-      name = "node21";
+      name = "node24";
     };
   };
   "proxy.vpsadminos.org" = {
@@ -209,19 +209,19 @@
   "redis1.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
       location = "prg";
-      name = "node21";
+      name = "node24";
     };
   };
   "rubygems.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node22.prg.vpsfree.cz";
+      id = 123;
       location = "prg";
-      name = "node21";
+      name = "node22";
     };
   };
   "tor-relay.vpsfree.cz" = {
@@ -236,55 +236,55 @@
   "utils.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
       location = "prg";
-      name = "node21";
+      name = "node24";
     };
   };
   "vpsadmin1.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
       location = "prg";
-      name = "node21";
+      name = "node24";
     };
   };
   "vpsfbot.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
       location = "prg";
-      name = "node21";
+      name = "node24";
     };
   };
   "webui-dev.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
       location = "prg";
-      name = "node21";
+      name = "node24";
     };
   };
   "webui1.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
       location = "prg";
-      name = "node21";
+      name = "node24";
     };
   };
   "webui2.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node21.prg.vpsfree.cz";
-      id = 122;
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
       location = "prg";
-      name = "node21";
+      name = "node24";
     };
   };
   "www.int.vpsadminos.org" = {
