@@ -9,6 +9,8 @@ in {
     ../../common/tunables-512g.nix
   ];
 
+  hardware.cpu.amd.updateMicrocode = true;
+
   boot.initrd.kernelModules = [ "bnxt_en" ];
 
   boot.kernelModules = [ "bonding" "8021q" ];
