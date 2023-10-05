@@ -996,6 +996,7 @@
         for = "5m";
         labels = {
           alertclass = "lxcfs_loadavg";
+          alertwhen = "inuse";
           severity = "critical";
           frequency = "15m";
         };
