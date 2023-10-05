@@ -297,10 +297,10 @@ in {
             equal = [ "fqdn" ];
           }
 
-          # Ignore disk write alerts when hypervisor is nearly empty
+          # Ignore alerts with alertwhen=inuse when hypervisor is nearly empty
           {
             target_match = {
-              alertclass = "nowrites";
+              alertwhen = "inuse";
             };
             source_match = {
               alertname = "HypervisorNearlyEmpty";

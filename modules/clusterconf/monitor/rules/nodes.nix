@@ -372,6 +372,7 @@
         expr = ''sum by (alias,fqdn) (increase(node_disk_written_bytes_total{job="nodes",role="hypervisor",storage_type=~"hdd|ssd",device=~"sd.+"}[1m])) == 0'';
         labels = {
           alertclass = "nowrites";
+          alertwhen = "inuse";
           severity = "fatal";
           frequency = "2m";
         };
@@ -391,6 +392,7 @@
         expr = ''sum by (alias,fqdn) (increase(node_disk_written_bytes_total{job="nodes",role="hypervisor",storage_type="nvme",device=~"nvme.+"}[1m])) == 0'';
         labels = {
           alertclass = "nowrites";
+          alertwhen = "inuse";
           severity = "fatal";
           frequency = "2m";
         };
