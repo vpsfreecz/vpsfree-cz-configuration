@@ -992,7 +992,7 @@
 
       {
         alert = "LxcfsLoadavgStalled";
-        expr = ''sum by (instance) (osctl_container_load1{job="nodes",role="hypervisor"}) == sum by (instance) (osctl_container_load1{job="nodes",role="hypervisor"} offset 1m)'';
+        expr = ''sum by (instance,fqdn) (osctl_container_load1{job="nodes",role="hypervisor"}) == sum by (instance,fqdn) (osctl_container_load1{job="nodes",role="hypervisor"} offset 1m)'';
         for = "5m";
         labels = {
           alertclass = "lxcfs_loadavg";
