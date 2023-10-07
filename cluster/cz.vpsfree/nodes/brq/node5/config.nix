@@ -68,6 +68,28 @@ in {
 
     tank-node4 = {
       install = true;
+
+      datasets = {
+        "/".properties = {
+          compression = "on";
+          dnodesize = "legacy";
+          recordsize = "128k";
+          xattr = "sa";
+        };
+        "ct".properties = {
+          acltype = "posixacl";
+        };
+        "reservation".properties = {
+          refreservation = lib.mkDefault "100G";
+          canmount = "off";
+        };
+      };
+
+      scrub = {
+        enable = true;
+        startIntervals = [ "0 4 1-7 * *" ];
+        startCommand = ''[ "$(LC_ALL=C date '+\%a')" = "Sun" ] && scrubctl start tank-node4'';
+      };
     };
   };
 
