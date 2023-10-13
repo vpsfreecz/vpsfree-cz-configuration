@@ -21,6 +21,17 @@
           { property = "ActiveState"; value = "active"; }
         ];
       };
+
+      machineCommands = [
+        {
+          description = "Check vpsAdmin webui";
+          command = [ "curl" "--fail" "http://localhost" ];
+          standardOutput.include = [
+            "vpsAdmin"
+            "</html>"
+          ];
+        }
+      ];
     };
   };
 }
