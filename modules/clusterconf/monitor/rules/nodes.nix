@@ -295,12 +295,31 @@
         for = "15m";
         labels = {
           alertclass = "dnodelimit";
-          severity = "critical";
+          severity = "warning";
         };
         annotations = {
           summary = "ZFS dnode_size is greater than arc_dnode_limit (instance {{ $labels.instance }})";
           description = ''
             ZFS dnode_size is greater than arc_dnode_limit
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "HypervisorDnodeSurpassedLimit";
+        expr = ''node_zfs_arc_dnode_size{role="hypervisor"} / node_zfs_arc_arc_dnode_limit * 100 >= 105'';
+        for = "15m";
+        labels = {
+          alertclass = "dnodelimit";
+          severity = "critical";
+        };
+        annotations = {
+          summary = "ZFS dnode_size is greater than arc_dnode_limit (instance {{ $labels.instance }})";
+          description = ''
+            ZFS dnode_size is >5% greater than arc_dnode_limit
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
