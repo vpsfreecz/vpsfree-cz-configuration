@@ -1,13 +1,6 @@
 { config, pkgs, lib, confMachine, confLib, ... }:
 with lib;
 let
-  apiConfigRepo = pkgs.fetchFromGitHub {
-    owner = "vpsfreecz";
-    repo = "vpsadmin-config";
-    rev = "beb246d09cb6bb1978ae973a55e4a8a9ed41ab1e";
-    sha256 = "sha256-4dLhIivmh/0GKBBjEZ7583NbLEbeYEt1rTJsmonbcY8=";
-  };
-
   db = confLib.findConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.db";
@@ -30,7 +23,7 @@ in {
       "webui"
     ];
 
-    configDirectory = apiConfigRepo;
+    configDirectory = ../../../../configs/vpsadmin/api;
 
     address = confMachine.addresses.primary.address;
     servers = 8;
