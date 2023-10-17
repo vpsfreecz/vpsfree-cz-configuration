@@ -56,6 +56,7 @@ in {
     vim
     screen
     config.boot.kernelPackages.perf
+    config.boot.kernelPackages.cpupower
   ];
 
   programs.bash.promptInit =
