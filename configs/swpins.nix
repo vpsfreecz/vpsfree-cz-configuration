@@ -27,11 +27,7 @@ let
     };
   };
 
-  nixpkgsUnstable = nixpkgsBranch "nixos-unstable";
-
-  nixpkgsStable = nixpkgsBranch "nixos-22.05";
-
-  vpsadminosMaster = osBranch "master";
+  nixpkgsStable = nixpkgsBranch "nixos-23.05";
 
   vpsadminosStaging = osBranch "staging";
 
@@ -50,7 +46,7 @@ in {
 
   confctl.swpins.channels = {
     staging = {
-      nixpkgs = nixpkgsUnstable;
+      nixpkgs = nixpkgsStable;
       vpsadminos = vpsadminosStaging;
       vpsadmin = vpsadminMaster;
     };
