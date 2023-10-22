@@ -26,7 +26,12 @@ module AbuseNoticeParser
 
             csv = CSV.parse(io.read, col_sep: ',', quote_char: '"', headers: true)
             csv.each do |row|
-              time = Time.iso8601(row['time_detected'])
+              begin
+                time = Time.iso8601(row['time_detected'])
+              rescue ArgumentError => e
+                warn "PROKI: unable to parse time of detection: #{e.message}"
+                next
+              end
 
               assignment = find_ip_address_assignment(row['ip'], time: time)
 
@@ -67,7 +72,19 @@ END
 
               text << sprintf("%-20s:\n", 'raw')
 
-              raw = CSV.parse(row['raw'], col_sep: ',', quote_char: '"', row_sep: '\n', headers: true)
+              begin
+                raw = CSV.parse(
+                  row['raw'],
+                  col_sep: ',',
+                  quote_char: '"',
+                  row_sep: '\n',
+                  headers: true,
+                )
+              rescue CSV::MalformedCSVError => e
+                warn "PROKI: malformed csv in raw attribute for key #{key}: #{e.message}"
+                next
+              end
+
               raw.each do |raw_row|
                 raw_row.each do |k, v|
                   begin
