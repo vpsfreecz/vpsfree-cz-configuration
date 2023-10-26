@@ -23,7 +23,7 @@
       };
 
       mailer = {
-        smtp_server = "mxproxy.vpsfree.cz";
+        smtp_server = "prasiatko.int.vpsfree.cz";
         smtp_port = 25;
       };
     };
