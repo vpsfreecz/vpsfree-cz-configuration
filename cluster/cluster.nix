@@ -33,6 +33,9 @@
   ./cz.vpsfree/vpsadmin/int.api1/module.nix
   ./cz.vpsfree/vpsadmin/int.api2/module.nix
   ./cz.vpsfree/vpsadmin/int.db/module.nix
+  ./cz.vpsfree/vpsadmin/int.rabbitmq1/module.nix
+  ./cz.vpsfree/vpsadmin/int.rabbitmq2/module.nix
+  ./cz.vpsfree/vpsadmin/int.rabbitmq3/module.nix
   ./cz.vpsfree/vpsadmin/int.redis1/module.nix
   ./cz.vpsfree/vpsadmin/int.vpsadmin1/module.nix
   ./cz.vpsfree/vpsadmin/int.webui-dev/module.nix

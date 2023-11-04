@@ -51,6 +51,7 @@ in {
       ipmi-exporter.port = 9290;
       node-exporter.port = 9100;
       osctl-exporter.port = 9101;
+      rabbitmq-exporter.port = 15692;
       syslog-exporter.port = 9102;
       ssh-exporter = {
         port = 9103;
