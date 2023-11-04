@@ -23,7 +23,7 @@
 
       machineCommands = [
         {
-          command = [ "rabbitmqctl" "check_running" ];
+          command = [ "rabbitmq-diagnostics" "check_running" ];
           standardOutput.include = [
             "RabbitMQ on node rabbit@${host.name} is fully booted and running"
           ];
