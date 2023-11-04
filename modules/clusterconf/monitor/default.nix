@@ -235,7 +235,7 @@ let
     rabbitmq =
       let
         rabbitmqServices = flatten (map (m:
-          filterServices m (sv: sv.monitor == "rabbitmq-exporter")
+          filterServices m (sv: sv.monitor == "rabbitmq")
         ) monitoredMachines);
       in {
         exporterConfigs = map (sv: {
