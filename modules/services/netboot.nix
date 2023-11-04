@@ -230,18 +230,6 @@ in
         description = "Hostname or IP address of the netboot server";
       };
 
-      banner = mkOption {
-        type = types.str;
-        description = "Message to display on ipxe script load";
-        default = "ipxe loading";
-      };
-
-      includeNetbootxyz = mkOption {
-        type = types.bool;
-        description = "Include netboot.xyz entry";
-        default = false;
-      };
-
       password = mkOption {
         type = types.str;
         description = "IPXE menu password";

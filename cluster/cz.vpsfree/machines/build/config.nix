@@ -102,7 +102,6 @@ in {
     inherit (images) nixosItems;
     vpsadminosItems = images.allNodes "vpsfree.cz";
     copyItems = false;
-    includeNetbootxyz = true;
     allowedIPRanges = [
       "172.16.254.0/24"
       "172.19.254.0/24"
