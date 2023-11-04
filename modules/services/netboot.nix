@@ -3,7 +3,6 @@ with lib;
 let
   cfg = config.services.netboot;
   server = cfg.host;
-  secretsDir = cfg.secretsDir;
 
   allItems = cfg.nixosItems // cfg.vpsadminosItems;
 
@@ -247,12 +246,6 @@ in
         type = types.str;
         description = "IPXE menu password";
         default = "letmein";
-      };
-
-      secretsDir = mkOption {
-        type = types.path;
-        description = "Directory containing signing secrets";
-        default = /secrets/ca;
       };
 
       nixosItems = mkOption {

@@ -194,7 +194,7 @@ in
     };
   };
 
-  system.secretsDir = toString /secrets/image/secrets;
+  system.secretsDir = "/secrets/nodes/${confMachine.host.fqdn}/secrets";
 
   system.storeOverlaySize = "6G";
 
