@@ -16,6 +16,11 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.api2";
   };
+
+  vpsadmin1 = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/vpsadmin/int.vpsadmin1";
+  };
 in {
   vpsadmin.rabbitmq = {
     enable = true;
@@ -30,6 +35,7 @@ in {
       clients = [
         "${api1.addresses.primary.address}/32"
         "${api2.addresses.primary.address}/32"
+        "${vpsadmin1.addresses.primary.address}/32"
       ] ++ (map (n: "${n.address}/${toString n.prefix}") confData.vpsadmin.networks.management.ipv4);
 
       management = [
