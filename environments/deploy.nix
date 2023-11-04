@@ -66,6 +66,7 @@ in
       cp -rp /secrets/nodes/template/ /secrets/nodes/images/"''${1}"/secrets/
       ssh-keygen -t rsa -b 4096 -f /secrets/nodes/images/"''${1}"/secrets/ssh_host_rsa_key -N ""
       ssh-keygen -t ed25519 -f /secrets/nodes/images/"''${1}"/secrets/ssh_host_ed25519_key -N ""
+      chmod 0644 /secrets/nodes/"''${1}"/secrets/ssh_host_*
     '')
 
     (pkgs.writeScriptBin "update-node-secrets" ''
