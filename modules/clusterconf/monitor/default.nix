@@ -232,6 +232,23 @@ let
         }) authoritativeServices;
       };
 
+    rabbitmq =
+      let
+        rabbitmqServices = flatten (map (m:
+          filterServices m (sv: sv.monitor == "rabbitmq-exporter")
+        ) monitoredMachines);
+      in {
+        exporterConfigs = map (sv: {
+          targets = [ "${sv.config.address}:${toString sv.config.port}" ];
+          labels = {
+            fqdn = sv.machine.config.host.fqdn;
+            domain = sv.machine.config.host.domain;
+            location = ensureLocation sv.machine.config.host.location;
+            service = "rabbitmq";
+          };
+        }) rabbitmqServices;
+      };
+
     http =
       let
         sites = import ./http.nix;
@@ -594,6 +611,12 @@ in {
                 replacement = "127.0.0.1:9115";
               }
             ];
+          }
+        ) ++ (optional (scrapeConfigs.rabbitmq.exporterConfigs != [])
+          {
+            job_name = "rabbitmq";
+            scrape_interval = "30s";
+            static_configs = scrapeConfigs.rabbitmq.exporterConfigs;
           }
         ) ++ scrapeConfigs.http.jobs ++ [
           {
