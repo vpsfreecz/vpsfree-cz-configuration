@@ -75,5 +75,13 @@ in
         cp -rp /secrets/nodes/template/* $dir/
       done
     '')
+
+    (pkgs.writeScriptBin "upload-node-secrets" ''
+      set -e
+
+      for fqdn in "$@" ; do
+        ${pkgs.rsync}/bin/rsync -av "/secrets/nodes/images/$fqdn/secrets/" ''${fqdn}:/var/secrets/:
+      done
+    '')
   ];
 }
