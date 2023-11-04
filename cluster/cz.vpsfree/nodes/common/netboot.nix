@@ -28,8 +28,8 @@ in {
   # };
 
   boot.postBootCommands = ''
-    cp /var/secrets/ssh_host_* /etc/ssh/
     chmod 0600 /var/secrets/ssh_host_*_key
     chmod 0644 /var/secrets/ssh_host_*_key.pub
+    cp -p /var/secrets/ssh_host_* /etc/ssh/
   '';
 }
