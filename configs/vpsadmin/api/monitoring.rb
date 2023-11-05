@@ -180,7 +180,15 @@ VpsAdmin::API::Plugins::Monitoring.config do
       # Plan restart unless one was already planned
       next if event.action_state && event.action_state['restart_planned']
 
-      finish_weekday = (Time.now + 24*60*60).wday
+      now = Time.now
+
+      finish_weekday =
+        if now.hour < 4 || (now.hour == 4 && now.min <= 30)
+          now.wday
+        else
+          (now + 24*60*60).wday
+        end
+
       finish_minutes = 4*60 + rand(35..55) # 04:35-55
 
       opts = {
