@@ -84,13 +84,13 @@ VpsAdmin::API::Plugins::Monitoring.config do
     }
 
     if event.state == 'closed'
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.state}@vpsadmin.vpsfree.cz>"
-      rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-confirmed@vpsadmin.vpsfree.cz>"
+      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-#{event.state}@vpsadmin.vpsfree.cz>"
+      rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-#{event.prev_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
       opts[:in_reply_to] = rpl_to
       opts[:references] = rpl_to
 
     else
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-confirmed@vpsadmin.vpsfree.cz>"
+      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
     end
 
     opts[:message_id] = msg_id
@@ -120,13 +120,13 @@ VpsAdmin::API::Plugins::Monitoring.config do
     }
 
     if event.state == 'closed'
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.state}@vpsadmin.vpsfree.cz>"
-      rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-confirmed@vpsadmin.vpsfree.cz>"
+      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-#{event.state}@vpsadmin.vpsfree.cz>"
+      rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-#{event.prev_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
       opts[:in_reply_to] = rpl_to
       opts[:references] = rpl_to
 
     else
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-confirmed@vpsadmin.vpsfree.cz>"
+      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
     end
 
     opts[:message_id] = msg_id
@@ -149,13 +149,13 @@ VpsAdmin::API::Plugins::Monitoring.config do
     }
 
     if event.state == 'closed'
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.state}@vpsadmin.vpsfree.cz>"
-      rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-confirmed@vpsadmin.vpsfree.cz>"
+      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-#{event.state}@vpsadmin.vpsfree.cz>"
+      rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-#{event.prev_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
       opts[:in_reply_to] = rpl_to
       opts[:references] = rpl_to
 
     else
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-confirmed@vpsadmin.vpsfree.cz>"
+      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
     end
 
     opts[:message_id] = msg_id
@@ -233,12 +233,12 @@ VpsAdmin::API::Plugins::Monitoring.config do
       }
 
       if event.state == 'closed'
-        msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.state}@vpsadmin.vpsfree.cz>"
-        rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-confirmed@vpsadmin.vpsfree.cz>"
+        msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-#{event.state}@vpsadmin.vpsfree.cz>"
+        rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-#{event.prev_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
         opts[:in_reply_to] = rpl_to
         opts[:references] = rpl_to
       else
-        msg_id = "<vpsadmin-monitoring-alert-#{event.id}-confirmed@vpsadmin.vpsfree.cz>"
+        msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
       end
 
       opts[:message_id] = msg_id
