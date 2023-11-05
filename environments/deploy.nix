@@ -80,7 +80,8 @@ in
       set -e
 
       for fqdn in "$@" ; do
-        ${pkgs.rsync}/bin/rsync -av "/secrets/nodes/images/$fqdn/secrets/" ''${fqdn}:/var/secrets/:
+        echo "''${fqdn}:"
+        ${pkgs.rsync}/bin/rsync -av "/secrets/nodes/images/$fqdn/secrets/" ''${fqdn}:/var/secrets/
       done
     '')
   ];
