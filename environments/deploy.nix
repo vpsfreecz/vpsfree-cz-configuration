@@ -81,7 +81,7 @@ in
 
       for fqdn in "$@" ; do
         echo "''${fqdn}:"
-        ${pkgs.rsync}/bin/rsync -av "/secrets/nodes/images/$fqdn/secrets/" ''${fqdn}:/var/secrets/
+        ${pkgs.rsync}/bin/rsync -rltgoDv "/secrets/nodes/images/$fqdn/secrets/" ''${fqdn}:/var/secrets/
       done
     '')
   ];
