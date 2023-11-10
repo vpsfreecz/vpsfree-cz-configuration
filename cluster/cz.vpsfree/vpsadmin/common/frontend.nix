@@ -39,6 +39,8 @@ let
   apis = [ api1 api2 ];
 
   webuis = [ webui1 webui2 ];
+
+  consoles = apis;
 in {
   networking.firewall.extraCommands = concatMapStringsSep "\n" (m: ''
     iptables -A nixos-fw -p tcp -m tcp -s ${m.addresses.primary.address} --dport 5000 -j nixos-fw-accept
@@ -51,16 +53,6 @@ in {
       tokenFile = "/private/vpsadmin-api.token";
     };
     mountpoint = "/mnt/vpsadmin-download";
-  };
-
-  vpsadmin.console-router = {
-    enable = true;
-    database = {
-      host = db.addresses.primary.address;
-      user = "vpsadmin-console";
-      name = "vpsadmin";
-      passwordFile = "/private/vpsadmin-db.pw";
-    };
   };
 
   vpsadmin.haproxy = {
@@ -79,12 +71,10 @@ in {
 
     console-router.prod = {
       frontend.bind = [ "unix@/run/haproxy/vpsadmin-console-router.sock mode 0666" ];
-      backends = [
-        {
-          host = "127.0.0.1";
-          port = config.vpsadmin.console-router.port;
-        }
-      ];
+      backends = map (m: {
+        host = m.addresses.primary.address;
+        port = 8000;
+      }) consoles;
     };
 
     webui = {

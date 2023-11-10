@@ -55,6 +55,19 @@ in {
     };
   };
 
+  vpsadmin.console-router = {
+    enable = true;
+
+    rabbitmq = {
+      username = "console-router";
+      passwordFile = "/private/vpsadmin-console-rabbitmq.pw";
+    };
+
+    allowedIPv4Ranges = [
+      "${proxyPrg.addresses.primary.address}/32"
+    ];
+  };
+
   environment.systemPackages = with pkgs; [
     git
   ];
