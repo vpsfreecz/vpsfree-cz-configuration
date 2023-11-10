@@ -10,6 +10,7 @@
       net_interfaces = [ "teng0" "teng1" ];
     };
     console = {
+      enable = false;
       host = "172.16.0.6";
     };
   };

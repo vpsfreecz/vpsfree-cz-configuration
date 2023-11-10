@@ -14,6 +14,7 @@
       };
     };
     console = {
+      enable = false;
       host = "172.16.0.5";
     };
   };
