@@ -5,7 +5,12 @@
     ../common/mailer.nix
   ];
 
-  vpsadmin.nodectld.settings.vpsadmin.node_id = 5;
+  vpsadmin.nodectld.settings = {
+    vpsadmin = {
+      node_id = 5;
+      node_name = "vpsadmin1.prg";
+    };
+  };
 
   system.stateVersion = "22.05";
 }
