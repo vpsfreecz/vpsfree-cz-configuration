@@ -135,20 +135,8 @@ let
   inMenu = name: netbootitem: netbootitem // { menu = name; };
 
 in rec {
-  nixos = nixosNetboot { name = "NixOS"; };
-
-  nixosZfs = nixosNetboot {
-    name = "NixOS with ZFS";
-    modules = [
-      {
-        imports = nixosModules;
-        boot.supportedFilesystems = [ "zfs" ];
-      }
-    ];
-  };
-
-  nixosZfsSSH = nixosNetboot {
-    name = "NixOS with ZFS and SSH";
+  nixos = nixosNetboot {
+    name = "NixOS";
     modules = [
       {
         imports = nixosModules;
@@ -160,8 +148,6 @@ in rec {
 
   nixosItems = {
     nixos = inMenu "NixOS" nixos;
-    nixoszfs = inMenu "NixOS ZFS" nixosZfs;
-    nixoszfsssh = inMenu "NixOS ZFS SSH" nixosZfsSSH;
   };
 
   nodesInLocation = domain: location:
