@@ -10,13 +10,6 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };
-
-  rabbitmqs = map (name:
-    confLib.findConfig {
-      cluster = config.cluster;
-      name = "cz.vpsfree/vpsadmin/int.${name}";
-    }
-  ) [ "rabbitmq1" "rabbitmq2" "rabbitmq3" ];
 in {
   vpsadmin.api = {
     enable = true;
@@ -57,8 +50,6 @@ in {
     };
 
     rabbitmq = {
-      hosts = map (rabbitmq: "${rabbitmq.addresses.primary.address}") rabbitmqs;
-      virtualHost = "vpsadmin_prod";
       username = "supervisor";
       passwordFile = "/private/vpsadmin-rabbitmq.pw";
     };
