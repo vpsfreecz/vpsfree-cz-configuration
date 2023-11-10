@@ -10,6 +10,13 @@ let
     };
     patches = [];
   });
+
+  rabbitmqs = map (name:
+    confLib.findConfig {
+      cluster = config.cluster;
+      name = "cz.vpsfree/vpsadmin/int.${name}";
+    }
+  ) [ "rabbitmq1" "rabbitmq2" "rabbitmq3" ];
 in
 {
   imports = [
@@ -190,6 +197,11 @@ in
           HwIDAQAB
           -----END PUBLIC KEY-----
         '';
+      };
+
+      rabbitmq = {
+        hosts = map (rabbitmq: "${rabbitmq.addresses.primary.address}") rabbitmqs;
+        vhost = "vpsadmin_prod";
       };
     };
   };
