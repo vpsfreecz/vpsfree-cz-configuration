@@ -58,6 +58,8 @@ in {
   vpsadmin.console-router = {
     enable = true;
 
+    address = confMachine.addresses.primary.address;
+
     rabbitmq = {
       username = "console-router";
       passwordFile = "/private/vpsadmin-console-rabbitmq.pw";
