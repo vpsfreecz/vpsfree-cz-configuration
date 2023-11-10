@@ -2,12 +2,11 @@
 
 let
   customVim =
-    pkgs.vim_configurable.customize {
-        name = "myvim";
-        wrapManual = false;
-        vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
-          start = [ vim-nix sensible ]; # load plugin on startup
-        };
+    pkgs.vim-full.customize {
+      name = "myvim";
+      vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
+        start = [ vim-nix sensible ]; # load plugin on startup
+      };
     };
 
   alerters = [
