@@ -24,6 +24,7 @@ in
     ../../../../environments/base.nix
     ../../../../configs/node
     ../../../../configs/munin-node.nix
+    ../../vpsadmin/common/settings.nix
   ];
 
   users.users.root.initialHashedPassword = "$6$X/q70eX.dr$svzVWUFXbcOwEtPtURVVy0n80evQMXxI4fU7ICBG5xXftWSuZh4G4zSQ8FF9mgICLfwxzFTffFcXluhn0xazH.";
@@ -197,11 +198,6 @@ in
           HwIDAQAB
           -----END PUBLIC KEY-----
         '';
-      };
-
-      rabbitmq = {
-        hosts = map (rabbitmq: "${rabbitmq.addresses.primary.address}") rabbitmqs;
-        vhost = "vpsadmin_prod";
       };
     };
   };
