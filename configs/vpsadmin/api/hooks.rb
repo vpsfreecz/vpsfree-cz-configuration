@@ -4,7 +4,7 @@ DatasetInPool.connect_hook(:create) do |ret, dataset_in_pool|
   if dataset_in_pool.pool.role == 'hypervisor'
     puts "\n\nCREATE BACKUP DATASET FOR #{dataset_in_pool.dataset.full_name}\n\n"
 
-    backup_pool = Pool.backup.take!
+    backup_pool = Pool.where(role: 'backup', is_open: true).where('max_datasets > 0').take!
 
     dataset_in_pool.update!(
       min_snapshots: 1,
