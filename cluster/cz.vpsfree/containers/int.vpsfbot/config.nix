@@ -23,6 +23,35 @@ let
 
   archiveDir = "/var/vpsfbot-archive";
 
+  matterbridgeConfig = "/private/matterbridge/config.toml";
+
+  matterbridgeTemplate = pkgs.writeText "matterbridge-config-template.toml" ''
+    [irc.myirc]
+    Server="irc.libera.chat:6667"
+    Nick="vpsfbr0"
+    RemoteNickFormat="[{PROTOCOL}] <{NICK}> "
+    Password="#IRC_PASSWORD#"
+
+    [matrix.mymatrix]
+    Server="https://matrix.org"
+    Login="vpsfbr0"
+    Password="#MATRIX_PASSWORD#"
+    RemoteNickFormat="[{PROTOCOL}] <{NICK}> "
+    NoHomeServerSuffix=false
+
+    [[gateway]]
+    name="gateway1"
+    enable=true
+
+    [[gateway.inout]]
+    account="irc.myirc"
+    channel="#vpsfree"
+
+    [[gateway.inout]]
+    account="matrix.mymatrix"
+    channel="#vpsfree:matrix.org"
+  '';
+
 in {
   imports = [
     ../../../../environments/base.nix
@@ -141,6 +170,22 @@ in {
       };
     };
   };
+
+  services.matterbridge = {
+    enable = true;
+    configPath = matterbridgeConfig;
+  };
+
+  systemd.services.matterbridge.preStart = ''
+    cp ${matterbridgeTemplate} ${matterbridgeConfig}
+    chmod u+w ${matterbridgeConfig}
+
+    IRC_PASSWORD=$(head -n1 /private/matterbridge/irc.passwd)
+    sed -e "s,#IRC_PASSWORD#,$IRC_PASSWORD,g" -i ${matterbridgeConfig}
+
+    MATRIX_PASSWORD=$(head -n1 /private/matterbridge/matrix.passwd)
+    sed -e "s,#MATRIX_PASSWORD#,$MATRIX_PASSWORD,g" -i ${matterbridgeConfig}
+  '';
 
   services.nginx = {
     enable = true;
