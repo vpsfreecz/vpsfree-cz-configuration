@@ -20,6 +20,10 @@ in {
     enableACME = true;
     hostname = "discourse.vpsfree.cz";
 
+    plugins = with config.services.discourse.package.plugins; [
+      discourse-oauth2-basic
+    ];
+
     admin = {
       email = "podpora@vpsfree.cz";
       username = "admin";
@@ -55,6 +59,23 @@ in {
 
       email = {
         email_in = true;
+      };
+
+      login = {
+        oauth2_enabled = true;
+        oauth2_client_id = "discourse.vpsfree.cz";
+        # oauth2_client_secret = "set using web UI";
+        oauth2_authorize_url = "https://api.vpsfree.cz/_auth/oauth2/authorize";
+        oauth2_token_url = "https://api.vpsfree.cz/_auth/oauth2/token";
+        oauth2_fetch_user_details = true;
+        oauth2_user_json_url = "https://api.vpsfree.cz/users/current";
+        oauth2_json_user_id_path = "response.user.id";
+        oauth2_json_username_path = "response.user.login";
+        oauth2_json_name_path = "response.user.full_name";
+        oauth2_json_email_path = "response.user.email";
+        oauth2_email_verified = true;
+        oauth2_button_title = "with vpsAdmin";
+        oauth2_allow_association_change = true;
       };
     };
   };
