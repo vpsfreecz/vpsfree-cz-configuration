@@ -156,6 +156,7 @@ in
   };
 
   osctld.settings = {
+    debug = true;
     send_receive = {
       send_mbuffer = {
         block_size = "128k";
