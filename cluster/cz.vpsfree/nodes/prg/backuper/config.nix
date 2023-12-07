@@ -207,4 +207,6 @@
       ];
     };
   };
+
+  boot.enableUnifiedCgroupHierarchy = true;
 }

@@ -34,4 +34,6 @@
       resumeIntervals = [ "1 23 * * *" ];
     };
   };
+
+  boot.enableUnifiedCgroupHierarchy = true;
 }

@@ -43,4 +43,6 @@
       };
     };
   };
+
+  boot.enableUnifiedCgroupHierarchy = true;
 }
