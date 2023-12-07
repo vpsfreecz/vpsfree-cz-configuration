@@ -16,6 +16,15 @@
     console = {
       enable = false;
     };
+    mbuffer = {
+      send = {
+        buffer_size = "2G";
+      };
+      receive = {
+        buffer_size = "1G";
+        start_writing_at = 60;
+      };
+    };
   };
 
   boot.kernelModules = [ "8021q" "nvmet" "nvmet-tcp" "configfs" ];
