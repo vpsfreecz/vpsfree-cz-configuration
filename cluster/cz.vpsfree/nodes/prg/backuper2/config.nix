@@ -31,7 +31,7 @@
 
   boot.zfs.pools = {
     storage = {
-      guid = "8281467061260719938";
+      guid = "13391792327079201350";
 
       install = false;
 
