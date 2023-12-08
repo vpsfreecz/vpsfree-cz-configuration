@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2023120700 ; serial number of this zone file
+              2023120800 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -174,6 +174,8 @@ console                        IN   CNAME   proxy.prg.vpsfree.cz.
 console-admin                  IN   CNAME   proxy.prg.vpsfree.cz.
 api                            IN   CNAME   proxy.prg.vpsfree.cz.
 api-admin                      IN   CNAME   proxy.prg.vpsfree.cz.
+auth                           IN   CNAME   proxy.prg.vpsfree.cz.
+auth-admin                     IN   CNAME   proxy.prg.vpsfree.cz.
 download                       IN   CNAME   proxy.prg.vpsfree.cz.
 download-admin                 IN   CNAME   proxy.prg.vpsfree.cz.
 vpsadmin                       IN   CNAME   proxy.prg.vpsfree.cz.
