@@ -65,8 +65,8 @@ in {
         oauth2_enabled = true;
         oauth2_client_id = "discourse.vpsfree.cz";
         # oauth2_client_secret = "set using web UI";
-        oauth2_authorize_url = "https://api.vpsfree.cz/_auth/oauth2/authorize";
-        oauth2_token_url = "https://api.vpsfree.cz/_auth/oauth2/token";
+        oauth2_authorize_url = "https://auth.vpsfree.cz/_auth/oauth2/authorize";
+        oauth2_token_url = "https://auth.vpsfree.cz/_auth/oauth2/token";
         oauth2_fetch_user_details = true;
         oauth2_user_json_url = "https://api.vpsfree.cz/users/current";
         oauth2_json_user_id_path = "response.user.id";
