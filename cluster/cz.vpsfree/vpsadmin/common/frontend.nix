@@ -125,6 +125,22 @@ in {
       };
     };
 
+    auth = {
+      production = {
+        domain = "auth.vpsfree.cz";
+        backend = {
+          address = "unix:/run/haproxy/vpsadmin-api.sock";
+        };
+      };
+
+      maintenance = {
+        domain = "auth-admin.vpsfree.cz";
+        backend = {
+          address = "unix:/run/haproxy/vpsadmin-api.sock";
+        };
+      };
+    };
+
     console-router = {
       production = {
         domain = "console.vpsfree.cz";
