@@ -44,6 +44,11 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.utils";
   };
+
+  kb = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/int.kb";
+  };
 in {
   imports = [
     ../../../../../environments/base.nix
@@ -131,6 +136,18 @@ in {
         forceSSL = true;
         basicAuthFile = "/private/nginx/mon.htpasswd";
         locations."/".proxyPass = "http://${utils.addresses.primary.address}:80";
+      };
+
+      "kb.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://${kb.addresses.primary.address}:80";
+      };
+
+      "kb.vpsfree.org" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://${kb.addresses.primary.address}:80";
       };
     };
   };
