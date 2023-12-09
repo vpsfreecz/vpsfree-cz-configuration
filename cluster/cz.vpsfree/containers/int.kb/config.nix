@@ -167,6 +167,7 @@ let
       superuser = "@admin";
       useacl = true;
       authtype = "oauth";
+      userewrite = true;
       youarehere = true;
       remote = true;
       remoteuser = "";
