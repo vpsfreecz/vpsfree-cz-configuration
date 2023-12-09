@@ -244,7 +244,6 @@ in {
   networking.firewall.extraCommands = ''
     # Allow access from proxy.prg
     iptables -A nixos-fw -p tcp --dport 80 -s ${proxyPrg.addresses.primary.address} -j nixos-fw-accept
-    iptables -A nixos-fw -p tcp --dport 80 -s 172.16.107.0/24 -j nixos-fw-accept
   '';
 
   # We use a shared media folder, as the images between the two KBs are mostly
