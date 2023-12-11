@@ -8,7 +8,7 @@
   clusterconf.monitor = {
     enable = true;
     retention.time = "365d";
-    retention.size = "200GB";
+    retention.size = "500GB";
     alerters = [
       "cz.vpsfree/containers/prg/int.alerts1"
       "cz.vpsfree/containers/prg/int.alerts2"
