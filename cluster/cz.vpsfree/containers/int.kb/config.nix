@@ -168,6 +168,7 @@ let
       useacl = true;
       authtype = "oauth";
       userewrite = true;
+      useslash = true;
       youarehere = true;
       remote = true;
       remoteuser = "";
