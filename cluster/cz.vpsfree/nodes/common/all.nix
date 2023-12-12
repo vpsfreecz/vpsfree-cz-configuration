@@ -1,12 +1,12 @@
 { config, lib, pkgs, confData, confMachine, confLib, ... }:
 let
   bpftraceGit = config.boot.kernelPackages.bpftrace.overrideAttrs (oldAttrs: rec {
-    version = "0.14.git";
+    version = "0.19.git";
     src = pkgs.fetchFromGitHub {
       owner = "iovisor";
       repo = "bpftrace";
-      rev = "5d181c82acba400ec64e8d95c57cdb509f7cc57a";
-      sha256 = "sha256-qZuJbtMLyrjrEK3pHUi/c+5Qw8xOYKS8QWNPrpVku0A=";
+      rev = "0e231e3185ca32da453ff596bc3e0b6cbdc17342";
+      sha256 = "sha256-JyMogqyntSm2IDXzsOIjcUkf2YwG2oXKpqPpdx/eMNI=";
     };
     patches = [];
   });
