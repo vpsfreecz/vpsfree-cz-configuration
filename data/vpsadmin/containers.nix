@@ -53,6 +53,15 @@
       name = "node24";
     };
   };
+  "discourse.vpsfree.cz" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node21.prg.vpsfree.cz";
+      id = 122;
+      location = "prg";
+      name = "node21";
+    };
+  };
   "grafana.int.prg.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
@@ -72,6 +81,15 @@
     };
   };
   "iso.int.vpsadminos.org" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
+      location = "prg";
+      name = "node24";
+    };
+  };
+  "kb.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
       fqdn = "node24.prg.vpsfree.cz";
@@ -204,6 +222,33 @@
       id = 124;
       location = "prg";
       name = "node23";
+    };
+  };
+  "rabbitmq1.int.vpsfree.cz" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
+      location = "prg";
+      name = "node24";
+    };
+  };
+  "rabbitmq2.int.vpsfree.cz" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node23.prg.vpsfree.cz";
+      id = 124;
+      location = "prg";
+      name = "node23";
+    };
+  };
+  "rabbitmq3.int.vpsfree.cz" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node21.prg.vpsfree.cz";
+      id = 122;
+      location = "prg";
+      name = "node21";
     };
   };
   "redis1.int.vpsfree.cz" = {
