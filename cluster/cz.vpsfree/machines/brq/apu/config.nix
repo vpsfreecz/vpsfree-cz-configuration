@@ -9,8 +9,8 @@ let
 in {
   imports = [
     ./hardware.nix
+    ../../common/all.nix
     ../../common/apu.nix
-    ../../../../../environments/base.nix
   ];
 
   services.udev.extraRules = ''

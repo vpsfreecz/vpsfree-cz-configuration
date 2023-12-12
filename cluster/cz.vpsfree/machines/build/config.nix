@@ -8,7 +8,7 @@ let
   };
 in {
   imports = [
-    ../../../../environments/base.nix
+    ../common/all.nix
     ../../../../environments/deploy.nix
     ../../../../configs/ssh-exporter.nix
 

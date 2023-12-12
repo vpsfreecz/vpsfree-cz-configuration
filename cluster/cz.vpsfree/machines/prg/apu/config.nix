@@ -9,9 +9,9 @@ let
 in {
   imports = [
     ./hardware.nix
+    ../../common/all.nix
     ../../common/apu.nix
     ../../../../../configs/vpsf-status.nix
-    ../../../../../environments/base.nix
   ];
 
   services.udev.extraRules = ''

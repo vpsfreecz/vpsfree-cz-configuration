@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware.nix
-    ../../../../../environments/base.nix
+    ../../common/all.nix
     ../../../../../configs/wireguard
   ];
 
