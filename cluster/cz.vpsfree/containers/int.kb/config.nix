@@ -170,6 +170,7 @@ let
       userewrite = true;
       useslash = true;
       youarehere = true;
+      useheading = "1";
       remote = true;
       remoteuser = "";
       plugin = {
