@@ -12,7 +12,7 @@ in buildGoModule rec {
     sha256 = "sha256-KiQSAjLRBf6XlEeIDsj2lssi2uKeiG0IFTzrPbqrGJY=";
   };
 
-  vendorSha256 = "sha256-BLxOht2O1TO0yWNljulrpXoSGG3JuRw+hL/PXhXSLkk=";
+  vendorHash = "sha256-BLxOht2O1TO0yWNljulrpXoSGG3JuRw+hL/PXhXSLkk=";
 
   postInstall = ''
     mkdir -p $out/share/vpsf-status
