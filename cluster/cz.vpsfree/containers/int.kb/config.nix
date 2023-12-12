@@ -114,6 +114,14 @@ let
       rev = "6cb8d74b9460386ebe827296478b5f3d5e4b00cb";
       sha256 = "sha256-Hfbh70bmhTWO64HTvWhK/fnivizr2oDuqurzQ/Tn5sQ=";
     })
+    # vshare
+    (mkPlugin {
+      name = "vshare";
+      owner = "splitbrain";
+      repo = "dokuwiki-plugin-vshare";
+      rev = "0f046031bdc0e13650dff209185adb2c6a330071";
+      sha256 = "sha256-uDdSQzJlHIThA6fXvXwaodUQDe6A2pmapITrVn3eQyE=";
+    })
     # wrap
     (mkPlugin {
       name = "wrap";
