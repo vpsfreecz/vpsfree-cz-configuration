@@ -106,6 +106,14 @@ let
       rev = "ee244dc3d7d12a767f444642f3897134277b278b";
       sha256 = "sha256-wnJdtCkTN/b5b4RAn51SaJQku/gaRTaBbsOAuKD3B5s=";
     })
+    # note
+    (mkPlugin {
+      name = "note";
+      owner = "lpaulsen93";
+      repo = "dokuwiki_note";
+      rev = "86cd79fb7c4be03be652e4e9f58f87b4ab965fec";
+      sha256 = "sha256-y2BWI0+EZak2tDyNVdxWV5YLOSqitOD8nPcAx4aCSeU=";
+    })
     # sqlite
     (mkPlugin {
       name = "sqlite";
