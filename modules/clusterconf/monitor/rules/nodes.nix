@@ -427,6 +427,26 @@
       }
 
       {
+        alert = "NodeFatalRootfsFreeSpace";
+        expr = ''(node_filesystem_avail_bytes{job="nodes",mountpoint="/"} / node_filesystem_size_bytes) * 100 <= 5'';
+        for = "5m";
+        labels = {
+          alertclass = "fsavail";
+          severity = "fatal";
+          frequency = "5m";
+        };
+        annotations = {
+          summary = "Not enough free space on rootfs (instance {{ $labels.instance }})";
+          description = ''
+            Rootfs uses more than 95% of available space
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NodeHighLoad";
         expr = ''node_load5{job="nodes"} > 300 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "5m";
