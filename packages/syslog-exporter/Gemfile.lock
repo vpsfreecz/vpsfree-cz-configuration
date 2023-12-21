@@ -9,7 +9,7 @@ GEM
     eventmachine (1.2.7)
     prometheus-client (4.0.0)
     rack (2.2.6.4)
-    syslog-exporter (0.7.0)
+    syslog-exporter (0.8.0)
       prometheus-client (~> 4.0.0)
       thin (~> 1.8.1)
     thin (1.8.2)
@@ -24,4 +24,4 @@ DEPENDENCIES
   syslog-exporter!
 
 BUNDLED WITH
-   2.4.13
+   2.4.22
