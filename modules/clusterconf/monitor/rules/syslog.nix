@@ -208,6 +208,57 @@
           '';
         };
       }
+
+      {
+        alert = "KernelOomHighRate";
+        expr = ''rate(syslog_kernel_oom_count[10m]) >= 10'';
+        labels = {
+          severity = "warning";
+          frequency = "5m";
+        };
+        annotations = {
+          summary = "More than 10 OOMs per second (instance {{ $labels.instance }})";
+          description = ''
+            Kernel reports more than 10 OOMs per second
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "KernelOomCritRate";
+        expr = ''rate(syslog_kernel_oom_count[10m]) >= 50'';
+        labels = {
+          severity = "critical";
+          frequency = "5m";
+        };
+        annotations = {
+          summary = "More than 50 OOMs per second (instance {{ $labels.instance }})";
+          description = ''
+            Kernel reports more than 50 OOMs per second
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "KernelOomFatalRate";
+        expr = ''rate(syslog_kernel_oom_count[10m]) >= 100'';
+        labels = {
+          severity = "fatal";
+          frequency = "5m";
+        };
+        annotations = {
+          summary = "More than 100 OOMs per second (instance {{ $labels.instance }})";
+          description = ''
+            Kernel reports more than 100 OOMs per second
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 ]
