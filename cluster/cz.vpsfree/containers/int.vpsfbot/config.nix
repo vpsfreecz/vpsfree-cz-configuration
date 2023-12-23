@@ -64,6 +64,7 @@ in {
 
     # Allow access from proxy.prg
     iptables -A nixos-fw -p tcp --dport 8000 -s ${proxyPrg.addresses.primary.address} -j nixos-fw-accept
+    iptables -A nixos-fw -p tcp --dport 8001 -s ${proxyPrg.addresses.primary.address} -j nixos-fw-accept
   '';
 
   systemd.tmpfiles.rules = [
@@ -135,6 +136,12 @@ in {
           channels = [
             "#vpsfree"
           ];
+        };
+
+        discourse_webhook = {
+          host = "0.0.0.0";
+          port = 8001;
+          channels = [ "#vpsfree" ];
         };
 
         github_webhook = {

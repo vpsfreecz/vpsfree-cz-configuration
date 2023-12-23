@@ -121,6 +121,7 @@ in {
       "vpsfbot.vpsfree.cz" = {
         enableACME = true;
         forceSSL = true;
+        locations."/discourse-webhook".proxyPass = "http://${vpsfbot.addresses.primary.address}:8001";
         locations."/gh-webhook".proxyPass = "http://${vpsfbot.addresses.primary.address}:8000";
       };
 
