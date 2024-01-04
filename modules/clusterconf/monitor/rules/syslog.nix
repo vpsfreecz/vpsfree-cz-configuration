@@ -176,23 +176,6 @@
       }
 
       {
-        alert = "NfConntrackTableFull";
-        expr = ''syslog_kernel_nf_conntrack_table_full == 1'';
-        labels = {
-          severity = "warning";
-          frequency = "2m";
-        };
-        annotations = {
-          summary = "Kernel nf_conntrack table is full (instance {{ $labels.instance }})";
-          description = ''
-            Kernel nf_conntrack table is full and packets are being dropped
-
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
-
-      {
         alert = "ZfsPanic";
         expr = ''syslog_zfs_panic == 1'';
         labels = {
