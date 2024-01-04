@@ -85,8 +85,8 @@ in {
 
   services.syslog-exporter = {
     enable = true;
+    port = syslogExporterPort;
     settings = {
-      port = syslogExporterPort;
       hosts = syslogExporterHosts;
     };
   };
