@@ -137,7 +137,6 @@ node21.prg                     IN   A       172.16.0.31
 node22.prg                     IN   A       172.16.0.32
 node23.prg                     IN   A       172.16.0.33
 node24.prg                     IN   A       172.16.0.34
-backuper.prg                   IN   A       172.16.0.5
 nasbox.prg                     IN   A       172.16.0.6
 backuper2.prg                  IN   A       172.16.0.8
 node1.pgnd                     IN   A       172.16.2.10
