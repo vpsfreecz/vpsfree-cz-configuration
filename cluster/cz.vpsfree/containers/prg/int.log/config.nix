@@ -87,6 +87,11 @@ in {
     enable = true;
     port = syslogExporterPort;
     settings = {
+      mbuffer = {
+        enable = true;
+        path = "${pkgs.mbuffer}/bin/mbuffer";
+        size = "50%";
+      };
       hosts = syslogExporterHosts;
     };
   };
