@@ -21,6 +21,10 @@ let
   syslogExporterPort = confMachine.services.syslog-exporter.port;
 
   monitorings = filter (d: d.config.monitoring.isMonitor) allMachines;
+
+  reloadRsyslog = ''
+    kill -HUP `systemctl show --property MainPID --value syslog`
+  '';
 in {
   imports = [
     ../../../../../environments/base.nix
@@ -106,9 +110,7 @@ in {
         dateext = true;
         notifempty = true;
         nocompress = true;
-        postrotate = ''
-          kill -HUP `cat /run/rsyslog.pid`
-        '';
+        postrotate = reloadRsyslog;
       };
 
       machines = {
@@ -121,9 +123,7 @@ in {
         dateext = true;
         notifempty = true;
         nocompress = true;
-        postrotate = ''
-          kill -HUP `cat /run/rsyslog.pid`
-        '';
+        postrotate = reloadRsyslog;
       };
 
       containers = {
@@ -138,9 +138,7 @@ in {
         dateext = true;
         notifempty = true;
         nocompress = true;
-        postrotate = ''
-          kill -HUP `cat /run/rsyslog.pid`
-        '';
+        postrotate = reloadRsyslog;
       };
 
       others = {
@@ -151,9 +149,7 @@ in {
         notifempty = true;
         nocompress = true;
         maxsize = "512M";
-        postrotate = ''
-          kill -HUP `cat /run/rsyslog.pid`
-        '';
+        postrotate = reloadRsyslog;
       };
     };
   };
