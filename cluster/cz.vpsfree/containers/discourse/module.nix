@@ -11,7 +11,7 @@
     services = {
       node-exporter = {};
     };
-    tags = [ "auto-update" ];
+    tags = [ "discourse" ];
 
     healthChecks = {
       systemd.unitProperties = {
