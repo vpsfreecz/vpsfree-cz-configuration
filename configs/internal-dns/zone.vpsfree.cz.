@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2023120901 ; serial number of this zone file
+              2024010601 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -75,64 +75,19 @@ wiki                           IN   A       77.93.223.123
 www                            IN   CNAME   prasiatko.vpsfree.cz.
 
 ; Management
-node1-mgmt.prg                 IN   A       172.16.101.103
-node2-mgmt.prg                 IN   A       172.16.101.102
-node3-mgmt.prg                 IN   A       172.16.101.30
-node4-mgmt.prg                 IN   A       172.16.101.104
-node5-mgmt.prg                 IN   A       172.16.101.105
-node6-mgmt.prg                 IN   A       172.16.101.106
-node7-mgmt.prg                 IN   A       172.16.101.28
-node8-mgmt.prg                 IN   A       172.16.101.29
-node9-mgmt.prg                 IN   A       172.16.101.109
-node10-mgmt.prg                IN   A       172.16.101.110
-node11-mgmt.prg                IN   A       172.16.101.111
-node12-mgmt.prg                IN   A       172.16.101.112
-node13-mgmt.prg                IN   A       172.16.101.113
-node14-mgmt.prg                IN   A       172.16.101.114
-node15-mgmt.prg                IN   A       172.16.101.115
-node16-mgmt.prg                IN   A       172.16.101.116
-node17-mgmt.prg                IN   A       172.16.101.117
-node18-mgmt.prg                IN   A       172.16.101.118
-node19-mgmt.prg                IN   A       172.16.101.120
-node20-mgmt.prg                IN   A       172.16.101.119
 node21-mgmt.prg                IN   A       172.16.101.121
 node22-mgmt.prg                IN   A       172.16.101.122
 node23-mgmt.prg                IN   A       172.16.101.123
 node24-mgmt.prg                IN   A       172.16.101.124
-backuper-mgmt.prg              IN   A       172.16.101.5
 nasbox-mgmt.prg                IN   A       172.16.101.6
 backuper2-mgmt.prg             IN   A       172.16.101.8
 pxe-mgmt.prg                   IN   A       172.16.101.254
-build-old-mgmt.prg             IN   A       172.16.101.253
 node1-mgmt.pgnd                IN   A       172.16.101.117
 node1-mgmt.stg                 IN   A       172.16.101.44
-node1-mgmt.brq                 IN   A       172.19.101.20
 node2-mgmt.brq                 IN   A       172.19.101.21
-node3-mgmt.brq                 IN   A       172.19.101.22
-node4-mgmt.brq                 IN   A       172.19.101.23
 node5-mgmt.brq                 IN   A       172.19.101.24
 
 ; Nodes
-node1.prg                      IN   A       172.16.0.10
-node2.prg                      IN   A       172.16.0.11
-node3.prg                      IN   A       172.16.0.12
-node4.prg                      IN   A       172.16.0.13
-node5.prg                      IN   A       172.16.0.14
-node6.prg                      IN   A       172.16.0.15
-node7.prg                      IN   A       172.16.0.17
-node8.prg                      IN   A       172.16.0.18
-node9.prg                      IN   A       172.16.0.19
-node10.prg                     IN   A       172.16.0.20
-node11.prg                     IN   A       172.16.0.21
-node12.prg                     IN   A       172.16.0.22
-node13.prg                     IN   A       172.16.0.23
-node14.prg                     IN   A       172.16.0.24
-node15.prg                     IN   A       172.16.0.25
-node16.prg                     IN   A       172.16.0.26
-node17.prg                     IN   A       172.16.0.27
-node18.prg                     IN   A       172.16.0.28
-node19.prg                     IN   A       172.16.0.29
-node20.prg                     IN   A       172.16.0.30
 node21.prg                     IN   A       172.16.0.31
 node22.prg                     IN   A       172.16.0.32
 node23.prg                     IN   A       172.16.0.33
@@ -140,10 +95,7 @@ node24.prg                     IN   A       172.16.0.34
 nasbox.prg                     IN   A       172.16.0.6
 backuper2.prg                  IN   A       172.16.0.8
 node1.pgnd                     IN   A       172.16.2.10
-node1.brq                      IN   A       172.19.0.10
 node2.brq                      IN   A       172.19.0.11
-node3.brq                      IN   A       172.19.0.12
-node4.brq                      IN   A       172.19.0.13
 node5.brq                      IN   A       172.19.0.14
 node1.stg                      IN   A       172.16.0.66
 
@@ -151,7 +103,6 @@ node1.stg                      IN   A       172.16.0.66
 apu.int.prg                    IN   A       172.16.254.254
 apu.int.brq                    IN   A       172.19.254.254
 build                          IN   A       172.16.106.5
-build-old                      IN   A       172.16.254.4
 devstation-mgmt.prg            IN   A       172.16.101.9
 devstation.prg                 IN   A       172.16.0.9
 pxe                            IN   A       172.16.254.5
