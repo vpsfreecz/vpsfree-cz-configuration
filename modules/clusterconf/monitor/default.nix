@@ -203,6 +203,10 @@ let
         resolverServices = flatten (map (m:
           filterServices m (sv: sv.monitor == "dns-resolver")
         ) monitoredMachines);
+
+        unboundExporterServices = flatten (map (m:
+          filterServices m (sv: sv.monitor == "unbound-exporter")
+        ) monitoredMachines);
       in {
         dnsProbes = map (sv: {
           targets = [ "${sv.config.address}:${toString sv.config.port}" ];
@@ -213,6 +217,16 @@ let
             service = "dns-resolver";
           };
         }) resolverServices;
+
+        unboundConfigs = map (sv: {
+          targets = [ "${sv.config.address}:${toString sv.config.port}" ];
+          labels = {
+            fqdn = sv.machine.config.host.fqdn;
+            domain = sv.machine.config.host.domain;
+            location = ensureLocation sv.machine.config.host.location;
+            service = "dns-resolver";
+          };
+        }) unboundExporterServices;
       };
 
     dnsAuthoritatives =
@@ -563,6 +577,12 @@ in {
             job_name = "ssh-exporters";
             scrape_interval = "30s";
             static_configs = scrapeConfigs.sshExporters.exporterConfigs;
+          }
+        ) ++ (optional (scrapeConfigs.dnsResolvers.unboundConfigs != [])
+          {
+            job_name = "unbound-exporters";
+            scrape_interval = "60s";
+            static_configs = scrapeConfigs.dnsResolvers.unboundConfigs;
           }
         ) ++ (optional (scrapeConfigs.dnsResolvers.dnsProbes != [])
           {
