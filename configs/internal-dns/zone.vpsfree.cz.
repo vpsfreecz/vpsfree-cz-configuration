@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2024010601 ; serial number of this zone file
+              2024010701 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -17,8 +17,19 @@ ns1                            IN   A       77.93.223.251
 ns1                            IN   AAAA    2a01:430:17:1::ffff:179
 ns2                            IN   A       37.205.11.51
 ns2                            IN   AAAA    2a00:cb40:2::1:51
+
 ns1.int.prg                    IN   A       172.16.9.90
 ns1.int.brq                    IN   A       172.19.9.90
+
+ns1.prg                        IN   A       37.205.9.100
+ns1.prg                        IN   AAAA    2a01:430:17:1::ffff:666
+ns2.prg                        IN   A       37.205.10.88
+ns2.prg                        IN   AAAA    2a01:430:17:1::ffff:588
+
+ns1.brq                        IN   A       37.205.11.200
+ns1.brq                        IN   AAAA    2a03:3b40:100::1:200
+ns2.brq                        IN   A       37.205.11.222
+ns2.brq                        IN   AAAA    2a03:3b40:100::1:222
 
 ; Misc
 bepasty                        IN   CNAME   proxy.prg.vpsfree.cz.
