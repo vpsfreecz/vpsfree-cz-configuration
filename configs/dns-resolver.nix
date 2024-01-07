@@ -32,6 +32,8 @@ let
   allMachines = confLib.getClusterMachines config.cluster;
 
   monitors = filter (m: m.config.monitoring.isMonitor) allMachines;
+
+  numThreads = 8;
 in {
   environment.systemPackages = with pkgs; [
     dnsutils
@@ -41,16 +43,32 @@ in {
     enable = true;
     settings = {
       server = {
+        # Optimizations based on https://nlnetlabs.nl/documentation/unbound/howto-optimise/
+        num-threads = numThreads;
+        msg-cache-slabs = numThreads;
+        rrset-cache-slabs = numThreads;
+        infra-cache-slabs = numThreads;
+        key-cache-slabs = numThreads;
+
+        rrset-cache-size = "100m";
+        msg-cache-size = "50m";
+
+        so-reuseport = true;
+
         interface = [ "0.0.0.0" "::0" ];
         access-control = map (net: "${net} allow") unboundNetworks;
+
         harden-glue = true;
         harden-dnssec-stripped = true;
         harden-below-nxdomain = true;
         harden-referral-path = true;
-        use-caps-for-id = false;
-        unwanted-reply-threshold = 10000000;
+
         prefetch = true;
         prefetch-key = true;
+
+        use-caps-for-id = false;
+        unwanted-reply-threshold = 10000000;
+
         rrset-roundrobin = true;
         minimal-responses = false;
       };
