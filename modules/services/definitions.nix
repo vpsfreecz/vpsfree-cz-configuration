@@ -67,6 +67,10 @@ in {
         port = 53;
         monitor = "dns-resolver";
       };
+      unbound-exporter = {
+        port = 9167;
+        monitor = "unbound-exporter";
+      };
     };
   };
 }
