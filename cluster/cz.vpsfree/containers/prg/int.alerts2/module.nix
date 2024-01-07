@@ -13,17 +13,6 @@
       node-exporter = {};
     };
     tags = [ "alerter" "auto-update" ];
-
-    healthChecks = {
-      systemd.unitProperties = {
-        "alertmanager.service" = [
-          { property = "ActiveState"; value = "active"; }
-        ];
-
-        "sachet.service" = [
-          { property = "ActiveState"; value = "active"; }
-        ];
-      };
-    };
+    healthChecks = import ../../../../../health-checks/alerts.nix;
   };
 }

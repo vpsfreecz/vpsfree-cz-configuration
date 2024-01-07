@@ -13,22 +13,6 @@
       rabbitmq-exporter = {};
     };
     tags = [ "vpsadmin" "rabbitmq" "auto-update" ];
-
-    healthChecks = {
-      systemd.unitProperties = {
-        "rabbitmq.service" = [
-          { property = "ActiveState"; value = "active"; }
-        ];
-      };
-
-      machineCommands = [
-        {
-          command = [ "rabbitmq-diagnostics" "check_running" ];
-          standardOutput.include = [
-            "RabbitMQ on node rabbit@${host.name} is fully booted and running"
-          ];
-        }
-      ];
-    };
+    healthChecks = import ../../../../health-checks/vpsadmin/rabbitmq.nix { inherit host; };
   };
 }

@@ -14,13 +14,6 @@
     };
     monitoring.isMonitor = true;
     tags = [ "monitor" "auto-update" ];
-
-    healthChecks = {
-      systemd.unitProperties = {
-        "prometheus.service" = [
-          { property = "ActiveState"; value = "active"; }
-        ];
-      };
-    };
+    healthChecks = import ../../../../../health-checks/monitoring.nix;
   };
 }

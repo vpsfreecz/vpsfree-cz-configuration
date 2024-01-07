@@ -10,21 +10,6 @@
     };
     services.node-exporter = {};
     tags = [ "vpsadmin" "api" "auto-update" ];
-
-    healthChecks = {
-      systemd.unitProperties = {
-        "vpsadmin-api.service" = [
-          { property = "ActiveState"; value = "active"; }
-        ];
-
-        "vpsadmin-supervisor.service" = [
-          { property = "ActiveState"; value = "active"; }
-        ];
-
-        "vpsadmin-console-router.service" = [
-          { property = "ActiveState"; value = "active"; }
-        ];
-      };
-    };
+    healthChecks = import ../../../../health-checks/vpsadmin/api.nix;
   };
 }

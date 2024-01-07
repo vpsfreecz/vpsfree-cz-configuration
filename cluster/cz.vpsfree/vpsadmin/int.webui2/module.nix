@@ -10,28 +10,6 @@
     };
     services.node-exporter = {};
     tags = [ "vpsadmin" "webui" "auto-update" ];
-
-    healthChecks = {
-      systemd.unitProperties = {
-        "phpfpm-vpsadmin-webui.service" = [
-          { property = "ActiveState"; value = "active"; }
-        ];
-
-        "nginx.service" = [
-          { property = "ActiveState"; value = "active"; }
-        ];
-      };
-
-      machineCommands = [
-        {
-          description = "Check vpsAdmin webui";
-          command = [ "curl" "--fail" "http://localhost" ];
-          standardOutput.include = [
-            "vpsAdmin"
-            "</html>"
-          ];
-        }
-      ];
-    };
+    healthChecks = import ../../../../health-checks/vpsadmin/webui.nix;
   };
 }
