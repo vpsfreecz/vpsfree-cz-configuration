@@ -4,6 +4,8 @@
     <vpsadminos/os/lib/nixos-container/vpsadminos.nix>
   ];
 
+  networking.useDHCP = false;
+
   services.resolved.enable = false;
 
   systemd.extraConfig = ''
