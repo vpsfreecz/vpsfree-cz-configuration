@@ -234,6 +234,10 @@ let
         authoritativeServices = flatten (map (m:
           filterServices m (sv: sv.monitor == "dns-authoritative")
         ) monitoredMachines);
+
+        bindExporterServices = flatten (map (m:
+          filterServices m (sv: sv.monitor == "bind-exporter")
+        ) monitoredMachines);
       in {
         dnsProbes = map (sv: {
           targets = [ "${sv.config.address}:${toString sv.config.port}" ];
@@ -244,6 +248,16 @@ let
             service = "dns-authoritative";
           };
         }) authoritativeServices;
+
+        bindConfigs = map (sv: {
+          targets = [ "${sv.config.address}:${toString sv.config.port}" ];
+          labels = {
+            fqdn = sv.machine.config.host.fqdn;
+            domain = sv.machine.config.host.domain;
+            location = ensureLocation sv.machine.config.host.location;
+            service = "dns-authoritative";
+          };
+        }) bindExporterServices;
       };
 
     rabbitmq =
@@ -631,6 +645,12 @@ in {
                 replacement = "127.0.0.1:9115";
               }
             ];
+          }
+        ) ++ (optional (scrapeConfigs.dnsAuthoritatives.bindConfigs != [])
+          {
+            job_name = "bind-exporters";
+            scrape_interval = "60s";
+            static_configs = scrapeConfigs.dnsAuthoritatives.bindConfigs;
           }
         ) ++ (optional (scrapeConfigs.rabbitmq.exporterConfigs != [])
           {
