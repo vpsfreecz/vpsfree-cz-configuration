@@ -1,4 +1,4 @@
-{ config, pkgs, lib, confLib, confMachine, ... }:
+{ config, pkgs, lib, confLib, confMachine, confData, ... }:
 let
   inherit (lib) concatMapStringsSep filter mkForce;
 
@@ -42,4 +42,6 @@ in {
       # bind-exporter from ${m.name}
       iptables -A nixos-fw -p tcp --dport ${toString exporterPort} -s ${m.config.addresses.primary.address} -j nixos-fw-accept
     '') monitors);
+
+  users.users.root.openssh.authorizedKeys.keys = [ confData.sshKeys.krcmar ];
 }
