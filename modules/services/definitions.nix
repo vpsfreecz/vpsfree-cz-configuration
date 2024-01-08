@@ -38,6 +38,10 @@ in {
         port = 53;
         monitor = "dns-authoritative";
       };
+      bind-exporter = {
+        port = 9119;
+        monitor = "bind-exporter";
+      };
       bepasty.port = 8000;
       bird-ospf.port = 89;
       bird-bgp.port = 179;

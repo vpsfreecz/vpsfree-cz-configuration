@@ -1,0 +1,205 @@
+$ORIGIN vpsfree.cz.
+$TTL 1H                  ; default expiration time of all resource records without their own TTL value
+@ IN  SOA  ns1.vpsfree.cz. hostmaster.vpsfree.cz. (
+              2024010601 ; serial number of this zone file
+              1D         ; slave refresh (1 day)
+              2H         ; slave retry time in case of a problem (2 hours)
+              4W         ; slave expiration time (4 weeks)
+              300        ; maximum caching time in case of failed lookups (1 hour)
+              )
+@ 		IN    NS	ns1.vpsfree.cz.
+@ 		IN    NS	ns2.vpsfree.cz.
+@ 		IN    A		37.205.9.80 ; proxy.vpsfree.cz
+@ 		IN    AAAA	2a01:430:17:1::ffff:149 ; proxy.vpsfree.cz
+@		IN    MX	10 prasiatko-mail.vpsfree.cz.
+@ 		IN	MX	15 mx2.vpsfree.cz.
+@		IN	TYPE257	\# 22 000569737375656C657473656E63727970742E6F7267 ; CAA
+ns1		IN	A	77.93.223.251
+ns1		IN	AAAA	2a01:430:17:1::ffff:179
+ns2		IN	A	37.205.11.51
+ns2		IN	AAAA	2a03:3b40:100::1:51
+mx1		IN	A	83.167.228.42
+mx1		IN	AAAA	2a03:3b40:fe:1c3::1
+mx2		IN	A	37.205.11.114
+mx2		IN	AAAA	2a03:3b40:100::1:95
+mail		IN	CNAME	mx1.vpsfree.cz.
+lists		IN	MX	10 prasiatko-mail.vpsfree.cz.
+lists		IN	MX	15 mx2.vpsfree.cz.
+im              IN      A       37.205.9.40
+im              IN      AAAA    2a01:430:17:1::ffff:536
+vpsfbot         IN	CNAME	proxy.prg.vpsfree.cz.
+vpsfbot-dev     IN	CNAME	im.vpsfree.cz.
+ipv6tun01	IN	A	77.93.223.5
+ipv6tun01	IN	AAAA	2a03:3b40:fe:33f::1
+ipv6tun01	IN	TXT	"v=spf1 a"
+ping		IN	A       37.205.14.208
+pad		IN	A	37.205.14.208
+_dmarc		IN	TXT	( "v=DMARC1; p=none; rua=mailto:podpora@vpsfree.cz; ruf=mailto:podpora@vpsfree.cz"
+			)  ;
+default._domainkey       IN      TXT     ( "v=DKIM1; h=sha256; k=rsa; "
+          "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtgkVXGMVGfmYnQm2YaLoRJLxdYYEcQ5jd0v7/fPaBZMrhTqmLrOH7s9tU8wgYnaB80BoHA3sP9QmCpFoVcNvK73WuzuXKn7XvCLHEw4NvhBaNzn8DokiqqD9okapJLqy88avDVk+kNCyEb6wnr/ZTAPVR7PIs8Pypr9l5JVxDQnrY9eyhWYQoaupQoOVwRZjM5NItOQcI/1GS1"
+          "PBNE0Uw0mTRjhlv9j9KgT8EP8Dj6J4LwkqVWmEcSGLFLgQOp9CiaQkO70m1Q8bKsmgswgkefDwYIEtFOMidgFR2oac3+tix8wwdcyl+wTcZaU17puNcOm7zzQvZerGTuWzS7fvgwIDAQAB" )  ;
+prasiatko-mail._domainkey	IN	TXT	( "v=DKIM1; h=sha256; k=rsa; "
+	  "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtgkVXGMVGfmYnQm2YaLoRJLxdYYEcQ5jd0v7/fPaBZMrhTqmLrOH7s9tU8wgYnaB80BoHA3sP9QmCpFoVcNvK73WuzuXKn7XvCLHEw4NvhBaNzn8DokiqqD9okapJLqy88avDVk+kNCyEb6wnr/ZTAPVR7PIs8Pypr9l5JVxDQnrY9eyhWYQoaupQoOVwRZjM5NItOQcI/1GS1"
+	  "PBNE0Uw0mTRjhlv9j9KgT8EP8Dj6J4LwkqVWmEcSGLFLgQOp9CiaQkO70m1Q8bKsmgswgkefDwYIEtFOMidgFR2oac3+tix8wwdcyl+wTcZaU17puNcOm7zzQvZerGTuWzS7fvgwIDAQAB" )  ;
+
+;;;; Current Meet installation
+meet					300 IN CNAME	meet-nixos.vpsfree.cz.
+meet-dev				300 IN CNAME	meet-nixos.vpsfree.cz.
+meet-dev1				300 IN CNAME	meet-nixos.vpsfree.cz.
+meet-nixos				300 IN A	37.205.14.113
+jvb1					300 IN A	37.205.14.138
+jvb2					300 IN A	37.205.14.150
+jvb3					300 IN A	37.205.14.163
+jvb4					300 IN A	37.205.14.178
+jvb5					300 IN A	37.205.14.182
+jvb6					300 IN A	37.205.14.207
+jvb7					300 IN A	37.205.14.214
+jvb8					300 IN A	37.205.14.219
+jvb9					300 IN A	37.205.14.231
+jvb10					300 IN A	37.205.14.250
+jvb11					300 IN A	37.205.13.90
+
+;meet					300 IN A	37.205.14.208
+jitsi-videobridge.meet.vpsfree.cz.	300 IN CNAME	jitsi-videobridge1.meet.vpsfree.cz.
+jitsi-videobridge1.meet.vpsfree.cz.	300 IN A	37.205.14.168
+jitsi-videobridge2.meet.vpsfree.cz.	300 IN A	37.205.14.153
+jitsi-videobridge3.meet.vpsfree.cz.	300 IN A	37.205.12.167
+jitsi-videobridge4.meet.vpsfree.cz.	300 IN A	37.205.12.173
+jitsi-videobridge5.meet.vpsfree.cz.	300 IN A	37.205.12.178
+jitsi-videobridge6.meet.vpsfree.cz.	300 IN A	37.205.12.180
+jitsi-videobridge7.meet.vpsfree.cz.	300 IN A	37.205.14.129
+jitsi-videobridge8.meet.vpsfree.cz.	300 IN A	37.205.14.154
+jitsi-videobridge9.meet.vpsfree.cz.	300 IN A	37.205.14.3
+jitsi-videobridge10.meet.vpsfree.cz.	300 IN A	83.167.228.190
+jitsi-videobridge11.meet.vpsfree.cz.	300 IN A	83.167.228.189
+jitsi-videobridge12.meet.vpsfree.cz.	300 IN A	37.205.14.235
+jitsi-videobridge13.meet.vpsfree.cz.	300 IN A	83.167.228.187
+jitsi-videobridge14.meet.vpsfree.cz.	300 IN A	83.167.228.179
+jitsi-videobridge15.meet.vpsfree.cz.	300 IN A	83.167.228.178
+jitsi-videobridge16.meet.vpsfree.cz.	300 IN A	185.8.164.60
+
+;Disabled for performance reasons (mikrotik)
+;meet					    IN AAAA	2a03:3b40:fe:10::1
+;;;;
+
+;auth.meet				300 IN A	37.205.14.30
+
+;;;;; New Meet installation
+;meet					300 IN A	37.205.14.59
+;meet					300 IN AAAA	2a03:3b40:fe:3f::1
+;conference.meet			300 IN A	37.205.14.30
+;conference.meet			300 IN AAAA	2a03:3b40:fe:1e::1
+;_jabber._tcp.meet.vpsfree.cz.      	300 IN SRV	0 0 5269 conference.meet.vpsfree.cz.
+;_xmpp-server._tcp.meet.vpsfree.cz. 	300 IN SRV	0 0 5269 conference.meet.vpsfree.cz.
+;_xmpp-client._tcp.meet.vpsfree.cz. 	300 IN SRV	0 0 5222 conference.meet.vpsfree.cz.
+;auth.meet 				300 IN CNAME	conference.vpsfree.cz.
+;jicofo.meet				300 IN A	37.205.14.91
+;jicofo.meet				300 IN AAAA	2a03:3b40:fe:40::1
+;jvb1.meet				300 IN A	37.205.14.146
+;jvb1.meet				300 IN AAAA	2a03:3b40:fe:59::1
+;turn.meet				300 IN A	37.205.14.152
+;turn.meet				300 IN AAAA	2a03:3b40:fe:76::1
+;;;;;
+
+new		IN	A	83.167.228.42
+caladan		IN	CNAME	caladan.hawin.cz.
+tor-relay	IN	A	37.205.8.191
+tor-relay	IN	AAAA	2a01:430:17:1::ffff:1281
+vpn01.prg	IN	A	77.93.223.7
+vpn		IN	CNAME	vpn01.prg.vpsfree.cz.
+secret		IN	A	37.205.10.42
+vpsadmin.prg	IN	A	37.205.10.1
+vpsadmin.brq	IN	A	37.205.11.211
+vpsadmin-brq	IN	CNAME	vpsadmin.brq.vpsfree.cz.
+vpsadmin-db     IN      CNAME   vpsadmin.prg.vpsfree.cz.
+console-brq	IN	A	37.205.10.12
+git		IN	A	37.205.10.42
+projects        IN      CNAME   git.vpsfree.cz.
+build		IN	A	37.205.10.38
+repo		IN	CNAME	build.vpsfree.cz.
+ejp4lk2cbfpe.rt IN	CNAME	gv-kfguamjf7gseyy.dv.googlehosted.com.
+nunc3m65wyuq	IN	CNAME	gv-ncv3xgoigoy7gh.dv.googlehosted.com.
+mxproxy		IN	A	37.205.9.45
+mxproxy		IN	AAAA	2a03:3b40:fe:1ef::1
+mxfilter	IN	A	37.205.10.110
+mxfilter	IN	AAAA	2a01:430:17:1::ffff:471	
+icinga.prg      IN      A       37.205.9.232
+icinga.prg      IN      AAAA    2a01:430:17:1::ffff:330
+icinga.brq      IN      A       37.205.11.85
+icinga.brq      IN      AAAA    2a03:3b40:100::1:34
+vpsfree.cz.	IN	TXT	"v=spf1 a mx a:vpsfree.cz a:mx2.vpsfree.cz a:prasiatko-mail.vpsfree.cz a:vpsadmin.vpsfree.cz a:lists.vpsfree.cz a:mail.snajpa.net a:mxproxy.vpsfree.cz a:rt.vpsfree.cz -all"
+lists.vpsfree.cz. IN	TXT	"v=spf1 a mx a:vpsfree.cz a:mx2.vpsfree.cz a:prasiatko-mail.vpsfree.cz a:vpsadmin.vpsfree.cz a:lists.vpsfree.cz -all"
+proxy.vpsfree.cz. IN	TXT	"v=spf1 a mx a:vpsfree.cz a:mx2.vpsfree.cz a:prasiatko-mail.vpsfree.cz a:vpsadmin.vpsfree.cz a:lists.vpsfree.cz a:mail.snajpa.net a:mxproxy.vpsfree.cz a:rt.vpsfree.cz -all"
+mail._domainkey       IN      TXT     ( "v=DKIM1; h=sha256; k=rsa; "
+          "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtgkVXGMVGfmYnQm2YaLoRJLxdYYEcQ5jd0v7/fPaBZMrhTqmLrOH7s9tU8wgYnaB80BoHA3sP9QmCpFoVcNvK73WuzuXKn7XvCLHEw4NvhBaNzn8DokiqqD9okapJLqy88avDVk+kNCyEb6wnr/ZTAPVR7PIs8Pypr9l5JVxDQnrY9eyhWYQoaupQoOVwRZjM5NItOQcI/1GS1"
+          "PBNE0Uw0mTRjhlv9j9KgT8EP8Dj6J4LwkqVWmEcSGLFLgQOp9CiaQkO70m1Q8bKsmgswgkefDwYIEtFOMidgFR2oac3+tix8wwdcyl+wTcZaU17puNcOm7zzQvZerGTuWzS7fvgwIDAQAB" )
+
+mail._domainkey.lists.vpsfree.cz. IN      TXT     ( "v=DKIM1; h=sha256; k=rsa; "
+          "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlCqk/eI/VqhHz5Doj7BwPWIFQPR5JZ4ICimja8hL1WDePoIylQaelTjYvNcr6Fx7x/vOmB5/GsODQCx81R1pmA0C+N5Dy9VzagdzxSJhAmNsIpwny4Z4IXvlH9r6VLxKvWpzwA4iTuWdTl3RAWAA3vZcHP9uXVfx8gul/BKv96IxqNuzpuiAkBQ0dHnGJeOF0U4TPwsTofGg5g"
+          "W3E57d3dIrVhK4n+yXxe/n6bp4JSCItZLJSG6l2vMn7E5DaFglMICQfJ4MLR8kIqq3iCL36Pp4bGiad1c/hJgAb99/Pxc48UCJTsMu9lsfHLS0v4jwYXs+oajzS6qYO+0fum1dswIDAQAB" )
+
+prasiatko-mail       IN      A       83.167.228.42
+prasiatko-mail	IN	AAAA	2a03:3b40:fe:1c3::1
+vpsadmin.int    IN      A       37.205.10.1
+kb.int          IN      A       37.205.10.96
+mirror.int      IN      A       185.8.165.222
+
+proxy	60	IN	A	37.205.9.80
+;proxy		IN	A	37.205.9.80
+proxy		IN	AAAA	2a01:430:17:1::ffff:149
+
+lists		IN	A	37.205.9.80 ; kvuli MX
+lists		IN	AAAA	2a01:430:17:1::ffff:149 ; kvuli MX
+prasiatko	IN	CNAME	proxy.vpsfree.cz.
+m		IN	CNAME	proxy.vpsfree.cz.
+rt		IN	CNAME	proxy.vpsfree.cz.
+dev		IN	CNAME	proxy.vpsfree.cz.
+piwik		IN	CNAME	proxy.vpsfree.cz.
+paste           IN      CNAME	proxy.prg.vpsfree.cz.
+slack           IN      CNAME	proxy.vpsfree.cz.
+mirror		IN	CNAME	proxy.vpsfree.cz.
+redmine		IN	CNAME	proxy.vpsfree.cz.
+kb		IN	CNAME	proxy.prg.vpsfree.cz.
+;kb-new		IN	CNAME	proxy.prg.vpsfree.cz.
+blog		IN	CNAME	proxy.vpsfree.cz.
+foto		IN	CNAME	proxy.vpsfree.cz.
+;vpsadmin	IN	CNAME	proxy.vpsfree.cz.
+;api		IN	CNAME	proxy.vpsfree.cz.
+vpsadmin-tmp    IN      CNAME	proxy.vpsfree.cz.
+api-tmp		IN	CNAME	proxy.vpsfree.cz.
+;console-prg	IN	CNAME	proxy.vpsfree.cz.
+conference	IN	CNAME	proxy.vpsfree.cz.
+www		IN	CNAME	proxy.vpsfree.cz.
+bepasty		IN	CNAME	proxy.prg.vpsfree.cz.
+utils		IN	CNAME	proxy.prg.vpsfree.cz.
+discourse	IN	A       37.205.13.116
+discourse	IN	AAAA    2a03:3b40:fe:3ac::1
+test            IN      CNAME   proxy.vpsfree.cz.
+
+proxy.prg       IN      A       37.205.14.61
+proxy.prg       IN      AAAA    2a03:3b40:fe:35::1
+log.prg         IN      CNAME   proxy.prg.vpsfree.cz.
+mon.prg         IN      CNAME   proxy.prg.vpsfree.cz.
+alerts.prg      IN      CNAME   proxy.prg.vpsfree.cz.
+mon1.prg        IN      CNAME   proxy.prg.vpsfree.cz.
+alerts1.prg     IN      CNAME   proxy.prg.vpsfree.cz.
+mon2.prg        IN      CNAME   proxy.prg.vpsfree.cz.
+alerts2.prg     IN      CNAME   proxy.prg.vpsfree.cz.
+grafana.prg     IN      CNAME   proxy.prg.vpsfree.cz.
+rubygems        IN      CNAME   proxy.prg.vpsfree.cz.
+
+api             IN      CNAME   proxy.prg.vpsfree.cz.
+api-admin       IN      CNAME   proxy.prg.vpsfree.cz.
+auth            IN      CNAME   proxy.prg.vpsfree.cz.
+auth-admin      IN      CNAME   proxy.prg.vpsfree.cz.
+console         IN      CNAME   proxy.prg.vpsfree.cz.
+console-admin   IN      CNAME   proxy.prg.vpsfree.cz.
+download        IN      CNAME   proxy.prg.vpsfree.cz.
+download-admin  IN      CNAME   proxy.prg.vpsfree.cz.
+vpsadmin        IN      CNAME   proxy.prg.vpsfree.cz.
+vpsadmin-admin  IN      CNAME   proxy.prg.vpsfree.cz.
+vpsadmin-dev    IN      CNAME   proxy.prg.vpsfree.cz.
+
+$GENERATE 1-127   $.164.8.185.pgnd    IN   A     185.8.164.$
+$GENERATE 1-127   *.$.164.8.185.pgnd  IN   A     185.8.164.$
