@@ -7,7 +7,7 @@
     host = { name = "ns1"; domain = "vpsfree.cz"; };
     addresses = {
       v4 = [ { address = "77.93.223.251"; prefix = 32; } ];
-      v6 = [ { address = "2a01:430:17:1::ffff:179"; prefix = 128; } ];
+      v6 = [ { address = "2a03:3b40:fe:3fd::1"; prefix = 64; } ];
     };
     services = {
       bind = {};

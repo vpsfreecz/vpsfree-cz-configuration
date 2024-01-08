@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @ IN  SOA  ns1.vpsfree.cz. hostmaster.vpsfree.cz. (
-              2024010601 ; serial number of this zone file
+              2024010801 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -15,9 +15,9 @@ $TTL 1H                  ; default expiration time of all resource records witho
 @ 		IN	MX	15 mx2.vpsfree.cz.
 @		IN	TYPE257	\# 22 000569737375656C657473656E63727970742E6F7267 ; CAA
 ns1		IN	A	77.93.223.251
-ns1		IN	AAAA	2a01:430:17:1::ffff:179
+ns1		IN	AAAA	2a03:3b40:fe:3fd::1
 ns2		IN	A	37.205.11.51
-ns2		IN	AAAA	2a03:3b40:100::1:51
+ns2		IN	AAAA	2a03:3b40:101:ca::1
 mx1		IN	A	83.167.228.42
 mx1		IN	AAAA	2a03:3b40:fe:1c3::1
 mx2		IN	A	37.205.11.114
