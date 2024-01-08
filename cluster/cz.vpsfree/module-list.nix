@@ -1,3 +1,1 @@
-[
-  ./containers/dns-authoritative.nix
-]
+[]
