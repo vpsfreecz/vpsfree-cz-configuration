@@ -60,48 +60,6 @@ jvb9					300 IN A	37.205.14.231
 jvb10					300 IN A	37.205.14.250
 jvb11					300 IN A	37.205.13.90
 
-;meet					300 IN A	37.205.14.208
-jitsi-videobridge.meet.vpsfree.cz.	300 IN CNAME	jitsi-videobridge1.meet.vpsfree.cz.
-jitsi-videobridge1.meet.vpsfree.cz.	300 IN A	37.205.14.168
-jitsi-videobridge2.meet.vpsfree.cz.	300 IN A	37.205.14.153
-jitsi-videobridge3.meet.vpsfree.cz.	300 IN A	37.205.12.167
-jitsi-videobridge4.meet.vpsfree.cz.	300 IN A	37.205.12.173
-jitsi-videobridge5.meet.vpsfree.cz.	300 IN A	37.205.12.178
-jitsi-videobridge6.meet.vpsfree.cz.	300 IN A	37.205.12.180
-jitsi-videobridge7.meet.vpsfree.cz.	300 IN A	37.205.14.129
-jitsi-videobridge8.meet.vpsfree.cz.	300 IN A	37.205.14.154
-jitsi-videobridge9.meet.vpsfree.cz.	300 IN A	37.205.14.3
-jitsi-videobridge10.meet.vpsfree.cz.	300 IN A	83.167.228.190
-jitsi-videobridge11.meet.vpsfree.cz.	300 IN A	83.167.228.189
-jitsi-videobridge12.meet.vpsfree.cz.	300 IN A	37.205.14.235
-jitsi-videobridge13.meet.vpsfree.cz.	300 IN A	83.167.228.187
-jitsi-videobridge14.meet.vpsfree.cz.	300 IN A	83.167.228.179
-jitsi-videobridge15.meet.vpsfree.cz.	300 IN A	83.167.228.178
-jitsi-videobridge16.meet.vpsfree.cz.	300 IN A	185.8.164.60
-
-;Disabled for performance reasons (mikrotik)
-;meet					    IN AAAA	2a03:3b40:fe:10::1
-;;;;
-
-;auth.meet				300 IN A	37.205.14.30
-
-;;;;; New Meet installation
-;meet					300 IN A	37.205.14.59
-;meet					300 IN AAAA	2a03:3b40:fe:3f::1
-;conference.meet			300 IN A	37.205.14.30
-;conference.meet			300 IN AAAA	2a03:3b40:fe:1e::1
-;_jabber._tcp.meet.vpsfree.cz.      	300 IN SRV	0 0 5269 conference.meet.vpsfree.cz.
-;_xmpp-server._tcp.meet.vpsfree.cz. 	300 IN SRV	0 0 5269 conference.meet.vpsfree.cz.
-;_xmpp-client._tcp.meet.vpsfree.cz. 	300 IN SRV	0 0 5222 conference.meet.vpsfree.cz.
-;auth.meet 				300 IN CNAME	conference.vpsfree.cz.
-;jicofo.meet				300 IN A	37.205.14.91
-;jicofo.meet				300 IN AAAA	2a03:3b40:fe:40::1
-;jvb1.meet				300 IN A	37.205.14.146
-;jvb1.meet				300 IN AAAA	2a03:3b40:fe:59::1
-;turn.meet				300 IN A	37.205.14.152
-;turn.meet				300 IN AAAA	2a03:3b40:fe:76::1
-;;;;;
-
 new		IN	A	83.167.228.42
 caladan		IN	CNAME	caladan.hawin.cz.
 tor-relay	IN	A	37.205.8.191
@@ -146,7 +104,6 @@ kb.int          IN      A       37.205.10.96
 mirror.int      IN      A       185.8.165.222
 
 proxy	60	IN	A	37.205.9.80
-;proxy		IN	A	37.205.9.80
 proxy		IN	AAAA	2a01:430:17:1::ffff:149
 
 lists		IN	A	37.205.9.80 ; kvuli MX
@@ -161,14 +118,10 @@ slack           IN      CNAME	proxy.vpsfree.cz.
 mirror		IN	CNAME	proxy.vpsfree.cz.
 redmine		IN	CNAME	proxy.vpsfree.cz.
 kb		IN	CNAME	proxy.prg.vpsfree.cz.
-;kb-new		IN	CNAME	proxy.prg.vpsfree.cz.
 blog		IN	CNAME	proxy.vpsfree.cz.
 foto		IN	CNAME	proxy.vpsfree.cz.
-;vpsadmin	IN	CNAME	proxy.vpsfree.cz.
-;api		IN	CNAME	proxy.vpsfree.cz.
 vpsadmin-tmp    IN      CNAME	proxy.vpsfree.cz.
 api-tmp		IN	CNAME	proxy.vpsfree.cz.
-;console-prg	IN	CNAME	proxy.vpsfree.cz.
 conference	IN	CNAME	proxy.vpsfree.cz.
 www		IN	CNAME	proxy.vpsfree.cz.
 bepasty		IN	CNAME	proxy.prg.vpsfree.cz.
