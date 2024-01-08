@@ -46,7 +46,7 @@ let
   makeZone = zone:
     let
       fn =
-        if !master || (builtins.isAttrs zone && (builtins.hasAttr "masters" zone)) then
+        if !master || ((builtins.isAttrs zone) && (builtins.hasAttr "masters" zone)) then
           makeSlaveZone
         else makeMasterZone;
 
