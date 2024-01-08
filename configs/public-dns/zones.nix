@@ -35,8 +35,8 @@ let
     "128-191.228.167.83.in-addr.arpa."
     "1-127.228.167.83.in-addr.arpa."
     "0.4.b.3.3.0.a.2.ip6.arpa."
-    "2.0.0.4.b.3.3.0.a.2.ip6.arpa."
-    "3.0.0.4.b.3.3.0.a.2.ip6.arpa."
+    { name = "2.0.0.4.b.3.3.0.a.2.ip6.arpa."; masters = [ "77.93.223.5" ]; }
+    { name = "3.0.0.4.b.3.3.0.a.2.ip6.arpa."; masters = [ "77.93.223.5" ]; }
   ];
 
   ipsToBind = ips: concatMapStringsSep " " (ip: "${ip};") ips;
@@ -45,7 +45,10 @@ let
 
   makeZone = zone:
     let
-      fn = if master then makeMasterZone else makeSlaveZone;
+      fn =
+        if !master || (builtins.isAttrs zone && (builtins.hasAttr "masters" zone)) then
+          makeSlaveZone
+        else makeMasterZone;
 
       attrset =
         if builtins.isAttrs zone then
@@ -61,15 +64,12 @@ let
     master = true;
     inherit slaves;
     file = zone.file or "${zoneDir}/zone.${zone.name}";
-    extraConfig = ''
-      allow-transfer { ${ipsToBind slaves} };
-    '';
   };
 
   makeSlaveZone = zone: {
     inherit (zone) name;
     master = false;
-    inherit masters;
+    masters = zone.masters or masters;
     file = "zone.${zone.name}";
     extraConfig = ''
       allow-transfer { "none"; };
