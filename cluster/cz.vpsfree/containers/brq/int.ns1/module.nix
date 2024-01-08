@@ -13,7 +13,6 @@ in {
     services = {
       bind = {};
       node-exporter = {};
-      prometheus = {};
     };
     tags = [ "dns" "internal-dns" "manual-update" ];
     healthChecks = import ../../../../../health-checks/internal-dns.nix { inherit pkgs addr; };
