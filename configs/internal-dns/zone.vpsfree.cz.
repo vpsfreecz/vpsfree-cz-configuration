@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2024010801 ; serial number of this zone file
+              2024010901 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -56,6 +56,8 @@ mx2                            IN   AAAA    2a00:cb40:2::1:95
 mxfilter                       IN   A       37.205.10.110
 mxproxy                        IN   A       37.205.9.45
 new                            IN   A       83.167.228.42
+munin                          IN   CNAME   proxy.prg.vpsfree.cz.
+munin.int                      IN   A       172.16.8.234
 paste                          IN   CNAME   proxy.prg.vpsfree.cz.
 paste.int                      IN   A       172.16.9.157
 paste-old.int                  IN   A       37.205.8.141

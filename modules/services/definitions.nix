@@ -50,6 +50,7 @@ in {
       grafana.port = 3000;
       vpsadmin-console.port = 8081;
       prometheus.port = 9090;
+      munin-cron.port = -1;
       nginx.port = 80;
       nix-serve.port = 5000;
       ipmi-exporter.port = 9290;

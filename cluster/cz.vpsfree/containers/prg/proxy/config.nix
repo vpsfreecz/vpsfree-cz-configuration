@@ -49,6 +49,11 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.kb";
   };
+
+  munin = confLib.findConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/int.munin";
+  };
 in {
   imports = [
     ../../../../../environments/base.nix
@@ -149,6 +154,12 @@ in {
         enableACME = true;
         forceSSL = true;
         locations."/".proxyPass = "http://${kb.addresses.primary.address}:80";
+      };
+
+      "munin.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://${munin.addresses.primary.address}:80";
       };
     };
   };

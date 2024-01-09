@@ -5,6 +5,7 @@
   ./cz.vpsfree/containers/brq/ns2/module.nix
   ./cz.vpsfree/containers/discourse/module.nix
   ./cz.vpsfree/containers/int.kb/module.nix
+  ./cz.vpsfree/containers/int.munin/module.nix
   ./cz.vpsfree/containers/int.paste/module.nix
   ./cz.vpsfree/containers/int.rubygems/module.nix
   ./cz.vpsfree/containers/int.utils/module.nix
