@@ -1,0 +1,35 @@
+{
+  "nixpkgs": {
+    "type": "git-rev",
+    "nix_options": {
+      "fetchSubmodules": false,
+      "update": {
+        "auto": false,
+        "interval": 3600,
+        "ref": "refs/heads/munin-fastcgi"
+      },
+      "url": "https://github.com/aither64/nixpkgs"
+    },
+    "state": {
+      "rev": "55a3498055cd2f2b0ebd53a3ecfe725b1222a117",
+      "date": "2024-01-10T19:35:46+01:00"
+    },
+    "info": {
+      "rev": "55a3498055cd2f2b0ebd53a3ecfe725b1222a117",
+      "sha256": "0rhxp12xs151rm5mnkvwxymlldmgwbmv4q9ish33irdwzpsmscqi"
+    },
+    "fetcher": {
+      "type": "git-rev",
+      "options": {
+        "rev": "55a3498055cd2f2b0ebd53a3ecfe725b1222a117",
+        "wrapped_fetcher": {
+          "type": "zip",
+          "options": {
+            "url": "https://github.com/aither64/nixpkgs/archive/55a3498055cd2f2b0ebd53a3ecfe725b1222a117.tar.gz",
+            "sha256": "0rhxp12xs151rm5mnkvwxymlldmgwbmv4q9ish33irdwzpsmscqi"
+          }
+        }
+      }
+    }
+  }
+}

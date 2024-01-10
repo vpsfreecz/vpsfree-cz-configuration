@@ -27,6 +27,10 @@ in {
   services.munin-cron = {
     enable = true;
     hosts = allHosts;
+    fastcgi = {
+      enableGraph = true;
+      socketUser = "nginx";
+    };
   };
 
   services.nginx = {
@@ -34,6 +38,14 @@ in {
 
     virtualHosts."munin.vpsfree.cz" = {
       locations."/".root = "/var/www/munin";
+
+      locations."^~ /munin-cgi/munin-cgi-graph/".extraConfig = ''
+        access_log off;
+        fastcgi_split_path_info ^(/munin-cgi/munin-cgi-graph)(.*);
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_pass unix:/run/munin/fastcgi-graph.sock;
+        include ${pkgs.nginx}/conf/fastcgi_params;
+      '';
     };
   };
 
