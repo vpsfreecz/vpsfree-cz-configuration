@@ -142,7 +142,7 @@
         labels = {
           alertclass = "zpool_vdev_errors";
           severity = "warning";
-          frequency = "6h";
+          frequency = "daily";
         };
         annotations = {
           summary = "Vdev is exhibiting errors (instance {{ $labels.instance }})";
@@ -159,7 +159,7 @@
         labels = {
           alertclass = "zpool_vdev_errors";
           severity = "critical";
-          frequency = "8h";
+          frequency = "daily";
         };
         annotations = {
           summary = "Vdev is exhibiting errors (instance {{ $labels.instance }})";
@@ -176,7 +176,7 @@
         labels = {
           alertclass = "vdevlog_errors";
           severity = "warning";
-          frequency = "6h";
+          frequency = "daily";
         };
         annotations = {
           summary = "Vdev is exhibiting longstanding errors (instance {{ $labels.instance }})";
@@ -193,7 +193,7 @@
         labels = {
           alertclass = "vdevlog_errors";
           severity = "critical";
-          frequency = "8h";
+          frequency = "daily";
         };
         annotations = {
           summary = "Vdev is exhibiting longstanding errors (instance {{ $labels.instance }})";
