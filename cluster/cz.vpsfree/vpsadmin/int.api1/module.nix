@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
   cluster."cz.vpsfree/vpsadmin/int.api1" = rec {
     spin = "nixos";
@@ -10,6 +10,16 @@
     };
     services.node-exporter = {};
     tags = [ "vpsadmin" "api" "auto-update" ];
-    healthChecks = import ../../../../health-checks/vpsadmin/api.nix;
+    healthChecks = lib.mkMerge [
+      (import ../../../../health-checks/vpsadmin/api.nix)
+
+      {
+        systemd.unitProperties = {
+          "vpsadmin-scheduler.service" = [
+            { property = "ActiveState"; value = "active"; }
+          ];
+        };
+      }
+    ];
   };
 }
