@@ -59,6 +59,10 @@ in {
     config.boot.kernelPackages.cpupower
   ];
 
+  programs.bash.interactiveShellInit = ''
+    export HISTSIZE=10000
+  '';
+
   programs.bash.promptInit =
     let
       hostname = if confMachine == null then "\\H" else confMachine.host.fqdn;
