@@ -320,7 +320,7 @@ in [
 
       {
         alert = "DatasetExpansionDeadlineWarn";
-        expr = ''vpsadmin_dataset_expansion_deadline < time()'';
+        expr = ''vpsadmin_dataset_expansion_over_refquota_seconds > vpsadmin_dataset_expansion_max_over_refquota_seconds'';
         labels = {
           severity = "warning";
           frequency = "12h";
