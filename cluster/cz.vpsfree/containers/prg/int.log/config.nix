@@ -92,7 +92,7 @@ in {
     port = syslogExporterPort;
     settings = {
       mbuffer = {
-        enable = true;
+        enable = false;
         path = "${pkgs.mbuffer}/bin/mbuffer";
         size = "50%";
       };
