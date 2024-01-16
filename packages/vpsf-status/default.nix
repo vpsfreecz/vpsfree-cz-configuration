@@ -2,17 +2,17 @@
 let
   owner = "vpsfreecz";
   repo = "vpsf-status";
-  rev = "5b1f3a9360d2c1d87988a1b5e715054f1713d13c";
+  rev = "61b1efedcd17b0fafef1541bd9ed20d720305a95";
 in buildGoModule rec {
   name = "vpsf-status-${version}";
   version = lib.substring 0 7 rev;
 
   src = fetchFromGitHub {
     inherit owner repo rev;
-    sha256 = "sha256-KiQSAjLRBf6XlEeIDsj2lssi2uKeiG0IFTzrPbqrGJY=";
+    sha256 = "sha256-WaqXgqKqzZRP8ueRBCeECn2T23w/1GweZzYijE21h5U=";
   };
 
-  vendorHash = "sha256-BLxOht2O1TO0yWNljulrpXoSGG3JuRw+hL/PXhXSLkk=";
+  vendorHash = "sha256-m38yOdn+W0sL5tCK6i+a683UaQF5DeR0w49GW0qyq6k=";
 
   postInstall = ''
     mkdir -p $out/share/vpsf-status
