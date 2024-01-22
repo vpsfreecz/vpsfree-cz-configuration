@@ -104,7 +104,13 @@ in {
     enable = true;
     settings = {
       nodes = {
-        files = [ "/var/log/remote/cz.vpsfree/nodes/*/*/log" ];
+        files = [
+          "/var/log/remote/cz.vpsfree/nodes/*/*/log"
+
+          # This file contains logs sent by svlogd from all nodes. They all
+          # appear as if from localhost, the node fqdn is a part of the message...
+          "/var/log/remote/localhost/log"
+        ];
         frequency = "daily";
         rotate = 180;
         dateext = true;
@@ -142,7 +148,10 @@ in {
       };
 
       others = {
-        files = [ "/var/log/remote/*/log" ];
+        files = [
+          # Mikrotik routers
+          "/var/log/remote/MAI-*/log"
+        ];
         frequency = "monthly";
         rotate = 13;
         dateext = true;
