@@ -25,62 +25,70 @@ let
 
   allNetworks = v4Networks ++ v6Networks;
 
-  unboundNetworks = [ "127.0.0.0/8" "::1/128" ] ++ allNetworks;
+  kresdNetworks = [ "127.0.0.0/8" "::1/128" ] ++ allNetworks;
 
-  exporterPort = confMachine.services.unbound-exporter.port;
+  managementPort = confMachine.services.kresd-management.port;
 
   allMachines = confLib.getClusterMachines config.cluster;
 
   monitors = filter (m: m.config.monitoring.isMonitor) allMachines;
 
-  numThreads = 8;
+  makeListenAddress = version: addr:
+    if version == 4 then
+      addr.address
+    else
+      "[${addr.address}]";
+
+  makeListen = version: map (addr: "${makeListenAddress version addr}:${toString confMachine.services.kresd-plain.port}");
 in {
   environment.systemPackages = with pkgs; [
     dnsutils
   ];
 
-  services.unbound = {
-    enable = true;
-    settings = {
-      server = {
-        # Optimizations based on https://nlnetlabs.nl/documentation/unbound/howto-optimise/
-        num-threads = numThreads;
-        msg-cache-slabs = numThreads;
-        rrset-cache-slabs = numThreads;
-        infra-cache-slabs = numThreads;
-        key-cache-slabs = numThreads;
-
-        rrset-cache-size = "100m";
-        msg-cache-size = "50m";
-
-        so-reuseport = true;
-
-        interface = [ "0.0.0.0" "::0" ];
-        access-control = map (net: "${net} allow") unboundNetworks;
-
-        harden-glue = true;
-        harden-dnssec-stripped = true;
-        harden-below-nxdomain = true;
-        harden-referral-path = true;
-
-        prefetch = true;
-        prefetch-key = true;
-
-        use-caps-for-id = false;
-        unwanted-reply-threshold = 10000000;
-
-        rrset-roundrobin = true;
-        minimal-responses = false;
-      };
-      remote-control = {
-        control-enable = true;
-      };
-    };
+  fileSystems."/var/cache/knot-resolver" = {
+    fsType = "tmpfs";
+    device = "tmpfs";
+    options = [ "rw,size=2G,uid=knot-resolver,gid=knot-resolver,nosuid,nodev,noexec,mode=0700" ];
   };
 
-  services.prometheus.exporters.unbound = {
+  services.kresd = {
     enable = true;
-    port = exporterPort;
+    package = pkgs.knot-resolver.override { extraFeatures = true; };
+    instances = 8;
+    listenPlain =
+      (makeListen 4 [ { address = "127.0.0.1"; } ])
+      ++ (makeListen 6 [ { address = "::1"; } ])
+      ++ (makeListen 4 confMachine.addresses.v4)
+      ++ (makeListen 6 confMachine.addresses.v6);
+    extraConfig = ''
+      net.listen(
+        '${confMachine.addresses.primary.address}',
+        ${toString confMachine.services.kresd-management.port},
+        { kind = 'webmgmt' }
+      )
+
+      cache.size = cache.fssize() - 10*MB
+
+      modules = {
+        'view',
+        'stats',
+        'http'
+      }
+
+      http.config({
+        tls = false,
+      })
+
+      http.prometheus.namespace = 'kresd_'
+
+      -- allow access from our networks
+      ${concatMapStringsSep "" (addr: ''
+      view:addr('${addr}', policy.all(policy.PASS))
+      '') kresdNetworks}
+
+      -- drop everything that hasn't matched
+      view:addr('0.0.0.0/0', policy.all(policy.DROP))
+    '';
   };
 
   networking.firewall.extraCommands =
@@ -93,7 +101,7 @@ in {
       ip6tables -A nixos-fw -p tcp -s ${net} --dport 53 -j nixos-fw-accept
     '') v6Networks)
     + (concatMapStringsSep "\n" (m: ''
-      # unbound-exporter from ${m.name}
-      iptables -A nixos-fw -p tcp --dport ${toString exporterPort} -s ${m.config.addresses.primary.address} -j nixos-fw-accept
+      # kresd prometheus metrics ${m.name}
+      iptables -A nixos-fw -p tcp --dport ${toString managementPort} -s ${m.config.addresses.primary.address} -j nixos-fw-accept
     '') monitors);
 }

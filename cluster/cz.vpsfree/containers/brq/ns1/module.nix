@@ -12,8 +12,8 @@ in {
       v6 = [ { address = "2a03:3b40:100::1:200"; prefix = 128; } ];
     };
     services = {
-      unbound = {};
-      unbound-exporter = {};
+      kresd-plain = {};
+      kresd-management = {};
       node-exporter = {};
     };
     tags = [ "dns" "dns-resolver" "manual-update" ];

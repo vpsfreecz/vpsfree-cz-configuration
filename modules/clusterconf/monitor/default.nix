@@ -204,8 +204,8 @@ let
           filterServices m (sv: sv.monitor == "dns-resolver")
         ) monitoredMachines);
 
-        unboundExporterServices = flatten (map (m:
-          filterServices m (sv: sv.monitor == "unbound-exporter")
+        kresdMetricsServices = flatten (map (m:
+          filterServices m (sv: sv.monitor == "kresd-management")
         ) monitoredMachines);
       in {
         dnsProbes = map (sv: {
@@ -218,7 +218,7 @@ let
           };
         }) resolverServices;
 
-        unboundConfigs = map (sv: {
+        kresdConfigs = map (sv: {
           targets = [ "${sv.config.address}:${toString sv.config.port}" ];
           labels = {
             fqdn = sv.machine.config.host.fqdn;
@@ -226,7 +226,7 @@ let
             location = ensureLocation sv.machine.config.host.location;
             service = "dns-resolver";
           };
-        }) unboundExporterServices;
+        }) kresdMetricsServices;
       };
 
     dnsAuthoritatives =
@@ -592,11 +592,11 @@ in {
             scrape_interval = "30s";
             static_configs = scrapeConfigs.sshExporters.exporterConfigs;
           }
-        ) ++ (optional (scrapeConfigs.dnsResolvers.unboundConfigs != [])
+        ) ++ (optional (scrapeConfigs.dnsResolvers.kresdConfigs != [])
           {
-            job_name = "unbound-exporters";
+            job_name = "kresd-management";
             scrape_interval = "60s";
-            static_configs = scrapeConfigs.dnsResolvers.unboundConfigs;
+            static_configs = scrapeConfigs.dnsResolvers.kresdConfigs;
           }
         ) ++ (optional (scrapeConfigs.dnsResolvers.dnsProbes != [])
           {

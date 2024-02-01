@@ -38,6 +38,10 @@ in {
         port = 53;
         monitor = "dns-authoritative";
       };
+      kresd-plain = {
+        port = 53;
+        monitor = "dns-resolver";
+      };
       bind-exporter = {
         port = 9119;
         monitor = "bind-exporter";
@@ -53,6 +57,10 @@ in {
       munin-cron.port = -1;
       nginx.port = 80;
       nix-serve.port = 5000;
+      kresd-management = {
+        port = 8453;
+        monitor = "kresd-management";
+      };
       ipmi-exporter.port = 9290;
       node-exporter.port = 9100;
       osctl-exporter.port = 9101;
@@ -68,14 +76,6 @@ in {
       rsyslog-tcp.port = 11514;
       rsyslog-udp.port = 11515;
       sachet.port = 9876;
-      unbound = {
-        port = 53;
-        monitor = "dns-resolver";
-      };
-      unbound-exporter = {
-        port = 9167;
-        monitor = "unbound-exporter";
-      };
     };
   };
 }
