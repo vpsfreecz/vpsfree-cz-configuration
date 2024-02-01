@@ -4,7 +4,7 @@ let
 in {
   cluster."cz.vpsfree/containers/brq/ns1" = rec {
     spin = "nixos";
-    swpins.channels = [ "nixos-unstable" "os-staging" ];
+    swpins.channels = [ "nixos-stable" "os-staging" ];
     container.id = 25107;
     host = { name = "ns1"; location = "brq"; domain = "vpsfree.cz"; };
     addresses = {
