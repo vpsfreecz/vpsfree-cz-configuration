@@ -3,8 +3,8 @@ let
   vpsfbot = fetchFromGitHub {
     owner = "vpsfreecz";
     repo = "vpsfree-irc-bot";
-    rev = "94155b6c9a590bb76e4edcb2de3a170a3fdd1a4f";
-    sha256 = "sha256-Aftm6m0XRA6keYJjhrAEnzwq3s5KeEQL6XowW/GHn5M=";
+    rev = "057fb245692d8aca9b9ceba921dae87759ed81af";
+    sha256 = "sha256-Dl0YAAErIUcEVnAwbcG5vm+WBAS294u61PUzAHAwgSQ=";
   };
 in bundlerEnv {
   name = "vpsfree-irc-bot";
