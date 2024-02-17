@@ -115,6 +115,10 @@ in {
             "textfile"
             "vmstat"
           ];
+          disabledCollectors = [
+            # Disabled for performance reasons, heavy netlink usage
+            "arp"
+          ];
         };
       };
 
