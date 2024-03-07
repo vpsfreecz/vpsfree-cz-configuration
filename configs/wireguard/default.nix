@@ -36,7 +36,7 @@
         }
 
         { # snajpa - ws
-          publicKey = "OjvzbXNnJEmTKwOqXrxs091OW6MOB+UUklTN5AWsGnY=";
+          publicKey = "oFZRUhQH5soGmiMuiuuhmM5X9SSyxTH2/6xVZfjDaHo=";
           presharedKeyFile = "/private/wireguard/preshared_keys/snajpa.psk";
           allowedIPs = [ "172.16.107.11/32" ];
         }
