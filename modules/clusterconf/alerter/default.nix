@@ -255,7 +255,7 @@ in {
             name = "team-mail";
             email_configs = [
               {
-                to = "aither@havefun.cz,snajpa@snajpa.net,martin@martinmyska.cz,monitoring@kerrycze.net";
+                to = "aither@havefun.cz,snajpa@snajpa.net,monitoring@kerrycze.net";
                 send_resolved = true;
               }
             ];

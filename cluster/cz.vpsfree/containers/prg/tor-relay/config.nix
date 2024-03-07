@@ -21,7 +21,7 @@
       BandwidthBurst = 34078720;
       ORPort = 443;
       ExitPolicy = "reject *:*";
-      ContactInfo = "martin.myska@vpsfree.cz";
+      ContactInfo = "support@vpsfree.org";
     };
   };
 

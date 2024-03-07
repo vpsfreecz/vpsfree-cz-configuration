@@ -19,15 +19,6 @@
       publicKeys = [ confData.sshKeys.kerrycze ];
     };
 
-    martyet = {
-      vpsadmin = {
-        id = 2442;
-        name = "martyet";
-      };
-
-      publicKeys = [ confData.sshKeys.martyet ];
-    };
-
     snajpa = {
       vpsadmin = {
         id = 1;
