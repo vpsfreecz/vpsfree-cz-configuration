@@ -30,25 +30,26 @@
     version = "1.2.7";
   };
   faraday = {
-    dependencies = ["faraday-net_http" "ruby2_keywords"];
+    dependencies = ["faraday-net_http"];
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1fa3y42bhz2ahp33labk8sfw1al9wrr1pkar6i8w9mdpsccygzg4";
+      sha256 = "1qqb1rmk0f9m82iijjlqadh5yby1bhnr6svjk9vxdvh6f181988s";
       type = "gem";
     };
-    version = "2.7.5";
+    version = "2.9.0";
   };
   faraday-net_http = {
+    dependencies = ["net-http"];
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "13byv3mp1gsjyv8k0ih4612y6vw5kqva6i03wcg4w2fqpsd950k8";
+      sha256 = "17w51yk4rrm9rpnbc3x509s619kba0jga3qrj4b17l30950vw9qn";
       type = "gem";
     };
-    version = "3.0.2";
+    version = "3.1.0";
   };
   geminabox = {
     dependencies = ["builder" "faraday" "httpclient" "nesty" "reentrant_flock" "sinatra"];
@@ -92,15 +93,26 @@
     };
     version = "1.0.2";
   };
+  net-http = {
+    dependencies = ["uri"];
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "10n2n9aq00ih8v881af88l1zyrqgs5cl3njdw8argjwbl5ggqvm9";
+      type = "gem";
+    };
+    version = "0.4.1";
+  };
   rack = {
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "16w217k9z02c4hqizym8dkj6bqmmzx4qdvqpnskgzf174a5pwdxk";
+      sha256 = "10mpk0hl6hnv324fp1pfimi2nw9acj0z4gyhrph36qg84pk1s4m7";
       type = "gem";
     };
-    version = "2.2.7";
+    version = "2.2.8.1";
   };
   rack-protection = {
     dependencies = ["rack"];
@@ -160,9 +172,19 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1qmhi6d9przjzhsyk9g5pq2j75c656msh6xzprqd2mxgphf23jxs";
+      sha256 = "0p3l7v619hwfi781l3r7ypyv1l8hivp09r18kmkn6g11c4yr1pc2";
       type = "gem";
     };
-    version = "2.1.0";
+    version = "2.3.0";
+  };
+  uri = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "094gk72ckazf495qc76gk09b5i318d5l9m7bicg2wxlrjcm3qm96";
+      type = "gem";
+    };
+    version = "0.13.0";
   };
 }
