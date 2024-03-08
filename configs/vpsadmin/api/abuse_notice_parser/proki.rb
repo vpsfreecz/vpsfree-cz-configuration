@@ -4,6 +4,21 @@ require 'zip'
 
 module AbuseNoticeParser
   class Proki < VpsAdmin::API::IncidentReports::Parser
+    IGNORED_CODENAMES = [
+      'Accessible-FTP',
+      'Accessible-HTTP',
+      'Accessible-SMTP',
+      'Accessible-SSH',
+      'Accessible-SSL',
+      'Device-Identification IPv4',
+      'Device-Identification IPv6',
+      'IPv6-Accessible-FTP',
+      'IPv6-Accessible-HTTP',
+      'IPv6-Accessible-SMTP',
+      'IPv6-Accessible-SSH',
+      'IPv6-Accessible-SSL',
+    ]
+
     def self.match_subject?(subject)
       subject.start_with?('PROKI - upozorneni na nalezene incidenty')
     end
@@ -26,6 +41,13 @@ module AbuseNoticeParser
 
             csv = CSV.parse(io.read, col_sep: ',', quote_char: '"', headers: true)
             csv.each do |row|
+              codename = row['feed_name']
+
+              if codename && IGNORED_CODENAMES.include?(codename.strip)
+                warn "PROKI: ignoring codename #{codename}"
+                next
+              end
+
               begin
                 time = Time.iso8601(row['time_detected'])
               rescue ArgumentError => e
@@ -40,7 +62,7 @@ module AbuseNoticeParser
                 next
               end
 
-              key = "#{assignment.user_id}:#{assignment.vps_id}:#{assignment.ip_addr}:#{row['feed_name']}"
+              key = "#{assignment.user_id}:#{assignment.vps_id}:#{assignment.ip_addr}:#{codename}"
               incident = incidents[key]
 
               next if incident && incident.detected_at > time
@@ -100,9 +122,9 @@ END
                 vps_id: assignment.vps_id,
                 ip_address_assignment: assignment,
                 mailbox: mailbox,
-                subject: "PROKI #{row['feed_name']} #{time.strftime('%Y-%m-%d')}",
+                subject: "PROKI #{codename} #{time.strftime('%Y-%m-%d')}",
                 text: text,
-                codename: row['feed_name'],
+                codename: codename,
                 detected_at: time,
               )
             end
