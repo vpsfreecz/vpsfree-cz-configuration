@@ -7,7 +7,7 @@
     }
     {
       command = [ "${pkgs.dnsutils}/bin/dig" "vpsfree.cz" "AAAA" "+short" "@${ns}" ];
-      standardOutput.match = "2a01:430:17:1::ffff:149\n";
+      standardOutput.match = "2a03:3b40:fe:473::1\n";
     }
     {
       command = [ "${pkgs.dnsutils}/bin/dig" "vpsadmin.vpsfree.cz" "A" "+short" "@${ns}" ];
