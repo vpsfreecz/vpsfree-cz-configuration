@@ -85,11 +85,11 @@ in {
     home.file = {
       ".gitconfig".text = ''
         [user]
-	  name = Jakub Skokan
-	  email = jakub.skokan@havefun.cz
+          name = Jakub Skokan
+          email = jakub.skokan@havefun.cz
 
         [push]
-	  default = current
+          default = current
       '';
     };
 
