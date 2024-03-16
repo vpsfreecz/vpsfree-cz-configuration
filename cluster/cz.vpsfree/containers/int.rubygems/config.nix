@@ -149,6 +149,7 @@ in {
       enable = true;
       users = {
         aither = "/private/geminabox/aither.pw";
+        aitherdev = "/private/geminabox/aitherdev.pw";
       };
     };
 

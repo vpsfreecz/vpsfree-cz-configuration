@@ -23,6 +23,7 @@
   ./cz.vpsfree/containers/prg/ns2/module.nix
   ./cz.vpsfree/containers/prg/proxy/module.nix
   ./cz.vpsfree/containers/prg/tor-relay/module.nix
+  ./cz.vpsfree/machines/aitherdev/module.nix
   ./cz.vpsfree/machines/brq/apu/module.nix
   ./cz.vpsfree/machines/build/module.nix
   ./cz.vpsfree/machines/prg/apu/module.nix
