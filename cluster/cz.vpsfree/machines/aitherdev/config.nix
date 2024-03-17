@@ -118,6 +118,10 @@ in {
   '';
 
   home-manager.users.aither = { config, ... }: {
+    imports = [
+      "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"
+    ];
+
     programs.home-manager.enable = true;
 
     home.stateVersion = "23.11";
@@ -162,6 +166,8 @@ in {
         setw -g mode-keys vi
       '';
     };
+
+    services.vscode-server.enable = true;
   };
 
   system.stateVersion = "23.11";
