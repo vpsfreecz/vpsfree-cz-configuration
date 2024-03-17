@@ -24,11 +24,22 @@ in {
   boot.loader.grub.device = "/dev/vda";
 
   networking.useDHCP = false;
-  networking.interfaces.enp1s0.ipv4.addresses = [{ address = "172.16.106.16"; prefixLength = 24; }];
+  networking.interfaces.enp1s0.ipv4.addresses = [
+    { address = "172.16.106.16"; prefixLength = 24; }
+  ];
   networking.defaultGateway = "172.16.106.1";
   networking.nameservers = internalDnsAddresses ++ [ "172.16.106.1" ];
 
-  nix.nixPath = [ "nixpkgs=${swpins.nixpkgs}" ];
+  nix = {
+    nixPath = [ "nixpkgs=${swpins.nixpkgs}" ];
+
+    settings = {
+      sandbox = true;
+      extra-sandbox-paths = [
+        "/secrets=/home/aither/workspace/vpsadmin/vpsadminos/os/secrets?"
+      ];
+    };
+  };
 
   nixpkgs.overlays = import ../../../../overlays;
 
@@ -45,6 +56,7 @@ in {
 
   users.users.aither = {
     isNormalUser = true;
+    homeMode = "711";
     extraGroups = [ "wheel" ];
     openssh.authorizedKeys.keys = confData.sshKeys.aither.all;
   };
@@ -65,6 +77,45 @@ in {
   programs.bepastyrb.enable = true;
 
   system.monitoring.enable = false;
+
+  # Bridge for VMs
+  boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
+
+  networking.bridges.virbr0.interfaces = [];
+  networking.interfaces.virbr0.ipv4.addresses = [
+    { address = "192.168.122.1"; prefixLength = 24; }
+  ];
+
+  networking.firewall.extraCommands = ''
+    iptables -A nixos-fw -i virbr0 -p udp -m udp --dport 53 -j ACCEPT
+    iptables -A nixos-fw -i virbr0 -p tcp -m tcp --dport 53 -j ACCEPT
+    iptables -A nixos-fw -i virbr0 -p udp -m udp --dport 67 -j ACCEPT
+    iptables -A nixos-fw -i virbr0 -p tcp -m tcp --dport 67 -j ACCEPT
+    iptables -A nixos-fw -i virbr0 -p udp -m udp --dport 68 -j ACCEPT
+    iptables -A nixos-fw -i virbr0 -p tcp -m tcp --dport 68 -j ACCEPT
+    iptables -t nat -A POSTROUTING -s 192.168.122.0/24 ! -d 192.168.122.0/24 -j MASQUERADE
+  '';
+
+  services.dnsmasq = {
+    enable = true;
+    resolveLocalQueries = false;
+    settings = {
+      interface = "virbr0";
+      listen-address = "192.168.122.1";
+      bind-interfaces = true;
+      dhcp-option = [
+        "3,192.168.122.1" # gateway
+        "6,192.168.122.1" # dns servers
+      ];
+      dhcp-range = "192.168.122.100,192.168.122.200,255.255.255.0,24h";
+      dhcp-leasefile = "/var/lib/dnsmasq/dnsmasq.leases";
+      dhcp-authoritative = true;
+    };
+  };
+
+  environment.etc."qemu/bridge.conf".text = ''
+    allow virbr0
+  '';
 
   home-manager.users.aither = { config, ... }: {
     programs.home-manager.enable = true;
