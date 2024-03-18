@@ -182,6 +182,31 @@ in {
         set -g mouse on
         setw -g mode-keys vi
       '';
+
+      tmuxinator = {
+        enable = true;
+        projects = {
+          vpsadminos-nodes = {
+            root = "~/workspace/vpsf-dev";
+            windows = [
+              { build = "./vpsadminos-shell"; }
+              {
+                qemu = {
+                  layout = "tiled";
+                  panes = [
+                    "./vpsadminos-shell"
+                    "./vpsadminos-shell"
+                    "# ssh root@172.16.106.41"
+                    "# ssh root@172.16.106.42"
+                    "# ssh root@172.16.106.41"
+                    "# ssh root@172.16.106.42"
+                  ];
+                };
+              }
+            ];
+          };
+        };
+      };
     };
 
     services.vscode-server.enable = true;
