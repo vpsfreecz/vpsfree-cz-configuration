@@ -24,8 +24,10 @@ in {
   boot.loader.grub.device = "/dev/vda";
 
   networking.useDHCP = false;
-  networking.interfaces.enp1s0.ipv4.addresses = [
-    { address = "172.16.106.16"; prefixLength = 24; }
+
+  networking.bridges.br0.interfaces = [ "enp1s0" ];
+  networking.interfaces.br0.ipv4.addresses = [
+    { address = "172.16.106.40"; prefixLength = 24; }
   ];
   networking.defaultGateway = "172.16.106.1";
   networking.nameservers = internalDnsAddresses ++ [ "172.16.106.1" ];
@@ -114,6 +116,7 @@ in {
   };
 
   environment.etc."qemu/bridge.conf".text = ''
+    allow br0
     allow virbr0
   '';
 

@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2024031601 ; serial number of this zone file
+              2024031701 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -113,7 +113,7 @@ node5.brq                      IN   A       172.19.0.14
 node1.stg                      IN   A       172.16.0.66
 
 ; Machines
-aitherdev.int                  IN   A       172.16.106.16
+aitherdev.int                  IN   A       172.16.106.40
 apu.int.prg                    IN   A       172.16.254.254
 apu.int.brq                    IN   A       172.19.254.254
 build                          IN   A       172.16.106.5
