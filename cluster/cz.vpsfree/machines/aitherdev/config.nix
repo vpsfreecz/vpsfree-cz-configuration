@@ -13,6 +13,38 @@ let
   internalDns = [ ns1IntPrg ns1IntBrq ];
 
   internalDnsAddresses = map (m: m.addresses.primary.address) internalDns;
+
+  homeTmuxinator =
+    { config, lib, pkgs, ... }:
+    with lib;
+    let
+      cfg = config.programs.tmux;
+    in {
+      options = {
+        programs.tmux.tmuxinator = {
+          projects = mkOption {
+            type = types.attrsOf types.attrs;
+            default = {};
+            description = ''
+              tmuxinator projects
+            '';
+          };
+        };
+      };
+
+      config = mkIf (cfg.tmuxinator.enable && cfg.tmuxinator.projects != {}) {
+        home.file = mapAttrs' (name: project:
+          let
+            projectPath = ".config/tmuxinator/${projectName}.yml";
+            projectName = if hasName then project.name else name;
+            hasName = hasAttr "name" project;
+            attrs = if hasName then project else project // { inherit name; };
+          in nameValuePair projectPath {
+            text = builtins.toJSON attrs;
+          }
+        ) cfg.tmuxinator.projects;
+      };
+    };
 in {
   # NOTE: environments/base.nix is not imported, this is a standalone system
   imports = [
@@ -136,6 +168,7 @@ in {
 
   home-manager.users.aither = { config, ... }: {
     imports = [
+      homeTmuxinator
       "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"
     ];
 
