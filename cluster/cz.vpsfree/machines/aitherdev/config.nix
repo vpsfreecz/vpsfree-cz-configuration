@@ -105,6 +105,10 @@ in {
     iptables -A nixos-fw -i virbr0 -p tcp -m tcp --dport 67 -j ACCEPT
     iptables -A nixos-fw -i virbr0 -p udp -m udp --dport 68 -j ACCEPT
     iptables -A nixos-fw -i virbr0 -p tcp -m tcp --dport 68 -j ACCEPT
+
+    iptables -A nixos-fw -p tcp -m tcp --dport 4567 -s 172.16.106.0/24 -j ACCEPT
+    iptables -A nixos-fw -p tcp -m tcp --dport 4567 -s 172.16.107.0/24 -j ACCEPT
+
     iptables -t nat -A POSTROUTING -s 192.168.122.0/24 ! -d 192.168.122.0/24 -j MASQUERADE
   '';
 
