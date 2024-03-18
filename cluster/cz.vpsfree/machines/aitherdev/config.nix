@@ -74,6 +74,16 @@ in {
     };
   };
 
+  security.sudo = {
+    enable = true;
+    extraRules = [
+      { groups = [ "wheel" ]; commands = [ "ALL" ]; }
+    ];
+    extraConfig = ''
+      Defaults:aither timestamp_timeout=90
+    '';
+  };
+
   programs.vim.defaultEditor = true;
 
   programs.bepastyrb.enable = true;
