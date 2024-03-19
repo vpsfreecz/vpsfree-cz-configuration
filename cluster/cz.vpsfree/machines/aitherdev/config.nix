@@ -166,6 +166,8 @@ in {
     allow virbr0
   '';
 
+  environment.homeBinInPath = true;
+
   home-manager.users.aither = { config, ... }: {
     imports = [
       homeTmuxinator
@@ -201,12 +203,26 @@ in {
         [push]
           default = current
       '';
+
+      "bin/dev-shell" = {
+        text = ''
+          #!/usr/bin/env bash
+          # Run nix-shell with custom prompt
+          SHELL_PROMPT="\n\[\033[1;35m\][nix-shell:\w]\$\[\033[0m\] "
+          export PROMPT_COMMAND="export PS1=\"$SHELL_PROMPT\"; unset PROMPT_COMMAND"
+          exec nix-shell "$@"
+        '';
+        executable = true;
+      };
     };
 
     programs.bash = {
       enable = true;
       historySize = 10000;
       historyFileSize = 10000;
+      initExtra = ''
+        export PS1="\n\[\033[1;35m\][\[\e]0;\u@\h: \w\a\]\u@\h:\w]\$\[\033[0m\] "
+      '';
     };
 
     programs.tmux = {
