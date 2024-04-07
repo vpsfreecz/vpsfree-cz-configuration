@@ -7,6 +7,5 @@
     addresses = {
       v4 = [ { address = "172.16.106.40"; prefix = 24; } ];
     };
-    tags = [ "auto-update" ];
   };
 }
