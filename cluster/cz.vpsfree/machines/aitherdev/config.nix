@@ -120,8 +120,6 @@ in {
 
   programs.bepastyrb.enable = true;
 
-  system.monitoring.enable = false;
-
   # Bridge for VMs
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 
