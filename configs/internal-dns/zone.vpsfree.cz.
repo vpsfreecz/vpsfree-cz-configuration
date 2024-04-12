@@ -40,7 +40,7 @@ dev                            IN   CNAME   prasiatko.vpsfree.cz.
 discourse                      IN   A       37.205.13.116
 discourse                      IN   AAAA    2a03:3b40:fe:3ac::1
 flow                           IN   A       172.16.8.8
-foto                           IN   CNAME   kb
+foto                           IN   CNAME   proxy.vpsfree.cz.
 im                             IN   A       37.205.9.40
 kb                             IN   CNAME   proxy.prg.vpsfree.cz.
 kb.int                         IN   A       172.16.9.179
