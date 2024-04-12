@@ -314,6 +314,15 @@
       name = "node24";
     };
   };
+  "web.int.vpsfree.cz" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node24.prg.vpsfree.cz";
+      id = 125;
+      location = "prg";
+      name = "node24";
+    };
+  };
   "webui-dev.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
