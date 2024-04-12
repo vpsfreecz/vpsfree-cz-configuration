@@ -10,6 +10,7 @@
   ./cz.vpsfree/containers/int.rubygems/module.nix
   ./cz.vpsfree/containers/int.utils/module.nix
   ./cz.vpsfree/containers/int.vpsfbot/module.nix
+  ./cz.vpsfree/containers/int.web/module.nix
   ./cz.vpsfree/containers/ns1/module.nix
   ./cz.vpsfree/containers/ns2/module.nix
   ./cz.vpsfree/containers/prg/int.alerts1/module.nix
