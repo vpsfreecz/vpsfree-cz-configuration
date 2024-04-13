@@ -1,6 +1,13 @@
 { config, pkgs, ... }:
 let
-  vpsfreeWeb = { domain, root }: {
+  vpsfreeWeb = pkgs.fetchFromGitHub {
+    owner = "vpsfreecz";
+    repo = "web";
+    rev = "59c8fb3216ce30599eb91dd78df87996a8b4a149";
+    sha256 = "sha256-nM6UMcMHCCvXGUu2RnGBbWUuEA0Lxz4br9nNRwoySrg=";
+  };
+
+  vpsfreeVhost = { domain, root }: {
     serverAliases = [ "www.${domain}" ];
     enableACME = false;
     forceSSL = false;
@@ -37,24 +44,24 @@ in {
   ];
 
   services.nginx.virtualHosts = {
-    "vpsfree.cz" = vpsfreeWeb {
+    "vpsfree.cz" = vpsfreeVhost {
       domain = "vpsfree.cz";
-      root = "/var/www/vpsfree.cz/cs/";
+      root = "${vpsfreeWeb}/cs/";
     };
 
-    "vpsfree.org" = vpsfreeWeb {
+    "vpsfree.org" = vpsfreeVhost {
       domain = "vpsfree.cz";
-      root = "/var/www/vpsfree.cz/en/";
+      root = "${vpsfreeWeb}/en/";
     };
 
-    "dev.vpsfree.cz" = vpsfreeWeb {
+    "dev.vpsfree.cz" = vpsfreeVhost {
       domain = "dev.vpsfree.cz";
-      root = "/var/www/vpsfree.cz/cs/";
+      root = "/var/www/dev.vpsfree.cz/cs/";
     };
 
-    "dev.vpsfree.org" = vpsfreeWeb {
+    "dev.vpsfree.org" = vpsfreeVhost {
       domain = "dev.vpsfree.org";
-      root = "/var/www/vpsfree.cz/en/";
+      root = "/var/www/dev.vpsfree.cz/en/";
     };
   };
 
