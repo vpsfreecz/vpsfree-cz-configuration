@@ -1,15 +1,30 @@
 { config, pkgs, ... }:
 let
-  vpsfreeSource = pkgs.fetchFromGitHub {
+  source = pkgs.fetchFromGitHub {
     owner = "vpsfreecz";
     repo = "web";
     rev = "c3c31989257ffd407d244d65b0a1d0ad9671191f";
     sha256 = "sha256-1WgTX8RiszvVEsrWJ7YuAtzYVLW7/E8gKxQYUifpJjo=";
   };
 
-  vpsfreeWeb = import vpsfreeSource { inherit pkgs; };
+  configFile = pkgs.writeText "vpsfree-config.php" ''
+    <?php
+    define ('API_URL', 'https://api.vpsfree.cz');
+    define ('ENVIRONMENT_ID', 1);
+  '';
 
-  vpsfreeVhost = { domain, root }: {
+  configured = pkgs.runCommand "vpsfree-web" {} ''
+    mkdir $out
+    cp -r ${source}/. $out/
+
+    # NOTE: ln doesn't work properly, possibly due to composer2nix. The dependency
+    # is not tracked by Nix and configFile is not copied to the target system.
+    cp ${configFile} $out/config.php
+  '';
+
+  web = import configured { inherit pkgs; };
+
+  vhost = { domain, root }: {
     serverAliases = [ "www.${domain}" ];
     enableACME = false;
     forceSSL = false;
@@ -46,22 +61,22 @@ in {
   ];
 
   services.nginx.virtualHosts = {
-    "vpsfree.cz" = vpsfreeVhost {
+    "vpsfree.cz" = vhost {
       domain = "vpsfree.cz";
-      root = "${vpsfreeWeb}/cs/";
+      root = "${web}/cs/";
     };
 
-    "vpsfree.org" = vpsfreeVhost {
+    "vpsfree.org" = vhost {
       domain = "vpsfree.cz";
-      root = "${vpsfreeWeb}/en/";
+      root = "${web}/en/";
     };
 
-    "dev.vpsfree.cz" = vpsfreeVhost {
+    "dev.vpsfree.cz" = vhost {
       domain = "dev.vpsfree.cz";
       root = "/var/www/dev.vpsfree.cz/cs/";
     };
 
-    "dev.vpsfree.org" = vpsfreeVhost {
+    "dev.vpsfree.org" = vhost {
       domain = "dev.vpsfree.org";
       root = "/var/www/dev.vpsfree.cz/en/";
     };
