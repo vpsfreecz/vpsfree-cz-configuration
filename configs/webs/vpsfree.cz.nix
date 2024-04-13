@@ -1,11 +1,13 @@
 { config, pkgs, ... }:
 let
-  vpsfreeWeb = pkgs.fetchFromGitHub {
+  vpsfreeSource = pkgs.fetchFromGitHub {
     owner = "vpsfreecz";
     repo = "web";
-    rev = "59c8fb3216ce30599eb91dd78df87996a8b4a149";
-    sha256 = "sha256-nM6UMcMHCCvXGUu2RnGBbWUuEA0Lxz4br9nNRwoySrg=";
+    rev = "c3c31989257ffd407d244d65b0a1d0ad9671191f";
+    sha256 = "sha256-1WgTX8RiszvVEsrWJ7YuAtzYVLW7/E8gKxQYUifpJjo=";
   };
+
+  vpsfreeWeb = import vpsfreeSource { inherit pkgs; };
 
   vpsfreeVhost = { domain, root }: {
     serverAliases = [ "www.${domain}" ];
