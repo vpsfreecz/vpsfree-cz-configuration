@@ -24,11 +24,11 @@ let
 
   web = import configured { inherit pkgs; };
 
-  vhost = { domain, root }: {
+  vhost = { domain, web, language }: {
     serverAliases = [ "www.${domain}" ];
     enableACME = false;
     forceSSL = false;
-    inherit root;
+    root = "${web}/${language}/";
     locations."~ \.php$".extraConfig = ''
       ssi on;
       gzip off;
@@ -43,16 +43,16 @@ let
       ssi on;
     '';
     locations."/css/".extraConfig = ''
-      alias /var/www/vpsfree.cz/css/;
+      alias ${web}/css/;
     '';
     locations."/js/".extraConfig = ''
-      alias /var/www/vpsfree.cz/js/;
+      alias ${web}/js/;
     '';
     locations."/obrazky/".extraConfig = ''
-      alias /var/www/vpsfree.cz/obrazky/;
+      alias ${web}/obrazky/;
     '';
     locations."/download/".extraConfig = ''
-      alias /var/www/vpsfree.cz/download/;
+      alias ${web}/download/;
     '';
   };
 in {
@@ -63,22 +63,26 @@ in {
   services.nginx.virtualHosts = {
     "vpsfree.cz" = vhost {
       domain = "vpsfree.cz";
-      root = "${web}/cs/";
+      inherit web;
+      language = "cs";
     };
 
     "vpsfree.org" = vhost {
       domain = "vpsfree.cz";
-      root = "${web}/en/";
+      inherit web;
+      language = "en";
     };
 
     "dev.vpsfree.cz" = vhost {
       domain = "dev.vpsfree.cz";
-      root = "/var/www/dev.vpsfree.cz/cs/";
+      web = "/var/www/dev.vpsfree.cz";
+      language = "cs";
     };
 
     "dev.vpsfree.org" = vhost {
       domain = "dev.vpsfree.org";
-      root = "/var/www/dev.vpsfree.cz/en/";
+      web = "/var/www/dev.vpsfree.cz";
+      language = "en";
     };
   };
 
