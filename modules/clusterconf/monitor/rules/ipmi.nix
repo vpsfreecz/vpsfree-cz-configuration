@@ -38,6 +38,24 @@
           '';
         };
       }
+
+      {
+        alert = "FanWarning";
+        expr = ''ipmi_fan_speed_state != 0'';
+        labels = {
+          severity = "warning";
+          frequency = "6h";
+        };
+        annotations = {
+          summary = "Fan warning reported (instance {{ $labels.instance }})";
+          description = ''
+            Fan warning reported
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 ]
