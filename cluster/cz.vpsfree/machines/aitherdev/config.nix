@@ -188,6 +188,7 @@ in {
       bundler
       cloc
       git
+      go
       inetutils
       nix-prefetch-git
       openssl
