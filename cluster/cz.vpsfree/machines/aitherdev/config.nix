@@ -260,6 +260,69 @@ in {
               }
             ];
           };
+
+          vpsadminos-dev = {
+            root = "~/workspace/vpsf-dev";
+            windows = [
+              {
+                repo = {
+                  layout = "tiled";
+                  panes = [
+                    "./vpsadminos-shell"
+                    "./vpsadminos-shell"
+                  ];
+                };
+              }
+            ];
+          };
+
+          vpsadmin-dev = {
+            root = "~/workspace/vpsf-dev";
+            windows = [
+              {
+                repo = {
+                  layout = "tiled";
+                  panes = [
+                    "./vpsadmin-shell"
+                    "./vpsadmin-shell"
+                  ];
+                };
+              }
+
+              {
+                api-mgmt = {
+                  layout = "tiled";
+                  panes = [
+                    "./vpsadmin-api-shell"
+                    "./vpsadmin-api-shell"
+                  ];
+                };
+              }
+
+              {
+                api-servers = {
+                  layout = "tiled";
+                  panes = [
+                    "./vpsadmin-api-shell"
+                    "./vpsadmin-api-shell"
+                  ];
+                };
+              }
+
+              { webui = "cd ~/workspace/vpsadmin/vpsadmin/webui; dev-shell"; }
+
+              { console = "cd ~/workspace/vpsadmin/vpsadmin/console_router ; dev-shell"; }
+            ];
+          };
+
+          nixos-conf = {
+            root = "~/workspace";
+            windows = [
+              { vpsfree-cz-configuration = "cd vpsfree.cz/vpsfree-cz-configuration ; dev-shell"; }
+              { vpsadminos-org-configuration = ""; }
+              { confctl = "cd confctl ; dev-shell"; }
+            ];
+          };
         };
       };
     };
