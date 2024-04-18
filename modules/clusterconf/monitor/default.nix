@@ -370,7 +370,7 @@ let
     ipv6Tunnels =
       let
         ips = {
-          ipv4 = "77.93.223.5";
+          ipv4 = "37.205.8.113";
           ipv6-interface = "2a03:3b40:fe:33f::1";
           ipv6-tunnel = "2a03:3b40:200::200";
         };

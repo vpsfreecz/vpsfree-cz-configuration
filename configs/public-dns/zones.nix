@@ -35,8 +35,8 @@ let
     "128-191.228.167.83.in-addr.arpa."
     "1-127.228.167.83.in-addr.arpa."
     "0.4.b.3.3.0.a.2.ip6.arpa."
-    { name = "2.0.0.4.b.3.3.0.a.2.ip6.arpa."; masters = [ "77.93.223.5" ]; }
-    { name = "3.0.0.4.b.3.3.0.a.2.ip6.arpa."; masters = [ "77.93.223.5" ]; }
+    { name = "2.0.0.4.b.3.3.0.a.2.ip6.arpa."; masters = [ "37.205.8.113" ]; }
+    { name = "3.0.0.4.b.3.3.0.a.2.ip6.arpa."; masters = [ "37.205.8.113" ]; }
   ];
 
   ipsToBind = ips: concatMapStringsSep " " (ip: "${ip};") ips;
