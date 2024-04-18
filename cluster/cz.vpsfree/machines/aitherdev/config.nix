@@ -106,6 +106,8 @@ in {
     };
   };
 
+  services.postfix.enable = true;
+
   security.sudo = {
     enable = true;
     extraRules = [
