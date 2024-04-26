@@ -7,10 +7,6 @@ let
 
   monitorings = filter (d: d.config.monitoring.isMonitor) allMachines;
 
-  ipmiExporterPort = confMachine.services.ipmi-exporter.port;
-
-  nodeExporterPort = confMachine.services.node-exporter.port;
-
   textfileDir = "/run/metrics";
 
   smartmon = pkgs.writeScript "smartmon.sh-wrapper" ''
@@ -18,6 +14,29 @@ let
     mv ${textfileDir}/smartmon.prom.$$ ${textfileDir}/smartmon.prom
   '';
 
+  knownExporters = [
+    "ipmi"
+    "node"
+  ] ++ (optionals (confMachine.spin == "vpsadminos") [ "osctl" ]);
+
+  availableExporters =
+    filter
+      (exporter: !(elem exporter [ "assertions" "warnings" ]))
+      (attrNames config.services.prometheus.exporters);
+
+  enabledExporters =
+    filter
+      (exporter: config.services.prometheus.exporters.${exporter}.enable)
+      availableExporters;
+
+  exporterRuleList = map (exporter: concatMapStringsSep "\n" (m:
+    mkExporterRules exporter config.services.prometheus.exporters.${exporter} m
+  ) monitorings) enabledExporters;
+
+  mkExporterRules = exporter: exporterCfg: m: ''
+    # Allow access to ${exporter}-exporter from ${m.config.host.fqdn}
+    iptables -A nixos-fw -p tcp -m tcp -s ${m.config.addresses.primary.address} --dport ${toString exporterCfg.port} -j nixos-fw-accept
+  '';
 in {
   options = {
     system.monitoring = {
@@ -33,17 +52,19 @@ in {
       system.monitoring.enable = mkDefault confMachine.monitoring.enable;
     }
 
+    # Set ports of known exporters to ports from service definition list
     (mkIf cfg.enable {
-      networking.firewall.extraCommands = concatStringsSep "\n" (map (d: ''
-        # Allow access to node-exporter from ${d.config.host.fqdn}
-        iptables -A nixos-fw -p tcp -m tcp -s ${d.config.addresses.primary.address} --dport ${toString nodeExporterPort} -j nixos-fw-accept
-      '') monitorings);
+      services.prometheus.exporters = listToAttrs (map (exporter: nameValuePair exporter {
+        port = confMachine.services."${exporter}-exporter".port;
+      }) knownExporters);
+    })
+
+    # All machines
+    (mkIf cfg.enable {
+      networking.firewall.extraCommands = concatStringsSep "\n" exporterRuleList;
 
       services.prometheus.exporters = {
-        node = {
-          enable = true;
-          port = nodeExporterPort;
-        };
+        node.enable = true;
       };
     })
 
@@ -91,16 +112,8 @@ in {
 
     # vpsAdminOS nodes
     (mkIf (cfg.enable && confMachine.spin == "vpsadminos") {
-      networking.firewall.extraCommands = concatStringsSep "\n" (map (d: ''
-        # Allow access to ipmi-exporter from ${d.config.host.fqdn}
-        iptables -A nixos-fw -p tcp -m tcp -s ${d.config.addresses.primary.address} --dport ${toString ipmiExporterPort} -j nixos-fw-accept
-      '') monitorings);
-
       services.prometheus.exporters = {
-        ipmi = {
-          enable = true;
-          port = ipmiExporterPort;
-        };
+        ipmi.enable = true;
 
         node = {
           extraFlags = [ "--collector.textfile.directory=${textfileDir}" ];
@@ -120,6 +133,8 @@ in {
             "arp"
           ];
         };
+
+        osctl.enable = true;
       };
 
       services.cron.systemCronJobs = [

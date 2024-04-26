@@ -46,7 +46,6 @@ in {
     '';
 
     system.monitoring.enable = true;
-    osctl.exporter.port = confMachine.services.osctl-exporter.port;
 
     users = {
       users.ssh-check = {

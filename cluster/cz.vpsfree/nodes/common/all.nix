@@ -85,8 +85,6 @@ in
       let
         nodeCfg = confMachine;
         nfsCfg = config.services.nfs.server;
-        nodeExporterCfg = config.services.prometheus.exporters.node;
-        osctlExporterCfg = config.osctl.exporter;
         monitors =
           lib.filter
             (m: m.config.monitoring.isMonitor)
@@ -162,8 +160,6 @@ in
       };
     };
   };
-
-  osctl.exporter.enable = true;
 
   # Workaround for a bug in kernel which causes node_exporter to get stuck
   # while reading power info from /sys.
