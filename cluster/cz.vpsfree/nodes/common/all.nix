@@ -104,14 +104,6 @@ in
         # sshd
         ${lib.concatStringsSep "\n" sshRules}
 
-        ${lib.concatMapStringsSep "\n" (m: ''
-        # node_exporter from ${m.name}
-        iptables -A nixos-fw -p tcp --dport ${toString nodeExporterCfg.port} -s ${m.config.addresses.primary.address} -j nixos-fw-accept
-
-        # osctl-exporter from ${m.name}
-        iptables -A nixos-fw -p tcp --dport ${toString osctlExporterCfg.port} -s ${m.config.addresses.primary.address} -j nixos-fw-accept
-        '') monitors}
-
         # rpcbind
         iptables -A nixos-fw -p tcp --dport 111 -j nixos-fw-accept
         iptables -A nixos-fw -p udp --dport 111 -j nixos-fw-accept
