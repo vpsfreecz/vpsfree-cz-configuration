@@ -14,24 +14,33 @@ let
     mv ${textfileDir}/smartmon.prom.$$ ${textfileDir}/smartmon.prom
   '';
 
-  knownExporters = [
-    "ipmi"
-    "node"
-  ] ++ (optionals (confMachine.spin == "vpsadminos") [ "osctl" ]);
+  # Handle exporters defined in nixpkgs or vpsAdminOS, dependending on confMachine
+  nixpkgsExporters = rec {
+    # Exporters handled by this module
+    known = [
+      "ipmi"
+      "node"
+    ] ++ (optionals (confMachine.spin == "vpsadminos") [ "osctl" ]);
 
-  availableExporters =
-    filter
-      (exporter: !(elem exporter [ "assertions" "warnings" ]))
-      (attrNames config.services.prometheus.exporters);
+    # Exporters declared in machine metadata
+    declared = attrNames confMachine.services;
 
-  enabledExporters =
-    filter
-      (exporter: config.services.prometheus.exporters.${exporter}.enable)
-      availableExporters;
+    # Exporters available in nixpkgs or vpsAdminOS
+    available =
+      filter
+        (exporter: !(elem exporter [ "assertions" "warnings" ]))
+        (attrNames config.services.prometheus.exporters);
 
-  exporterRuleList = map (exporter: concatMapStringsSep "\n" (m:
-    mkExporterRules exporter config.services.prometheus.exporters.${exporter} m
-  ) monitorings) enabledExporters;
+    # Exporters enabled in machine configuration
+    enabled =
+      filter
+        (exporter: config.services.prometheus.exporters.${exporter}.enable)
+        available;
+
+    ruleList = map (exporter: concatMapStringsSep "\n" (m:
+      mkExporterRules exporter config.services.prometheus.exporters.${exporter} m
+    ) monitorings) enabled;
+  };
 
   mkExporterRules = exporter: exporterCfg: m: ''
     # Allow access to ${exporter}-exporter from ${m.config.host.fqdn}
@@ -56,12 +65,12 @@ in {
     (mkIf cfg.enable {
       services.prometheus.exporters = listToAttrs (map (exporter: nameValuePair exporter {
         port = confMachine.services."${exporter}-exporter".port;
-      }) knownExporters);
+      }) (with nixpkgsExporters; intersectLists known declared));
     })
 
     # All machines
     (mkIf cfg.enable {
-      networking.firewall.extraCommands = concatStringsSep "\n" exporterRuleList;
+      networking.firewall.extraCommands = concatStringsSep "\n" nixpkgsExporters.ruleList;
 
       services.prometheus.exporters = {
         node.enable = true;
