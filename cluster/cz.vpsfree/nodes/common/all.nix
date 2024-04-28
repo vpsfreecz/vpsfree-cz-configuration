@@ -50,6 +50,10 @@ in
     options ixgbe allow_unsupported_sfp=1
   '';
 
+  environment.interactiveShellInit = ''
+    alias arcstat='arcstat -f time,hits,miss,mtxmis,grow,need,c,size,free'
+  '';
+
   environment.systemPackages = with pkgs; [
     bpftraceGit
     dmidecode
