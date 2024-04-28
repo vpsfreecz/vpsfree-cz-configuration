@@ -49,6 +49,7 @@
 
     services = {
       ipmi-exporter = {};
+      ksvcmon-exporter = {};
       node-exporter = {};
       osctl-exporter = {};
       vpsadmin-console = {};
