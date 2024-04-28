@@ -122,7 +122,8 @@ let
         exporterConfigs = map (m: {
           targets = [
             "${m.config.host.fqdn}:${toString m.config.services.node-exporter.port}"
-          ] ++ (optional (hasAttr "osctl-exporter" m.config.services) "${m.config.host.fqdn}:${toString m.config.services.osctl-exporter.port}");
+          ] ++ (optional (hasAttr "osctl-exporter" m.config.services) "${m.config.host.fqdn}:${toString m.config.services.osctl-exporter.port}")
+            ++ (optional (hasAttr "ksvcmon-exporter" m.config.services) "${m.config.host.fqdn}:${toString m.config.services.ksvcmon-exporter.port}");
           labels = {
             alias = getAlias m.config.host;
             fqdn = m.config.host.fqdn;
