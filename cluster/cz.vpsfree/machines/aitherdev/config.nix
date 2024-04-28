@@ -194,8 +194,11 @@ in {
       inetutils
       nix-prefetch-git
       openssl
+      php
+      ruby
       screen
       tmux
+      tree
       unzip
       vpsfree-client
     ];
