@@ -73,6 +73,7 @@ in {
         port = 9103;
         monitor = "ssh-exporter";
       };
+      ksvcmon-exporter.port = 9299;
       rsyslog-tcp.port = 11514;
       rsyslog-udp.port = 11515;
       sachet.port = 9876;

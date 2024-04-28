@@ -20,7 +20,7 @@ let
     known = [
       "ipmi"
       "node"
-    ] ++ (optionals (confMachine.spin == "vpsadminos") [ "osctl" ]);
+    ] ++ (optionals (confMachine.spin == "vpsadminos") [ "ksvcmon" "osctl" ]);
 
     # Exporters declared in machine metadata
     declared = attrNames confMachine.services;
@@ -123,6 +123,8 @@ in {
     (mkIf (cfg.enable && confMachine.spin == "vpsadminos") {
       services.prometheus.exporters = {
         ipmi.enable = true;
+
+        ksvcmon.enable = true;
 
         node = {
           extraFlags = [ "--collector.textfile.directory=${textfileDir}" ];
