@@ -73,7 +73,7 @@ in {
       }
 
       ruleset(name="remote-pipe") {
-        action(type="ompipe" Pipe="${config.services.syslog-exporter.settings.syslog_pipe}")
+        action(type="ompipe" Pipe="${config.services.prometheus.confExporters.syslog.settings.syslog_pipe}")
       }
 
       module(load="imtcp")
@@ -83,11 +83,11 @@ in {
       input(type="imudp" port="11515" ruleset="remote-file")
 
       *.*             -/var/log/messages
-      *.*             |${config.services.syslog-exporter.settings.syslog_pipe}
+      *.*             |${config.services.prometheus.confExporters.syslog.settings.syslog_pipe}
     '';
   };
 
-  services.syslog-exporter = {
+  services.prometheus.confExporters.syslog = {
     enable = true;
     port = syslogExporterPort;
     settings = {

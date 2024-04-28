@@ -19,7 +19,7 @@ let
 
   port = config.serviceDefinitions.ssh-exporter.port;
 in {
-  services.ssh-exporter = {
+  services.prometheus.confExporters.ssh = {
     enable = true;
     port = port;
     settings.hosts = hosts;

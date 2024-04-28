@@ -1,65 +1,65 @@
 { config, pkgs, lib, ... }:
 with lib;
 let
-  cfg = config.services.ssh-exporter;
+  cfg = config.services.prometheus.confExporters.syslog;
 
-  defaultUser = "ssh-exporter";
+  defaultUser = "syslog-exporter";
 
   settingsFormat = pkgs.formats.json { };
 
-  configurationJson = settingsFormat.generate "ssh-exporter.json" cfg.settings;
+  configurationJson = settingsFormat.generate "syslog-exporter.json" cfg.settings;
 
-  rackupConfig = pkgs.writeText "ssh-exporter.ru" ''
-    require 'ssh-exporter/rackup'
+  rackupConfig = pkgs.writeText "syslog-exporter.ru" ''
+    require 'syslog-exporter/rackup'
 
-    run SshExporter::Rackup.app('${configurationJson}')
+    run SyslogExporter::Rackup.app('${configurationJson}')
   '';
 
   thinYml = pkgs.writeText "thin.yml" ''
-    address: ${cfg.address}
+    address: ${cfg.listenAddress}
     port: ${toString cfg.port}
     rackup: ${rackupConfig}
     environment: production
-    tag: ssh-exporter
+    tag: syslog-exporter
   '';
 in {
   options = {
-    services.ssh-exporter = {
-      enable = mkEnableOption "Enable ssh-exporter";
+    services.prometheus.confExporters.syslog = {
+      enable = mkEnableOption "Enable syslog-exporter";
 
       package = mkOption {
         type = types.package;
-        default = pkgs.ssh-exporter;
-        description = "Which ssh-exporter package to use.";
+        default = pkgs.syslog-exporter;
+        description = "Which syslog-exporter package to use.";
       };
 
       user = mkOption {
         type = types.str;
         default = defaultUser;
-        description = "User under which ssh-exporter is run.";
+        description = "User under which syslog-exporter is run.";
       };
 
       group = mkOption {
         type = types.str;
         default = defaultUser;
-        description = "Group under which ssh-exporter is run.";
+        description = "Group under which syslog-exporter is run.";
       };
 
-      address = mkOption {
+      listenAddress = mkOption {
         type = types.str;
         default = "0.0.0.0";
-        description = "Address on which ssh-exporter is run.";
+        description = "Address on which syslog-exporter is run.";
       };
 
       port = mkOption {
         type = types.int;
-        default = 9103;
-        description = "Port on which ssh-exporter is run.";
+        default = 9102;
+        description = "Port on which syslog-exporter is run.";
       };
 
       stateDir = mkOption {
         type = types.str;
-        default = "/var/ssh-exporter";
+        default = "/var/syslog-exporter";
         description = "The state directory";
       };
 
@@ -69,23 +69,23 @@ in {
         };
         default = {};
         description = ''
-          ssh-exporter configuration options
+          syslog-exporter configuration options
         '';
       };
     };
   };
 
   config = mkIf cfg.enable {
+    services.prometheus.confExporters.syslog.settings.syslog_pipe = mkDefault "/var/log/rsyslog.pipe";
+
     systemd.tmpfiles.rules = [
       "d '${cfg.stateDir}' 0750 ${cfg.user} ${cfg.group} - -"
+      "p '${cfg.settings.syslog_pipe}' 0640 root ${cfg.group} - -"
     ];
 
-    systemd.services.ssh-exporter = {
+    systemd.services.prometheus-syslog-exporter = {
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
-      path = with pkgs; [
-        openssh
-      ];
       environment.RACK_ENV = "production";
       serviceConfig = {
         Type = "simple";
