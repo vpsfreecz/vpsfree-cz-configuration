@@ -5,7 +5,7 @@ let
   rsyslogUdpPort = confMachine.services.rsyslog-udp.port;
 
   loggedAddresses = filter (a:
-    a.config.logging.enable
+    a.metaConfig.logging.enable
   ) (confLib.getAllAddressesOf config.cluster 4);
 
   allMachines = confLib.getClusterMachines config.cluster;
@@ -13,14 +13,14 @@ let
   getAlias = host: "${host.name}${optionalString (!isNull host.location) ".${host.location}"}";
 
   syslogExporterHosts = listToAttrs (map (m: nameValuePair m.name {
-    alias = getAlias m.config.host;
-    fqdn = m.config.host.fqdn;
-    os = m.config.spin;
+    alias = getAlias m.metaConfig.host;
+    fqdn = m.metaConfig.host.fqdn;
+    os = m.metaConfig.spin;
   }) allMachines);
 
   syslogExporterPort = confMachine.services.syslog-exporter.port;
 
-  monitorings = filter (d: d.config.monitoring.isMonitor) allMachines;
+  monitorings = filter (d: d.metaConfig.monitoring.isMonitor) allMachines;
 
   reloadRsyslog = ''
     kill -HUP `systemctl show --property MainPID --value syslog`
@@ -49,15 +49,15 @@ in {
 
       ### Individual machines
       ${concatMapStringsSep "\n" (a: ''
-        # Allow access from ${a.config.host.fqdn} @ ${a.address}
+        # Allow access from ${a.metaConfig.host.fqdn} @ ${a.address}
         iptables -A nixos-fw -p tcp -s ${a.address} --dport ${toString rsyslogTcpPort} -j nixos-fw-accept
         iptables -A nixos-fw -p udp -s ${a.address} --dport ${toString rsyslogUdpPort} -j nixos-fw-accept
       '') loggedAddresses}
 
       ### Syslog-exporter
       ${concatStringsSep "\n" (map (d: ''
-        # Allow access to syslog-exporter from ${d.config.host.fqdn}
-        iptables -A nixos-fw -p tcp -m tcp -s ${d.config.addresses.primary.address} --dport ${toString syslogExporterPort} -j nixos-fw-accept
+        # Allow access to syslog-exporter from ${d.metaConfig.host.fqdn}
+        iptables -A nixos-fw -p tcp -m tcp -s ${d.metaConfig.addresses.primary.address} --dport ${toString syslogExporterPort} -j nixos-fw-accept
       '') monitorings)}
     '';
   };

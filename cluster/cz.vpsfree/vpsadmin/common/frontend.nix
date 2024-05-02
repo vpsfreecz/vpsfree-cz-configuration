@@ -1,37 +1,37 @@
 { pkgs, lib, config, confLib, ... }:
 with lib;
 let
-  db = confLib.findConfig {
+  db = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.db";
   };
 
-  api1 = confLib.findConfig {
+  api1 = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.api1";
   };
 
-  api2 = confLib.findConfig {
+  api2 = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.api2";
   };
 
-  webui1 = confLib.findConfig {
+  webui1 = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.webui1";
   };
 
-  webui2 = confLib.findConfig {
+  webui2 = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.webui2";
   };
 
-  webuiDev = confLib.findConfig {
+  webuiDev = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.webui-dev";
   };
 
-  proxyPrg = confLib.findConfig {
+  proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };

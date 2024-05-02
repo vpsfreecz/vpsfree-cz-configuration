@@ -1,11 +1,11 @@
 { pkgs, lib, config, confLib, ... }:
 let
-  webui1 = confLib.findConfig {
+  webui1 = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.webui1";
   };
 
-  webui2 = confLib.findConfig {
+  webui2 = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.webui2";
   };

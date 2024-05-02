@@ -5,7 +5,7 @@ let
 
   allMachines = confLib.getClusterMachines config.cluster;
 
-  monitorings = filter (d: d.config.monitoring.isMonitor) allMachines;
+  monitorings = filter (d: d.metaConfig.monitoring.isMonitor) allMachines;
 
   textfileDir = "/run/metrics";
 
@@ -43,8 +43,8 @@ let
   };
 
   mkExporterRules = exporter: exporterCfg: m: ''
-    # Allow access to ${exporter}-exporter from ${m.config.host.fqdn}
-    iptables -A nixos-fw -p tcp -m tcp -s ${m.config.addresses.primary.address} --dport ${toString exporterCfg.port} -j nixos-fw-accept
+    # Allow access to ${exporter}-exporter from ${m.metaConfig.host.fqdn}
+    iptables -A nixos-fw -p tcp -m tcp -s ${m.metaConfig.addresses.primary.address} --dport ${toString exporterCfg.port} -j nixos-fw-accept
   '';
 in {
   options = {

@@ -3,12 +3,12 @@ with lib;
 let
   cfg = config.clusterconf.alerter;
 
-  apuPrg = confLib.findConfig {
+  apuPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/machines/prg/apu";
   };
 
-  apuBrq = confLib.findConfig {
+  apuBrq = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/machines/brq/apu";
   };
@@ -17,16 +17,16 @@ let
 
   allMachines = confLib.getClusterMachines config.cluster;
 
-  allMonitors = filter (m: m.config.monitoring.isMonitor) allMachines;
+  allMonitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
 
-  allContainers = filter (m: m.config.container != null) allMachines;
+  allContainers = filter (m: m.metaConfig.container != null) allMachines;
 
   containerInhibitRules = map (ct:
     let
-      ctData = confData.vpsadmin.containers.${ct.config.host.fqdn};
+      ctData = confData.vpsadmin.containers.${ct.metaConfig.host.fqdn};
     in {
       target_match = {
-        fqdn = "${ct.config.host.fqdn}";
+        fqdn = "${ct.metaConfig.host.fqdn}";
       };
       source_match_re = {
         alertname = "NodeDown|HypervisorBooting";
@@ -157,13 +157,13 @@ in {
         (map (machine:
           ''
             # Allow access to alertmanager from monitor on ${machine.name}
-            iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${machine.config.addresses.primary.address} -j nixos-fw-accept
+            iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${machine.metaConfig.addresses.primary.address} -j nixos-fw-accept
           ''
           ) allMonitors)
         ++
         (map (machine:
           let
-            m = confLib.findConfig {
+            m = confLib.findMetaConfig {
               cluster = config.cluster;
               name = machine;
             };
@@ -175,7 +175,7 @@ in {
         ++
         (map (machine:
           let
-            m = confLib.findConfig {
+            m = confLib.findMetaConfig {
               cluster = config.cluster;
               name = machine;
             };
@@ -191,7 +191,7 @@ in {
       enable = true;
       extraFlags = map (machine:
         let
-          m = confLib.findConfig {
+          m = confLib.findMetaConfig {
             cluster = config.cluster;
             name = machine;
           };

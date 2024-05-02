@@ -1,11 +1,11 @@
 { config, pkgs, lib, confLib, confData, confMachine, swpins, ... }:
 let
-  ns1IntPrg = confLib.findConfig {
+  ns1IntPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/int.ns1";
   };
 
-  ns1IntBrq = confLib.findConfig {
+  ns1IntBrq = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/brq/int.ns1";
   };

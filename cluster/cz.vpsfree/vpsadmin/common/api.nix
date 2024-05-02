@@ -1,12 +1,12 @@
 { config, pkgs, lib, confMachine, confLib, ... }:
 with lib;
 let
-  db = confLib.findConfig {
+  db = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.db";
   };
 
-  proxyPrg = confLib.findConfig {
+  proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };

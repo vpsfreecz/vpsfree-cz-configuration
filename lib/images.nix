@@ -12,7 +12,7 @@ let
 
   machines = confLib.getClusterMachines config.cluster;
 
-  machineAttrs = listToAttrs (map (d: nameValuePair d.config.host.fqdn d) machines);
+  machineAttrs = listToAttrs (map (d: nameValuePair d.metaConfig.host.fqdn d) machines);
 
   netbootable = filterAttrs (k: v: v.config.netboot.enable) machineAttrs;
 

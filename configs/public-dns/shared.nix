@@ -4,7 +4,7 @@ let
 
   allMachines = confLib.getClusterMachines config.cluster;
 
-  monitors = filter (m: m.config.monitoring.isMonitor) allMachines;
+  monitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
 
   exporterPort = confMachine.services.bind-exporter.port;
 in {
@@ -40,7 +40,7 @@ in {
   networking.firewall.extraCommands =
     (concatMapStringsSep "\n" (m: ''
       # bind-exporter from ${m.name}
-      iptables -A nixos-fw -p tcp --dport ${toString exporterPort} -s ${m.config.addresses.primary.address} -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp --dport ${toString exporterPort} -s ${m.metaConfig.addresses.primary.address} -j nixos-fw-accept
     '') monitors);
 
   users.users.root.openssh.authorizedKeys.keys = [ confData.sshKeys.krcmar ];

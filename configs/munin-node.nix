@@ -4,7 +4,7 @@ let
 
   allMachines = confLib.getClusterMachines config.cluster;
 
-  muninCrons = filter (m: hasAttr "munin-cron" m.config.services) allMachines;
+  muninCrons = filter (m: hasAttr "munin-cron" m.metaConfig.services) allMachines;
 
   disabledNetifPlugins = flatten (map (v: [ "if_${v}" "if_err_${v}" ]) [
     "dummy*"
@@ -30,13 +30,13 @@ in {
       "swap"
     ] ++ disabledNetifPlugins;
     extraConfig = concatMapStringsSep "\n\n" (m: ''
-      # Allow access from ${m.config.host.fqdn}
-      allow ^${replaceStrings ["."] ["\\."] m.config.addresses.primary.address}$
+      # Allow access from ${m.metaConfig.host.fqdn}
+      allow ^${replaceStrings ["."] ["\\."] m.metaConfig.addresses.primary.address}$
     '') muninCrons;
   };
 
   networking.firewall.extraCommands = concatMapStringsSep "\n\n" (m: ''
-    # Allow access to munin-node from ${m.config.host.fqdn}
-    iptables -A nixos-fw -p tcp --dport 4949 -s ${m.config.addresses.primary.address} -j nixos-fw-accept
+    # Allow access to munin-node from ${m.metaConfig.host.fqdn}
+    iptables -A nixos-fw -p tcp --dport 4949 -s ${m.metaConfig.addresses.primary.address} -j nixos-fw-accept
   '') muninCrons;
 }

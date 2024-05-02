@@ -12,7 +12,7 @@ let
   });
 
   rabbitmqs = map (name:
-    confLib.findConfig {
+    confLib.findMetaConfig {
       cluster = config.cluster;
       name = "cz.vpsfree/vpsadmin/int.${name}";
     }
@@ -91,7 +91,7 @@ in
         nfsCfg = config.services.nfs.server;
         monitors =
           lib.filter
-            (m: m.config.monitoring.isMonitor)
+            (m: m.metaConfig.monitoring.isMonitor)
             (confLib.getClusterMachines config.cluster);
         sshCfg = config.services.openssh;
         sshRules = map (port:

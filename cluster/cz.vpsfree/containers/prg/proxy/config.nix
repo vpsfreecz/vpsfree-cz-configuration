@@ -1,56 +1,56 @@
 { pkgs, lib, config, confLib, ... }:
 let
-  alerts1Prg = confLib.findConfig {
+  alerts1Prg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/int.alerts1";
   };
 
-  alerts2Prg = confLib.findConfig {
+  alerts2Prg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/int.alerts2";
   };
 
-  mon1Prg = confLib.findConfig {
+  mon1Prg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/int.mon1";
   };
 
-  mon2Prg = confLib.findConfig {
+  mon2Prg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/int.mon2";
   };
 
-  grafanaPrg = confLib.findConfig {
+  grafanaPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/int.grafana";
   };
 
-  rubygems = confLib.findConfig {
+  rubygems = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.rubygems";
   };
 
-  vpsfbot = confLib.findConfig {
+  vpsfbot = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.vpsfbot";
   };
 
-  paste = confLib.findConfig {
+  paste = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.paste";
   };
 
-  utils = confLib.findConfig {
+  utils = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.utils";
   };
 
-  kb = confLib.findConfig {
+  kb = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.kb";
   };
 
-  munin = confLib.findConfig {
+  munin = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.munin";
   };

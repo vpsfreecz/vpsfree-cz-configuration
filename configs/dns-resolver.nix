@@ -31,7 +31,7 @@ let
 
   allMachines = confLib.getClusterMachines config.cluster;
 
-  monitors = filter (m: m.config.monitoring.isMonitor) allMachines;
+  monitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
 
   makeListenAddress = version: addr:
     if version == 4 then
@@ -102,6 +102,6 @@ in {
     '') v6Networks)
     + (concatMapStringsSep "\n" (m: ''
       # kresd prometheus metrics ${m.name}
-      iptables -A nixos-fw -p tcp --dport ${toString managementPort} -s ${m.config.addresses.primary.address} -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp --dport ${toString managementPort} -s ${m.metaConfig.addresses.primary.address} -j nixos-fw-accept
     '') monitors);
 }

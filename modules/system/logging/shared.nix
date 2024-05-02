@@ -7,17 +7,17 @@ in rec {
 
   machines = confLib.getClusterMachines topLevelConfig.cluster;
 
-  loggers = filter (d: d.config.logging.isLogger) machines;
+  loggers = filter (d: d.metaConfig.logging.isLogger) machines;
 
-  locationLoggers = filter (d: d.config.host.location == confMachine.host.location) loggers;
+  locationLoggers = filter (d: d.metaConfig.host.location == confMachine.host.location) loggers;
 
   anyLogger = if loggers == [] then null else head loggers;
 
   logger = if locationLoggers == [] then anyLogger else head locationLoggers;
 
-  enable = cfg.enable && !isNull logger && logger.config.host.fqdn != confMachine.host.fqdn;
+  enable = cfg.enable && !isNull logger && logger.metaConfig.host.fqdn != confMachine.host.fqdn;
 
-  services = logger.config.services;
+  services = logger.metaConfig.services;
 
   options = {
     system.logging = {

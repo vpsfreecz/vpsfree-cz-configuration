@@ -1,7 +1,7 @@
 { config, confLib, ... }:
 let
   rabbitmqs = map (name:
-    confLib.findConfig {
+    confLib.findMetaConfig {
       cluster = config.cluster;
       name = "cz.vpsfree/vpsadmin/int.${name}";
     }

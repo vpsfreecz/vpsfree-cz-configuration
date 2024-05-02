@@ -98,7 +98,7 @@ in {
     let
       alerterRules = concatMapStringsSep "\n" (machine:
         let
-          alerter = confLib.findConfig {
+          alerter = confLib.findMetaConfig {
             cluster = config.cluster;
             name = machine;
           };

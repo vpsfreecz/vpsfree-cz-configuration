@@ -10,7 +10,7 @@ let
 
   monitoredMachines =
     if isNull cfg.monitorMachines then
-      filter (m: m.config.monitoring.enable) allMachines
+      filter (m: m.metaConfig.monitoring.enable) allMachines
     else
       filter (m: elem m.name cfg.monitorMachines) allMachines;
 
@@ -19,17 +19,17 @@ let
 
   filterServices = machine: fn:
     let
-      serviceList = mapAttrsToList (name: config: {
-        inherit machine name config;
-      }) machine.config.services;
+      serviceList = mapAttrsToList (name: svConfig: {
+        inherit machine name svConfig;
+      }) machine.metaConfig.services;
     in
-      filter (sv: fn sv.config) serviceList;
+      filter (sv: fn sv.svConfig) serviceList;
 
   scrapeConfigs = {
     monitorings =
       let
         machines = filter (m:
-          m.config.monitoring.isMonitor && m.config.host.fqdn != confMachine.host.fqdn
+          m.metaConfig.monitoring.isMonitor && m.metaConfig.host.fqdn != confMachine.host.fqdn
         ) monitoredMachines;
       in {
         exporterConfigs = [
@@ -45,22 +45,22 @@ let
           }
         ] ++ (flatten (map (m: {
           targets = [
-            "${m.config.host.fqdn}:${toString m.config.services.node-exporter.port}"
+            "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.node-exporter.port}"
           ];
           labels = {
-            alias = getAlias m.config.host;
-            fqdn = m.config.host.fqdn;
-          } // m.config.monitoring.labels;
+            alias = getAlias m.metaConfig.host;
+            fqdn = m.metaConfig.host.fqdn;
+          } // m.metaConfig.monitoring.labels;
         }) machines));
 
         pingConfigs = map (m: {
-          targets = [ m.config.host.fqdn ];
+          targets = [ m.metaConfig.host.fqdn ];
           labels = {
-            alias = getAlias m.config.host;
-            fqdn = m.config.host.fqdn;
-            domain = m.config.host.domain;
-            location = ensureLocation m.config.host.location;
-            os = m.config.spin;
+            alias = getAlias m.metaConfig.host;
+            fqdn = m.metaConfig.host.fqdn;
+            domain = m.metaConfig.host.domain;
+            location = ensureLocation m.metaConfig.host.location;
+            os = m.metaConfig.spin;
           };
         }) machines;
       };
@@ -68,16 +68,16 @@ let
     loggers =
       let
         machines = filter (m:
-          m.config.logging.isLogger && m.config.host.fqdn != confMachine.host.fqdn
+          m.metaConfig.logging.isLogger && m.metaConfig.host.fqdn != confMachine.host.fqdn
         ) monitoredMachines;
       in {
         exporterConfigs = map (m: {
           targets = [
-            "${m.config.host.fqdn}:${toString m.config.services.syslog-exporter.port}"
+            "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.syslog-exporter.port}"
           ];
           labels = {
-            logger_alias = getAlias m.config.host;
-            logger_fqdn = m.config.host.fqdn;
+            logger_alias = getAlias m.metaConfig.host;
+            logger_fqdn = m.metaConfig.host.fqdn;
           };
         }) machines;
       };
@@ -85,82 +85,82 @@ let
     infra =
       let
         machines = filter (m:
-          !m.config.monitoring.isMonitor && (m.config.node == null)
+          !m.metaConfig.monitoring.isMonitor && (m.metaConfig.node == null)
         ) monitoredMachines;
 
-        exporterMachines = filter (m: m.config.spin != "other") machines;
+        exporterMachines = filter (m: m.metaConfig.spin != "other") machines;
       in {
         exporterConfigs = map (m: {
           targets = [
-            "${m.config.host.fqdn}:${toString m.config.services.node-exporter.port}"
-          ] ++ (optional (hasAttr "osctl-exporter" m.config.services) "${m.config.host.fqdn}:${toString m.config.services.osctl-exporter.port}");
+            "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.node-exporter.port}"
+          ] ++ (optional (hasAttr "osctl-exporter" m.metaConfig.services) "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.osctl-exporter.port}");
           labels = {
-            alias = getAlias m.config.host;
-            fqdn = m.config.host.fqdn;
-            domain = m.config.host.domain;
-            location = ensureLocation m.config.host.location;
-            os = m.config.spin;
-          } // m.config.monitoring.labels;
+            alias = getAlias m.metaConfig.host;
+            fqdn = m.metaConfig.host.fqdn;
+            domain = m.metaConfig.host.domain;
+            location = ensureLocation m.metaConfig.host.location;
+            os = m.metaConfig.spin;
+          } // m.metaConfig.monitoring.labels;
         }) exporterMachines;
 
         pingConfigs = map (m: {
-          targets = [ m.config.host.fqdn ];
+          targets = [ m.metaConfig.host.fqdn ];
           labels = {
-            alias = getAlias m.config.host;
-            fqdn = m.config.host.fqdn;
-            domain = m.config.host.domain;
-            location = ensureLocation m.config.host.location;
-            os = m.config.spin;
+            alias = getAlias m.metaConfig.host;
+            fqdn = m.metaConfig.host.fqdn;
+            domain = m.metaConfig.host.domain;
+            location = ensureLocation m.metaConfig.host.location;
+            os = m.metaConfig.spin;
           };
         }) machines;
       };
 
     nodes =
       let
-        machines = filter (m: m.config.node != null) monitoredMachines;
+        machines = filter (m: m.metaConfig.node != null) monitoredMachines;
       in {
         exporterConfigs = map (m: {
           targets = [
-            "${m.config.host.fqdn}:${toString m.config.services.node-exporter.port}"
-          ] ++ (optional (hasAttr "osctl-exporter" m.config.services) "${m.config.host.fqdn}:${toString m.config.services.osctl-exporter.port}")
-            ++ (optional (hasAttr "ksvcmon-exporter" m.config.services) "${m.config.host.fqdn}:${toString m.config.services.ksvcmon-exporter.port}");
+            "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.node-exporter.port}"
+          ] ++ (optional (hasAttr "osctl-exporter" m.metaConfig.services) "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.osctl-exporter.port}")
+            ++ (optional (hasAttr "ksvcmon-exporter" m.metaConfig.services) "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.ksvcmon-exporter.port}");
           labels = {
-            alias = getAlias m.config.host;
-            fqdn = m.config.host.fqdn;
-            domain = m.config.host.domain;
-            location = ensureLocation m.config.host.location;
+            alias = getAlias m.metaConfig.host;
+            fqdn = m.metaConfig.host.fqdn;
+            domain = m.metaConfig.host.domain;
+            location = ensureLocation m.metaConfig.host.location;
             type = "node";
-            os = m.config.spin;
-            role = m.config.node.role;
-            storage_type = m.config.node.storageType;
-          } // m.config.monitoring.labels;
+            os = m.metaConfig.spin;
+            role = m.metaConfig.node.role;
+            storage_type = m.metaConfig.node.storageType;
+          } // m.metaConfig.monitoring.labels;
         }) machines;
 
         ipmiConfigs = map (m: {
           targets = [
-            "${m.config.host.fqdn}:${toString m.config.services.ipmi-exporter.port}"
+            "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.ipmi-exporter.port}"
           ];
           labels = {
-            alias = getAlias m.config.host;
-            fqdn = m.config.host.fqdn;
-            domain = m.config.host.domain;
-            location = ensureLocation m.config.host.location;
+            alias = getAlias m.metaConfig.host;
+            fqdn = m.metaConfig.host.fqdn;
+            domain = m.metaConfig.host.domain;
+            location = ensureLocation m.metaConfig.host.location;
             type = "node";
-            os = m.config.spin;
-            role = m.config.node.role;
-            storage_type = m.config.node.storageType;
-          } // m.config.monitoring.labels;
+            os = m.metaConfig.spin;
+            role = m.metaConfig.node.role;
+            storage_type = m.metaConfig.node.storageType;
+          } // m.metaConfig.monitoring.labels;
         }) machines;
 
         pingConfigs = map (m: {
-          targets = [ m.config.host.fqdn ];
+          targets = [ m.metaConfig.host.fqdn ];
           labels = {
-            alias = getAlias m.config.host;
-            fqdn = m.config.host.fqdn;
-            domain = m.config.host.domain;
-            location = ensureLocation m.config.host.location;
-            role = m.config.node.role;
-            os = m.config.spin;
+            alias = getAlias m.metaConfig.host;
+            fqdn = m.metaConfig.host.fqdn;
+            domain = m.metaConfig.host.domain;
+            location = ensureLocation m.metaConfig.host.location;
+            role = m.metaConfig.node.role;
+            os = m.metaConfig.spin;
           };
         }) machines;
 
@@ -171,16 +171,16 @@ let
                 parts = splitString "." hostname;
               in concatStringsSep "." ([ "${elemAt parts 0}-mgmt" ] ++ (tail parts));
 
-            fqdn = makeMgmt m.config.host.fqdn;
+            fqdn = makeMgmt m.metaConfig.host.fqdn;
           in {
             targets = [ fqdn ];
             labels = {
-              alias = getAlias m.config.host;
+              alias = getAlias m.metaConfig.host;
               fqdn = fqdn;
-              domain = m.config.host.domain;
-              location = ensureLocation m.config.host.location;
-              role = m.config.node.role;
-              os = m.config.spin;
+              domain = m.metaConfig.host.domain;
+              location = ensureLocation m.metaConfig.host.location;
+              role = m.metaConfig.node.role;
+              os = m.metaConfig.spin;
             };
           }) machines;
       };
@@ -192,7 +192,7 @@ let
         ) monitoredMachines);
       in {
         exporterConfigs = map (sv: {
-          targets = [ "${sv.config.address}:${toString sv.config.port}" ];
+          targets = [ "${sv.svConfig.address}:${toString sv.svConfig.port}" ];
           labels = {
             service = "ssh-exporter";
           };
@@ -210,21 +210,21 @@ let
         ) monitoredMachines);
       in {
         dnsProbes = map (sv: {
-          targets = [ "${sv.config.address}:${toString sv.config.port}" ];
+          targets = [ "${sv.svConfig.address}:${toString sv.svConfig.port}" ];
           labels = {
-            fqdn = sv.machine.config.host.fqdn;
-            domain = sv.machine.config.host.domain;
-            location = ensureLocation sv.machine.config.host.location;
+            fqdn = sv.machine.metaConfig.host.fqdn;
+            domain = sv.machine.metaConfig.host.domain;
+            location = ensureLocation sv.machine.metaConfig.host.location;
             service = "dns-resolver";
           };
         }) resolverServices;
 
         kresdConfigs = map (sv: {
-          targets = [ "${sv.config.address}:${toString sv.config.port}" ];
+          targets = [ "${sv.svConfig.address}:${toString sv.svConfig.port}" ];
           labels = {
-            fqdn = sv.machine.config.host.fqdn;
-            domain = sv.machine.config.host.domain;
-            location = ensureLocation sv.machine.config.host.location;
+            fqdn = sv.machine.metaConfig.host.fqdn;
+            domain = sv.machine.metaConfig.host.domain;
+            location = ensureLocation sv.machine.metaConfig.host.location;
             service = "dns-resolver";
           };
         }) kresdMetricsServices;
@@ -241,21 +241,21 @@ let
         ) monitoredMachines);
       in {
         dnsProbes = map (sv: {
-          targets = [ "${sv.config.address}:${toString sv.config.port}" ];
+          targets = [ "${sv.svConfig.address}:${toString sv.svConfig.port}" ];
           labels = {
-            fqdn = sv.machine.config.host.fqdn;
-            domain = sv.machine.config.host.domain;
-            location = ensureLocation sv.machine.config.host.location;
+            fqdn = sv.machine.metaConfig.host.fqdn;
+            domain = sv.machine.metaConfig.host.domain;
+            location = ensureLocation sv.machine.metaConfig.host.location;
             service = "dns-authoritative";
           };
         }) authoritativeServices;
 
         bindConfigs = map (sv: {
-          targets = [ "${sv.config.address}:${toString sv.config.port}" ];
+          targets = [ "${sv.svConfig.address}:${toString sv.svConfig.port}" ];
           labels = {
-            fqdn = sv.machine.config.host.fqdn;
-            domain = sv.machine.config.host.domain;
-            location = ensureLocation sv.machine.config.host.location;
+            fqdn = sv.machine.metaConfig.host.fqdn;
+            domain = sv.machine.metaConfig.host.domain;
+            location = ensureLocation sv.machine.metaConfig.host.location;
             service = "dns-authoritative";
           };
         }) bindExporterServices;
@@ -268,11 +268,11 @@ let
         ) monitoredMachines);
       in {
         exporterConfigs = map (sv: {
-          targets = [ "${sv.config.address}:${toString sv.config.port}" ];
+          targets = [ "${sv.svConfig.address}:${toString sv.svConfig.port}" ];
           labels = {
-            fqdn = sv.machine.config.host.fqdn;
-            domain = sv.machine.config.host.domain;
-            location = ensureLocation sv.machine.config.host.location;
+            fqdn = sv.machine.metaConfig.host.fqdn;
+            domain = sv.machine.metaConfig.host.domain;
+            location = ensureLocation sv.machine.metaConfig.host.location;
             service = "rabbitmq";
           };
         }) rabbitmqServices;
@@ -437,7 +437,7 @@ in {
     networking = {
       firewall.extraCommands = concatMapStringsSep "\n" (machine:
         let
-          m = confLib.findConfig {
+          m = confLib.findMetaConfig {
             cluster = config.cluster;
             name = machine;
           };
@@ -769,7 +769,7 @@ in {
               {
                 targets = map (machine:
                   let
-                    alerter = confLib.findConfig {
+                    alerter = confLib.findMetaConfig {
                       cluster = config.cluster;
                       name = machine;
                     };

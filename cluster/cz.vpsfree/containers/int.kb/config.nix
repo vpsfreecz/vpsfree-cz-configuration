@@ -2,7 +2,7 @@
 let
   inherit (lib) nameValuePair listToAttrs;
 
-  proxyPrg = confLib.findConfig {
+  proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };

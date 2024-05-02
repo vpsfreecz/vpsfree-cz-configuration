@@ -4,32 +4,32 @@ let
   allMachines = confLib.getClusterMachines config.cluster;
 
   findNodes = loc:
-    filter (m: m.config.node != null && m.config.host.location == loc && m.config.monitoring.enable) allMachines;
+    filter (m: m.metaConfig.node != null && m.metaConfig.host.location == loc && m.metaConfig.monitoring.enable) allMachines;
 
   filterServices = machine: fn:
     let
       serviceList = mapAttrsToList (name: config: {
         inherit machine name config;
-      }) machine.config.services;
+      }) machine.metaConfig.services;
     in
-      filter (sv: fn sv.config) serviceList;
+      filter (sv: fn sv.svConfig) serviceList;
 
   findDnsResolverServices = loc:
     flatten (map (m:
-      optional (m.config.host.location == loc) (filterServices m (sv: sv.monitor == "dns-resolver"))
+      optional (m.metaConfig.host.location == loc) (filterServices m (sv: sv.monitor == "dns-resolver"))
     ) allMachines);
 
   locationNodes = loc: map (m: {
-      name = "${m.config.host.name}.${m.config.host.location}";
-      id = m.config.node.id;
-      ip_address = m.config.addresses.primary.address;
+      name = "${m.metaConfig.host.name}.${m.metaConfig.host.location}";
+      id = m.metaConfig.node.id;
+      ip_address = m.metaConfig.addresses.primary.address;
     }) (findNodes loc);
 
   sortedLocationNodes = loc: sort (a: b: a.id < b.id) (locationNodes loc);
 
   locationDnsResolvers = loc: map (sv: {
-      name = sv.machine.config.host.fqdn;
-      ip_address = sv.machine.config.addresses.primary.address;
+      name = sv.machine.metaConfig.host.fqdn;
+      ip_address = sv.machine.metaConfig.addresses.primary.address;
     }) (findDnsResolverServices loc);
 
   dnsResolvers = rec {

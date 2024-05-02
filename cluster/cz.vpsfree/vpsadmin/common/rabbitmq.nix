@@ -4,20 +4,20 @@ let
 
   monitors =
     filter
-      (m: m.config.monitoring.isMonitor)
+      (m: m.metaConfig.monitoring.isMonitor)
       (confLib.getClusterMachines config.cluster);
 
-  api1 = confLib.findConfig {
+  api1 = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.api1";
   };
 
-  api2 = confLib.findConfig {
+  api2 = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.api2";
   };
 
-  vpsadmin1 = confLib.findConfig {
+  vpsadmin1 = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.vpsadmin1";
   };
@@ -42,7 +42,7 @@ in {
         "172.16.107.0/24"
       ];
 
-      monitoring = map (m: "${m.config.addresses.primary.address}/32") monitors;
+      monitoring = map (m: "${m.metaConfig.addresses.primary.address}/32") monitors;
     };
   };
 

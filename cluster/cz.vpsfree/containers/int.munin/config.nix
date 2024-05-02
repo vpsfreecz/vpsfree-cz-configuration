@@ -4,17 +4,17 @@ let
 
   allMachines = confLib.getClusterMachines config.cluster;
 
-  allNodes = filter (m: m.config.node != null && m.config.monitoring.enable) allMachines;
+  allNodes = filter (m: m.metaConfig.node != null && m.metaConfig.monitoring.enable) allMachines;
 
   nodeHosts = map (n: ''
-    [${n.config.host.fqdn}]
-    address ${n.config.addresses.primary.address}
+    [${n.metaConfig.host.fqdn}]
+    address ${n.metaConfig.addresses.primary.address}
     use_node_name yes
   '') allNodes;
 
   allHosts = concatStringsSep "\n\n" nodeHosts;
 
-  proxyPrg = confLib.findConfig {
+  proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };

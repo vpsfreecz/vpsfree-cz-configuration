@@ -3,15 +3,15 @@ with lib;
 let
   allMachines = confLib.getClusterMachines config.cluster;
 
-  allNodes = filter (m: m.config.node != null && m.config.monitoring.enable) allMachines;
+  allNodes = filter (m: m.metaConfig.node != null && m.metaConfig.monitoring.enable) allMachines;
 
-  monitors = filter (m: m.config.monitoring.isMonitor) allMachines;
+  monitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
 
   getAlias = host: "${host.name}${optionalString (!isNull host.location) ".${host.location}"}";
 
   hosts = listToAttrs (map (m: nameValuePair m.name {
-    alias = getAlias m.config.host;
-    fqdn = m.config.host.fqdn;
+    alias = getAlias m.metaConfig.host;
+    fqdn = m.metaConfig.host.fqdn;
     user = "ssh-check";
     private_key_file = "/secrets/ssh-exporter/id_ecdsa";
     timeout = 45;
@@ -27,6 +27,6 @@ in {
 
   networking.firewall.extraCommands = concatMapStringsSep "\n" (m: ''
     # ssh-exporter from ${m.name}
-    iptables -A nixos-fw -p tcp --dport ${toString port} -s ${m.config.addresses.primary.address} -j nixos-fw-accept
+    iptables -A nixos-fw -p tcp --dport ${toString port} -s ${m.metaConfig.addresses.primary.address} -j nixos-fw-accept
   '') monitors;
 }

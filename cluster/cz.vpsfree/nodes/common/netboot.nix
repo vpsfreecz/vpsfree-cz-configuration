@@ -1,6 +1,6 @@
 { config, lib, pkgs, confLib, confMachine, ... }:
 let
-  apuPrg = confLib.findConfig {
+  apuPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/machines/prg/apu";
   };
