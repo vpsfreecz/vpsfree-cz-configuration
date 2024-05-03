@@ -4,7 +4,7 @@ GEM
     daemons (1.4.1)
     eventmachine (1.2.7)
     prometheus-client (4.0.0)
-    rack (2.2.8.1)
+    rack (2.2.9)
     thin (1.8.2)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -13,7 +13,7 @@ GEM
 GEM
   remote: https://rubygems.vpsfree.cz/
   specs:
-    syslog-exporter (0.9.0)
+    syslog-exporter (0.10.0)
       prometheus-client (~> 4.0.0)
       thin (~> 1.8.1)
 
