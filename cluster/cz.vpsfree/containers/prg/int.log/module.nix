@@ -23,7 +23,7 @@
           { property = "ActiveState"; value = "active"; }
         ];
 
-        "syslog-exporter.service" = [
+        "prometheus-syslog-exporter.service" = [
           { property = "ActiveState"; value = "active"; }
         ];
       };
