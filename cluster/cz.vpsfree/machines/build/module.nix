@@ -7,11 +7,19 @@
     addresses = {
       v4 = [ { address = "172.16.106.5"; prefix = 24; } ];
     };
-    tags = [ "build" "pxe" "pxe-primary" ];
+    tags = [ "build" ];
 
     services = {
       node-exporter = {};
       ssh-exporter = {};
+    };
+
+    carrier = {
+      enable = true;
+      machines = import ../../../../lib/netboot-machines.nix {
+        inherit (config) cluster;
+        tags = [ "pxe" "pxe-primary" ];
+      };
     };
 
     healthChecks = {

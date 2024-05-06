@@ -1,12 +1,5 @@
-{ config, pkgs, lib, confDir, confLib, confData, confMachine, ... }:
-let
-  images = import ../../../../../lib/images.nix {
-    inherit config lib pkgs confDir confLib confData confMachine;
-    nixosModules = [
-      ../../../../../environments/base.nix
-    ];
-  };
-in {
+{ config, ... }:
+{
   imports = [
     ./hardware.nix
     ../../common/all.nix
@@ -33,12 +26,10 @@ in {
     { address = "172.16.0.0"; prefixLength = 12; via = "172.16.254.1"; }
   ];
 
-  services.netboot = {
+  confctl.carrier.netboot = {
     enable = true;
     host = "172.16.254.253";
     tftp.bindAddress = "172.16.254.253";
-    inherit (images) nixosItems;
-    vpsadminosItems = images.allNodes "vpsfree.cz";
     allowedIPRanges = [
       "172.16.254.0/24"
       "172.19.254.0/24"

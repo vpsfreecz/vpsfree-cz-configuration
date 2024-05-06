@@ -1,12 +1,5 @@
-{ config, pkgs, lib, confDir, confLib, confData, confMachine, ... }:
-let
-  images = import ../../../../lib/images.nix {
-    inherit config lib pkgs confDir confLib confData confMachine;
-    nixosModules = [
-      ../../../../environments/base.nix
-    ];
-  };
-in {
+{ config, pkgs, ... }:
+{
   imports = [
     ../common/all.nix
     ../../../../environments/deploy.nix
@@ -96,12 +89,9 @@ in {
     systemd.timer.enable = true;
   };
 
-  services.netboot = {
+  confctl.carrier.netboot = {
     enable = true;
     host = "172.16.106.5";
-    inherit (images) nixosItems;
-    vpsadminosItems = images.allNodes "vpsfree.cz";
-    copyItems = false;
     allowedIPRanges = [
       "172.16.254.0/24"
       "172.19.254.0/24"
