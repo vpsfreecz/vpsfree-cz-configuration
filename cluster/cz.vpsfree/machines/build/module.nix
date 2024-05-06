@@ -18,7 +18,20 @@
       enable = true;
       machines = import ../../../../lib/netboot-machines.nix {
         inherit (config) cluster;
+
         tags = [ "pxe" "pxe-primary" ];
+
+        buildGenerations = {
+          min = 10;
+          max = 20;
+          maxAge = 180*24*60*60;
+        };
+
+        hostGenerations = {
+          min = 20;
+          max = 30;
+          maxAge = 360*24*60*60;
+        };
       };
     };
 
@@ -28,18 +41,6 @@
           { property = "ActiveState"; value = "active"; }
         ];
       };
-    };
-
-    buildGenerations = {
-      min = 10;
-      max = 20;
-      maxAge = 180*24*60*60;
-    };
-
-    hostGenerations = {
-      min = 20;
-      max = 30;
-      maxAge = 360*24*60*60;
     };
   };
 }

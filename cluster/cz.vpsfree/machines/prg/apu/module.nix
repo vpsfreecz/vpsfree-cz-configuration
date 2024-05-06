@@ -19,10 +19,25 @@
 
     carrier = {
       enable = true;
+
       machines = import ../../../../../lib/netboot-machines.nix {
         inherit (config) cluster;
+
         buildAttribute = [ "system" "build" "distCopy" ];
+
         tags = [ "pxe" "pxe-secondary" ];
+
+        buildGenerations = {
+          min = 5;
+          max = 10;
+          maxAge = 180*24*60*60;
+        };
+
+        hostGenerations = {
+          min = 20;
+          max = 40;
+          maxAge = 360*24*60*60;
+        };
       };
     };
 
@@ -40,18 +55,6 @@
           { property = "ActiveState"; value = "active"; }
         ];
       };
-    };
-
-    buildGenerations = {
-      min = 5;
-      max = 10;
-      maxAge = 180*24*60*60;
-    };
-
-    hostGenerations = {
-      min = 20;
-      max = 40;
-      maxAge = 360*24*60*60;
     };
   };
 }

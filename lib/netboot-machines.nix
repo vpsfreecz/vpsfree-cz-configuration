@@ -1,7 +1,9 @@
 {
   cluster,
   tags,
-  buildAttribute ? [ "system" "build" "dist" ]
+  buildAttribute ? [ "system" "build" "dist" ],
+  buildGenerations,
+  hostGenerations
 }:
 let
   machines = import ../cluster/netbootable.nix;
@@ -11,17 +13,20 @@ let
       clusterMachine = cluster.${name};
     in {
       machine = name;
+
       alias =
         if isNull clusterMachine.host.location then
           "${clusterMachine.host.name}"
         else
           "${clusterMachine.host.location}/${clusterMachine.host.name}";
+
       extraModules =
         if clusterMachine.spin == "vpsadminos" then
           [ ../configs/node/pxe-only.nix ]
         else
           [];
-      inherit buildAttribute tags;
+
+      inherit buildAttribute tags buildGenerations hostGenerations;
     }
   ) machines;
 in carried
