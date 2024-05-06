@@ -15,7 +15,6 @@ let
     ./services/monitoring/prometheus/conf-exporters/ssh.nix
     ./services/monitoring/prometheus/conf-exporters/syslog.nix
     ./services/monitoring/prometheus/rules.nix
-    ./services/netboot.nix
     ./services/network-graphs
     ./services/sachet.nix
     ./services/vpsf-status.nix
