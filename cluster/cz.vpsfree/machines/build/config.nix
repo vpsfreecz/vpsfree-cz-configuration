@@ -92,7 +92,7 @@
   confctl.carrier.netboot = {
     enable = true;
     host = "172.16.106.5";
-    allowedIPRanges = [
+    allowedIPv4Ranges = [
       "172.16.254.0/24"
       "172.19.254.0/24"
     ];
