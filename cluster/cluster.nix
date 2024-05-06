@@ -27,6 +27,7 @@
   ./cz.vpsfree/machines/aitherdev/module.nix
   ./cz.vpsfree/machines/brq/apu/module.nix
   ./cz.vpsfree/machines/build/module.nix
+  ./cz.vpsfree/machines/nixos-live/module.nix
   ./cz.vpsfree/machines/prg/apu/module.nix
   ./cz.vpsfree/machines/prg/int.vpn/module.nix
   ./cz.vpsfree/nodes/brq/node2/module.nix
