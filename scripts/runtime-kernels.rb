@@ -6,7 +6,10 @@ module RuntimeKernels
 
     def setup_hooks(hooks)
       hooks.subscribe(:cluster_deploy) do |machines:, **kwargs|
-        os_machines = machines.select { |_, machine| machine.spin == 'vpsadminos' }
+        os_machines = machines.select do |_, machine|
+          machine.spin == 'vpsadminos' && !machine.carried?
+        end
+
         next if os_machines.empty?
 
         puts Rainbow('Updating runtime kernel information...').bright
