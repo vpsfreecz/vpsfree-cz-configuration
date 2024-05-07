@@ -10,7 +10,7 @@ let
 
   monitoredMachines =
     if isNull cfg.monitorMachines then
-      filter (m: m.metaConfig.monitoring.enable && !(isNull m.metaConfig.host.target)) allMachines
+      filter (m: m.metaConfig.monitoring.enable && isNull m.carrier && !(isNull m.metaConfig.host.target)) allMachines
     else
       filter (m: elem m.name cfg.monitorMachines) allMachines;
 
