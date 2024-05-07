@@ -5,6 +5,8 @@ let
     fqdn = confMachine.host.fqdn;
     label = confMachine.host.fqdn;
     toplevel = builtins.unsafeDiscardStringContext config.system.build.toplevel;
+    version = config.system.nixos.version;
+    revision = config.system.nixos.revision;
     macs = confMachine.netboot.macs;
     swpins-info = swpinsInfo;
   });

@@ -13,6 +13,8 @@ in {
         label = confMachine.host.fqdn;
         toplevel = builtins.unsafeDiscardStringContext config.system.build.toplevel;
         kernelParams = config.boot.kernelParams;
+        version = config.system.vpsadminos.version;
+        revision = config.system.vpsadminos.revision;
         macs = confMachine.netboot.macs;
         swpins-info = swpinsInfo;
       });
