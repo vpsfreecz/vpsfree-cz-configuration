@@ -8,8 +8,8 @@ let
 
   filterServices = machine: fn:
     let
-      serviceList = mapAttrsToList (name: config: {
-        inherit machine name config;
+      serviceList = mapAttrsToList (name: svConfig: {
+        inherit machine name svConfig;
       }) machine.metaConfig.services;
     in
       filter (sv: fn sv.svConfig) serviceList;
