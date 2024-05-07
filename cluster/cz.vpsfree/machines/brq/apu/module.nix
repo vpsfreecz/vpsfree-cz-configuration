@@ -23,8 +23,6 @@
       machines = import ../../../../../lib/netboot-machines.nix {
         inherit (config) cluster;
 
-        buildAttribute = [ "system" "build" "distCopy" ];
-
         tags = [ "pxe" "pxe-secondary" ];
 
         dynamicTags = [ "brq" "pxe" ];

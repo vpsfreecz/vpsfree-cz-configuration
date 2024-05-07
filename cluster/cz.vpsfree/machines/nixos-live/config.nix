@@ -28,11 +28,6 @@ in {
     '';
   };
 
-  system.build.distCopy = pkgs.runCommand "nixos-netboot-copy" {} ''
-    mkdir $out
-    cp -r ${config.system.build.dist}/. $out/
-  '';
-
   boot.supportedFilesystems = [ "zfs" ];
 
   networking.useDHCP = true;

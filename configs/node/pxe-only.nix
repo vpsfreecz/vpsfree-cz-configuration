@@ -19,6 +19,6 @@ in {
         swpins-info = swpinsInfo;
       });
     in ''
-      cp ${json} $out/machine.json
+      cp ${builtins.unsafeDiscardOutputDependency json} $out/machine.json
     '';
 }
