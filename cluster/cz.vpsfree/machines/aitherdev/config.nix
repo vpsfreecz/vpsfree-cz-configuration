@@ -187,7 +187,6 @@ in {
       asciinema
       bind
       bundix
-      bundler
       cloc
       git
       go
