@@ -16,10 +16,13 @@
 
     carrier = {
       enable = true;
+
       machines = import ../../../../lib/netboot-machines.nix {
         inherit (config) cluster;
 
         tags = [ "pxe" "pxe-primary" ];
+
+        dynamicTags = [ "prg" "pxe" ];
 
         buildGenerations = {
           min = 10;

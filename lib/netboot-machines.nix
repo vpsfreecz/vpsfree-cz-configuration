@@ -1,6 +1,7 @@
 {
   cluster,
   tags,
+  dynamicTags ? [],
   buildAttribute ? [ "system" "build" "dist" ],
   buildGenerations,
   hostGenerations
@@ -11,14 +12,16 @@ let
   carried = map (name:
     let
       clusterMachine = cluster.${name};
-    in {
-      machine = name;
 
       alias =
         if isNull clusterMachine.host.location then
-          "${clusterMachine.host.name}"
+          clusterMachine.host.name
         else
           "${clusterMachine.host.location}/${clusterMachine.host.name}";
+    in {
+      machine = name;
+
+      inherit alias;
 
       extraModules =
         if clusterMachine.spin == "vpsadminos" then
@@ -26,7 +29,9 @@ let
         else
           [];
 
-      inherit buildAttribute tags buildGenerations hostGenerations;
+      tags = tags ++ (map (t: "${t}#${alias}") dynamicTags);
+
+      inherit buildAttribute buildGenerations hostGenerations;
     }
   ) machines;
 in carried

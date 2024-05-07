@@ -27,6 +27,8 @@
 
         tags = [ "pxe" "pxe-secondary" ];
 
+        dynamicTags = [ "pxe" ];
+
         buildGenerations = {
           min = 5;
           max = 10;
