@@ -55,6 +55,7 @@ in {
     wget
     vim
     screen
+    tree
     config.boot.kernelPackages.perf
     config.boot.kernelPackages.cpupower
   ];
