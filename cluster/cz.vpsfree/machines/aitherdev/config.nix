@@ -331,6 +331,22 @@ in {
               { confctl = "cd confctl ; dev-shell"; }
             ];
           };
+
+          pxe-dev = {
+            root = "~";
+            windows = [
+              {
+                deploy = {
+                  layout = "tiled";
+                  panes = [
+                    "cd ~/workspace/confctl ; dev-shell"
+                    "cd ~/workspace/pxe-cluster ; dev-shell"
+                  ];
+                };
+              }
+              { pxe-server = "# ssh root@192.168.100.5"; }
+            ];
+          };
         };
       };
     };
