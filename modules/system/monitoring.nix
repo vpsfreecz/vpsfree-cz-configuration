@@ -124,7 +124,7 @@ in {
       services.prometheus.exporters = {
         ipmi.enable = true;
 
-        ksvcmon.enable = true;
+        ksvcmon.enable = false;
 
         node = {
           extraFlags = [ "--collector.textfile.directory=${textfileDir}" ];
