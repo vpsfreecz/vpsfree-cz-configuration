@@ -10,17 +10,19 @@ let
 
   allMachines = confLib.getClusterMachines config.cluster;
 
+  possibleMachines = filter (m: !isNull m.carrier) allMachines;
+
   getAlias = host: "${host.name}${optionalString (!isNull host.location) ".${host.location}"}";
 
   syslogExporterHosts = listToAttrs (map (m: nameValuePair m.name {
     alias = getAlias m.metaConfig.host;
     fqdn = m.metaConfig.host.fqdn;
     os = m.metaConfig.spin;
-  }) allMachines);
+  }) possibleMachines);
 
   syslogExporterPort = confMachine.services.syslog-exporter.port;
 
-  monitorings = filter (d: d.metaConfig.monitoring.isMonitor) allMachines;
+  monitorings = filter (d: d.metaConfig.monitoring.isMonitor) possibleMachines;
 
   reloadRsyslog = ''
     kill -HUP `systemctl show --property MainPID --value syslog`
