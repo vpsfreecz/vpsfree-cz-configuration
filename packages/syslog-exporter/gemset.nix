@@ -24,10 +24,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "11k1r8mfr0bnd574yy08wmpzbgq8yqw3shx7fn5f6hlmayacc4bh";
+      sha256 = "1zw39rp3b6jhm9273giv119lkgqvllisxb98k7vfx7367birbqcm";
       type = "gem";
     };
-    version = "4.0.0";
+    version = "4.2.2";
   };
   rack = {
     groups = ["default"];
@@ -45,10 +45,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.vpsfree.cz"];
-      sha256 = "00p8wx0h52mcfapv8g2h6fh2kvpngx2a31vr0sv5p7s6pyykbsns";
+      sha256 = "1jya1dc6gzj5gjhzsm5xklmq5kxdg561sv6x9d2z4za6gs0r3adb";
       type = "gem";
     };
-    version = "0.10.0";
+    version = "0.11.0";
   };
   thin = {
     dependencies = ["daemons" "eventmachine" "rack"];
