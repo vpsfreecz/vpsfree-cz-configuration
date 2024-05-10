@@ -24,20 +24,20 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "11k1r8mfr0bnd574yy08wmpzbgq8yqw3shx7fn5f6hlmayacc4bh";
+      sha256 = "1zw39rp3b6jhm9273giv119lkgqvllisxb98k7vfx7367birbqcm";
       type = "gem";
     };
-    version = "4.0.0";
+    version = "4.2.2";
   };
   rack = {
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "10mpk0hl6hnv324fp1pfimi2nw9acj0z4gyhrph36qg84pk1s4m7";
+      sha256 = "0hj0rkw2z9r1lcg2wlrcld2n3phwrcgqcp7qd1g9a7hwgalh2qzx";
       type = "gem";
     };
-    version = "2.2.8.1";
+    version = "2.2.9";
   };
   ssh-exporter = {
     dependencies = ["prometheus-client" "thin"];
@@ -45,10 +45,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.vpsfree.cz"];
-      sha256 = "1jpxcwwqip6b0p0z8fkq00zby24wl4bbkvwnzmx6a0bjw2070yn1";
+      sha256 = "102hrrsy31fipmdghqifjlxx32rhl7mcfi6xrsn2pvf5y3159l27";
       type = "gem";
     };
-    version = "0.1.0";
+    version = "0.2.0";
   };
   thin = {
     dependencies = ["daemons" "eventmachine" "rack"];
