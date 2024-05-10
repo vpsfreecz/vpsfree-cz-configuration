@@ -10,7 +10,7 @@ let
 
   allMachines = confLib.getClusterMachines config.cluster;
 
-  possibleMachines = filter (m: !isNull m.carrier) allMachines;
+  possibleMachines = filter (m: isNull m.carrier) allMachines;
 
   getAlias = host: "${host.name}${optionalString (!isNull host.location) ".${host.location}"}";
 
