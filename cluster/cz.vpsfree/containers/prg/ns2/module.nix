@@ -9,10 +9,7 @@ in {
     host = { name = "ns2"; location = "prg"; domain = "vpsfree.cz"; };
     addresses = {
       v4 = [ { address = addr; prefix = 32; } ];
-      v6 = [
-        { address = "2a03:3b40:fe:47d::1"; prefix = 64; }
-        { address = "2a01:430:17:1::ffff:588"; prefix = 128; }
-      ];
+      v6 = [ { address = "2a03:3b40:fe:47d::1"; prefix = 64; } ];
     };
     services = {
       kresd-plain = {};
