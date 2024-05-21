@@ -3,6 +3,7 @@
   "cz.vpsfree/machines/nixos-live"
   "cz.vpsfree/nodes/brq/node2"
   "cz.vpsfree/nodes/brq/node5"
+  "cz.vpsfree/nodes/brq/node6"
   "cz.vpsfree/nodes/pgnd/node1"
   "cz.vpsfree/nodes/prg/backuper2"
   "cz.vpsfree/nodes/prg/nasbox"
