@@ -62,7 +62,7 @@ in
       test $# -eq 1 || { echo "Expects node hostname"; exit 1; }
       test -d /secrets/nodes/images/"''${1}" && { echo "Already there"; exit 1; }
       mkdir -p /secrets/nodes/images/"''${1}"/secrets
-      cp -rp /secrets/nodes/template/ /secrets/nodes/images/"''${1}"/secrets/
+      cp -rp /secrets/nodes/template/. /secrets/nodes/images/"''${1}"/secrets/
       ssh-keygen -t rsa -b 4096 -f /secrets/nodes/images/"''${1}"/secrets/ssh_host_rsa_key -N ""
       ssh-keygen -t ed25519 -f /secrets/nodes/images/"''${1}"/secrets/ssh_host_ed25519_key -N ""
       chmod 0644 /secrets/nodes/images/"''${1}"/secrets/ssh_host_*
