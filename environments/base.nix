@@ -25,11 +25,6 @@ let
 
   adminSshKeys = flatten (mapAttrsToList (k: v: v.authorizedKeys) config.vpsfconf.admins);
 in {
-  # NOTE: Whenever adding new settings to this file, remember that it is used for
-  # everything in this configuration, including netboot images for pure NixOS
-  # used as a rescue system. Those images must be made to import any
-  # vpsfconf-specific modules, as they're minimal by default, see ../lib/images.nix.
-
   imports = [
     ../configs/admins.nix
   ];
