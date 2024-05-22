@@ -52,13 +52,13 @@ in {
   ] ++ (optional (hasAttr "vpsadminos" swpins) "vpsadminos=${swpins.vpsadminos}");
 
   environment.systemPackages = with pkgs; [
-    wget
-    vim
-    screen
-    tree
     config.boot.kernelPackages.perf
     config.boot.kernelPackages.cpupower
     kitty.terminfo
+    screen
+    tree
+    vim
+    wget
   ];
 
   programs.bash.interactiveShellInit = ''
