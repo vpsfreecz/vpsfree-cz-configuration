@@ -58,6 +58,7 @@ in {
     tree
     config.boot.kernelPackages.perf
     config.boot.kernelPackages.cpupower
+    kitty.terminfo
   ];
 
   programs.bash.interactiveShellInit = ''
