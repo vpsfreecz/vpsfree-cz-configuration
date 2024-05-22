@@ -54,7 +54,6 @@ in {
   environment.systemPackages = with pkgs; [
     config.boot.kernelPackages.perf
     config.boot.kernelPackages.cpupower
-    kitty.terminfo
     screen
     tree
     vim

@@ -102,7 +102,6 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
-    kitty.terminfo
     vim
   ];
 
