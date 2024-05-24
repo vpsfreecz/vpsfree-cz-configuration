@@ -43,13 +43,25 @@ let
     name="gateway1"
     enable=true
 
-    [[gateway.inout]]
-    account="irc.myirc"
-    channel="#vpsfree"
+      [[gateway.inout]]
+      account="irc.myirc"
+      channel="#vpsfree"
 
-    [[gateway.inout]]
-    account="matrix.mymatrix"
-    channel="#vpsfree:matrix.org"
+      [[gateway.inout]]
+      account="matrix.mymatrix"
+      channel="#vpsfree:matrix.org"
+
+    [[gateway]]
+    name="gateway2"
+    enable=true
+
+      [[gateway.inout]]
+      account="irc.myirc"
+      channel="#vpsadminos"
+
+      [[gateway.inout]]
+      account="matrix.mymatrix"
+      channel="#vpsadminos:matrix.org"
   '';
 
 in {
