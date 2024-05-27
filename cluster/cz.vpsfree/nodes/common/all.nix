@@ -71,7 +71,7 @@ in
     # debug stuff
     # config.boot.kernelPackages.bcc
     config.boot.kernelPackages.perf
-    dstat
+    dool
     strace
 
     wireguard-tools
