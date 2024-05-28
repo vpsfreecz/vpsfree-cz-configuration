@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2024052000 ; serial number of this zone file
+              2024052801 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -12,7 +12,10 @@ $TTL 1H                  ; default expiration time of all resource records witho
 vpsfree.cz.                    IN   NS      ns1.int.prg.vpsfree.cz.
 vpsfree.cz.                    IN   NS      ns1.int.brq.vpsfree.cz.
 vpsfree.cz.                    IN   A       37.205.9.80
-vpsfree.cz.                    IN   TXT     "v=spf1 a mx ptr ip4:83.167.228.42 ip6:2a01:430:17:1::33 a:vpsfree.cz a:mx1.vpsfree.cz a:mx2.vpsfree.cz a:prasiatko.vpsfree.cz a:vpsadmin.vpsfree.cz a:lists.vpsfree.cz a:mail.snajpa.net -all"
+vpsfree.cz.	IN	TXT	"v=spf1 a mx a:vpsfree.cz a:mx2.vpsfree.cz a:prasiatko-mail.vpsfree.cz a:vpsadmin.vpsfree.cz a:lists.vpsfree.cz a:mail.snajpa.net a:mxproxy.vpsfree.cz a:rt.vpsfree.cz -all"
+lists.vpsfree.cz. IN	TXT	"v=spf1 a mx a:vpsfree.cz a:mx2.vpsfree.cz a:prasiatko-mail.vpsfree.cz a:vpsadmin.vpsfree.cz a:lists.vpsfree.cz -all"
+proxy.vpsfree.cz. IN	TXT	"v=spf1 a mx a:vpsfree.cz a:mx2.vpsfree.cz a:prasiatko-mail.vpsfree.cz a:vpsadmin.vpsfree.cz a:lists.vpsfree.cz a:mail.snajpa.net a:mxproxy.vpsfree.cz a:rt.vpsfree.cz -all"
+
 ns1                            IN   A       37.205.9.232
 ns1                            IN   AAAA    2a03:3b40:fe:3fd::1
 ns2                            IN   A       37.205.11.51
@@ -49,13 +52,12 @@ lists                          IN   MX      10 mx1.vpsfree.cz.
 mail                           IN   CNAME   mx1.vpsfree.cz.
 mirror                         IN   CNAME   proxy.vpsfree.cz.
 mirror.int                     IN   A       185.8.165.222
-mx1                            IN   A       83.167.228.42
+mx1                            IN   A       37.205.15.53
 mx1                            IN   AAAA    2a01:430:17:1::33
 mx2                            IN   A       37.205.11.114
 mx2                            IN   AAAA    2a00:cb40:2::1:95
 mxfilter                       IN   A       37.205.10.110
 mxproxy                        IN   A       37.205.9.45
-new                            IN   A       83.167.228.42
 munin                          IN   CNAME   proxy.prg.vpsfree.cz.
 munin.int                      IN   A       172.16.8.234
 paste                          IN   CNAME   proxy.prg.vpsfree.cz.
@@ -63,7 +65,7 @@ paste.int                      IN   A       172.16.9.157
 paste-old.int                  IN   A       37.205.8.141
 piwik                          IN   CNAME   prasiatko.vpsfree.cz.
 prasiatko                      IN   CNAME   proxy.vpsfree.cz.
-prasiatko.int                  IN   A       83.167.228.42
+prasiatko.int                  IN   A       37.205.15.53
 proxy                          IN   A       37.205.9.80
 proxy                          IN   AAAA    2a03:3b40:fe:473::1
 proxy.prg                      IN   A       37.205.14.61

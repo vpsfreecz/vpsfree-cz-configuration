@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @ IN  SOA  ns1.vpsfree.cz. hostmaster.vpsfree.cz. (
-              2024041401 ; serial number of this zone file
+              2024041405 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -18,7 +18,7 @@ ns1		IN	A	37.205.9.232
 ns1		IN	AAAA	2a03:3b40:fe:3fd::1
 ns2		IN	A	37.205.11.51
 ns2		IN	AAAA	2a03:3b40:101:ca::1
-mx1		IN	A	83.167.228.42
+mx1		IN	A	37.205.15.53
 mx1		IN	AAAA	2a03:3b40:fe:1c3::1
 mx2		IN	A	37.205.11.114
 mx2		IN	AAAA	2a03:3b40:100::1:95
@@ -60,7 +60,6 @@ jvb9					300 IN A	37.205.14.231
 jvb10					300 IN A	37.205.14.250
 jvb11					300 IN A	37.205.13.90
 
-new		IN	A	83.167.228.42
 caladan		IN	CNAME	caladan.hawin.cz.
 tor-relay	IN	A	37.205.8.191
 tor-relay	IN	AAAA	2a01:430:17:1::ffff:1281
@@ -97,7 +96,7 @@ mail._domainkey.lists.vpsfree.cz. IN      TXT     ( "v=DKIM1; h=sha256; k=rsa; "
           "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlCqk/eI/VqhHz5Doj7BwPWIFQPR5JZ4ICimja8hL1WDePoIylQaelTjYvNcr6Fx7x/vOmB5/GsODQCx81R1pmA0C+N5Dy9VzagdzxSJhAmNsIpwny4Z4IXvlH9r6VLxKvWpzwA4iTuWdTl3RAWAA3vZcHP9uXVfx8gul/BKv96IxqNuzpuiAkBQ0dHnGJeOF0U4TPwsTofGg5g"
           "W3E57d3dIrVhK4n+yXxe/n6bp4JSCItZLJSG6l2vMn7E5DaFglMICQfJ4MLR8kIqq3iCL36Pp4bGiad1c/hJgAb99/Pxc48UCJTsMu9lsfHLS0v4jwYXs+oajzS6qYO+0fum1dswIDAQAB" )
 
-prasiatko-mail       IN      A       83.167.228.42
+prasiatko-mail       IN      A       37.205.15.53
 prasiatko-mail	IN	AAAA	2a03:3b40:fe:1c3::1
 vpsadmin.int    IN      A       37.205.10.1
 kb.int          IN      A       37.205.10.96
