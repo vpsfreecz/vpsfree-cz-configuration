@@ -14,14 +14,11 @@
   };
 
   boot.zfs.moduleParams.spl = {
-    "spl_kmem_cache_reclaim" = 1;
     "spl_taskq_thread_timeout_ms" = 60000;
   };
 
   boot.zfs.moduleParams.zfs = {
     "zfs_dmu_offset_next_sync" = 0;
-    "zfs_arc_dnode_limit_percent" = 30;
-    "zfs_arc_meta_limit_percent" = 85;
-    "zfs_per_txg_dirty_frees_percent" = 50;
+    "zfs_abd_scatter_max_order" = 2;
   };
 }

@@ -43,7 +43,6 @@ in
     "kernel.printk" = 0;
     "net.ipv4.neigh.default.gc_thresh3" = 16384;
     "net.ipv6.neigh.default.gc_thresh3" = 16384;
-    "vm.min_free_kbytes" = 16 * 1024 * 1024;
   };
 
   boot.extraModprobeConfig = ''
