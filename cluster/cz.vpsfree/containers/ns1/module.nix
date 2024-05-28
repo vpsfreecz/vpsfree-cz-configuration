@@ -6,7 +6,7 @@
     container.id = 25113;
     host = { name = "ns1"; domain = "vpsfree.cz"; };
     addresses = {
-      v4 = [ { address = "77.93.223.251"; prefix = 32; } ];
+      v4 = [ { address = "37.205.9.232"; prefix = 32; } ];
       v6 = [ { address = "2a03:3b40:fe:3fd::1"; prefix = 64; } ];
     };
     services = {

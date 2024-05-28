@@ -14,7 +14,7 @@ $TTL 1H                  ; default expiration time of all resource records witho
 @		IN    MX	10 prasiatko-mail.vpsfree.cz.
 @ 		IN	MX	15 mx2.vpsfree.cz.
 @		IN	TYPE257	\# 22 000569737375656C657473656E63727970742E6F7267 ; CAA
-ns1		IN	A	77.93.223.251
+ns1		IN	A	37.205.9.232
 ns1		IN	AAAA	2a03:3b40:fe:3fd::1
 ns2		IN	A	37.205.11.51
 ns2		IN	AAAA	2a03:3b40:101:ca::1

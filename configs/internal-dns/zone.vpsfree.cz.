@@ -13,7 +13,7 @@ vpsfree.cz.                    IN   NS      ns1.int.prg.vpsfree.cz.
 vpsfree.cz.                    IN   NS      ns1.int.brq.vpsfree.cz.
 vpsfree.cz.                    IN   A       37.205.9.80
 vpsfree.cz.                    IN   TXT     "v=spf1 a mx ptr ip4:83.167.228.42 ip6:2a01:430:17:1::33 a:vpsfree.cz a:mx1.vpsfree.cz a:mx2.vpsfree.cz a:prasiatko.vpsfree.cz a:vpsadmin.vpsfree.cz a:lists.vpsfree.cz a:mail.snajpa.net -all"
-ns1                            IN   A       77.93.223.251
+ns1                            IN   A       37.205.9.232
 ns1                            IN   AAAA    2a03:3b40:fe:3fd::1
 ns2                            IN   A       37.205.11.51
 ns2                            IN   AAAA    2a03:3b40:101:ca::1

@@ -3,7 +3,7 @@ let
   inherit (lib) concatMapStringsSep;
 
   masters = [
-    "77.93.223.251"
+    "37.205.9.232"
   ];
 
   slaves = [
