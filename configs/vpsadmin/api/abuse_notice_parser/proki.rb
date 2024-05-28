@@ -1,3 +1,4 @@
+require 'csv'
 require 'stringio'
 require 'time'
 require 'zip'
