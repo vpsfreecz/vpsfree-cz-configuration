@@ -34,13 +34,13 @@
 
     interfaces.vlan220 = {
       ipv4.addresses = [{
-        address = "77.93.223.7";
-        prefixLength = 26;
+        address = "37.205.12.254";
+        prefixLength = 30;
       }];
       useDHCP = false;
     };
 
-    defaultGateway = "77.93.223.1";
+    defaultGateway = "37.205.12.253";
   };
 
   system.stateVersion = "22.05";

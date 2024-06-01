@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @ IN  SOA  ns1.vpsfree.cz. hostmaster.vpsfree.cz. (
-              2024041405 ; serial number of this zone file
+              2024053100 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -63,7 +63,7 @@ jvb11					300 IN A	37.205.13.90
 caladan		IN	CNAME	caladan.hawin.cz.
 tor-relay	IN	A	37.205.8.191
 tor-relay	IN	AAAA	2a01:430:17:1::ffff:1281
-vpn01.prg	IN	A	77.93.223.7
+vpn01.prg	IN	A	37.205.12.254
 vpn		IN	CNAME	vpn01.prg.vpsfree.cz.
 secret		IN	A	37.205.10.42
 vpsadmin.prg	IN	A	37.205.10.1

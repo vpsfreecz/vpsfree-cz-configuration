@@ -17,7 +17,7 @@
           # Set your preshared key
           presharedKeyFile = "/private/wireguard/vpsfree.cz/preshared_key";
           allowedIPs = [ "172.16.0.0/12" ];
-          endpoint = "77.93.223.7:51820";
+          endpoint = "37.205.12.254:51820";
           persistentKeepalive = 25;
         }
       ];
