@@ -13,13 +13,7 @@ let
   v4Networks = [
     "172.16.0.0/12"
   ] ++ managementV4Networks
-    ++ containerV4Networks
-    ++ (optionals (confMachine.host.location == "brq") [
-      # NAT in prg, needed in brq for access from monitoring
-      "83.167.228.130/32"
-      "81.31.40.98/32"
-      "81.31.40.102/32"
-    ]);
+    ++ containerV4Networks;
 
   v6Networks = containerV6Networks;
 
