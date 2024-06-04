@@ -47,6 +47,8 @@ let
   monitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
 
   haproxyExporterPort = confMachine.services.haproxy-exporter.port;
+
+  varnishExporterPort = confMachine.services.varnish-exporter.port;
 in {
   networking.firewall.extraCommands =
     (concatMapStringsSep "\n" (m: ''
@@ -55,6 +57,9 @@ in {
     + (concatMapStringsSep "\n" (m: ''
       # haproxy prometheus metrics ${m.name}
       iptables -A nixos-fw -p tcp --dport ${toString haproxyExporterPort} -s ${m.metaConfig.addresses.primary.address} -j nixos-fw-accept
+
+      # varnish exporter ${m.name}
+      iptables -A nixos-fw -p tcp --dport ${toString varnishExporterPort} -s ${m.metaConfig.addresses.primary.address} -j nixos-fw-accept
     '') monitors);
 
   systemd.tmpfiles.rules = [
@@ -233,4 +238,11 @@ in {
     path = "network-graphs";
     virtualHost = "vpsadmin.vpsfree.cz";
   };
+
+  services.prometheus.exporters.varnish = {
+    enable = true;
+    port = varnishExporterPort;
+  };
+
+  users.groups.varnish.members = [ config.services.prometheus.exporters.varnish.user ];
 }

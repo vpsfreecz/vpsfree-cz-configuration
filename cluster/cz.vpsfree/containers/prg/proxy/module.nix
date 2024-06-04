@@ -11,6 +11,7 @@
     services = {
       haproxy-exporter = {};
       node-exporter = {};
+      varnish-exporter = {};
     };
     tags = [ "vpsadmin" "manual-update" ];
 
