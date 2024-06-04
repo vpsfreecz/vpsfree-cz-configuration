@@ -46,6 +46,10 @@ in {
     iptables -A nixos-fw -p tcp -m tcp -s ${m.addresses.primary.address} --dport 5000 -j nixos-fw-accept
   '') (webuis ++ [ webuiDev ]);
 
+  systemd.tmpfiles.rules = [
+    "d /run/varnish 0755 varnish varnish -"
+  ];
+
   vpsadmin.download-mounter = {
     enable = true;
     api = {
@@ -98,6 +102,22 @@ in {
     };
   };
 
+  vpsadmin.varnish = {
+    enable = true;
+
+    bind = "/run/varnish/vpsadmin-varnish.sock,mode=0666";
+
+    api.prod = {
+      domain = "api.vpsfree.cz";
+      backend.path = "/run/haproxy/vpsadmin-api.sock";
+    };
+
+    api.maintenance = {
+      domain = "api-admin.vpsfree.cz";
+      backend.path = "/run/haproxy/vpsadmin-api.sock";
+    };
+  };
+
   vpsadmin.frontend = {
     enable = true;
 
@@ -113,14 +133,14 @@ in {
       production = {
         domain = "api.vpsfree.cz";
         backend = {
-          address = "unix:/run/haproxy/vpsadmin-api.sock";
+          address = "unix:/run/varnish/vpsadmin-varnish.sock";
         };
       };
 
       maintenance = {
         domain = "api-admin.vpsfree.cz";
         backend = {
-          address = "unix:/run/haproxy/vpsadmin-api.sock";
+          address = "unix:/run/varnish/vpsadmin-varnish.sock";
         };
       };
     };
@@ -129,14 +149,14 @@ in {
       production = {
         domain = "auth.vpsfree.cz";
         backend = {
-          address = "unix:/run/haproxy/vpsadmin-api.sock";
+          address = "unix:/run/varnish/vpsadmin-varnish.sock";
         };
       };
 
       maintenance = {
         domain = "auth-admin.vpsfree.cz";
         backend = {
-          address = "unix:/run/haproxy/vpsadmin-api.sock";
+          address = "unix:/run/varnish/vpsadmin-varnish.sock";
         };
       };
     };
