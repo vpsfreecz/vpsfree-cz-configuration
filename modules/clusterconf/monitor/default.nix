@@ -278,6 +278,23 @@ let
         }) rabbitmqServices;
       };
 
+    haproxy =
+      let
+        haproxyServices = flatten (map (m:
+          filterServices m (sv: sv.monitor == "haproxy-exporter")
+        ) monitoredMachines);
+      in {
+        exporterConfigs = map (sv: {
+          targets = [ "${sv.svConfig.address}:${toString sv.svConfig.port}" ];
+          labels = {
+            fqdn = sv.machine.metaConfig.host.fqdn;
+            domain = sv.machine.metaConfig.host.domain;
+            location = ensureLocation sv.machine.metaConfig.host.location;
+            service = "haproxy";
+          };
+        }) haproxyServices;
+      };
+
     http =
       let
         sites = import ./http.nix;
@@ -658,6 +675,12 @@ in {
             job_name = "rabbitmq";
             scrape_interval = "30s";
             static_configs = scrapeConfigs.rabbitmq.exporterConfigs;
+          }
+        ) ++ (optional (scrapeConfigs.haproxy.exporterConfigs != [])
+          {
+            job_name = "haproxy";
+            scrape_interval = "60s";
+            static_configs = scrapeConfigs.haproxy.exporterConfigs;
           }
         ) ++ scrapeConfigs.http.jobs ++ [
           {
