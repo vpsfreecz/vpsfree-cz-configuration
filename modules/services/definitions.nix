@@ -57,6 +57,10 @@ in {
       munin-cron.port = -1;
       nginx.port = 80;
       nix-serve.port = 5000;
+      haproxy-exporter = {
+        port = 8405;
+        monitor = "haproxy-exporter";
+      };
       kresd-management = {
         port = 8453;
         monitor = "kresd-management";

@@ -1,4 +1,4 @@
-{ pkgs, lib, config, confLib, ... }:
+{ pkgs, lib, config, confMachine, confLib, ... }:
 with lib;
 let
   db = confLib.findMetaConfig {
@@ -41,10 +41,21 @@ let
   webuis = [ webui1 webui2 ];
 
   consoles = apis;
+
+  allMachines = confLib.getClusterMachines config.cluster;
+
+  monitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
+
+  haproxyExporterPort = confMachine.services.haproxy-exporter.port;
 in {
-  networking.firewall.extraCommands = concatMapStringsSep "\n" (m: ''
-    iptables -A nixos-fw -p tcp -m tcp -s ${m.addresses.primary.address} --dport 5000 -j nixos-fw-accept
-  '') (webuis ++ [ webuiDev ]);
+  networking.firewall.extraCommands =
+    (concatMapStringsSep "\n" (m: ''
+      iptables -A nixos-fw -p tcp -m tcp -s ${m.addresses.primary.address} --dport 5000 -j nixos-fw-accept
+    '') (webuis ++ [ webuiDev ]))
+    + (concatMapStringsSep "\n" (m: ''
+      # haproxy prometheus metrics ${m.name}
+      iptables -A nixos-fw -p tcp --dport ${toString haproxyExporterPort} -s ${m.metaConfig.addresses.primary.address} -j nixos-fw-accept
+    '') monitors);
 
   systemd.tmpfiles.rules = [
     "d /run/varnish 0755 varnish varnish -"
@@ -61,6 +72,8 @@ in {
 
   vpsadmin.haproxy = {
     enable = true;
+
+    exporter.port = haproxyExporterPort;
 
     api.prod = {
       frontend.bind = [

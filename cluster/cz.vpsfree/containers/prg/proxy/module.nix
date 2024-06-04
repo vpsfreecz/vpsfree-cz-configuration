@@ -8,7 +8,10 @@
     addresses = {
       v4 = [ { address = "172.16.9.140"; prefix = 32; } ];
     };
-    services.node-exporter = {};
+    services = {
+      haproxy-exporter = {};
+      node-exporter = {};
+    };
     tags = [ "vpsadmin" "manual-update" ];
 
     healthChecks = {
