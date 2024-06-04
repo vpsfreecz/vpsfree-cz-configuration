@@ -295,6 +295,23 @@ let
         }) haproxyServices;
       };
 
+    varnish =
+      let
+        varnishServices = flatten (map (m:
+          filterServices m (sv: sv.monitor == "varnish-exporter")
+        ) monitoredMachines);
+      in {
+        exporterConfigs = map (sv: {
+          targets = [ "${sv.svConfig.address}:${toString sv.svConfig.port}" ];
+          labels = {
+            fqdn = sv.machine.metaConfig.host.fqdn;
+            domain = sv.machine.metaConfig.host.domain;
+            location = ensureLocation sv.machine.metaConfig.host.location;
+            service = "varnish";
+          };
+        }) varnishServices;
+      };
+
     http =
       let
         sites = import ./http.nix;
@@ -681,6 +698,12 @@ in {
             job_name = "haproxy";
             scrape_interval = "60s";
             static_configs = scrapeConfigs.haproxy.exporterConfigs;
+          }
+        ) ++ (optional (scrapeConfigs.varnish.exporterConfigs != [])
+          {
+            job_name = "varnish";
+            scrape_interval = "60s";
+            static_configs = scrapeConfigs.varnish.exporterConfigs;
           }
         ) ++ scrapeConfigs.http.jobs ++ [
           {
