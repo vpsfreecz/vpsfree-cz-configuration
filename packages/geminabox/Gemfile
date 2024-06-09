@@ -1,3 +1,7 @@
 source 'https://rubygems.org'
 gem 'geminabox'
 gem 'thin'
+
+# Workaround for rubygems >=3.5
+# See https://github.com/geminabox/geminabox/pull/572
+gem 'rubygems-generate_index', '~> 1.1'

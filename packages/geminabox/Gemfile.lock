@@ -1,10 +1,11 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    builder (3.2.4)
+    builder (3.3.0)
+    compact_index (0.15.0)
     daemons (1.4.1)
     eventmachine (1.2.7)
-    faraday (2.9.0)
+    faraday (2.9.1)
       faraday-net_http (>= 2.0, < 3.2)
     faraday-net_http (3.1.0)
       net-http
@@ -21,11 +22,13 @@ GEM
     nesty (1.0.2)
     net-http (0.4.1)
       uri
-    rack (2.2.8.1)
+    rack (2.2.9)
     rack-protection (2.2.4)
       rack
     reentrant_flock (0.1.1)
     ruby2_keywords (0.0.5)
+    rubygems-generate_index (1.1.2)
+      compact_index (~> 0.15.0)
     sinatra (2.2.4)
       mustermann (~> 2.0)
       rack (~> 2.2)
@@ -39,11 +42,13 @@ GEM
     uri (0.13.0)
 
 PLATFORMS
+  ruby
   x86_64-linux
 
 DEPENDENCIES
   geminabox
+  rubygems-generate_index (~> 1.1)
   thin
 
 BUNDLED WITH
-   2.4.22
+   2.5.9
