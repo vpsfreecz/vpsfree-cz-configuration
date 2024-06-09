@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/containers/discourse" = {
     spin = "nixos";
-    swpins.channels = [ "nixos-unstable" "os-staging" ];
+    swpins.channels = [ "nixos-stable" "os-staging" ];
     container.id = 24920;
     host = { name = "discourse"; domain = "vpsfree.cz"; };
     addresses = {
