@@ -41,6 +41,12 @@
           allowedIPs = [ "172.16.107.11/32" ];
         }
 
+        { # snajpa - ipad
+          publicKey = "scUEKg3klB5pNVCFUnwuq5fa49MgzmzVW2BFCoSdLyM=";
+          presharedKeyFile = "/private/wireguard/preshared_keys/snajpa.psk";
+          allowedIPs = [ "172.16.107.12/32" ];
+        }
+
         { # aither - ws
           publicKey = "74Q77kXuMJ4Kz4Tn52n7xRreRvvuuqAnAND4HbVythI=";
           presharedKeyFile = "/private/wireguard/preshared_keys/aither.psk";
