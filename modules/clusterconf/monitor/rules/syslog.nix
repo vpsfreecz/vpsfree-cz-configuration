@@ -193,7 +193,7 @@
       }
 
       {
-        alert = "KernelOomHighRate";
+        alert = "OomHighRate";
         expr = ''rate(syslog_kernel_oom_count[10m]) >= 10'';
         labels = {
           severity = "warning";
@@ -210,7 +210,7 @@
       }
 
       {
-        alert = "KernelOomCritRate";
+        alert = "OomCritRate";
         expr = ''rate(syslog_kernel_oom_count[10m]) >= 50'';
         labels = {
           severity = "critical";
@@ -227,7 +227,7 @@
       }
 
       {
-        alert = "KernelOomFatalRate";
+        alert = "OomFatalRate";
         expr = ''rate(syslog_kernel_oom_count[10m]) >= 100'';
         labels = {
           severity = "fatal";
