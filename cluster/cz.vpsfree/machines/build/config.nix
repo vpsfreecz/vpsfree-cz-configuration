@@ -23,8 +23,7 @@
     ];
   };
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.supportedFilesystems = [ "zfs" ];
-  boot.zfs.enableUnstable = true;
+  boot.supportedFilesystems.zfs = true;
   boot.zfs.devNodes = "/dev";
 
   boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk" ];

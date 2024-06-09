@@ -28,7 +28,7 @@ in {
     '';
   };
 
-  boot.supportedFilesystems = [ "zfs" ];
+  boot.supportedFilesystems.zfs = true;
 
   networking.useDHCP = true;
 
