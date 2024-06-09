@@ -41,12 +41,6 @@
           allowedIPs = [ "172.16.107.11/32" ];
         }
 
-        { # martyet - laptop
-          publicKey = "fDZXHPIqbBtudHlS8UKeyUI97QDMzH3xPS3pgwIozBE=";
-          presharedKeyFile = "/private/wireguard/preshared_keys/martyet.psk";
-          allowedIPs = [ "172.16.107.20/32" ];
-        }
-
         { # aither - ws
           publicKey = "74Q77kXuMJ4Kz4Tn52n7xRreRvvuuqAnAND4HbVythI=";
           presharedKeyFile = "/private/wireguard/preshared_keys/aither.psk";
