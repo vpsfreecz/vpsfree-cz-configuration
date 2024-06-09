@@ -49,7 +49,7 @@ in {
   # NOTE: environments/base.nix is not imported, this is a standalone system
   imports = [
     ./hardware.nix
-    "${builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-23.11.tar.gz}/nixos"
+    "${builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-24.05.tar.gz}/nixos"
   ];
 
   boot.loader.grub.enable = true;
