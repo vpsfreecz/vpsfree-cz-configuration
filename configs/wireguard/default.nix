@@ -71,12 +71,6 @@
           allowedIPs = [ "172.16.107.40/32" ];
         }
 
-        { # roman
-          publicKey = "4ikPBCKPz5aMPN0QPGw//lXZzDoz8//w+6dWxspoP38=";
-          presharedKeyFile = "/private/wireguard/preshared_keys/roman.psk";
-          allowedIPs = [ "172.16.107.50/32" ];
-        }
-
         { # kerrycze - desktop
           publicKey = "NxQwqOLW0GO5VTBdcHC5fanFkUZ1QpohBsUsFB+4LkU=";
           presharedKeyFile = "/private/wireguard/preshared_keys/kerrycze.psk";
