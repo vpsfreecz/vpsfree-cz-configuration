@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/containers/int.paste" = {
     spin = "nixos";
-    swpins.channels = [ "nixos-unstable" "os-staging" ];
+    swpins.channels = [ "nixos-stable" "os-staging" ];
     container.id = 23695;
     host = { name = "paste"; location = "int"; domain = "vpsfree.cz"; };
     addresses = {
