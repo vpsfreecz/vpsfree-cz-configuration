@@ -3,6 +3,7 @@
   imports = [
     ../../../../../environments/base.nix
     ../../../../../profiles/ct.nix
+    ../../../../../configs/internal-dns
   ];
 
   clusterconf.monitor = {
@@ -23,6 +24,8 @@
       "cz.vpsfree/containers/prg/int.mon1"
     ];
   };
+
+  networking.nameservers = lib.mkForce [ "127.0.0.1" ];
 
   system.stateVersion = "22.05";
 }

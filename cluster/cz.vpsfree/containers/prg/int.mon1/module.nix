@@ -13,7 +13,7 @@
       prometheus = {};
     };
     monitoring.isMonitor = true;
-    tags = [ "monitor" "auto-update" ];
+    tags = [ "monitor" "internal-dns" "auto-update" ];
     healthChecks = import ../../../../../health-checks/monitoring.nix;
   };
 }
