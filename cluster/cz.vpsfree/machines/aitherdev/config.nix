@@ -78,6 +78,7 @@ in {
       extra-sandbox-paths = [
         "/secrets=/home/aither/workspace/vpsadmin/vpsadminos/os/secrets?"
       ];
+      trusted-users = [ "aither" ];
     };
   };
 
