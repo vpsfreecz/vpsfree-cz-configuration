@@ -103,6 +103,8 @@ in {
     parallelStop = 8;
   };
 
+  boot.enableUnifiedCgroupHierarchy = true;
+
   swapDevices = [
     # { label = "swap1"; }
   ];
