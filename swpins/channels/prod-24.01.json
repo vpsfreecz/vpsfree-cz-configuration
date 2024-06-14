@@ -6,7 +6,7 @@
       "update": {
         "auto": false,
         "interval": 3600,
-        "ref": "refs/heads/nixos-23.11"
+        "ref": "refs/heads/nixos-24.05"
       },
       "url": "https://github.com/NixOS/nixpkgs"
     },
@@ -77,22 +77,22 @@
       "url": "https://github.com/vpsfreecz/vpsadminos"
     },
     "state": {
-      "rev": "6a7b974362d8625dad63e46168ff383663de6a57",
-      "date": "2024-06-04T13:32:38+02:00"
+      "rev": "e0dbc638653868ebac999ad4b5db535be066dc33",
+      "date": "2024-06-14T22:09:54+02:00"
     },
     "info": {
-      "rev": "6a7b974362d8625dad63e46168ff383663de6a57",
-      "sha256": "0vvb6sc491w90ap9wa9g5b5hb5ln52gfq3vgyqfkjvva20xp6s8l"
+      "rev": "e0dbc638653868ebac999ad4b5db535be066dc33",
+      "sha256": "0c8i5dqy9qc7sxwakm7f8m2dcpd3vyc0g0qqfyda5619z7hqxj23"
     },
     "fetcher": {
       "type": "git-rev",
       "options": {
-        "rev": "6a7b974362d8625dad63e46168ff383663de6a57",
+        "rev": "e0dbc638653868ebac999ad4b5db535be066dc33",
         "wrapped_fetcher": {
           "type": "zip",
           "options": {
-            "url": "https://github.com/vpsfreecz/vpsadminos/archive/6a7b974362d8625dad63e46168ff383663de6a57.tar.gz",
-            "sha256": "0vvb6sc491w90ap9wa9g5b5hb5ln52gfq3vgyqfkjvva20xp6s8l"
+            "url": "https://github.com/vpsfreecz/vpsadminos/archive/e0dbc638653868ebac999ad4b5db535be066dc33.tar.gz",
+            "sha256": "0c8i5dqy9qc7sxwakm7f8m2dcpd3vyc0g0qqfyda5619z7hqxj23"
           }
         }
       }
