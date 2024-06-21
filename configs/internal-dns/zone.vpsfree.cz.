@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2024060301 ; serial number of this zone file
+              2024062401 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -93,6 +93,8 @@ web.int                        IN   A       172.16.9.28
 www                            IN   CNAME   prasiatko.vpsfree.cz.
 
 ; Management
+node19-mgmt.prg                IN   A       172.16.101.119
+node20-mgmt.prg                IN   A       172.16.101.120
 node21-mgmt.prg                IN   A       172.16.101.121
 node22-mgmt.prg                IN   A       172.16.101.122
 node23-mgmt.prg                IN   A       172.16.101.123
@@ -107,6 +109,8 @@ node5-mgmt.brq                 IN   A       172.19.101.24
 node6-mgmt.brq                 IN   A       172.19.101.25
 
 ; Nodes
+node19.prg                     IN   A       172.16.0.29
+node20.prg                     IN   A       172.16.0.30
 node21.prg                     IN   A       172.16.0.31
 node22.prg                     IN   A       172.16.0.32
 node23.prg                     IN   A       172.16.0.33

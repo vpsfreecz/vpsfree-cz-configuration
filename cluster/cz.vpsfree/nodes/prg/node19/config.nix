@@ -1,0 +1,46 @@
+{ config, pkgs, lib, ... }:
+{
+  imports = [
+    ../common.nix
+    ../../common/tunables-1t.nix
+  ];
+
+  hardware.cpu.amd.updateMicrocode = true;
+
+  boot.zfs.pools = {
+    tank = {
+      install = true;
+
+      wipe = [
+        "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1"
+      ];
+
+      layout = [
+        { type = "raidz"; devices = [ "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ]; }
+      ];
+
+      properties = {
+        ashift = "12";
+      };
+
+      datasets = {
+        "reservation".properties = {
+          refreservation = "500G";
+        };
+      };
+    };
+  };
+
+  osctl.pools.tank = {
+    parallelStart = 20;
+    parallelStop = 40;
+  };
+
+  swapDevices = [
+    # none
+  ];
+
+  vpsadmin.nodectld.settings = {
+    vpsadmin.queues.zfs_send.threads = 5;
+  };
+}
