@@ -55,7 +55,7 @@ in {
       networking = {
         interfaces = {
           names = {
-            teng0 = "04:3f:72:fa:a7:14";
+            teng0 = "04:3f:72:fa:a8:14";
             teng1 = "04:3f:72:fa:a8:15";
           };
           addresses = {
