@@ -31,7 +31,7 @@ module ProdBranch
       end
 
       machines = ConfCtl::MachineList.new.select do |_, m|
-        m.spin == 'vpsadminos' && m['swpins']['channels'].detect { |v| v.start_with?('prod-') }
+        !m.carried? && m.spin == 'vpsadminos' && m['swpins']['channels'].detect { |v| v.start_with?('prod-') }
       end
 
       old_branch = nil
