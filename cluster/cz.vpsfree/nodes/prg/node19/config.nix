@@ -21,6 +21,7 @@
 
       properties = {
         ashift = "12";
+        "feature@block_cloning" = "disabled";
       };
 
       datasets = {
