@@ -27,6 +27,7 @@ in
     extra-sandbox-paths = [
       "/nix/var/cache/ccache"
       "/secrets/nodes/images"
+      "/srv/iso-images"
     ];
     cores = 0;
     gc-keep-outputs = true;
