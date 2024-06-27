@@ -3,6 +3,7 @@
   imports = [
     ../common/all.nix
     ../../../../environments/deploy.nix
+    ../../../../configs/carrier.nix
     ../../../../configs/ssh-exporter.nix
 
     <vpsadminos/os/modules/services/misc/build-vpsadminos-container-image-repository/nixos.nix>
@@ -88,14 +89,7 @@
     systemd.timer.enable = true;
   };
 
-  confctl.carrier.netboot = {
-    enable = true;
-    host = "172.16.106.5";
-    allowedIPv4Ranges = [
-      "172.16.254.0/24"
-      "172.19.254.0/24"
-    ];
-  };
+  confctl.carrier.netboot.host = "172.16.106.5";
 
   system.stateVersion = "22.05";
 }
