@@ -1,7 +1,6 @@
 # This file is auto-generated on confctl rediscover, changes will be lost
 [
   "cz.vpsfree/machines/nixos-live"
-  "cz.vpsfree/nodes/brq/node2"
   "cz.vpsfree/nodes/brq/node5"
   "cz.vpsfree/nodes/brq/node6"
   "cz.vpsfree/nodes/pgnd/node1"
