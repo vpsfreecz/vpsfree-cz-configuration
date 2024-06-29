@@ -101,10 +101,10 @@
   "log.int.prg.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node24.prg.vpsfree.cz";
-      id = 125;
-      location = "prg";
-      name = "node24";
+      fqdn = "node1.pgnd.vpsfree.cz";
+      id = 300;
+      location = "pgnd";
+      name = "node1";
     };
   };
   "mon1.int.prg.vpsfree.cz" = {
@@ -137,19 +137,19 @@
   "ns1.brq.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node5.brq.vpsfree.cz";
-      id = 214;
+      fqdn = "node6.brq.vpsfree.cz";
+      id = 215;
       location = "brq";
-      name = "node5";
+      name = "node6";
     };
   };
   "ns1.int.brq.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node5.brq.vpsfree.cz";
-      id = 214;
+      fqdn = "node6.brq.vpsfree.cz";
+      id = 215;
       location = "brq";
-      name = "node5";
+      name = "node6";
     };
   };
   "ns1.int.prg.vpsfree.cz" = {
@@ -182,10 +182,10 @@
   "ns2.brq.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node2.brq.vpsfree.cz";
-      id = 211;
+      fqdn = "node6.brq.vpsfree.cz";
+      id = 215;
       location = "brq";
-      name = "node2";
+      name = "node6";
     };
   };
   "ns2.prg.vpsfree.cz" = {
@@ -200,10 +200,10 @@
   "ns2.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node5.brq.vpsfree.cz";
-      id = 214;
+      fqdn = "node6.brq.vpsfree.cz";
+      id = 215;
       location = "brq";
-      name = "node5";
+      name = "node6";
     };
   };
   "paste.int.vpsfree.cz" = {
