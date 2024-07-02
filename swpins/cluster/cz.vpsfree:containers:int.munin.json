@@ -11,22 +11,22 @@
       "url": "https://github.com/aither64/nixpkgs"
     },
     "state": {
-      "rev": "55a3498055cd2f2b0ebd53a3ecfe725b1222a117",
-      "date": "2024-01-10T19:35:46+01:00"
+      "rev": "65f84ae973f7420725d1c498959a786141c664f0",
+      "date": "2024-07-02T14:25:10+02:00"
     },
     "info": {
-      "rev": "55a3498055cd2f2b0ebd53a3ecfe725b1222a117",
-      "sha256": "0rhxp12xs151rm5mnkvwxymlldmgwbmv4q9ish33irdwzpsmscqi"
+      "rev": "65f84ae973f7420725d1c498959a786141c664f0",
+      "sha256": "028rvmf6rsvlaq0xkgsya5zsfnizzh0r33n2ald8qbqn3v7mvh96"
     },
     "fetcher": {
       "type": "git-rev",
       "options": {
-        "rev": "55a3498055cd2f2b0ebd53a3ecfe725b1222a117",
+        "rev": "65f84ae973f7420725d1c498959a786141c664f0",
         "wrapped_fetcher": {
           "type": "zip",
           "options": {
-            "url": "https://github.com/aither64/nixpkgs/archive/55a3498055cd2f2b0ebd53a3ecfe725b1222a117.tar.gz",
-            "sha256": "0rhxp12xs151rm5mnkvwxymlldmgwbmv4q9ish33irdwzpsmscqi"
+            "url": "https://github.com/aither64/nixpkgs/archive/65f84ae973f7420725d1c498959a786141c664f0.tar.gz",
+            "sha256": "028rvmf6rsvlaq0xkgsya5zsfnizzh0r33n2ald8qbqn3v7mvh96"
           }
         }
       }
