@@ -176,7 +176,6 @@ in {
               "vpsfreecz/lxcfs"
               "vpsfreecz/nixos-modules"
               "vpsfreecz/terraform-provider-vpsadmin"
-              "vpsfreecz/vpsfree-cz-configuration"
               "vpsfreecz/vpsadmin"
               "vpsfreecz/vpsadmin-go-client"
               "vpsfreecz/vpsadminos"
