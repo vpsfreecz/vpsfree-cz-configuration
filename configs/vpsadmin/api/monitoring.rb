@@ -352,7 +352,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
   monitor :diskspace do
     label 'Dataset free space'
     desc 'The dataset has less than 10 % of free space'
-    check_count 1
+    period 60*60
     repeat 1*24*60*60
     cooldown 6*60*60
 
