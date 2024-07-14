@@ -128,6 +128,9 @@ in
         # iperf
         iptables -A nixos-fw -p tcp --dport 5001 -j nixos-fw-accept
 
+        # goresheat
+        iptables -A nixos-fw -p tcp -s 172.16.107.0/24 --dport ${toString config.services.goresheat.port} -j nixos-fw-accept
+
         # vpsadmin ports for zfs send/recv
         ${lib.concatStringsSep "\n" vpsadminSendRecvRules}
 
@@ -186,6 +189,8 @@ in
   #   /sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI000D:00
   #
   services.prometheus.exporters.node.disabledCollectors = [ "hwmon" ];
+
+  services.goresheat.enable = true;
 
   services.openssh = {
     openFirewall = false;
