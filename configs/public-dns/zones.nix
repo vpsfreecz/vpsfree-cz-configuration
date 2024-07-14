@@ -14,20 +14,20 @@ let
 
   zones = [
     { name = "vpsfree.cz."; file = ./zone.vpsfree.cz.; }
-    "10.205.37.in-addr.arpa."
-    "164.8.185.in-addr.arpa."
-    "165.8.185.in-addr.arpa."
-    "166.8.185.in-addr.arpa."
-    "167.8.185.in-addr.arpa."
     "8.205.37.in-addr.arpa."
     "9.205.37.in-addr.arpa."
+    "10.205.37.in-addr.arpa."
+    "11.205.37.in-addr.arpa."
     "12.205.37.in-addr.arpa."
     "13.205.37.in-addr.arpa."
     "14.205.37.in-addr.arpa."
     "15.205.37.in-addr.arpa."
-    "0.0.1.0.0.4.b.3.3.0.a.2.ip6.arpa."
-    "11.205.37.in-addr.arpa."
+    "164.8.185.in-addr.arpa."
+    "165.8.185.in-addr.arpa."
+    "166.8.185.in-addr.arpa."
+    "167.8.185.in-addr.arpa."
     "0.4.b.3.3.0.a.2.ip6.arpa."
+    "0.0.1.0.0.4.b.3.3.0.a.2.ip6.arpa."
     { name = "2.0.0.4.b.3.3.0.a.2.ip6.arpa."; masters = [ "37.205.8.113" ]; }
     { name = "3.0.0.4.b.3.3.0.a.2.ip6.arpa."; masters = [ "37.205.8.113" ]; }
   ];
