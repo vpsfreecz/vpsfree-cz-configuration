@@ -15,7 +15,6 @@ let
   zones = [
     { name = "vpsfree.cz."; file = ./zone.vpsfree.cz.; }
     "10.205.37.in-addr.arpa."
-    "7.1.0.0.0.3.4.0.1.0.a.2.ip6.arpa."
     "164.8.185.in-addr.arpa."
     "165.8.185.in-addr.arpa."
     "166.8.185.in-addr.arpa."
@@ -30,10 +29,7 @@ let
     "2.0.0.0.0.4.b.c.0.0.a.2.ip6.arpa."
     "1.0.0.0.0.4.b.c.0.0.a.2.ip6.arpa."
     "16-31.145.62.149.in-addr.arpa."
-    "223.93.77.in-addr.arpa."
     "11.205.37.in-addr.arpa."
-    "128-191.228.167.83.in-addr.arpa."
-    "1-127.228.167.83.in-addr.arpa."
     "0.4.b.3.3.0.a.2.ip6.arpa."
     { name = "2.0.0.4.b.3.3.0.a.2.ip6.arpa."; masters = [ "37.205.8.113" ]; }
     { name = "3.0.0.4.b.3.3.0.a.2.ip6.arpa."; masters = [ "37.205.8.113" ]; }
