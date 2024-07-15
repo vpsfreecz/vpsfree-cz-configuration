@@ -11,10 +11,10 @@
   "alerts2.int.prg.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node23.prg.vpsfree.cz";
-      id = 124;
+      fqdn = "node19.prg.vpsfree.cz";
+      id = 120;
       location = "prg";
-      name = "node23";
+      name = "node19";
     };
   };
   "api1.int.vpsfree.cz" = {
@@ -74,10 +74,10 @@
   "images.int.vpsadminos.org" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node23.prg.vpsfree.cz";
-      id = 124;
+      fqdn = "node20.prg.vpsfree.cz";
+      id = 121;
       location = "prg";
-      name = "node23";
+      name = "node20";
     };
   };
   "iso.int.vpsadminos.org" = {
@@ -164,10 +164,10 @@
   "ns1.prg.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node23.prg.vpsfree.cz";
-      id = 124;
+      fqdn = "node20.prg.vpsfree.cz";
+      id = 121;
       location = "prg";
-      name = "node23";
+      name = "node20";
     };
   };
   "ns1.vpsfree.cz" = {
@@ -206,6 +206,24 @@
       name = "node6";
     };
   };
+  "ns3.vpsfree.cz" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node19.prg.vpsfree.cz";
+      id = 120;
+      location = "prg";
+      name = "node19";
+    };
+  };
+  "ns4.vpsfree.cz" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node6.brq.vpsfree.cz";
+      id = 215;
+      location = "brq";
+      name = "node6";
+    };
+  };
   "paste.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
@@ -227,10 +245,10 @@
   "proxy.vpsadminos.org" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node23.prg.vpsfree.cz";
-      id = 124;
+      fqdn = "node20.prg.vpsfree.cz";
+      id = 121;
       location = "prg";
-      name = "node23";
+      name = "node20";
     };
   };
   "rabbitmq1.int.vpsfree.cz" = {
@@ -245,10 +263,10 @@
   "rabbitmq2.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node23.prg.vpsfree.cz";
-      id = 124;
+      fqdn = "node20.prg.vpsfree.cz";
+      id = 121;
       location = "prg";
-      name = "node23";
+      name = "node20";
     };
   };
   "rabbitmq3.int.vpsfree.cz" = {
@@ -353,10 +371,10 @@
   "www.int.vpsadminos.org" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node23.prg.vpsfree.cz";
-      id = 124;
+      fqdn = "node20.prg.vpsfree.cz";
+      id = 121;
       location = "prg";
-      name = "node23";
+      name = "node20";
     };
   };
 }
