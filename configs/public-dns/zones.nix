@@ -1,12 +1,12 @@
-{ lib, master }:
+{ lib, primary }:
 let
   inherit (lib) concatMapStringsSep;
 
-  masters = [
+  primaries = [
     "37.205.9.232"
   ];
 
-  slaves = [
+  secondaries = [
     "37.205.11.51"
   ];
 
@@ -28,8 +28,8 @@ let
     "167.8.185.in-addr.arpa."
     "0.4.b.3.3.0.a.2.ip6.arpa."
     "0.0.1.0.0.4.b.3.3.0.a.2.ip6.arpa."
-    { name = "2.0.0.4.b.3.3.0.a.2.ip6.arpa."; masters = [ "37.205.8.113" ]; }
-    { name = "3.0.0.4.b.3.3.0.a.2.ip6.arpa."; masters = [ "37.205.8.113" ]; }
+    { name = "2.0.0.4.b.3.3.0.a.2.ip6.arpa."; primaries = [ "37.205.8.113" ]; }
+    { name = "3.0.0.4.b.3.3.0.a.2.ip6.arpa."; primaries = [ "37.205.8.113" ]; }
   ];
 
   ipsToBind = ips: concatMapStringsSep " " (ip: "${ip};") ips;
@@ -39,9 +39,9 @@ let
   makeZone = zone:
     let
       fn =
-        if !master || ((builtins.isAttrs zone) && (builtins.hasAttr "masters" zone)) then
-          makeSlaveZone
-        else makeMasterZone;
+        if !primary || ((builtins.isAttrs zone) && (builtins.hasAttr "primaries" zone)) then
+          makeSecondaryZone
+        else makePrimaryZone;
 
       attrset =
         if builtins.isAttrs zone then
@@ -52,17 +52,17 @@ let
           abort "zone has to be attrset or string";
     in fn attrset;
 
-  makeMasterZone = zone: {
+  makePrimaryZone = zone: {
     inherit (zone) name;
     master = true;
-    inherit slaves;
+    slaves = secondaries;
     file = zone.file or "${zoneDir}/zone.${zone.name}";
   };
 
-  makeSlaveZone = zone: {
+  makeSecondaryZone = zone: {
     inherit (zone) name;
     master = false;
-    masters = zone.masters or masters;
+    masters = zone.primaries or primaries;
     file = "zone.${zone.name}";
     extraConfig = ''
       allow-transfer { "none"; };

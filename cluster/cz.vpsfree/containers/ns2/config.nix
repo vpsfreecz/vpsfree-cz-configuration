@@ -3,7 +3,7 @@
   imports = [
     ../../../../environments/base.nix
     ../../../../profiles/ct.nix
-    ../../../../configs/public-dns/slave.nix
+    ../../../../configs/public-dns/secondary.nix
   ];
 
   system.stateVersion = "23.11";

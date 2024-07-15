@@ -5,7 +5,7 @@
   ];
 
   services.bind = {
-    zones = import ./zones.nix { inherit lib; master = true; };
+    zones = import ./zones.nix { inherit lib; primary = true; };
   };
 
   systemd.tmpfiles.rules = [
