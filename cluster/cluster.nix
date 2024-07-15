@@ -13,6 +13,8 @@
   ./cz.vpsfree/containers/int.web/module.nix
   ./cz.vpsfree/containers/ns1/module.nix
   ./cz.vpsfree/containers/ns2/module.nix
+  ./cz.vpsfree/containers/ns3/module.nix
+  ./cz.vpsfree/containers/ns4/module.nix
   ./cz.vpsfree/containers/prg/int.alerts1/module.nix
   ./cz.vpsfree/containers/prg/int.alerts2/module.nix
   ./cz.vpsfree/containers/prg/int.grafana/module.nix
