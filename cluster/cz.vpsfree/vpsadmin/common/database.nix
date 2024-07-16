@@ -15,6 +15,11 @@ let
     name = "cz.vpsfree/vpsadmin/int.vpsadmin1";
   };
 
+  nameservers = map (ns: confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/${ns}";
+  }) [ "ns1" "ns2" "ns3" "ns4" ];
+
   proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
@@ -42,7 +47,7 @@ in {
           "${vpsadmin1.addresses.primary.address}/32"
           "${proxyPrg.addresses.primary.address}/32"
           "${utils.addresses.primary.address}/32"
-        ];
+        ] ++ (map (ns: "${ns.addresses.primary.address}/32") nameservers);
       in management ++ others;
   };
 }
