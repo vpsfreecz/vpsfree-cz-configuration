@@ -21,7 +21,7 @@
 
       {
         alert = "SystemdUnitActivatingTooLong";
-        expr = ''node_systemd_unit_state{state="activating"} == 1'';
+        expr = ''node_systemd_unit_state{state="activating",name!~"munin-cron.service"} == 1'';
         for = "5m";
         labels = {
           severity = "warning";
