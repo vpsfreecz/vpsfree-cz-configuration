@@ -971,27 +971,6 @@
           '';
         };
       }
-
-      {
-        alert = "LxcfsLoadavgStalled";
-        expr = ''sum by (instance,fqdn) (osctl_container_load1{job="nodes",role="hypervisor"}) == sum by (instance,fqdn) (osctl_container_load1{job="nodes",role="hypervisor"} offset 1m)'';
-        for = "5m";
-        labels = {
-          alertclass = "lxcfs_loadavg";
-          alertwhen = "inuse";
-          severity = "critical";
-          frequency = "15m";
-        };
-        annotations = {
-          summary = "LXCFS loadavg is not updating (instance {{ $labels.instance }})";
-          description = ''
-            LXCFS loadavg is not updating
-
-            VALUE = {{ $value }}
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
     ];
   }
 
