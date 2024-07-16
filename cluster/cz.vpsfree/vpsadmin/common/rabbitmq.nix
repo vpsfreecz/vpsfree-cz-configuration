@@ -21,6 +21,11 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.vpsadmin1";
   };
+
+  nameservers = map (ns: confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/${ns}";
+  }) [ "ns1" "ns2" "ns3" "ns4" ];
 in {
   vpsadmin.rabbitmq = {
     enable = true;
@@ -36,7 +41,8 @@ in {
         "${api1.addresses.primary.address}/32"
         "${api2.addresses.primary.address}/32"
         "${vpsadmin1.addresses.primary.address}/32"
-      ] ++ (map (n: "${n.address}/${toString n.prefix}") confData.vpsadmin.networks.management.ipv4);
+      ] ++ (map (n: "${n.address}/${toString n.prefix}") confData.vpsadmin.networks.management.ipv4)
+        ++ (map (ns: "${ns.addresses.primary.address}/32") nameservers);
 
       management = [
         "172.16.107.0/24"
