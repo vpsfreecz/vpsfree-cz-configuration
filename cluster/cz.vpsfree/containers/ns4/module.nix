@@ -15,5 +15,9 @@
       node-exporter = {};
     };
     tags = [ "dns" "public-dns" "secondary-dns" "vpsadmin" "auto-update" ];
+    healthChecks = import ../../../../health-checks/public-dns.nix {
+      inherit pkgs;
+      ns = "ns1.vpsfree.cz";
+    };
   };
 }

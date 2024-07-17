@@ -1,13 +1,15 @@
-{ lib, primary }:
+{ lib, primary, filterZones ? null }:
 let
-  inherit (lib) concatMapStringsSep;
+  inherit (lib) concatMapStringsSep filter;
 
   primaries = [
-    "37.205.9.232"
+    "37.205.9.232" # ns1
   ];
 
   secondaries = [
-    "37.205.11.51"
+    "37.205.11.51" # ns2
+    "37.205.15.45" # ns3
+    "37.205.11.85" # ns4
   ];
 
   zoneDir = "/var/named";
@@ -55,4 +57,11 @@ let
       allow-transfer { "none"; };
     '';
   };
-in makeZones
+
+  filteredZones = zones:
+    if isNull filterZones then
+      zones
+    else
+      filter filterZones zones;
+
+in filteredZones makeZones
