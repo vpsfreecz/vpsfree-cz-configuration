@@ -109,6 +109,14 @@ in {
           name = "ns2.vpsfree.cz";
           domain = "vpsfree.cz";
         }
+        {
+          name = "ns3.vpsfree.cz";
+          domain = "vpsfree.cz";
+        }
+        {
+          name = "ns4.vpsfree.cz";
+          domain = "vpsfree.cz";
+        }
       ];
     };
   };
