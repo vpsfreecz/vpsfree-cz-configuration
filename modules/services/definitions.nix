@@ -51,6 +51,7 @@ in {
       bird-bgp.port = 179;
       buildbot-master.port = 8010;
       geminabox.port = 8000;
+      goresheat.port = 8080;
       grafana.port = 3000;
       vpsadmin-console.port = 8081;
       prometheus.port = 9090;

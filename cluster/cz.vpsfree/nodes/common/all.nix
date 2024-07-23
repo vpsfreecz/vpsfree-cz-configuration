@@ -190,7 +190,10 @@ in
   #
   services.prometheus.exporters.node.disabledCollectors = [ "hwmon" ];
 
-  services.goresheat.enable = true;
+  services.goresheat = {
+    enable = true;
+    port = confMachine.services.goresheat.port;
+  };
 
   services.openssh = {
     openFirewall = false;
