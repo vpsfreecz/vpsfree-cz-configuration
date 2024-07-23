@@ -17,6 +17,11 @@ let
       name = "cz.vpsfree/vpsadmin/int.${name}";
     }
   ) [ "rabbitmq1" "rabbitmq2" "rabbitmq3" ];
+
+  proxyPrg = confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/prg/proxy";
+  };
 in
 {
   imports = [
@@ -128,8 +133,11 @@ in
         # iperf
         iptables -A nixos-fw -p tcp --dport 5001 -j nixos-fw-accept
 
-        # goresheat
+        # goresheat from VPN
         iptables -A nixos-fw -p tcp -s 172.16.107.0/24 --dport ${toString config.services.goresheat.port} -j nixos-fw-accept
+
+        # goresheat from proxy
+        iptables -A nixos-fw -p tcp -s ${proxyPrg.addresses.primary.address} --dport ${toString config.services.goresheat.port} -j nixos-fw-accept
 
         # vpsadmin ports for zfs send/recv
         ${lib.concatStringsSep "\n" vpsadminSendRecvRules}
@@ -193,6 +201,7 @@ in
   services.goresheat = {
     enable = true;
     port = confMachine.services.goresheat.port;
+    url = "https://goresheat.vpsfree.cz/${confMachine.host.fqdn}";
   };
 
   services.openssh = {

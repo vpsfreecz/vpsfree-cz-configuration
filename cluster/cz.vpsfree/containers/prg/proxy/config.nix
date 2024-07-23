@@ -58,6 +58,7 @@ in {
   imports = [
     ../../../../../environments/base.nix
     ../../../../../profiles/ct.nix
+    ../../../../../configs/goresheat-proxy.nix
     ../../../vpsadmin/common/all.nix
     ../../../vpsadmin/common/frontend.nix
   ];

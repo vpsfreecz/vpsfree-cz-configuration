@@ -85,6 +85,7 @@ in {
     };
 
     services = {
+      goresheat = {};
       ipmi-exporter = {};
       ksvcmon-exporter = {};
       node-exporter = {};
