@@ -39,6 +39,7 @@ in {
 
   services.bind = {
     enable = true;
+    directory = "/var/named";
     forwarders = mkForce [];
     extraOptions = ''
       recursion no;
@@ -54,7 +55,7 @@ in {
   };
 
   systemd.tmpfiles.rules = [
-    "d '/var/named' 0550 named named - -"
+    "d '/var/named' 0750 named named - -"
   ];
 
   services.prometheus.exporters.bind = {
