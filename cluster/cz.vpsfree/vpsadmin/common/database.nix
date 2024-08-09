@@ -18,7 +18,7 @@ let
   nameservers = map (ns: confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/${ns}";
-  }) [ "ns1" "ns2" "ns3" "ns4" ];
+  }) [ "ns0" "ns1" "ns2" "ns3" "ns4" ];
 
   proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
