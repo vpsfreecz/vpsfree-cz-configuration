@@ -150,6 +150,10 @@ in {
     api = {
       production = {
         domain = "api.vpsfree.cz";
+        aliases = [
+          "ipv4.ddns.vpsfree.cz"
+          "ipv6.ddns.vpsfree.cz"
+        ];
         backend = {
           address = "unix:/run/varnish/vpsadmin-varnish.sock";
         };
