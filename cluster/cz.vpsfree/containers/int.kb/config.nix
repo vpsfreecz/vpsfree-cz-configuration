@@ -158,8 +158,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "vpsfreecz";
       repo = "dokuwiki-template-vpsfree";
-      rev = "487c418e9ae28b9636e4311eb5f099f4b080dec6";
-      sha256 = "sha256-Yt4QiGUJHjw0KeydBuCyLpP6rM7tI0i1CQTZYxgN+cU=";
+      rev = "9e90fa56bcc65d405e4019936a50d65a98fde169";
+      sha256 = "sha256-RWO8Gn4F5r5pLhiCESbbj3d0Z3J9ImHHAnC+uqV1Xto=";
     };
     installPhase = ''
       mkdir -p $out
