@@ -42,7 +42,7 @@ in
   boot.extraModulePackages =
     lib.optional (lib.versionOlder config.boot.kernelPackages.kernel.version "5.6") config.boot.kernelPackages.wireguard;
 
-  boot.kernelParams = [ "slub_nomerge" "preempt=none" "iommu=off" ];
+  boot.kernelParams = [ "slub_nomerge" "preempt=none" "iommu=off" "cgroup_favordynmods=false" ];
 
   boot.kernel.sysctl = {
     "kernel.printk" = 0;
