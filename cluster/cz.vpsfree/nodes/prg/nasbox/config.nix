@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 {
   imports = [
+    ../../common/intel.nix
     ../../common/storage.nix
     ../../common/netboot.nix
   ];

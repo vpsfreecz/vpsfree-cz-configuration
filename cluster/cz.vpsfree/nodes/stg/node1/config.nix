@@ -2,6 +2,7 @@
 {
   imports = [
     ../common.nix
+    ../../common/intel.nix
     ../../common/netboot.nix
     ../../common/tank.nix
     ../../common/tunables-256g.nix

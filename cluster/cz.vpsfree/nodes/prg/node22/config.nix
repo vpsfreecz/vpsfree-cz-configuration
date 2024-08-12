@@ -2,6 +2,7 @@
 {
   imports = [
     ../common.nix
+    ../../common/amd.nix
     ../../common/tunables-1t.nix
   ];
 
