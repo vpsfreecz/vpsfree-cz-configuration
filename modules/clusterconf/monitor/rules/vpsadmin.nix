@@ -353,6 +353,25 @@ in [
           '';
         };
       }
+
+      {
+        alert = "DnsZoneSerialMismatch";
+        expr = ''count(count_values("serial", vpsadmin_dns_server_zone_serial) by (dns_zone)) by (dns_zone) > 1'';
+        for = "10m";
+        labels = {
+          severity = "warning";
+          frequency = "6h";
+        };
+        annotations = {
+          summary = "Zone {{ $labels.dns_zone }} is out of sync";
+          description = ''
+            Zone {{ $labels.dns_zone }} is out of sync, servers are reporting different
+            serial numbers.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 
