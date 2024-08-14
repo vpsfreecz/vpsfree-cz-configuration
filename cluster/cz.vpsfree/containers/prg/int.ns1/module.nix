@@ -14,7 +14,7 @@ in {
       bind = {};
       node-exporter = {};
     };
-    tags = [ "dns" "internal-dns" "manual-update" ];
+    tags = [ "dns" "internal-dns" "all-internal-dns" "manual-update" ];
     healthChecks = import ../../../../../health-checks/internal-dns.nix { inherit pkgs addr; };
   };
 }
