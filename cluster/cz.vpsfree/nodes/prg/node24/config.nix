@@ -7,8 +7,6 @@
     ../../common/tunables-2t.nix
   ];
 
-  hardware.cpu.amd.updateMicrocode = true;
-
   boot.zfs.pools = {
     tank = {
       install = true;
