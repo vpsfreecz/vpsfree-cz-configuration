@@ -9,8 +9,6 @@ echo "Performing manual-updates"
 confctl deploy -t manual-update --one-by-one '*' boot
 
 echo "Updating internal DNS resolvers"
-confctl build -t internal-dns
-amtool silence add --duration=5m "severity=~critical|fatal"
 confctl deploy -g current -t internal-dns --one-by-one --reboot '*' boot
 
 echo "Deploying VPN"
