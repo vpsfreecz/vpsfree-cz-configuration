@@ -66,42 +66,11 @@ in {
         ashift = "12";
       };
     };
-
-    tank-node4 = {
-      install = true;
-
-      datasets = {
-        "/".properties = {
-          compression = "on";
-          dnodesize = "legacy";
-          recordsize = "128k";
-          xattr = "sa";
-        };
-        "ct".properties = {
-          acltype = "posixacl";
-        };
-        "reservation".properties = {
-          refreservation = lib.mkDefault "100G";
-          canmount = "off";
-        };
-      };
-
-      scrub = {
-        enable = true;
-        startIntervals = [ "0 4 1-7 * *" ];
-        startCommand = ''[ "$(LC_ALL=C date '+\%a')" = "Sun" ] && scrubctl start tank-node4'';
-      };
-    };
   };
 
   osctl.pools.tank = {
-    parallelStart = 5;
-    parallelStop = 12;
-  };
-
-  osctl.pools.tank-node4 = {
-    parallelStart = 3;
-    parallelStop = 8;
+    parallelStart = 8;
+    parallelStop = 20;
   };
 
   boot.enableUnifiedCgroupHierarchy = true;
