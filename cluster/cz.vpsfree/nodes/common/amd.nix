@@ -2,5 +2,5 @@
 {
   hardware.cpu.amd.updateMicrocode = true;
 
-  boot.kernelParams = [ "amd_pstate=active" ];
+  boot.kernelParams = [ "amd_pstate=guided" ];
 }
