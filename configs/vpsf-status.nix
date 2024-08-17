@@ -93,6 +93,11 @@ in {
           url = "https://kb.vpsfree.org";
         }
         {
+          label = "discourse.vpsfree.cz";
+          description = "Discussion forum";
+          url = "https://discourse.vpsfree.cz";
+        }
+        {
           label = "ZNC";
           description = "IRC bouncer";
           url = "https://im.vpsfree.cz/znc/";
