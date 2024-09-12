@@ -435,7 +435,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
     object { |tr| tr.user }
     value { |tr| tr.bytes_all }
-    check { |tr, v| v < 10 * 1024*1024*1024*1024 }
+    check { |tr, v| v < 30 * 1024*1024*1024*1024 }
     action :alert_admins
   end
 
