@@ -1,4 +1,4 @@
-{ lib, pkgs }:
+{ lib, pkgs, config }:
 let
   # Override kernels per-node which are used for boot from PXE
   bootKernels = {
@@ -22,7 +22,7 @@ let
     else
       {};
 
-  vpsadminosKernels = import <vpsadminos/os/packages/linux/availableKernels.nix> { inherit pkgs lib; };
+  vpsadminosKernels = import <vpsadminos/os/packages/linux/availableKernels.nix> { inherit pkgs lib config; };
 
   defaultKernel = vpsadminosKernels.defaultVersion;
 in {
