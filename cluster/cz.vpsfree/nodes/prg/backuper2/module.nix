@@ -15,7 +15,7 @@ in {
   cluster."cz.vpsfree/nodes/prg/backuper2" = rec {
     spin = "vpsadminos";
 
-    swpins.channels = [ "prod-24.07" ];
+    swpins.channels = [ "staging" ];
 
     node = {
       id = 161;
