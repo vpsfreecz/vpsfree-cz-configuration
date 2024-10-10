@@ -73,14 +73,14 @@ in {
       language = "en";
     };
 
-    "dev.vpsfree.cz" = vhost {
-      domain = "dev.vpsfree.cz";
+    "web-dev.vpsfree.cz" = vhost {
+      domain = "web-dev.vpsfree.cz";
       web = "/var/www/dev.vpsfree.cz";
       language = "cs";
     };
 
-    "dev.vpsfree.org" = vhost {
-      domain = "dev.vpsfree.org";
+    "web-dev.vpsfree.org" = vhost {
+      domain = "web-dev.vpsfree.org";
       web = "/var/www/dev.vpsfree.cz";
       language = "en";
     };
