@@ -19,6 +19,7 @@ let
     ./services/sachet.nix
     ./services/vpsf-status.nix
     ./services/vpsfree-irc-bot.nix
+    ./services/vpsfree-web.nix
     ./system/logging/nixos.nix
   ];
 

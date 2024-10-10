@@ -3,7 +3,6 @@
   imports = [
     ./blog.vpsfree.cz.nix
     ./foto.vpsfree.cz.nix
-    ./vpsfree.cz.nix
   ];
 
   networking.firewall.extraCommands = ''
@@ -19,5 +18,24 @@
   services.nginx = {
     enable = true;
     recommendedProxySettings = true;
+  };
+
+  services.vpsfree-web = {
+    enable = true;
+    virtualHosts = {
+      "vpsfree.cz".language = "cs";
+
+      "vpsfree.org".language = "en";
+
+      "web-dev.vpsfree.cz" = {
+        web = "/var/www/dev.vpsfree.cz";
+        language = "cs";
+      };
+
+      "web-dev.vpsfree.org" = {
+        web = "/var/www/dev.vpsfree.cz";
+        language = "en";
+      };
+    };
   };
 }

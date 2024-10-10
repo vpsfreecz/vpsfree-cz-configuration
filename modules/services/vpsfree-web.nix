@@ -1,5 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
+  inherit (lib) mapAttrs mkEnableOption mkIf mkOption types;
+
+  cfg = config.services.vpsfree-web;
+
   source = pkgs.fetchFromGitHub {
     owner = "vpsfreecz";
     repo = "web";
@@ -55,59 +59,67 @@ let
       alias ${web}/download/;
     '';
   };
+
+  virtualHostModule = {
+    options = {
+      web = mkOption {
+        type = types.path;
+        default = web;
+      };
+
+      language = mkOption {
+        type = types.enum [ "cs" "en" ];
+      };
+    };
+  };
 in {
-  environment.systemPackages = with pkgs; [
-    xz # For Slovak QR Payments
-  ];
+  options = {
+    services.vpsfree-web = {
+      enable = mkEnableOption "vpsFree.cz web presentation";
 
-  services.nginx.virtualHosts = {
-    "vpsfree.cz" = vhost {
-      domain = "vpsfree.cz";
-      inherit web;
-      language = "cs";
-    };
-
-    "vpsfree.org" = vhost {
-      domain = "vpsfree.cz";
-      inherit web;
-      language = "en";
-    };
-
-    "web-dev.vpsfree.cz" = vhost {
-      domain = "web-dev.vpsfree.cz";
-      web = "/var/www/dev.vpsfree.cz";
-      language = "cs";
-    };
-
-    "web-dev.vpsfree.org" = vhost {
-      domain = "web-dev.vpsfree.org";
-      web = "/var/www/dev.vpsfree.cz";
-      language = "en";
+      virtualHosts = mkOption {
+        type = types.attrsOf (types.submodule virtualHostModule);
+      };
     };
   };
 
-  services.phpfpm.pools.vpsfree = {
-    user = "vpsfree";
-    group = "vpsfree";
+  config = mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      xz # For Slovak QR Payments
+    ];
 
-    settings = {
-      "pm" = "dynamic";
-      "listen.owner" = config.services.nginx.user;
-      "pm.max_children" = 5;
-      "pm.start_servers" = 2;
-      "pm.min_spare_servers" = 1;
-      "pm.max_spare_servers" = 3;
-      "pm.max_requests" = 500;
+    services.nginx = {
+      enable = true;
+
+      virtualHosts = mapAttrs (name: vhostCfg: vhost {
+        domain = name;
+        inherit (vhostCfg) web language;
+      }) cfg.virtualHosts;
     };
-  };
 
-  users = {
-    users.vpsfree = {
-      isSystemUser = true;
+    services.phpfpm.pools.vpsfree = {
+      user = "vpsfree";
       group = "vpsfree";
-      description = "vpsfree main web account";
+
+      settings = {
+        "pm" = "dynamic";
+        "listen.owner" = config.services.nginx.user;
+        "pm.max_children" = 5;
+        "pm.start_servers" = 2;
+        "pm.min_spare_servers" = 1;
+        "pm.max_spare_servers" = 3;
+        "pm.max_requests" = 500;
+      };
     };
 
-    groups.vpsfree = {};
+    users = {
+      users.vpsfree = {
+        isSystemUser = true;
+        group = "vpsfree";
+        description = "vpsfree main web account";
+      };
+
+      groups.vpsfree = {};
+    };
   };
 }
