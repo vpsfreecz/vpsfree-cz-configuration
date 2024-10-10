@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2024101001 ; serial number of this zone file
+              2024101002 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -130,7 +130,6 @@ node6.brq                      IN   A       172.19.0.15
 node1.stg                      IN   A       172.16.0.66
 
 ; Machines
-aitherdev.int                  IN   A       172.16.106.40
 apu.int.prg                    IN   A       172.16.254.254
 apu.int.brq                    IN   A       172.19.254.254
 build                          IN   A       172.16.106.5
@@ -219,6 +218,11 @@ jvb8                           IN   A       37.205.14.219
 jvb9                           IN   A       37.205.14.231
 jvb10                          IN   A       37.205.14.250
 jvb11                          IN   A       37.205.13.90
+
+; aitherdev
+aitherdev.int                  IN   A       172.16.106.40
+web-cs.aitherdev.int           IN   CNAME   aitherdev.int.vpsfree.cz.
+web-en.aitherdev.int           IN   CNAME   aitherdev.int.vpsfree.cz.
 
 ; Playground
 $GENERATE 1-127 $.164.8.185.pgnd    IN    A    185.8.164.$

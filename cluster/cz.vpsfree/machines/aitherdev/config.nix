@@ -137,6 +137,9 @@ in {
     { address = "192.168.122.1"; prefixLength = 24; }
   ];
 
+  # For vpsfree-web
+  networking.firewall.allowedTCPPorts = [ 80 ];
+
   networking.firewall.extraCommands = ''
     iptables -A nixos-fw -i virbr0 -p udp -m udp --dport 53 -j ACCEPT
     iptables -A nixos-fw -i virbr0 -p tcp -m tcp --dport 53 -j ACCEPT
@@ -353,6 +356,38 @@ in {
     };
 
     services.vscode-server.enable = true;
+  };
+
+  containers.vpsfree-web = {
+    autoStart = true;
+    bindMounts = {
+      "/vpsfree-web" = {
+        hostPath = "/home/aither/workspace/vpsfree.cz/web";
+        isReadOnly = true;
+      };
+    };
+    config =
+      { config, ... }:
+      {
+        imports = [
+          ../../../../modules/services/vpsfree-web.nix
+        ];
+
+        services.vpsfree-web = {
+          enable = true;
+          virtualHosts = {
+            "web-cs.aitherdev.int.vpsfree.cz" = {
+              web = "/vpsfree-web";
+              language = "cs";
+            };
+
+            "web-en.aitherdev.int.vpsfree.cz" = {
+              web = "/vpsfree-web";
+              language = "en";
+            };
+          };
+        };
+      };
   };
 
   system.stateVersion = "23.11";
