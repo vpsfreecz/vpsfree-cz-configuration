@@ -7,8 +7,8 @@ let
   source = pkgs.fetchFromGitHub {
     owner = "vpsfreecz";
     repo = "web";
-    rev = "48da570748bb17d849a9afdf2af98f1e466156fc";
-    sha256 = "sha256-h978vh9zjmvdClMxeWwiLITKIZdRF3O+NmhMb3OyzPE=";
+    rev = "06f2ea0f9268530a5a058fe62717a3f45e44f85c";
+    sha256 = "sha256-i/ck9cjYRHyvKGb+NzmuodSIShGA4No2WVxCvjzvwrY=";
   };
 
   configFile = pkgs.writeText "vpsfree-config.php" ''
