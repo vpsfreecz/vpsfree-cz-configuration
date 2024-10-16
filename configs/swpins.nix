@@ -51,6 +51,12 @@ in {
       vpsadmin = vpsadminMaster;
     };
 
+    production = {
+      nixpkgs = nixpkgsStable;
+      vpsadminos = osBranch "staging";
+      vpsadmin = vpsadminMaster;
+    };
+
     vpsadmin = {
       vpsadmin = vpsadminMaster;
     };

@@ -3,7 +3,7 @@
   cluster."cz.vpsfree/nodes/brq/node5" = rec {
     spin = "vpsadminos";
 
-    swpins.channels = [ "staging" ];
+    swpins.channels = [ "production" ];
 
     node = {
       id = 214;

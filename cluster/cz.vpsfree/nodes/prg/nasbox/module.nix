@@ -15,7 +15,7 @@ in {
   cluster."cz.vpsfree/nodes/prg/nasbox" = rec {
     spin = "vpsadminos";
 
-    swpins.channels = [ "staging" ];
+    swpins.channels = [ "production" ];
 
     node = {
       id = 170;
