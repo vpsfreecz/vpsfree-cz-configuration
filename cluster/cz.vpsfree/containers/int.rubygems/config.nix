@@ -81,7 +81,7 @@ let
     GEM_DIR="${config.services.geminabox.settings.data}/gems"
     TRASH_DIR="${config.services.geminabox.stateDir}/trash"
     GEM_NAME_RX="(libnodectld|nodectl|nodectld)"
-    GEM_VERSION_RX="\d+\.\d+\.\d+\.dev\.build\d+"
+    GEM_VERSION_RX="\d+\.\d+\.\d+(\.dev)?\.build\d+"
     GEM_RX="''${GEM_NAME_RX}-''${GEM_VERSION_RX}\.gem"
     ###
 
