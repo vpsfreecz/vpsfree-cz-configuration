@@ -44,22 +44,22 @@
       "url": "https://github.com/vpsfreecz/vpsadmin"
     },
     "state": {
-      "rev": "51100c7571820329501c4385463dec4fa4d3dd57",
-      "date": "2024-10-16T15:27:51+02:00"
+      "rev": "ff282039f595f133a4128117b2e35082629ed93d",
+      "date": "2024-10-29T16:41:56+01:00"
     },
     "info": {
-      "rev": "51100c7571820329501c4385463dec4fa4d3dd57",
-      "sha256": "0jjin2c9vqscgy7fqw1p8yyyxfwmlfz0fwn0dnlldab9gh7ar659"
+      "rev": "ff282039f595f133a4128117b2e35082629ed93d",
+      "sha256": "171ismhd0kh1yf98wbgvzzf2rjp6848i9c27n4awbj42yzxbadg9"
     },
     "fetcher": {
       "type": "git-rev",
       "options": {
-        "rev": "51100c7571820329501c4385463dec4fa4d3dd57",
+        "rev": "ff282039f595f133a4128117b2e35082629ed93d",
         "wrapped_fetcher": {
           "type": "zip",
           "options": {
-            "url": "https://github.com/vpsfreecz/vpsadmin/archive/51100c7571820329501c4385463dec4fa4d3dd57.tar.gz",
-            "sha256": "0jjin2c9vqscgy7fqw1p8yyyxfwmlfz0fwn0dnlldab9gh7ar659"
+            "url": "https://github.com/vpsfreecz/vpsadmin/archive/ff282039f595f133a4128117b2e35082629ed93d.tar.gz",
+            "sha256": "171ismhd0kh1yf98wbgvzzf2rjp6848i9c27n4awbj42yzxbadg9"
           }
         }
       }
