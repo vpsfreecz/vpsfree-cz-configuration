@@ -236,7 +236,7 @@ in
 
   system.secretsDir = "/secrets/nodes/images/${confMachine.host.fqdn}/secrets";
 
-  system.storeOverlaySize = "6G";
+  system.storeOverlaySize = "10G";
 
   services.haveged.enable = true;
 }
