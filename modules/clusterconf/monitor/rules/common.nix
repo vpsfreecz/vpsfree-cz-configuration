@@ -51,7 +51,7 @@
       }
       {
         alert = "ZpoolLowFreeSpace";
-        expr = "zpool_list_capacity >= 75";
+        expr = "zpool_list_capacity >= 80";
         for = "1h";
         labels = {
           alertclass = "zpoolcap";
@@ -60,7 +60,7 @@
         annotations = {
           summary = "Not enough free space (instance {{ $labels.instance }})";
           description = ''
-            Zpool uses more than 75% of available space
+            Zpool uses more than 80% of available space
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
@@ -69,7 +69,7 @@
       }
       {
         alert = "ZpoolCritFreeSpace";
-        expr = "zpool_list_capacity >= 80";
+        expr = "zpool_list_capacity >= 85";
         for = "15m";
         labels = {
           alertclass = "zpoolcap";
@@ -79,7 +79,7 @@
         annotations = {
           summary = "Not enough free space (instance {{ $labels.instance }})";
           description = ''
-            Zpool uses more than 80% of available space
+            Zpool uses more than 85% of available space
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
