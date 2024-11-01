@@ -1,4 +1,14 @@
 {
+  base64 = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "01qml0yilb9basf7is2614skjp8384h2pycfx86cr8023arfj98g";
+      type = "gem";
+    };
+    version = "0.2.0";
+  };
   daemons = {
     groups = ["default"];
     platforms = [];
@@ -20,24 +30,25 @@
     version = "1.2.7";
   };
   prometheus-client = {
+    dependencies = ["base64"];
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1zw39rp3b6jhm9273giv119lkgqvllisxb98k7vfx7367birbqcm";
+      sha256 = "1kdm3997f0jg25vczhxsgh102b3janp7c5zsgx2z3z4gv3hjp6hv";
       type = "gem";
     };
-    version = "4.2.2";
+    version = "4.2.3";
   };
   rack = {
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0hj0rkw2z9r1lcg2wlrcld2n3phwrcgqcp7qd1g9a7hwgalh2qzx";
+      sha256 = "0ax778fsfvlhj7c11n0d1wdcb8bxvkb190a9lha5d91biwzyx9g4";
       type = "gem";
     };
-    version = "2.2.9";
+    version = "2.2.10";
   };
   syslog-exporter = {
     dependencies = ["prometheus-client" "thin"];
@@ -45,10 +56,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.vpsfree.cz"];
-      sha256 = "1v39z6q3bprh7wmskvw5xwpnxkjc6wrzzpiixv78pck7wyjif3x7";
+      sha256 = "0iik20i21r4iwpjg3vzwjy92zlf695j5l9wfadwdli95nm26cgkg";
       type = "gem";
     };
-    version = "0.12.1";
+    version = "0.12.2";
   };
   thin = {
     dependencies = ["daemons" "eventmachine" "rack"];

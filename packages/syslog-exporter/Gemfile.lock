@@ -1,10 +1,12 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    base64 (0.2.0)
     daemons (1.4.1)
     eventmachine (1.2.7)
-    prometheus-client (4.2.2)
-    rack (2.2.9)
+    prometheus-client (4.2.3)
+      base64
+    rack (2.2.10)
     thin (1.8.2)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -13,15 +15,16 @@ GEM
 GEM
   remote: https://rubygems.vpsfree.cz/
   specs:
-    syslog-exporter (0.12.1)
+    syslog-exporter (0.12.2)
       prometheus-client (~> 4.2.2)
       thin (~> 1.8.2)
 
 PLATFORMS
+  ruby
   x86_64-linux
 
 DEPENDENCIES
   syslog-exporter!
 
 BUNDLED WITH
-   2.4.22
+   2.5.9
