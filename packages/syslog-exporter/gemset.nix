@@ -56,10 +56,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.vpsfree.cz"];
-      sha256 = "0iik20i21r4iwpjg3vzwjy92zlf695j5l9wfadwdli95nm26cgkg";
+      sha256 = "0c231n66jrvs3a0lyygribqfxvylvi6aj42lplmmnvwy0lki4fn0";
       type = "gem";
     };
-    version = "0.12.2";
+    version = "0.12.3";
   };
   thin = {
     dependencies = ["daemons" "eventmachine" "rack"];

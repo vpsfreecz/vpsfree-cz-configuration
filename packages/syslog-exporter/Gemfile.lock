@@ -15,7 +15,7 @@ GEM
 GEM
   remote: https://rubygems.vpsfree.cz/
   specs:
-    syslog-exporter (0.12.2)
+    syslog-exporter (0.12.3)
       prometheus-client (~> 4.2.2)
       thin (~> 1.8.2)
 
