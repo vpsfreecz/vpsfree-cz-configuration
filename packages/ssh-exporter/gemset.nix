@@ -41,15 +41,25 @@
     };
     version = "6.4.3";
   };
+  rack = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "1cd13019gnnh2c0a3kj27ij5ibk72v0bmpypqv4l6ayw8g5cpyyk";
+      type = "gem";
+    };
+    version = "3.1.8";
+  };
   ssh-exporter = {
-    dependencies = ["prometheus-client" "puma"];
+    dependencies = ["prometheus-client" "puma" "rack"];
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.vpsfree.cz"];
-      sha256 = "1rn7k2rq4c6vbs9bdx091m63mgd499ah3m2fv9qk12xkgfv66vbc";
+      sha256 = "07bjmgscqlnmfydc2ad5gm3z2fxh045fg5jcs1fznk70x32vayy5";
       type = "gem";
     };
-    version = "0.3.0";
+    version = "0.3.1";
   };
 }
