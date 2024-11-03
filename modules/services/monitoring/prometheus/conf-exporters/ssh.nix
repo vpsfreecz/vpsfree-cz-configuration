@@ -15,12 +15,11 @@ let
     run SshExporter::Rackup.app('${configurationJson}')
   '';
 
-  thinYml = pkgs.writeText "thin.yml" ''
-    address: ${cfg.listenAddress}
-    port: ${toString cfg.port}
-    rackup: ${rackupConfig}
-    environment: production
-    tag: ssh-exporter
+  pumaConfig = pkgs.writeText "ssh-exporter.rb" ''
+    bind 'tcp://${cfg.listenAddress}:${toString cfg.port}'
+    rackup '${rackupConfig}'
+    environment 'production'
+    tag 'ssh-exporter'
   '';
 in {
   options = {
@@ -88,13 +87,14 @@ in {
       ];
       environment.RACK_ENV = "production";
       serviceConfig = {
-        Type = "simple";
+        Type = "notify";
         User = cfg.user;
         Group = cfg.group;
         WorkingDirectory = cfg.stateDir;
-        ExecStart = "${cfg.package}/bin/thin --config ${thinYml} start";
+        ExecStart = "${cfg.package}/bin/puma -C ${pumaConfig}";
         Restart = "on-failure";
         RestartSec = 30;
+        WatchdogSec = 10;
       };
     };
 
