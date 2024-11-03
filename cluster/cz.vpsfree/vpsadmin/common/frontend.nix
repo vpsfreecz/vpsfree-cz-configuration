@@ -85,10 +85,10 @@ in {
         "unix@/run/haproxy/vpsadmin-api.sock mode 0666"
         "*:5000"
       ];
-      backends = flatten (map (m: builtins.genList (i: {
+      backends = map (m: {
         host = m.addresses.primary.address;
-        port = 9292 + i;
-      }) 8) apis);
+        port = 9292;
+      }) apis;
     };
 
     console-router.prod = {

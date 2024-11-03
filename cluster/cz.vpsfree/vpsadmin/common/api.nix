@@ -17,7 +17,7 @@ in {
     configDirectory = ../../../../configs/vpsadmin/api;
 
     address = confMachine.addresses.primary.address;
-    servers = 8;
+    workers = 8;
 
     allowedIPv4Ranges = [
       "${proxyPrg.addresses.primary.address}/32"

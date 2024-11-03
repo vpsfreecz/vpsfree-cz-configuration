@@ -13,15 +13,14 @@
     ];
   };
 
-  machineCommands = builtins.genList (i:
-    let
-      port = toString (9292 + i);
-    in {
-      description = "Check vpsAdmin API server #${toString i} at :${port}";
-      command = [ "curl" "--fail" "http://{addresses.primary.address}:${port}" ];
+  machineCommands = [
+    {
+      description = "Check vpsAdmin API server at :9292";
+      command = [ "curl" "--fail" "http://{addresses.primary.address}:9292" ];
       standardOutput.include = [
         "HaveAPI"
         "</html>"
       ];
-    }) 8;
+    }
+  ];
 }
