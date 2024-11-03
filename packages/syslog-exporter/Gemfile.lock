@@ -7,13 +7,15 @@ GEM
       base64
     puma (6.4.3)
       nio4r (~> 2.0)
+    rack (3.1.8)
 
 GEM
   remote: https://rubygems.vpsfree.cz/
   specs:
-    syslog-exporter (0.13.0)
+    syslog-exporter (0.13.1)
       prometheus-client (~> 4.2.2)
       puma (~> 6.4)
+      rack (~> 3.1)
 
 PLATFORMS
   ruby
