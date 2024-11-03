@@ -1,64 +1,55 @@
 {
-  daemons = {
+  base64 = {
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "07cszb0zl8mqmwhc8a2yfg36vi6lbgrp4pa5bvmryrpcz9v6viwg";
-      type = "gem";
-    };
-    version = "1.4.1";
-  };
-  eventmachine = {
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "0wh9aqb0skz80fhfn66lbpr4f86ya2z5rx6gm5xlfhd05bj1ch4r";
-      type = "gem";
-    };
-    version = "1.2.7";
-  };
-  prometheus-client = {
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "1zw39rp3b6jhm9273giv119lkgqvllisxb98k7vfx7367birbqcm";
-      type = "gem";
-    };
-    version = "4.2.2";
-  };
-  rack = {
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.org"];
-      sha256 = "0hj0rkw2z9r1lcg2wlrcld2n3phwrcgqcp7qd1g9a7hwgalh2qzx";
-      type = "gem";
-    };
-    version = "2.2.9";
-  };
-  ssh-exporter = {
-    dependencies = ["prometheus-client" "thin"];
-    groups = ["default"];
-    platforms = [];
-    source = {
-      remotes = ["https://rubygems.vpsfree.cz"];
-      sha256 = "102hrrsy31fipmdghqifjlxx32rhl7mcfi6xrsn2pvf5y3159l27";
+      sha256 = "01qml0yilb9basf7is2614skjp8384h2pycfx86cr8023arfj98g";
       type = "gem";
     };
     version = "0.2.0";
   };
-  thin = {
-    dependencies = ["daemons" "eventmachine" "rack"];
+  nio4r = {
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "08g1yq6zzvgndj8fd98ah7pp8g2diw28p8bfjgv7rvjvp8d2am8w";
+      sha256 = "1a9www524fl1ykspznz54i0phfqya4x45hqaz67in9dvw1lfwpfr";
       type = "gem";
     };
-    version = "1.8.2";
+    version = "2.7.4";
+  };
+  prometheus-client = {
+    dependencies = ["base64"];
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "1kdm3997f0jg25vczhxsgh102b3janp7c5zsgx2z3z4gv3hjp6hv";
+      type = "gem";
+    };
+    version = "4.2.3";
+  };
+  puma = {
+    dependencies = ["nio4r"];
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0gml1rixrfb0naciq3mrnqkpcvm9ahgps1c04hzxh4b801f69914";
+      type = "gem";
+    };
+    version = "6.4.3";
+  };
+  ssh-exporter = {
+    dependencies = ["prometheus-client" "puma"];
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.vpsfree.cz"];
+      sha256 = "1rn7k2rq4c6vbs9bdx091m63mgd499ah3m2fv9qk12xkgfv66vbc";
+      type = "gem";
+    };
+    version = "0.3.0";
   };
 }
