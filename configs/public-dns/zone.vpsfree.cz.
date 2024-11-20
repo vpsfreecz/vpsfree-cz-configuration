@@ -79,8 +79,6 @@ vpsadmin-db     IN      CNAME   vpsadmin.prg.vpsfree.cz.
 console-brq	IN	A	37.205.10.12
 git		IN	A	37.205.10.42
 projects        IN      CNAME   git.vpsfree.cz.
-build		IN	A	37.205.10.38
-repo		IN	CNAME	build.vpsfree.cz.
 ejp4lk2cbfpe.rt IN	CNAME	gv-kfguamjf7gseyy.dv.googlehosted.com.
 nunc3m65wyuq	IN	CNAME	gv-ncv3xgoigoy7gh.dv.googlehosted.com.
 mxproxy		IN	A	37.205.9.45
