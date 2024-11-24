@@ -238,5 +238,7 @@ in
 
   system.storeOverlaySize = "10G";
 
+  services.irqbalance.enable = true;
+
   services.haveged.enable = true;
 }
