@@ -15,6 +15,10 @@
     { location = "brq"; address = "172.19.252.0"; prefix = 24; }
   ];
 
+  dev = [
+    { location = "prg"; address = "172.16.106.0"; prefix = 24; }
+  ];
+
   dhcp = [
     { location = "prg"; address = "172.16.254.0"; prefix = 24; }
     { location = "brq"; address = "172.19.254.0"; prefix = 24; }

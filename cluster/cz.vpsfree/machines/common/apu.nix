@@ -108,10 +108,12 @@ in {
         ''
       ) alerters;
 
+      tftpNetworks = with confData.vpsadmin.networks.management; ipv4 ++ dev;
+
       tftpRules = concatMapStringsSep "\n" (net: ''
         # Allow access from ${net.location} @ ${net.address}/${toString net.prefix}
         iptables -A nixos-fw -p udp -s ${net.address}/${toString net.prefix} -d ${confMachine.addresses.primary.address} --dport 69 -j nixos-fw-accept
-      '') confData.vpsadmin.networks.management.ipv4;
+      '') tftpNetworks;
     in ''
       ### Alertmanagers to sachet
       ${alerterRules}
