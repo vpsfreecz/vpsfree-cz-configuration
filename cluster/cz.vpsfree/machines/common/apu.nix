@@ -51,45 +51,16 @@ in {
   '';
 
   users.groups = {
-    "crashdump".members = [ "crashdump" ];
     "tty-vpsf-net".members = [ "snajpa" ];
   };
 
   users.users = {
-    crashdump = {
-      isNormalUser = true;
-      shell = null;
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINqqtUK0MaKpMVkUnzjwXYv/7jr1m0E02YqMulMXJmUm snajpa@snajpadev"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGZx+5fCM/NBwVZItoTTs6wv57yFcfipM1Xl7SOyn0sj snajpa@snajpabook.vpsfree.cz"
-      ];
-    };
-
     snajpa = {
       isNormalUser = true;
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGZx+5fCM/NBwVZItoTTs6wv57yFcfipM1Xl7SOyn0sj snajpa@snajpabook.vpsfree.cz"
       ];
     };
-  };
-
-  system.activationScripts.crashDumpDir = {
-    text = ''
-      mkdir -p /var/crashdump || true
-      chown root:crashdump /var/crashdump
-      chmod 730 /var/crashdump
-      chmod g+s /var/crashdump
-    '';
-    deps = [ "users" "groups" ];
-  };
-
-  services.atftpd = {
-    enable = true;
-    root = "/var/crashdump";
-    extraOptions = [
-      "--bind-address ${confMachine.addresses.primary.address}"
-      "--group crashdump"
-    ];
   };
 
   networking.interfaces.lte0.useDHCP = false;
@@ -107,19 +78,9 @@ in {
           iptables -A nixos-fw -p tcp --dport ${toString config.services.sachet.port} -s ${alerter.addresses.primary.address} -j nixos-fw-accept
         ''
       ) alerters;
-
-      tftpNetworks = with confData.vpsadmin.networks.management; ipv4 ++ dev;
-
-      tftpRules = concatMapStringsSep "\n" (net: ''
-        # Allow access from ${net.location} @ ${net.address}/${toString net.prefix}
-        iptables -A nixos-fw -p udp -s ${net.address}/${toString net.prefix} -d ${confMachine.addresses.primary.address} --dport 69 -j nixos-fw-accept
-      '') tftpNetworks;
     in ''
       ### Alertmanagers to sachet
       ${alerterRules}
-
-      ### TFTP for crashdump
-      ${tftpRules}
     '';
 
   systemd.services.modemNet = {
