@@ -1,5 +1,9 @@
 { config, lib, pkgs, confData, ... }:
-{
+let
+  inherit (lib) concatMapStringsSep "\n";
+
+  crashdumpNetworks = with confData.vpsadmin.networks.management; ipv4 ++ dev ++ dhcp;
+in {
   imports = [
     ../../common/intel.nix
     ../../common/storage.nix
@@ -35,6 +39,12 @@
       guid = "13391792327079201350";
 
       install = false;
+
+      datasets = {
+        "vpsfree.cz/crashdump".properties = {
+          sharenfs = concatMapStringsSep "," (net: "rw=${net.address}/${toString net.prefix},no_root_squash") crashdumpNetworks;
+        };
+      };
 
       scrub = {
         enable = true;
