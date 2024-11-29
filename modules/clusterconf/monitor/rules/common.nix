@@ -206,7 +206,7 @@
       }
       {
         alert = "FilesystemLowFreeSpace";
-        expr = ''(node_filesystem_avail_bytes{mountpoint=~"^(/)|(/run)|(/nix/store)"} / node_filesystem_size_bytes) * 100 < 25'';
+        expr = ''(node_filesystem_avail_bytes{mountpoint=~"^(/)|(/run)|(/nix/store)"} / node_filesystem_size_bytes) * 100 < 20'';
         for = "5m";
         labels = {
           alertclass = "fsavail";
@@ -216,7 +216,7 @@
         annotations = {
           summary = "Not enough free space (instance {{ $labels.instance }})";
           description = ''
-            Filesystem uses more than 75% of available space
+            Filesystem uses more than 80% of available space
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
@@ -225,7 +225,7 @@
       }
       {
         alert = "FilesystemCritFreeSpace";
-        expr = ''(node_filesystem_avail_bytes{mountpoint=~"^(/)|(/run)|(/nix/store)"} / node_filesystem_size_bytes) * 100 <= 20'';
+        expr = ''(node_filesystem_avail_bytes{mountpoint=~"^(/)|(/run)|(/nix/store)"} / node_filesystem_size_bytes) * 100 <= 10'';
         for = "5m";
         labels = {
           alertclass = "fsavail";
@@ -235,7 +235,7 @@
         annotations = {
           summary = "Not enough free space (instance {{ $labels.instance }})";
           description = ''
-            Filesystem uses more than 80% of available space
+            Filesystem uses more than 90% of available space
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
