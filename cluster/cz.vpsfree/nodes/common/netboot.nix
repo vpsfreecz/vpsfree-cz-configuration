@@ -14,6 +14,13 @@
   boot.initrd.network = {
     enable = true;
     useDHCP = true;
+    ssh = {
+      enable = true;
+      hostKeys = [
+        /secrets/nodes/initrd/ssh_host_rsa_key
+        /secrets/nodes/initrd/ssh_host_ed25519_key
+      ];
+    };
   };
 
   boot.consoleLogLevel = 8;
