@@ -72,6 +72,11 @@ in mkIf (confMachine.osNode.networking.bird.enable && confMachine.osNode.network
       echo "Target dir $target"
       mkdir -p "$target"
 
+      echo "Saving metadata"
+      uname -r > "$target/kernel-version"
+      echo "${config.system.vpsadminos.revision}" > "$target/os-revision"
+      echo "${config.system.vpsadminos.version}" > "$target/os-version"
+
       cpuCount=$(nproc)
 
       echo "Dumping core file using $cpuCount threads"
