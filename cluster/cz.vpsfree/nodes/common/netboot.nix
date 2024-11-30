@@ -23,6 +23,14 @@
     };
   };
 
+  # NixOS initrd-ssh module does pkill -x sshd, which does not match
+  # any processes
+  boot.initrd.postMountCommands = ''
+    if ! [ -e /.keep_sshd ]; then
+      pkill sshd
+    fi
+  '';
+
   boot.consoleLogLevel = 8;
 
   boot.postBootCommands = ''
