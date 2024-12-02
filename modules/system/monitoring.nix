@@ -26,9 +26,10 @@ let
     declared = attrNames confMachine.services;
 
     # Exporters available in nixpkgs or vpsAdminOS
+    # Non-exporter attributes and deprecated exporters are filtered out
     available =
       filter
-        (exporter: !(elem exporter [ "assertions" "warnings" ]))
+        (exporter: !(elem exporter [ "assertions" "warnings" "minio" "tor" "unifi-poller" ]))
         (attrNames config.services.prometheus.exporters);
 
     # Exporters enabled in machine configuration
