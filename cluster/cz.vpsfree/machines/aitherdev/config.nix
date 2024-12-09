@@ -93,7 +93,7 @@ in {
     keyMap = "us";
   };
 
-  users.users.root.openssh.authorizedKeys.keys = confData.sshKeys.builders ++ confData.sshKeys.aither.all;
+  users.users.root.openssh.authorizedKeys.keys = confData.sshKeys.builders ++ confData.sshKeys.aither.all ++ confData.sshKeys.snajpa;
 
   users.users.aither = {
     isNormalUser = true;
@@ -125,7 +125,10 @@ in {
     '';
   };
 
-  programs.vim.defaultEditor = true;
+  programs.vim = {
+    enable = true;
+    defaultEditor = true;
+  };
 
   programs.bepastyrb.enable = true;
 
