@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, confMachine, ... }:
 {
   imports = [
     # While crash dump is not limited to netbooted machines, in practice, all nodes
@@ -14,6 +14,7 @@
   boot.initrd.network = {
     enable = true;
     useDHCP = true;
+    preferredDHCPInterfaceMacAddresses = confMachine.netboot.macs;
     ssh = {
       enable = true;
       hostKeys = [
