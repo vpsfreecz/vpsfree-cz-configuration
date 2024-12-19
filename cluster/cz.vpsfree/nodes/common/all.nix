@@ -22,6 +22,12 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };
+
+  modprobeWrapper = pkgs.writeScript "modprobe-wrapper.sh" ''
+    #!/bin/sh
+    echo "$@" | ${pkgs.util-linux}/bin/logger -t kernel.modprobe
+    exec ${pkgs.kmod}/bin/modprobe "$@"
+  '';
 in
 {
   imports = [
@@ -45,6 +51,7 @@ in
   boot.kernelParams = [ "slub_nomerge" "preempt=none" "iommu=off" "cgroup_favordynmods=false" ];
 
   boot.kernel.sysctl = {
+    "kernel.modprobe" = "${modprobeWrapper}";
     "kernel.printk" = 0;
     "net.ipv4.neigh.default.gc_thresh3" = 16384;
     "net.ipv6.neigh.default.gc_thresh3" = 16384;
