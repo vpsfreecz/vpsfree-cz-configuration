@@ -3,7 +3,7 @@
   builderCommands = [
     {
       command = [ "${pkgs.dnsutils}/bin/dig" "vpsfree.cz" "A" "+short" "@${addr}" ];
-      standardOutput.match = "37.205.9.80\n";
+      standardOutput.match = "37.205.14.61\n";
     }
     {
       command = [ "${pkgs.dnsutils}/bin/dig" "node1.stg.vpsfree.cz" "A" "+short" "@${addr}" ];

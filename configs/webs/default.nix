@@ -1,5 +1,10 @@
-{ config, pkgs, ... }:
-{
+{ config, pkgs, confLib, ... }:
+let
+  proxyPrg = confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/prg/proxy";
+  };
+in {
   imports = [
     ./blog.vpsfree.cz.nix
     ./foto.vpsfree.cz.nix
@@ -7,7 +12,7 @@
 
   networking.firewall.extraCommands = ''
     # Allow access from proxy
-    iptables -A nixos-fw -p tcp --dport 80 -s 37.205.9.80 -j nixos-fw-accept
+    iptables -A nixos-fw -p tcp --dport 80 -s ${proxyPrg.addresses.primary.address} -j nixos-fw-accept
   '';
 
   environment.systemPackages = with pkgs; [

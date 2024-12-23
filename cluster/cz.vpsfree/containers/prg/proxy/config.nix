@@ -54,6 +54,11 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.munin";
   };
+
+  web = confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/int.web";
+  };
 in {
   imports = [
     ../../../../../environments/base.nix
@@ -82,6 +87,19 @@ in {
     recommendedTlsSettings = true;
 
     virtualHosts = {
+      "vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        serverAliases = [ "www.vpsfree.cz" ];
+        locations."/".proxyPass = "http://${web.addresses.primary.address}:80";
+      };
+
+      "vpsfree.org" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://${web.addresses.primary.address}:80";
+      };
+
       "alerts1.prg.vpsfree.cz" = {
         serverAliases = [ "alerts.prg.vpsfree.cz" ];
         enableACME = true;
@@ -161,6 +179,51 @@ in {
         enableACME = true;
         forceSSL = true;
         locations."/".proxyPass = "http://${munin.addresses.primary.address}:80";
+      };
+
+      "prasiatko.vpsfree.cz" = {
+        serverAliases = [ "prasiatko.vpsfree.cz" "conference.vpsfree.cz" "piwik.vpsfree.cz" ];
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://37.205.15.53:80";
+      };
+
+      "blog.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://${web.addresses.primary.address}:80";
+      };
+
+      "foto.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://${web.addresses.primary.address}:80";
+      };
+
+      "lists.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://37.205.15.53:80";
+      };
+
+      "mirror.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://185.8.165.222:80";
+      };
+
+      "rt.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "https://172.16.9.194:443";
+      };
+
+      "web-dev.vpsfree.cz" = {
+        locations."/".proxyPass = "http://${web.addresses.primary.address}:80";
+      };
+
+      "web-dev.vpsfree.org" = {
+        locations."/".proxyPass = "http://${web.addresses.primary.address}:80";
       };
     };
   };
