@@ -55,7 +55,7 @@ let
     masters = zone.primaries or primaries;
     file = "zone.${zone.name}";
     extraConfig = ''
-      allow-transfer { "none"; };
+      allow-transfer { none; };
     '';
   };
 
