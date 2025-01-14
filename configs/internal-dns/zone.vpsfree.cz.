@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2024122200 ; serial number of this zone file
+              2025011400 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -11,7 +11,7 @@ $TTL 1H                  ; default expiration time of all resource records witho
 
 vpsfree.cz.                    IN   NS      ns1.int.prg.vpsfree.cz.
 vpsfree.cz.                    IN   NS      ns1.int.brq.vpsfree.cz.
-vpsfree.cz.                    IN   A       37.205.9.80
+vpsfree.cz.                    IN   A       37.205.14.61
 vpsfree.cz.	IN	TXT	"v=spf1 a mx a:vpsfree.cz a:mx2.vpsfree.cz a:prasiatko-mail.vpsfree.cz a:vpsadmin.vpsfree.cz a:lists.vpsfree.cz a:mail.snajpa.net a:mxproxy.vpsfree.cz a:rt.vpsfree.cz -all"
 lists.vpsfree.cz. IN	TXT	"v=spf1 a mx a:vpsfree.cz a:mx2.vpsfree.cz a:prasiatko-mail.vpsfree.cz a:vpsadmin.vpsfree.cz a:lists.vpsfree.cz -all"
 proxy.vpsfree.cz. IN	TXT	"v=spf1 a mx a:vpsfree.cz a:mx2.vpsfree.cz a:prasiatko-mail.vpsfree.cz a:vpsadmin.vpsfree.cz a:lists.vpsfree.cz a:mail.snajpa.net a:mxproxy.vpsfree.cz a:rt.vpsfree.cz -all"
@@ -56,7 +56,7 @@ goresheat                      IN   CNAME   proxy.prg.vpsfree.cz.
 im                             IN   A       37.205.9.40
 kb                             IN   CNAME   proxy.prg.vpsfree.cz.
 kb.int                         IN   A       172.16.9.179
-lists                          IN   A       37.205.9.80
+lists                          IN   A       37.205.14.61
 lists                          IN   MX      10 mx1.vpsfree.cz.
 mail                           IN   CNAME   mx1.vpsfree.cz.
 mx1.prg                        IN   A       37.205.15.52
