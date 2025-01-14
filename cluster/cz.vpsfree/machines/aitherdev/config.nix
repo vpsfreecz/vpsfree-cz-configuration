@@ -93,7 +93,7 @@ in {
     keyMap = "us";
   };
 
-  users.users.root.openssh.authorizedKeys.keys = confData.sshKeys.builders ++ confData.sshKeys.aither.all ++ confData.sshKeys.snajpa;
+  users.users.root.openssh.authorizedKeys.keys = confData.sshKeys.builders ++ confData.sshKeys.aither.all;
 
   users.users.aither = {
     isNormalUser = true;
