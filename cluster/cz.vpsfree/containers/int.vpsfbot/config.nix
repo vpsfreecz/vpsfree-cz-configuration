@@ -215,6 +215,7 @@ in {
 
     virtualHosts = {
       "vpsfbot.vpsfree.cz" = {
+        serverAliases = [ "im.vpsfree.cz" ];
         locations."/archive" = {
           root = pkgs.runCommand "vpsfbot-archive-root" {} ''
             mkdir $out
