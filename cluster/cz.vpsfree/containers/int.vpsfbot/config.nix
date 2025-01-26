@@ -26,6 +26,10 @@ let
   matterbridgeConfig = "/private/matterbridge/config.toml";
 
   matterbridgeTemplate = pkgs.writeText "matterbridge-config-template.toml" ''
+    [general]
+    MediaDownloadPath="/var/www/matterbridge.vpsfree.cz/download"
+    MediaServerDownload="https://matterbridge.vpsfree.cz/download"
+
     [irc.myirc]
     Server="irc.libera.chat:6667"
     Nick="vpsfbr0"
@@ -75,6 +79,7 @@ in {
     iptables -A nixos-fw -p tcp --dport 80 -s 37.205.9.40 -j nixos-fw-accept
 
     # Allow access from proxy.prg
+    iptables -A nixos-fw -p tcp --dport 80 -s ${proxyPrg.addresses.primary.address} -j nixos-fw-accept
     iptables -A nixos-fw -p tcp --dport 8000 -s ${proxyPrg.addresses.primary.address} -j nixos-fw-accept
     iptables -A nixos-fw -p tcp --dport 8001 -s ${proxyPrg.addresses.primary.address} -j nixos-fw-accept
   '';
@@ -208,15 +213,21 @@ in {
   services.nginx = {
     enable = true;
 
-    virtualHosts."vpsfbot.vpsfree.cz" = {
-      locations."/archive" = {
-        root = pkgs.runCommand "vpsfbot-archive-root" {} ''
-          mkdir $out
-          ln -s ${archiveDir}/html $out/archive
-        '';
-        extraConfig = ''
-          autoindex on;
-        '';
+    virtualHosts = {
+      "vpsfbot.vpsfree.cz" = {
+        locations."/archive" = {
+          root = pkgs.runCommand "vpsfbot-archive-root" {} ''
+            mkdir $out
+            ln -s ${archiveDir}/html $out/archive
+          '';
+          extraConfig = ''
+            autoindex on;
+          '';
+        };
+      };
+
+      "matterbridge.vpsfree.cz" = {
+        locations."/download".root = "/var/www/matterbridge.vpsfree.cz";
       };
     };
   };

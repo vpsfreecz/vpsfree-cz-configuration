@@ -149,6 +149,12 @@ in {
         locations."/gh-webhook".proxyPass = "http://${vpsfbot.addresses.primary.address}:8000";
       };
 
+      "matterbridge.vpsfree.cz" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyPass = "http://${vpsfbot.addresses.primary.address}:80";
+      };
+
       "paste.vpsfree.cz" = {
         serverAliases = [ "bepasty.vpsfree.cz" ];
         enableACME = true;
