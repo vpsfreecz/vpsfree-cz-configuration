@@ -474,6 +474,45 @@ VpsAdmin::API::Plugins::Monitoring.config do
     action :alert_user_zombie_processes
   end
 
+  monitor :outgoing_data_flow do
+    label 'High outgoing data flow'
+    desc 'Outgoing data transfer rate was high for the last 6 or more hours'
+    period 6*60*60
+    repeat 6*60*60
+    cooldown 1*60*60
+
+    query do
+      ::NetworkInterfaceMonitor.select(
+        "#{::NetworkInterfaceMonitor.table_name}.*, SUM(bytes_out / delta) AS bytes_out_sum"
+      ).joins(
+        network_interface: {vps: [:vps_current_status, user: :user_account]}
+      ).includes(
+        network_interface: {vps: {node: :location}}
+      ).where(
+        users: {object_state: ::User.object_states[:active]},
+        vpses: {object_state: ::Vps.object_states[:active]},
+        vps_current_statuses: {status: true, is_running: true},
+      ).group('vpses.id')
+    end
+
+    object { |mon| mon.network_interface.vps }
+    value { |mon| (mon.bytes_out_sum * 8).to_i }
+
+    check do |mon, v|
+      limit =
+        case mon.network_interface.vps.node.location.label
+        when 'Praha'
+          800
+        else
+          250
+        end
+
+      v < (limit * 1024 * 1024)
+    end
+
+    action :alert_user
+  end
+
   monitor :vps_in_rescue_mode do
     label 'VPS in rescue mode'
     desc 'VPS is in rescue mode for too long'
