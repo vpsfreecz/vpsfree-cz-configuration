@@ -3,10 +3,11 @@
 set -e
 
 echo "Performing auto-updates"
-confctl deploy -t auto-update --one-by-one --reboot '*' boot
+confctl build -y -t auto-update --copy-only '*'
+confctl deploy -t auto-update -g current --one-by-one --reboot '*' boot
 
 echo "Performing manual-updates"
-confctl deploy -t manual-update --one-by-one '*' boot
+confctl deploy -t manual-update '*' boot
 
 echo "Updating internal DNS resolvers"
 confctl deploy -g current -t internal-dns --one-by-one --reboot '*' boot
