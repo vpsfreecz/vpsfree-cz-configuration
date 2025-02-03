@@ -3,7 +3,7 @@
 set -e
 
 echo "Performing auto-updates"
-confctl build -y -t auto-update --copy-only '*'
+confctl deploy -y -t auto-update --copy-only '*'
 confctl deploy -t auto-update -g current --one-by-one --reboot '*' boot
 
 echo "Performing manual-updates"
