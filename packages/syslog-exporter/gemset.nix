@@ -25,10 +25,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1kdm3997f0jg25vczhxsgh102b3janp7c5zsgx2z3z4gv3hjp6hv";
+      sha256 = "0bzypdh2586iwl7m9xrhn1gglrvhx0mvz297ih0770h6x8ja09ni";
       type = "gem";
     };
-    version = "4.2.3";
+    version = "4.2.4";
   };
   puma = {
     dependencies = ["nio4r"];
@@ -36,20 +36,20 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0gml1rixrfb0naciq3mrnqkpcvm9ahgps1c04hzxh4b801f69914";
+      sha256 = "11xd3207k5rl6bz0qxhcb3zcr941rhx7ig2f19gxxmdk7s3hcp7j";
       type = "gem";
     };
-    version = "6.4.3";
+    version = "6.6.0";
   };
   rack = {
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1cd13019gnnh2c0a3kj27ij5ibk72v0bmpypqv4l6ayw8g5cpyyk";
+      sha256 = "04nb9fja4ndhjvlaq719g0x4kdaiql2cxc982l9ch127s0kk31sy";
       type = "gem";
     };
-    version = "3.1.8";
+    version = "3.1.10";
   };
   syslog-exporter = {
     dependencies = ["prometheus-client" "puma" "rack"];
