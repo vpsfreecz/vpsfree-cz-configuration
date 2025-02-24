@@ -3,11 +3,11 @@ GEM
   specs:
     base64 (0.2.0)
     nio4r (2.7.4)
-    prometheus-client (4.2.3)
+    prometheus-client (4.2.4)
       base64
-    puma (6.4.3)
+    puma (6.6.0)
       nio4r (~> 2.0)
-    rack (3.1.8)
+    rack (3.1.10)
 
 GEM
   remote: https://rubygems.vpsfree.cz/
@@ -25,4 +25,4 @@ DEPENDENCIES
   ssh-exporter!
 
 BUNDLED WITH
-   2.5.9
+   2.5.22
