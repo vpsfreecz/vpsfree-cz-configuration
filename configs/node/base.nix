@@ -45,6 +45,26 @@ in {
       ''}
     '';
 
+    confctl.programs.netboot-kexec.enable = true;
+
+    runit.halt.hooks = {
+      "netboot-kexec".source = pkgs.writeScript "netboot-kexec" ''
+        #!${pkgs.bash}/bin/bash
+
+        [ "$HALT_HOOK" != "pre-run" ] && exit 0
+        [ "$HALT_ACTION" != "reboot" ] && exit 0
+        [ "$HALT_FORCE" != "0" ] && exit 0
+        [ "$HALT_KEXEC" == "0" ] && exit 0
+
+        echo "Configuring kexec from netboot server"
+        echo "Set REBOOT_KEXEC=0 to skip it"
+        echo
+
+        netboot-kexec
+        exit $?
+      '';
+    };
+
     system.monitoring.enable = true;
 
     users = {
