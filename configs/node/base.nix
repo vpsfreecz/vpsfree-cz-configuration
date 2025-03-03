@@ -57,7 +57,7 @@ in {
         [ "$HALT_KEXEC" == "0" ] && exit 0
 
         echo "Configuring kexec from netboot server"
-        echo "Set REBOOT_KEXEC=0 to skip it"
+        echo "Use --no-kexec to skip it"
         echo
 
         netboot-kexec
