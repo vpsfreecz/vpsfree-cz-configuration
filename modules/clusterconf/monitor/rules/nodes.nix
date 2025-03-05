@@ -975,7 +975,7 @@
       {
         alert = "PacketLoss";
         expr = ''rate(node_network_transmit_drop_total{device=~"(teng.+)|(oneg.+)"}[5m]) > 0 or rate(node_network_receive_drop_total{device=~"(teng.+)|(oneg.+)"}[5m]) > 0'';
-        for = "5m";
+        for = "10m";
         labels = {
           alertclass = "packetloss";
           severity = "warning";
