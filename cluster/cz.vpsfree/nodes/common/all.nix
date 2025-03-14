@@ -78,6 +78,7 @@ in
     ledmon
     git
     ethtool
+    kexec-tools
 
     # debug stuff
     # config.boot.kernelPackages.bcc
