@@ -46,10 +46,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "04nb9fja4ndhjvlaq719g0x4kdaiql2cxc982l9ch127s0kk31sy";
+      sha256 = "0h65a1f9gsqx2ryisdy4lrd9a9l8gdv65dcscw9ynwwjr1ak1n00";
       type = "gem";
     };
-    version = "3.1.10";
+    version = "3.1.12";
   };
   ssh-exporter = {
     dependencies = ["prometheus-client" "puma" "rack"];
