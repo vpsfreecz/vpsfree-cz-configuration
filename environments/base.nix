@@ -49,7 +49,10 @@ in {
   environment.systemPackages = with pkgs; [
     config.boot.kernelPackages.perf
     config.boot.kernelPackages.cpupower
+    iftop
+    iptraf-ng
     screen
+    tcpdump
     tree
     vim
     wget
