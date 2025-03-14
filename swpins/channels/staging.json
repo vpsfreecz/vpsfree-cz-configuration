@@ -77,22 +77,22 @@
       "url": "https://github.com/vpsfreecz/vpsadminos"
     },
     "state": {
-      "rev": "cc6934038cae9f76d10c7b2aa01a7d86c2498bff",
-      "date": "2025-03-10T16:50:05+01:00"
+      "rev": "1cee6d64e37eb7ecab659544d21a14fced2e161a",
+      "date": "2025-03-14T18:37:49+01:00"
     },
     "info": {
-      "rev": "cc6934038cae9f76d10c7b2aa01a7d86c2498bff",
-      "sha256": "0qiknv8a4hf7hfjvikx5ajz0spqsjyvavjxw6n7y6ppkxl920gjb"
+      "rev": "1cee6d64e37eb7ecab659544d21a14fced2e161a",
+      "sha256": "0xh70yc922wqf2hwm4dps3s7l689n51qc7c62q8cnnaghn9xz4n3"
     },
     "fetcher": {
       "type": "git-rev",
       "options": {
-        "rev": "cc6934038cae9f76d10c7b2aa01a7d86c2498bff",
+        "rev": "1cee6d64e37eb7ecab659544d21a14fced2e161a",
         "wrapped_fetcher": {
           "type": "zip",
           "options": {
-            "url": "https://github.com/vpsfreecz/vpsadminos/archive/cc6934038cae9f76d10c7b2aa01a7d86c2498bff.tar.gz",
-            "sha256": "0qiknv8a4hf7hfjvikx5ajz0spqsjyvavjxw6n7y6ppkxl920gjb"
+            "url": "https://github.com/vpsfreecz/vpsadminos/archive/1cee6d64e37eb7ecab659544d21a14fced2e161a.tar.gz",
+            "sha256": "0xh70yc922wqf2hwm4dps3s7l689n51qc7c62q8cnnaghn9xz4n3"
           }
         }
       }
