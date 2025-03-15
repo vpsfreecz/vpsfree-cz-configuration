@@ -77,6 +77,9 @@ in mkIf (confMachine.osNode.networking.bird.enable && confMachine.osNode.network
       echo "${config.system.vpsadminos.revision}" > "$target/os-revision"
       echo "${config.system.vpsadminos.version}" > "$target/os-version"
 
+      echo "Dumping dmesg"
+      makedumpfile --dump-dmesg /proc/vmcore "$target/dmesg"
+
       cpuCount=$(nproc)
 
       echo "Dumping core file using $cpuCount threads"
