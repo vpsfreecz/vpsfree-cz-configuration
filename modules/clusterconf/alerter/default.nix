@@ -121,6 +121,35 @@ let
       repeat_interval = "15s";
     }
   ];
+
+  telegramTemplate = pkgs.writeText "telegram.tmpl" ''
+    {{ define "alert_list" }}{{ range . }}
+    ---
+    🪪 <b>{{ .Labels.alertname }}</b>
+    {{- if eq .Labels.severity "fatal" }}
+    🚨 FATAL 🚨 {{ end }}
+    {{- if eq .Labels.severity "critical" }}
+    ⚠️ CRITICAL ⚠️{{ end }}
+    {{- if .Annotations.summary }}
+    📝 {{ .Annotations.summary }}{{ end }}
+
+    🏷 Labels:
+    {{ range .Labels.SortedPairs }}  <i>{{ .Name }}</i>: <code>{{ .Value }}</code>
+    {{ end }}{{ end }}
+    🛠 <a href="https://mon1.prg.vpsfree.cz">mon1</a> / <a href="https://mon2.prg.vpsfree.cz">mon2</a> 💊 <a href="https://alerts1.prg.vpsfree.cz">alerts1</a> / <a href="https://alerts2.prg.vpsfree.cz">alerts2</a> 🛠
+    {{ end }}
+
+    {{ define "telegram.message" }}
+    {{ if gt (len .Alerts.Firing) 0 }}
+    🔥 Alerts Firing 🔥
+    {{ template "alert_list" .Alerts.Firing }}
+    {{ end }}
+    {{ if gt (len .Alerts.Resolved) 0 }}
+    ✅ Alerts Resolved ✅
+    {{ template "alert_list" .Alerts.Resolved }}
+    {{ end }}
+    {{ end }}
+  '';
 in {
   options = {
     clusterconf.alerter = {
@@ -205,6 +234,9 @@ in {
           smtp_from = "alertmanager@vpsfree.cz";
           smtp_require_tls = false;
         };
+        templates = [
+          telegramTemplate
+        ];
         route = {
           group_by = [ "alertname" "alias" ];
           group_wait = "30s";
@@ -280,6 +312,7 @@ in {
                 bot_token_file = "/private/alertmanager/telegram_bot_token.txt";
                 chat_id = -1002692367921;
                 send_resolved = true;
+                message = ''{{ template "telegram.message". }}'';
               }
             ];
           }
