@@ -227,6 +227,19 @@ in {
               routes = intervalRoutes;
             }
 
+            # Telegram alerts
+            {
+              match_re = {
+                severity = "critical|fatal";
+              };
+              receiver = "team-telegram";
+              group_wait = "10s";
+              repeat_interval = "10m";
+              continue = true;
+
+              routes = intervalRoutes;
+            }
+
             # SMS alerts
             {
               match_re = {
@@ -256,6 +269,16 @@ in {
             email_configs = [
               {
                 to = "aither@havefun.cz,snajpa@snajpa.net,monitoring@kerrycze.net";
+                send_resolved = true;
+              }
+            ];
+          }
+          {
+            name = "team-telegram";
+            telegram_configs = [
+              {
+                bot_token_file = "/private/alertmanager/telegram_bot_token.txt";
+                chat_id = -1002692367921;
                 send_resolved = true;
               }
             ];
