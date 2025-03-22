@@ -45,6 +45,24 @@ let
         ) cfg.tmuxinator.projects;
       };
     };
+
+  lxcVscode = pkgs.writeText "lxc-vscode.conf" ''
+    # Distribution configuration
+    lxc.include = /run/current-system/sw/share/lxc/config/common.conf
+    lxc.arch = linux64
+
+    # Container specific configuration
+    lxc.rootfs.path = dir:/var/lib/lxc/vscode/rootfs
+    lxc.uts.name = vscode
+
+    # Network configuration
+    lxc.net.0.type = none
+    lxc.namespace.share.net = 1
+
+    lxc.mount.entry = /etc/resolv.conf etc/resolv.conf none bind,create=file 0 0
+    lxc.mount.entry = /etc/ssh/authorized_keys.d/aither etc/ssh/authorized_keys.d/aither none bind,create=file 0 0
+    lxc.mount.entry = /home/aither/workspace home/aither/workspace none bind,create=dir 0 0
+  '';
 in {
   # NOTE: environments/base.nix is not imported, this is a standalone system
   imports = [
@@ -402,7 +420,7 @@ in {
     wantedBy = [ "multi-user.target" ];
     after = [ "network.target" ];
     serviceConfig = {
-      ExecStart = "${pkgs.lxc}/bin/lxc-start -F -n vscode";
+      ExecStart = "${pkgs.lxc}/bin/lxc-start -F -f ${lxcVscode} -n vscode";
       ExecStop = "${pkgs.lxc}/bin/lxc-stop -n vscode";
       Type = "simple";
     };
