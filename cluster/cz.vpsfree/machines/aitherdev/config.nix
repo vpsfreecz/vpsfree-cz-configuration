@@ -415,6 +415,20 @@ in {
 
   virtualisation.lxc.enable = true;
 
+  # Steps to recreate the container:
+  #
+  #  - lxc-create -n vscode -t download -- --dist debian --release bookworm --arch amd64
+  #  - rm /var/lib/lxc/vscode/config
+  #  - systemctl start lxc-vscode
+  #  - lxc-attach -n vscode
+  #  - . /etc/profile ; . /etc/profile
+  #  - apt-get install git nix openssh-server unattended-upgrades
+  #  - edit /etc/ssh/sshd_config:
+  #      Port 2222
+  #      AuthorizedKeysFile %h/.ssh/authorized_keys /etc/ssh/authorized_keys.d/%u
+  #  - useradd -u 1000 -g users -d /home/aither aither
+  #  - chmod 0711 /home/aither
+  #
   systemd.services.lxc-vscode = {
     description = "Auto-start LXC container vscode";
     wantedBy = [ "multi-user.target" ];
