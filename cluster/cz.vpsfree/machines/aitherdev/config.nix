@@ -140,8 +140,13 @@ in {
     { address = "192.168.122.1"; prefixLength = 24; }
   ];
 
-  # For vpsfree-web
-  networking.firewall.allowedTCPPorts = [ 80 ];
+  networking.firewall.allowedTCPPorts = [
+    # For vpsfree-web
+    80
+
+    # vscode container
+    2222
+  ];
 
   networking.firewall.extraCommands = ''
     iptables -A nixos-fw -i virbr0 -p udp -m udp --dport 53 -j ACCEPT
@@ -189,7 +194,6 @@ in {
   home-manager.users.aither = { config, ... }: {
     imports = [
       homeTmuxinator
-      "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"
     ];
 
     programs.home-manager.enable = true;
@@ -357,8 +361,6 @@ in {
         };
       };
     };
-
-    services.vscode-server.enable = true;
   };
 
   containers.vpsfree-web = {
@@ -391,6 +393,20 @@ in {
           };
         };
       };
+  };
+
+  virtualisation.lxc.enable = true;
+
+  systemd.services.lxc-vscode = {
+    description = "Auto-start LXC container vscode";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.lxc}/bin/lxc-start -F -n vscode";
+      ExecStop = "${pkgs.lxc}/bin/lxc-stop -n vscode";
+      Type = "simple";
+    };
+    restartIfChanged = false;
   };
 
   system.stateVersion = "23.11";
