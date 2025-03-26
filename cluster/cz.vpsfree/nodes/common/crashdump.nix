@@ -54,39 +54,99 @@ in mkIf (confMachine.osNode.networking.bird.enable && confMachine.osNode.network
   };
 
   boot.initrd.extraUtilsCommands = ''
+    copy_bin_and_libs ${pkgs.kexec-tools}/bin/kexec
     copy_bin_and_libs ${pkgs.nfs-utils}/bin/mount.nfs
   '';
 
   boot.crashDump = {
     enable = true;
+    reservedMemory = "1536M";
     commands = ''
-      date=$(date +%Y%m%dT%H%M%S)
-      server="${backuper2Prg.addresses.primary.address}:/storage/vpsfree.cz/crashdump"
-      mountpoint="/mnt/nfs"
-      target="$mountpoint/${confMachine.name}/$date"
+      kexec_load() {
+        local http_root http_base http_newurl kernel_cmdline kexec_files wdir
 
-      echo "Mounting NFS"
-      mkdir -p "$mountpoint"
-      mount.nfs -o vers=4 "$server" "$mountpoint" || fail "Unable to mount NFS share"
+        kexec_files="bzImage initrd kernel-params"
+        wdir=/tmp/kexec
 
-      echo "Target dir $target"
-      mkdir -p "$target"
+        # Find httproot in /proc/cmdline
+        http_root="$(sed -n 's/.*httproot=\([^[:space:]]*\).*/\1/p' /proc/cmdline)"
 
-      echo "Saving metadata"
-      uname -r > "$target/kernel-version"
-      echo "${config.system.vpsadminos.revision}" > "$target/os-revision"
-      echo "${config.system.vpsadminos.version}" > "$target/os-version"
+        if [ -z "$http_root" ]; then
+          echo "ERROR: Unable to find httproot= parameter in /proc/cmdline"
+          return 1
+        fi
 
-      echo "Dumping dmesg"
-      makedumpfile --dump-dmesg /proc/vmcore "$target/dmesg"
+        # Strip the last two path components (like "../../")
+        http_base="$(echo "$http_root" | sed 's!/[^/]*$!!; s!/[^/]*$!!')"
 
-      cpuCount=$(nproc)
+        # Build URL for the current generation
+        http_newurl="$http_base/current"
+        echo "Base URL for kexec files: $http_newurl"
 
-      echo "Dumping core file using $cpuCount threads"
-      LD_PRELOAD=$LD_LIBRARY_PATH/libgcc_s.so.1  makedumpfile -c -d 16 --num-threads $cpuCount /proc/vmcore "$target/dumpfile"
+        # Download the necessary kernel/initrd/kernel-params
+        mkdir -p "$wdir"
 
-      echo "Rebooting"
-      reboot -f
+        for file in $kexec_files ; do
+          wget "$http_newurl/$file" -O "$wdir/$file" || {
+            echo "ERROR: Failed to download $file"
+            return 1
+          }
+        done
+
+        # Load the new kernel
+        kexec -l "$wdir/bzImage" --initrd="$wdir/initrd" --command-line="$(cat "$wdir/kernel-params")" || {
+          echo "ERROR: kexec load failed"
+          return 1
+        }
+
+        echo "Kexec loaded"
+        return 0
+      }
+
+      create_crash_dump() {
+        local date server mountpoint target cpuCount
+
+        date=$(date +%Y%m%dT%H%M%S)
+        server="${backuper2Prg.addresses.primary.address}:/storage/vpsfree.cz/crashdump"
+        mountpoint="/mnt/nfs"
+        target="$mountpoint/${confMachine.name}/$date"
+
+        echo "Mounting NFS"
+        mkdir -p "$mountpoint"
+        mount.nfs -o vers=4 "$server" "$mountpoint" || fail "Unable to mount NFS share"
+
+        echo "Target dir $target"
+        mkdir -p "$target"
+
+        echo "Saving metadata"
+        uname -r > "$target/kernel-version"
+        echo "${config.system.vpsadminos.revision}" > "$target/os-revision"
+        echo "${config.system.vpsadminos.version}" > "$target/os-version"
+
+        echo "Dumping dmesg"
+        makedumpfile --dump-dmesg /proc/vmcore "$target/dmesg"
+
+        cpuCount=$(nproc)
+
+        echo "Dumping core file using $cpuCount threads"
+        LD_PRELOAD=$LD_LIBRARY_PATH/libgcc_s.so.1 makedumpfile -c -d 16 --num-threads $cpuCount /proc/vmcore "$target/dumpfile"
+      }
+
+      use_kexec=0
+
+      echo "Preparing for kexec"
+      kexec_load && use_kexec=1
+
+      echo "Creating crash dump"
+      create_crash_dump
+
+      if [ "$use_kexec" == "1" ] ; then
+        echo "Executing kexec"
+        kexec -e
+      else
+        echo "Rebooting"
+        reboot -f
+      fi
     '';
   };
 }
