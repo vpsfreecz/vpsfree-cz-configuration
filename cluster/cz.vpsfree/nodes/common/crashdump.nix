@@ -1,6 +1,6 @@
 { config, pkgs, lib, confLib, confMachine, ... }:
 let
-  inherit (lib) concatStringsSep imap1 mapAttrsToList mkIf;
+  inherit (lib) concatStringsSep imap1 mapAttrsToList mkIf optionalString;
 
   backuper2Prg = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -8,6 +8,12 @@ let
   };
 
   networking = confMachine.osNode.networking;
+
+  has10GNetwork = confMachine.osNode.networking.bird.enable && confMachine.osNode.networking.bird.routingProtocol == "bgp";
+
+  customNetworking = has10GNetwork;
+
+  dumpMemory = has10GNetwork;
 
   renameNetif = mac: newName: ''
     oldName=$(ip -o link | grep "${mac}" | awk -F': ' '{print $2}')
@@ -26,7 +32,7 @@ let
     ${concatStringsSep "\n" (map (addr: "ip -4 addr add ${addr.address}/${toString addr.prefix} dev ${name}") addresses.v4)}
     ip link set ${name} up
   '';
-in mkIf (confMachine.osNode.networking.bird.enable && confMachine.osNode.networking.bird.routingProtocol == "bgp") {
+in {
   boot.initrd.kernelModules = [
     "lockd"
     "netfs"
@@ -34,9 +40,10 @@ in mkIf (confMachine.osNode.networking.bird.enable && confMachine.osNode.network
     "sunrpc"
   ];
 
-  boot.initrd.network = {
-    # Within the crash system, we're using 10G interfaces and so the DHCP
-    # that configures 1G interfaces can and should be skipped.
+  # On nodes with 10G and BGP (Prague), we skip DHCP on 1G interfaces and configure
+  # the network manually using the 10G interfaces. On nodes with 1G and OSPF (Brno),
+  # we use the normal initrd setup with DHCP.
+  boot.initrd.network = mkIf customNetworking {
     enableSetupInCrashDump = false;
 
     customSetupCommands = ''
@@ -126,10 +133,12 @@ in mkIf (confMachine.osNode.networking.bird.enable && confMachine.osNode.network
         echo "Dumping dmesg"
         makedumpfile --dump-dmesg /proc/vmcore "$target/dmesg"
 
+        ${optionalString dumpMemory ''
         cpuCount=$(nproc)
 
         echo "Dumping core file using $cpuCount threads"
         LD_PRELOAD=$LD_LIBRARY_PATH/libgcc_s.so.1 makedumpfile -c -d 16 --num-threads $cpuCount /proc/vmcore "$target/dumpfile"
+        ''}
       }
 
       use_kexec=0
