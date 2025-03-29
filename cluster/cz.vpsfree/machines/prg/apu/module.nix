@@ -10,7 +10,7 @@
       v4 = [ { address = "172.16.254.254"; prefix = 24; } ];
     };
 
-    tags = [ "apu" "vpsf-status" ];
+    tags = [ "apu" "vpsf-status" "pxe-server" ];
 
     services = {
       node-exporter = {};
