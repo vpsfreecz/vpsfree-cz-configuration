@@ -61,55 +61,12 @@ in {
   };
 
   boot.initrd.extraUtilsCommands = ''
-    copy_bin_and_libs ${pkgs.kexec-tools}/bin/kexec
     copy_bin_and_libs ${pkgs.nfs-utils}/bin/mount.nfs
   '';
 
   boot.crashDump = {
     enable = true;
-    reservedMemory = "1536M";
     commands = ''
-      kexec_load() {
-        local http_root http_base http_newurl kernel_cmdline kexec_files wdir
-
-        kexec_files="bzImage initrd kernel-params"
-        wdir=/tmp/kexec
-
-        # Find httproot in /proc/cmdline
-        http_root="$(sed -n 's/.*httproot=\([^[:space:]]*\).*/\1/p' /proc/cmdline)"
-
-        if [ -z "$http_root" ]; then
-          echo "ERROR: Unable to find httproot= parameter in /proc/cmdline"
-          return 1
-        fi
-
-        # Strip the last two path components (like "../../")
-        http_base="$(echo "$http_root" | sed 's!/[^/]*$!!; s!/[^/]*$!!')"
-
-        # Build URL for the current generation
-        http_newurl="$http_base/current"
-        echo "Base URL for kexec files: $http_newurl"
-
-        # Download the necessary kernel/initrd/kernel-params
-        mkdir -p "$wdir"
-
-        for file in $kexec_files ; do
-          wget "$http_newurl/$file" -O "$wdir/$file" || {
-            echo "ERROR: Failed to download $file"
-            return 1
-          }
-        done
-
-        # Load the new kernel
-        kexec -l "$wdir/bzImage" --initrd="$wdir/initrd" --command-line="$(cat "$wdir/kernel-params")" || {
-          echo "ERROR: kexec load failed"
-          return 1
-        }
-
-        echo "Kexec loaded"
-        return 0
-      }
-
       create_crash_dump() {
         local date server mountpoint target cpuCount
 
@@ -141,21 +98,11 @@ in {
         ''}
       }
 
-      use_kexec=0
-
-      echo "Preparing for kexec"
-      kexec_load && use_kexec=1
-
       echo "Creating crash dump"
       create_crash_dump
 
-      if [ "$use_kexec" == "1" ] ; then
-        echo "Executing kexec"
-        kexec -e
-      else
-        echo "Rebooting"
-        reboot -f
-      fi
+      echo "Rebooting"
+      reboot -f
     '';
   };
 }
