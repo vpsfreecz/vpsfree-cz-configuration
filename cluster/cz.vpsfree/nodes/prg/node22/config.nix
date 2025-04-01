@@ -38,6 +38,8 @@
     parallelStop = 40;
   };
 
+  boot.enableUnifiedCgroupHierarchy = false;
+
   swapDevices = [
     # { label = "swap1"; }
   ];

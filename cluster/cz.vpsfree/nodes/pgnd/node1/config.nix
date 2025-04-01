@@ -32,6 +32,8 @@
     };
   };
 
+  boot.enableUnifiedCgroupHierarchy = false;
+
   swapDevices = [
   ];
 }

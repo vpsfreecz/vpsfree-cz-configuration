@@ -33,6 +33,8 @@
 
   osctld.settings.cpu_scheduler.enable = true;
 
+  boot.enableUnifiedCgroupHierarchy = false;
+
   swapDevices = [
   ];
 

@@ -56,6 +56,8 @@ in {
     parallelStop = 20;
   };
 
+  boot.enableUnifiedCgroupHierarchy = false;
+
   swapDevices = [
     # none
   ];
