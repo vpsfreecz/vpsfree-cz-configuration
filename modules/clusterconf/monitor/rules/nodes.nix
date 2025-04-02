@@ -449,6 +449,26 @@
       }
 
       {
+        alert = "NodeOverallCritLoad";
+        expr = ''node_load1 - on (fqdn) group_left() sum by (fqdn) (topk by (fqdn)(5, osctl_container_load1)) > 400'';
+        for = "5m";
+        labels = {
+          alertclass = "loadavg";
+          severity = "critical";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "Overall load average critical (instance {{ $labels.instance }})";
+          description = ''
+            Overall load average (excluding top 5 VPS) is critical
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NodeCritUninterruptibleProcesses";
         expr = ''node_processes_state{job="nodes",state="D"} > 1000 and on(instance) time() - node_boot_time_seconds > 1800'';
         for = "1m";
