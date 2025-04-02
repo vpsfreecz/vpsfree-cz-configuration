@@ -29,7 +29,7 @@ let
         fqdn = "${ct.metaConfig.host.fqdn}";
       };
       source_match_re = {
-        alertname = "NodeDown|HypervisorBooting";
+        alertname = "NodeDownCritical|NodeDownFatal|HypervisorBooting";
         fqdn = "${ctData.node.fqdn}";
       };
     }
