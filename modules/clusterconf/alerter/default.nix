@@ -336,8 +336,8 @@ in {
             target_match = {
               alertname = "NodeExporterDown";
             };
-            source_match = {
-              alertname = "NodeDown";
+            source_match_re = {
+              alertname = "NodeDownCritical|NodeDownFatal";
             };
             equal = [ "fqdn" ];
           }
