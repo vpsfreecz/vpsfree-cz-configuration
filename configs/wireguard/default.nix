@@ -29,6 +29,12 @@
       privateKeyFile = "/private/wireguard/private_key";
 
       peers = [
+        { # base48 - gpus0
+          publicKey = "IYnoHIB5OmwU4NaVIf6rLn0rV8g54NHgltnW5Pa+3mk=";
+          presharedKeyFile = "/private/wireguard/preshared_keys/base48.psk";
+          allowedIPs = [ "172.16.107.9/32" ];
+        }
+
         { # snajpa - laptop
           publicKey = "kvkin1ssGdwnRdRZExGiYryywNGy4+D84DJCgyIcXVI=";
           presharedKeyFile = "/private/wireguard/preshared_keys/snajpa.psk";
