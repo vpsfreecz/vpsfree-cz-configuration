@@ -90,7 +90,7 @@
     in ''
       copy_bin_and_libs ${pkgs.kexec-tools}/bin/kexec
 
-      cat <<EOF > $out/bin/netboot-kexec
+      cat <<'EOF' > $out/bin/netboot-kexec
       ${netbootKexec}
       EOF
 
