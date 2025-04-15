@@ -39,4 +39,56 @@
     chmod 0644 /var/secrets/ssh_host_*_key.pub
     cp -p /var/secrets/ssh_host_* /etc/ssh/
   '';
+
+  # Helper script for manual kexec from netboot server
+  boot.initrd.extraUtilsCommands =
+    let
+      netbootKexec = pkgs.writeScript "netboot-kexec" ''
+        #!/bin/sh
+        # Usage: $0 [generation]
+
+        generation=current
+        kexec_files="bzImage initrd kernel-params"
+        wdir=/tmp/kexec
+
+        [ -n "$1" ] && generation="$1"
+
+        # Find httproot in /proc/cmdline
+        http_root="$(sed -n 's/.*httproot=\([^[:space:]]*\).*/\1/p' /proc/cmdline)"
+
+        if [ -z "$http_root" ]; then
+          echo "ERROR: Unable to find httproot= parameter in /proc/cmdline"
+          exit 1
+        fi
+
+        # Strip the last two path components (like "../../")
+        http_base="$(echo "$http_root" | sed 's!/[^/]*$!!; s!/[^/]*$!!')"
+
+        # Build URL for the selected generation
+        http_newurl="$http_base/$generation"
+        echo "Base URL for kexec files: $http_newurl"
+
+        # Download the necessary kernel/initrd/kernel-params
+        mkdir -p "$wdir"
+
+        for file in $kexec_files ; do
+          wget "$http_newurl/$file" -O "$wdir/$file" || {
+            echo "ERROR: Failed to download $file"
+            exit 1
+          }
+        done
+
+        # Load the new kernel
+        kexec -l "$wdir/bzImage" --initrd="$wdir/initrd" --command-line="$(cat "$wdir/kernel-params")" || {
+          echo "ERROR: kexec load failed"
+          exit 1
+        }
+
+        echo "Kexec loaded, run kexec -e"
+        exit 0
+      '';
+    in ''
+      copy_bin_and_libs ${pkgs.kexec-tools}/bin/kexec
+      copy_bin_and_libs ${netbootKexec}
+    '';
 }
