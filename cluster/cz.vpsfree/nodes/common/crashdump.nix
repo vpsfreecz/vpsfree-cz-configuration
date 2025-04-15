@@ -87,8 +87,8 @@ in {
         echo "${config.system.vpsadminos.revision}" > "$target/os-revision"
         echo "${config.system.vpsadminos.version}" > "$target/os-version"
         cat <<EOF > "$target/swpins-info.json"
-        ${builtins.toJSON swpinsInfo}
-        EOF
+      ${builtins.toJSON swpinsInfo}
+      EOF
 
         echo "Dumping dmesg"
         makedumpfile --dump-dmesg /proc/vmcore "$target/dmesg"
