@@ -45,10 +45,10 @@ in {
       ''}
     '';
 
-    confctl.programs.netboot-kexec.enable = true;
+    confctl.programs.kexec-netboot.enable = true;
 
     runit.halt.hooks = {
-      "netboot-kexec".source = pkgs.writeScript "netboot-kexec" ''
+      "kexec-netboot".source = pkgs.writeScript "kexec-netboot" ''
         #!${pkgs.bash}/bin/bash
 
         [ "$HALT_HOOK" != "pre-run" ] && exit 0
@@ -60,7 +60,7 @@ in {
         echo "Use --no-kexec to skip it"
         echo
 
-        netboot-kexec
+        kexec-netboot
         exit $?
       '';
     };

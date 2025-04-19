@@ -43,7 +43,7 @@
   # Helper script for manual kexec from netboot server
   boot.initrd.extraUtilsCommands =
     let
-      netbootKexec = ''
+      kexecNetboot = ''
         #!/bin/sh
         # Usage: $0 [generation]
 
@@ -90,10 +90,10 @@
     in ''
       copy_bin_and_libs ${pkgs.kexec-tools}/bin/kexec
 
-      cat <<'EOF' > $out/bin/netboot-kexec
-      ${netbootKexec}
+      cat <<'EOF' > $out/bin/kexec-netboot
+      ${kexecNetboot}
       EOF
 
-      chmod +x $out/bin/netboot-kexec
+      chmod +x $out/bin/kexec-netboot
     '';
 }
