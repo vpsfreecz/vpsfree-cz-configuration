@@ -372,6 +372,25 @@ in [
           '';
         };
       }
+
+      {
+        alert = "DnsRecordAnswerError";
+        expr = ''vpsadmin_dns_record_answer_error == 1'';
+        for = "10m";
+        labels = {
+          severity = "warning";
+          frequency = "1h";
+        };
+        annotations = {
+          summary = "DNS record {{ $labels.record_name }} {{ $labels.record_type }} from zone {{ $labels.dns_zone }} is misconfigured";
+          description = ''
+            DNS server {{ $labels.dns_server }} returns unexpected query answer for record {{ $labels.record_name }} {{ $labels.record_type }}
+            from zone {{ $labels.dns_zone }}.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 
