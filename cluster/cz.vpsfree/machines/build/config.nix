@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, confData, ... }:
 {
   imports = [
     ../common/all.nix
@@ -75,6 +75,13 @@
 
   services.build-vpsadminos-container-image-repository.vpsadminos = {
     enable = true;
+    osModules = [
+      ({ config, ... }: {
+        users.users.root.openssh.authorizedKeys.keys = [
+          confData.sshKeys.build-vpsfree-cz
+        ];
+      })
+    ];
     osVm = {
       memory = 10240;
       cpus = 16;
