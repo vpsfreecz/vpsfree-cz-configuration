@@ -1,7 +1,7 @@
 $ORIGIN vpsadminos.org.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2022070501 ; serial number of this zone file
+              2025051401 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -16,6 +16,8 @@ vpsadminos.org.                IN   AAAA    2a03:3b40:fe:48::1
 builder.int                    IN   A       172.16.4.14
 cache                          IN   CNAME   vpsadminos.org.
 cache.int                      IN   A       172.16.4.30
+gh-runner1.int                 IN   A       172.16.4.21
+gh-runner2.int                 IN   A       172.16.4.22
 images                         IN   CNAME   vpsadminos.org.
 images.int                     IN   A       172.16.4.15
 iso                            IN   CNAME   vpsadminos.org.
@@ -25,7 +27,3 @@ proxy                          IN   CNAME   vpsadminos.org.
 ref                            IN   CNAME   vpsadminos.org.
 www                            IN   CNAME   vpsadminos.org.
 www.int                        IN   A       172.16.4.17
-
-master.bb.int                  IN   A       172.16.4.20
-nixos01.bb.int                 IN   A       172.16.4.21
-nixos02.bb.int                 IN   A       172.16.4.22
