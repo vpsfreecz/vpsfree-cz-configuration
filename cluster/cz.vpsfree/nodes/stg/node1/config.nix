@@ -30,5 +30,4 @@
   boot.enableUnifiedCgroupHierarchy = true;
 
   system.vpsadminos.enableUnstable = true;
-  system.vpsadminos.zfsDebug = true;
 }
