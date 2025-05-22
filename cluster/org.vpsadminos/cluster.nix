@@ -12,6 +12,30 @@
     };
   };
 
+  cluster."org.vpsadminos/int.gh-runner1" = rec {
+    managed = false;
+    spin = "nixos";
+    swpins.channels = [ "nixos-stable" "os-staging" ];
+    container.id = 27535;
+    host = { name = "gh-runner1"; domain = "int.vpsadminos.org"; };
+    addresses.primary = { address = "172.16.4.21"; prefix = 32; };
+    services = {
+      node-exporter = {};
+    };
+  };
+
+  cluster."org.vpsadminos/int.gh-runner2" = rec {
+    managed = false;
+    spin = "nixos";
+    swpins.channels = [ "nixos-stable" "os-staging" ];
+    container.id = 27536;
+    host = { name = "gh-runner2"; domain = "int.vpsadminos.org"; };
+    addresses.primary = { address = "172.16.4.22"; prefix = 32; };
+    services = {
+      node-exporter = {};
+    };
+  };
+
   cluster."org.vpsadminos/int.images" = rec {
     managed = false;
     spin = "nixos";
