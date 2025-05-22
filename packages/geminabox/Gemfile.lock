@@ -5,7 +5,7 @@ GEM
     compact_index (0.15.0)
     daemons (1.4.1)
     eventmachine (1.2.7)
-    faraday (2.12.2)
+    faraday (2.13.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -20,15 +20,15 @@ GEM
       sinatra (~> 2.0)
     httpclient (2.9.0)
       mutex_m
-    json (2.10.2)
-    logger (1.6.6)
+    json (2.12.0)
+    logger (1.7.0)
     mustermann (2.0.2)
       ruby2_keywords (~> 0.0.1)
     mutex_m (0.3.0)
     nesty (1.0.2)
     net-http (0.6.0)
       uri
-    rack (2.2.13)
+    rack (2.2.16)
     rack-protection (2.2.4)
       rack
     reentrant_flock (0.1.1)
