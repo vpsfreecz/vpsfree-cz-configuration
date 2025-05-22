@@ -62,6 +62,24 @@
       name = "node21";
     };
   };
+  "gh-runner1.int.vpsadminos.org" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node1.stg.vpsfree.cz";
+      id = 400;
+      location = "stg";
+      name = "node1";
+    };
+  };
+  "gh-runner2.int.vpsadminos.org" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node1.pgnd.vpsfree.cz";
+      id = 300;
+      location = "pgnd";
+      name = "node1";
+    };
+  };
   "grafana.int.prg.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
