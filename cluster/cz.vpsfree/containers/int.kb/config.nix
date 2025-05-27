@@ -168,8 +168,6 @@ let
   };
 
   mkSite = { name, host, title, lang, tagline, start, maintainersNamespace, mlfarmMaster, matomoCodeFile }: {
-    enable = true;
-
     templates = [ dokuwiki-template-vpsfree ];
 
     plugins = kbPlugins;
