@@ -243,10 +243,11 @@ in {
     virtualHost = "vpsadmin.vpsfree.cz";
   };
 
-  services.prometheus.exporters.varnish = {
-    enable = true;
-    port = varnishExporterPort;
-  };
+  # Broken in 25.05, see nixpkgs#400003
+  # services.prometheus.exporters.varnish = {
+  #   enable = true;
+  #   port = varnishExporterPort;
+  # };
 
   users.groups.varnish.members = [ config.services.prometheus.exporters.varnish.user ];
 }
