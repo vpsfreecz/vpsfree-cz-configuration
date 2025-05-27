@@ -3,10 +3,12 @@ with lib;
 let
   cfg = config.services.network-graphs;
 
-  fetchGraphs = pkgs.substituteAll {
+  fetchGraphs = pkgs.replaceVarsWith {
     src = ./fetch-graphs.rb;
     isExecutable = true;
-    ruby = pkgs.ruby;
+    replacements = {
+      ruby = pkgs.ruby;
+    };
   };
 
   dir = "/run/network-graphs";

@@ -1,8 +1,7 @@
 { config, lib, pkgs, confData, confMachine, ... }:
 with lib;
 let
-  mkZoneFile = file: pkgs.substituteAll {
-    src = file;
+  mkZoneFile = file: pkgs.replaceVars file {
     fqdn = confMachine.host.fqdn;
   };
 
