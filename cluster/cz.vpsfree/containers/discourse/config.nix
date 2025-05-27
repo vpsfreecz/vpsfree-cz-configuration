@@ -13,7 +13,7 @@ in {
 
   networking.firewall.allowedTCPPorts = [ 25 80 443 ];
 
-  services.postgresql.package = pkgs.postgresql_13;
+  services.postgresql.package = pkgs.postgresql_15;
 
   services.discourse = {
     enable = true;
