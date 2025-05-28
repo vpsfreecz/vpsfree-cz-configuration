@@ -831,6 +831,7 @@ in {
         ruleConfigs = flatten ((map (v: import v) [
           ./rules/common.nix
           ./rules/nodes.nix
+          ./rules/monitoring.nix
           ./rules/infra.nix
           ./rules/dns.nix
           ./rules/smartmon.nix
