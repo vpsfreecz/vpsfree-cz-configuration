@@ -43,7 +43,6 @@ in {
     forwarders = mkForce [];
     extraOptions = ''
       recursion no;
-      allow-query-cache { none; };
     '';
     extraConfig = ''
       statistics-channels {
