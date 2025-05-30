@@ -152,6 +152,15 @@
       name = "node24";
     };
   };
+  "mx2.vpsfree.cz" = {
+    node = {
+      domain = "vpsfree.cz";
+      fqdn = "node5.brq.vpsfree.cz";
+      id = 214;
+      location = "brq";
+      name = "node5";
+    };
+  };
   "ns0.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
