@@ -4,6 +4,8 @@ let
   bootKernels = {
     # machine name => kernel version, for example:
     # "cz.vpsfree/nodes/stg/node1" = "5.10.164";
+    "cz.vpsfree/nodes/prg/node24" = "6.9.12-2";
+    "cz.vpsfree/nodes/brq/node6" = "6.9.12-2";
   };
 
   # Override kernels per-node used for live updates. For automated runtime kernel
