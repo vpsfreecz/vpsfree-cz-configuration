@@ -66,6 +66,7 @@ in {
 
   boot.crashDump = {
     enable = true;
+    reservedMemory = "1536M";
     commands = ''
       create_crash_dump() {
         local date server mountpoint target cpuCount
