@@ -1,0 +1,74 @@
+name: Daily update
+on:
+  schedule:
+    - cron: '30 6 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Set up Ruby + Bundler cache
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Setup git
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Restore confctl cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/confctl
+          key: confctl-cache-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            confctl-cache-${{ runner.os }}
+
+      - name: Update swpins
+        run: |
+          sudo mkdir /nix/var/nix/gcroots/per-user/$USER
+          sudo chown $USER /nix/var/nix/gcroots/per-user/$USER
+
+          bundle exec confctl swpins core update --commit --no-changelog
+          bundle exec confctl swpins channel update --commit --no-changelog \
+                              '{nixos-stable,production,staging}' nixpkgs
+          bundle exec confctl swpins channel update --commit --no-changelog nixos-unstable
+
+      - name: Update package dependencies
+        run: |
+          for pkg in geminabox ssh-exporter syslog-exporter ; do
+            pushd "packages/$pkg"
+            
+            rm -f gemset.nix Gemfile.lock
+            nix-shell -p bundix --run "bundix -l"
+            
+            git add gemset.nix Gemfile.lock
+            git diff --cached --quiet && continue
+
+            git commit -m "$pkg: update dependencies"
+            
+            popd
+          done
+
+      - name: Push updates
+        run: |
+          git push origin master
+
+      - name: Save confctl cache
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/confctl
+          key: confctl-cache-${{ runner.os }}-${{ github.run_id }}
