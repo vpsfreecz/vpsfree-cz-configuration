@@ -20,7 +20,7 @@ GEM
       sinatra (~> 2.0)
     httpclient (2.9.0)
       mutex_m
-    json (2.12.0)
+    json (2.12.2)
     logger (1.7.0)
     mustermann (2.0.2)
       ruby2_keywords (~> 0.0.1)
@@ -28,7 +28,7 @@ GEM
     nesty (1.0.2)
     net-http (0.6.0)
       uri
-    rack (2.2.16)
+    rack (2.2.17)
     rack-protection (2.2.4)
       rack
     reentrant_flock (0.1.1)
@@ -57,4 +57,4 @@ DEPENDENCIES
   thin
 
 BUNDLED WITH
-   2.5.22
+   2.6.6
