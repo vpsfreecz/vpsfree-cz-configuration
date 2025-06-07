@@ -49,6 +49,15 @@ else
 fi
 
 
+echo "Updating public DNS resolvers"
+
+if [ "$reboot" == y ]; then
+    confctl deploy -g current -t dns-resolver --one-by-one --reboot '*' boot
+else
+    confctl deploy -g current -t dns-resolver --one-by-one
+fi
+
+
 echo "Deploying VPN"
 
 if [ "$reboot" == y ]; then
