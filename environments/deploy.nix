@@ -32,6 +32,8 @@ in
     cores = 0;
     substituters = [ "https://cache.vpsadminos.org" ];
     trusted-public-keys = [ "cache.vpsadminos.org:wpIJlNZQIhS+0gFf1U3MC9sLZdLW3sh5qakOWGDoDrE=" ];
+    fallback = true;
+    connect-timeout = 10;
     gc-keep-outputs = true;
     gc-keep-derivations = true;
   };
