@@ -46,6 +46,7 @@ jobs:
           bundle exec confctl swpins channel update --commit --no-changelog \
                               '{nixos-stable,production,staging}' nixpkgs
           bundle exec confctl swpins channel update --commit --no-changelog nixos-unstable
+          bundle exec confctl swpins channel update --commit '{staging,os-staging}' vpsadminos
 
       - name: Update package dependencies
         run: |
