@@ -57,7 +57,11 @@ jobs:
             nix-shell -p bundix --run "bundix -l"
             
             git add gemset.nix Gemfile.lock
-            git diff --cached --quiet && continue
+
+            if git diff --cached --quiet ; then
+              popd
+              continue
+            fi
 
             git commit -m "$pkg: update dependencies"
             
