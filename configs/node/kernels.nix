@@ -25,7 +25,7 @@ let
     else
       {};
 
-  vpsadminosKernels = import <vpsadminos/os/packages/linux/availableKernels.nix> { inherit pkgs lib config; };
+  vpsadminosKernels = import <vpsadminos/os/packages/linux/packages.nix> { inherit pkgs lib config; };
 
   defaultKernel = vpsadminosKernels.defaultVersion;
 in {
