@@ -9,4 +9,4 @@ echo "Removing generations of netbooted machines"
 confctl generation rotate --no-gc -lr -t pxe-primary
 
 echo "Collecting garbage"
-confctl garbage-collect -t build
+confctl collect-garbage -t build
