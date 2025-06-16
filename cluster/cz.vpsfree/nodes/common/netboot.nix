@@ -1,12 +1,5 @@
 { config, lib, pkgs, confMachine, ... }:
 {
-  imports = [
-    # While crash dump is not limited to netbooted machines, in practice, all nodes
-    # are netbooted and other systems do not use boot.initrd.network, which is
-    # required to upload the crash dump.
-    ./crashdump.nix
-  ];
-
   boot.initrd.kernelModules = [
     "igb" "ixgbe" "tg3"
   ];
@@ -96,4 +89,9 @@
 
       chmod +x $out/bin/kexec-netboot
     '';
+
+  # While crash dump is not limited to netbooted machines, in practice, all nodes
+  # are netbooted and other systems do not use boot.initrd.network, which is
+  # required to upload the crash dump.
+  clusterconf.crashdump.enable = true;
 }

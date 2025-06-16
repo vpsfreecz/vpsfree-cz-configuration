@@ -24,6 +24,7 @@ let
   ];
 
   vpsadminos = [
+    ./clusterconf/crashdump.nix
     ./system/logging/vpsadminos.nix
     ./system/serial-console.nix
   ];
