@@ -1,4 +1,4 @@
-{ config, pkgs, lib, confLib, confData, confMachine, ... }:
+{ config, pkgs, lib, confLib, confData, confMachine, swpinsInfo, ... }:
 with lib;
 let
   cfg = confMachine;
@@ -14,6 +14,10 @@ let
 in {
   config = mkIf (confMachine.osNode != null) {
     boot.kernelVersion = mkDefault (kernels.getRuntimeKernelForMachine confMachine.name);
+
+    boot.postBootCommands = concatStringsSep "\n" (mapAttrsToList (swpin: spec:
+      ''echo "swpin ${swpin}=${spec.rev}" > /dev/kmsg''
+    ) swpinsInfo);
 
     vpsadmin.nodectld.settings = {
       vpsadmin = {
