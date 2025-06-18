@@ -1,7 +1,7 @@
-name: Daily update
+name: Weekly update
 on:
   schedule:
-    - cron: '30 4 * * *'
+    - cron: '30 3 1 * *'
 
 permissions:
   contents: write
@@ -42,30 +42,7 @@ jobs:
           sudo mkdir /nix/var/nix/gcroots/per-user/$USER
           sudo chown $USER /nix/var/nix/gcroots/per-user/$USER
 
-          bundle exec confctl swpins channel update --commit --no-changelog \
-                              '{nixos-stable,production,staging}' nixpkgs
-          bundle exec confctl swpins channel update --commit --no-changelog nixos-unstable
-          bundle exec confctl swpins channel update --commit '{staging,os-staging}' vpsadminos
-
-      - name: Update package dependencies
-        run: |
-          for pkg in geminabox ssh-exporter syslog-exporter ; do
-            pushd "packages/$pkg"
-            
-            rm -f gemset.nix Gemfile.lock
-            nix-shell -p bundix --run "bundix -l"
-            
-            git add gemset.nix Gemfile.lock
-
-            if git diff --cached --quiet ; then
-              popd
-              continue
-            fi
-
-            git commit -m "$pkg: update dependencies"
-            
-            popd
-          done
+          bundle exec confctl swpins core update --commit --no-changelog
 
       - name: Push updates
         run: |
