@@ -16,8 +16,6 @@ let
 
   customNetworking = has10GNetwork;
 
-  dumpMemory = has10GNetwork;
-
   renameNetif = mac: newName: ''
     oldName=$(ip -o link | grep "${mac}" | awk -F': ' '{print $2}')
 
@@ -64,6 +62,7 @@ in {
 
       dumpMemory = mkOption {
         type = types.bool;
+        default = false;
         description = ''
           Dump system memory
         '';
@@ -133,8 +132,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    clusterconf.crashdump.dumpMemory = mkDefault dumpMemory;
-
     boot.initrd.kernelModules = [
       "lockd"
       "netfs"
