@@ -37,5 +37,9 @@ in {
     };
   };
 
+  systemd.services."bepasty-server-paste.vpsfree.cz-gunicorn".preStart = ''
+    rm -f "${config.services.bepasty.servers."paste.vpsfree.cz".workDir}/gunicorn-paste.vpsfree.cz.pid"
+  '';
+
   system.stateVersion = "22.11";
 }
