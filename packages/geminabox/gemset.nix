@@ -209,15 +209,15 @@
     version = "2.2.4";
   };
   thin = {
-    dependencies = ["daemons" "eventmachine" "rack"];
+    dependencies = ["daemons" "eventmachine" "logger" "rack"];
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "08g1yq6zzvgndj8fd98ah7pp8g2diw28p8bfjgv7rvjvp8d2am8w";
+      sha256 = "17ss870j5g6d095csfdjfyi0cqpdim2kk5g3nmcfkm7qmy8h2h56";
       type = "gem";
     };
-    version = "1.8.2";
+    version = "2.0.0";
   };
   tilt = {
     groups = ["default"];
