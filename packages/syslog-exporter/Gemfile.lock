@@ -3,7 +3,7 @@ GEM
   specs:
     base64 (0.3.0)
     nio4r (2.7.4)
-    prometheus-client (4.2.4)
+    prometheus-client (4.2.5)
       base64
     puma (6.6.0)
       nio4r (~> 2.0)
