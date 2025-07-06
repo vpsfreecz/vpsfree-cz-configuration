@@ -25,10 +25,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0bzypdh2586iwl7m9xrhn1gglrvhx0mvz297ih0770h6x8ja09ni";
+      sha256 = "09ajgmp3zvr417wasyr2imqg6f2kx0avx42dh56rzk9cx71ynyw0";
       type = "gem";
     };
-    version = "4.2.4";
+    version = "4.2.5";
   };
   puma = {
     dependencies = ["nio4r"];
