@@ -51,6 +51,7 @@ in
   boot.kernelParams = [ "slub_nomerge" "preempt=full" "iommu=off" "cgroup_favordynmods=false" ];
 
   boot.kernel.sysctl = {
+    "kernel.hung_task_warnings" = -1;
     "kernel.modprobe" = "${modprobeWrapper}";
     "kernel.printk" = 0;
     "net.ipv4.neigh.default.gc_thresh3" = 16384;
