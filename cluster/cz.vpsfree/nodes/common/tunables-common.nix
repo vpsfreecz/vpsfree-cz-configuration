@@ -14,6 +14,7 @@
   };
 
   boot.zfs.moduleParams.spl = {
+    "spl_panic_halt" = 1;
     "spl_taskq_thread_timeout_ms" = 60000;
   };
 
