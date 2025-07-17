@@ -53,6 +53,12 @@
           allowedIPs = [ "172.16.107.12/32" ];
         }
 
+        { # snajpa - viture
+          publicKey = "WhJU5fVoO+su7lC4vyNBxspvjxK9aLbzMKxu8HdBxGE=";
+          presharedKeyFile = "/private/wireguard/preshared_keys/snajpa.psk";
+          allowedIPs = [ "172.16.107.13/32" ];
+        }
+
         { # aither - ws
           publicKey = "74Q77kXuMJ4Kz4Tn52n7xRreRvvuuqAnAND4HbVythI=";
           presharedKeyFile = "/private/wireguard/preshared_keys/aither.psk";
