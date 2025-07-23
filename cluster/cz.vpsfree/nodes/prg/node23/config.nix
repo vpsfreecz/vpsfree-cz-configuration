@@ -7,6 +7,8 @@
     ../../common/tunables-2t.nix
   ];
 
+  boot.initrd.kernelModules = [ "i40e" ];
+
   boot.zfs.pools = {
     tank = {
       install = true;
