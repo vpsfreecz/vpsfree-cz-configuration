@@ -5,7 +5,7 @@ GEM
     compact_index (0.15.0)
     daemons (1.4.1)
     eventmachine (1.2.7)
-    faraday (2.13.2)
+    faraday (2.13.3)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger

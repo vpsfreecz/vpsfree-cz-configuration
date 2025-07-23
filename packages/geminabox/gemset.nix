@@ -45,10 +45,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "06ia9z1wxydn0nmddinnjr93qdv856gi3i87h0fycy5y7cp7c6aw";
+      sha256 = "1dq1mk28vwn3hqrbd2nrm5mdq4bvvyg79z55blw5nnfs99x1wmz9";
       type = "gem";
     };
-    version = "2.13.2";
+    version = "2.13.3";
   };
   faraday-net_http = {
     dependencies = ["net-http"];
