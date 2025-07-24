@@ -10,6 +10,7 @@
       datasets = {
         "/".properties = {
           compression = "on";
+          direct = "disabled";
           dnodesize = "legacy";
           recordsize = "128k";
           xattr = "sa";
