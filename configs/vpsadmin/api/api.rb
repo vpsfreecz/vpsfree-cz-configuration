@@ -3,6 +3,6 @@ VpsAdmin::API.configure do |server|
     from: 'vpsadmin@vpsadmin.vpsfree.cz',
     to: 'aither@havefun.cz',
     subject: '[vpsAdmin API Error] %s',
-    smtp: {},
+    smtp: {}
   )
 end

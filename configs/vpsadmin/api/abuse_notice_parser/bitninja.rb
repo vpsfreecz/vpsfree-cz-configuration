@@ -14,21 +14,21 @@ module AbuseNoticeParser
 
     def parse
       if /Your server ([^ ]+) has been/ !~ message.subject
-        warn "BitNinja: source IP not found"
+        warn 'BitNinja: source IP not found'
         return []
       end
 
-      addr_str = $1
+      addr_str = ::Regexp.last_match(1)
 
       body = message.decoded
 
       # . is instead of nonbreaking space...
-      if /Timestamp \(UTC\):.(\d+\-\d+\-\d+ \d+:\d+:\d+)/ !~ body
-        warn "BitNinja: timestamp not found"
+      if /Timestamp \(UTC\):.(\d+-\d+-\d+ \d+:\d+:\d+)/ !~ body
+        warn 'BitNinja: timestamp not found'
         return []
       end
 
-      time_str = $1
+      time_str = ::Regexp.last_match(1)
 
       begin
         time = DateTime.strptime("#{time_str} UTC", '%Y-%m-%d %H:%M:%S %Z').to_time
@@ -48,7 +48,7 @@ module AbuseNoticeParser
       text = strip_rt_header(body)
 
       if body.empty?
-        warn "BitNinja: empty message body"
+        warn 'BitNinja: empty message body'
         return []
       end
 
@@ -59,7 +59,7 @@ module AbuseNoticeParser
         mailbox: mailbox,
         subject: subject,
         text: text,
-        detected_at: time,
+        detected_at: time
       )
 
       incident.save! unless dry_run?

@@ -17,7 +17,7 @@ module AbuseNoticeParser
       'IPv6-Accessible-HTTP',
       'IPv6-Accessible-SMTP',
       'IPv6-Accessible-SSH',
-      'IPv6-Accessible-SSL',
+      'IPv6-Accessible-SSL'
     ]
 
     def self.match_subject?(subject)
@@ -32,7 +32,7 @@ module AbuseNoticeParser
       incidents = {}
 
       message.attachments.each do |attachment|
-        next if !attachment.content_type.start_with?('application/zip')
+        next unless attachment.content_type.start_with?('application/zip')
 
         string_io = StringIO.new(attachment.decoded)
 
@@ -68,32 +68,33 @@ module AbuseNoticeParser
 
               next if incident && incident.detected_at > time
 
-              text = <<END
-Česky:
-Jménem Národního bezpečnostního týmu CSIRT.CZ Vám, v rámci projektu PRedikce a
-Ochrana před Kybernetickými Incidenty (PROKI, ID: VI20152020026) realizovaném
-v rámci Programu bezpečnostního výzkumu ČR na léta 2015 – 2020, zasíláme
-souhrnný report o IP adresách z Vaší sítě, které byly vyhodnoceny jako
-potenciálně škodlivé.
+              text = <<~END
+                Česky:
+                Jménem Národního bezpečnostního týmu CSIRT.CZ Vám, v rámci projektu PRedikce a
+                Ochrana před Kybernetickými Incidenty (PROKI, ID: VI20152020026) realizovaném
+                v rámci Programu bezpečnostního výzkumu ČR na léta 2015 – 2020, zasíláme
+                souhrnný report o IP adresách z Vaší sítě, které byly vyhodnoceny jako
+                potenciálně škodlivé.
 
-English:
-On behalf of the National Security Team CSIRT.CZ and in connection with the
-project Prediction and Protection against Cybernetic Incidents (PROKI, ID:
-VI20152020026) implemented under the Security Research Program of the Czech
-Republic for the years 2015–2020, we are sending you a comprehensive report on
-the IP addresses from your network that have been evaluated as potentially
-harmful.
+                English:
+                On behalf of the National Security Team CSIRT.CZ and in connection with the
+                project Prediction and Protection against Cybernetic Incidents (PROKI, ID:
+                VI20152020026) implemented under the Security Research Program of the Czech
+                Republic for the years 2015–2020, we are sending you a comprehensive report on
+                the IP addresses from your network that have been evaluated as potentially
+                harmful.
 
-Report:
+                Report:
 
-END
+              END
 
               row.each do |k, v|
                 next if k == 'raw'
-                text << sprintf("%-20s: %s\n", k, v)
+
+                text << format("%-20s: %s\n", k, v)
               end
 
-              text << sprintf("%-20s:\n", 'raw')
+              text << format("%-20s:\n", 'raw')
 
               begin
                 raw = CSV.parse(
@@ -101,7 +102,7 @@ END
                   col_sep: ',',
                   quote_char: '"',
                   row_sep: '\n',
-                  headers: true,
+                  headers: true
                 )
               rescue CSV::MalformedCSVError => e
                 warn "PROKI: malformed csv in raw attribute for key #{key}: #{e.message}"
@@ -110,11 +111,9 @@ END
 
               raw.each do |raw_row|
                 raw_row.each do |k, v|
-                  begin
-                    text << sprintf("  %-18s: %s\n", k, v)
-                  rescue Encoding::CompatibilityError
-                    next
-                  end
+                  text << format("  %-18s: %s\n", k, v)
+                rescue Encoding::CompatibilityError
+                  next
                 end
               end
 
@@ -126,7 +125,7 @@ END
                 subject: "PROKI #{codename} #{time.strftime('%Y-%m-%d')}",
                 text: text,
                 codename: codename,
-                detected_at: time,
+                detected_at: time
               )
             end
           end
@@ -138,19 +137,19 @@ END
       end
 
       now = Time.now
-      proki_cooldown = ENV['PROKI_COOLDOWN'] ? ENV['PROKI_COOLDOWN'].to_i : 7*24*60*60
+      proki_cooldown = ENV['PROKI_COOLDOWN'] ? ENV['PROKI_COOLDOWN'].to_i : 7 * 24 * 60 * 60
 
       incident_list.select! do |incident|
         existing = ::IncidentReport.where(
           user_id: incident.user_id,
           vps_id: incident.vps_id,
           ip_address_assignment_id: incident.ip_address_assignment_id,
-          codename: incident.codename,
+          codename: incident.codename
         ).order('created_at DESC').take
 
         if existing && existing.created_at + proki_cooldown > now
-          warn "PROKI: found previous incident ##{existing.id} for "+
-               "user=#{existing.user_id} vps=#{existing.vps_id} "+
+          warn "PROKI: found previous incident ##{existing.id} for " +
+               "user=#{existing.user_id} vps=#{existing.vps_id} " +
                "ip=#{existing.ip_address_assignment.ip_addr} code=#{existing.codename}"
           next(false)
         else
@@ -160,7 +159,7 @@ END
       end
 
       if incident_list.empty?
-        warn "PROKI: no new incidents found"
+        warn 'PROKI: no new incidents found'
       end
 
       incident_list

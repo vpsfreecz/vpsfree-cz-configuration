@@ -14,25 +14,25 @@ module AbuseNoticeParser
 
     def parse
       if /Critical security issue for ([^$]+)$/ !~ message.subject
-        warn "LeakIX: source IP not found"
+        warn 'LeakIX: source IP not found'
         return []
       end
 
-      addr_str = $1
+      addr_str = ::Regexp.last_match(1)
 
       body = message.decoded
 
       if /\|\s+Discovered\s+\|\s+(\d+ \w+ \d+ \d+:\d+ UTC)/ !~ body
-        warn "LeakIX: timestamp not found"
+        warn 'LeakIX: timestamp not found'
         return []
       end
 
-      time_str = $1
+      time_str = ::Regexp.last_match(1)
 
       begin
         time = DateTime.strptime("#{time_str} UTC", '%d %b %y %H:%M %Z').to_time
       rescue Date::Error => e
-        warn "LeakIX: invalid timestamp #{$1.inspect}"
+        warn "LeakIX: invalid timestamp #{::Regexp.last_match(1).inspect}"
         return []
       end
 
@@ -47,7 +47,7 @@ module AbuseNoticeParser
       text = strip_rt_header(body)
 
       if body.empty?
-        warn "LeakIX: empty message body"
+        warn 'LeakIX: empty message body'
         return []
       end
 
@@ -58,7 +58,7 @@ module AbuseNoticeParser
         mailbox: mailbox,
         subject: subject,
         text: text,
-        detected_at: time,
+        detected_at: time
       )
 
       incident.save! unless dry_run?

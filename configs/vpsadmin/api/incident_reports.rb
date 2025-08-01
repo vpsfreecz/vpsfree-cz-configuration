@@ -1,13 +1,13 @@
 require 'require_all'
 
-module AbuseNoticeParser ; end
+module AbuseNoticeParser; end
 
 require_relative 'abuse_notice_parser/utils'
 require_rel 'abuse_notice_parser/*.rb'
 
 VpsAdmin::API::IncidentReports.config do
   handle_message do |mailbox, message, dry_run:|
-    check_sender = ENV['CHECK_SENDER'] ? %w(y yes 1).include?(ENV['CHECK_SENDER']) : true
+    check_sender = ENV['CHECK_SENDER'] ? %w[y yes 1].include?(ENV['CHECK_SENDER']) : true
     originator = message['X-RT-Originator'].to_s
 
     if /^\[rt\.vpsfree\.cz \#\d+\] ([^$]+)/ !~ message.subject
@@ -15,7 +15,7 @@ VpsAdmin::API::IncidentReports.config do
       next
     end
 
-    subject = $1
+    subject = Regexp.last_match(1)
     processed = false
     incidents = []
 
@@ -25,7 +25,7 @@ VpsAdmin::API::IncidentReports.config do
       AbuseNoticeParser::LeakIX,
       AbuseNoticeParser::Proki,
       AbuseNoticeParser::SpamCop,
-      AbuseNoticeParser::UsGo,
+      AbuseNoticeParser::UsGo
     ].each do |klass|
       if !klass.match_subject?(subject) \
          || (check_sender && !klass.match_sender?(originator))
@@ -48,9 +48,9 @@ VpsAdmin::API::IncidentReports.config do
       incidents: incidents,
       reply: {
         from: 'vpsadmin@vpsfree.cz',
-        to: ['abuse-komentare@vpsfree.cz'],
+        to: ['abuse-komentare@vpsfree.cz']
       },
-      processed: processed,
+      processed: processed
     )
   end
 end

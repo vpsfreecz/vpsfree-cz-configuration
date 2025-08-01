@@ -4,7 +4,7 @@ module AbuseNoticeParser
       closing_bracket = subject.index(']')
       return subject if closing_bracket.nil?
 
-      ret = subject[(closing_bracket+1)..-1].strip
+      ret = subject[(closing_bracket + 1)..-1].strip
       ret.empty? ? 'No subject' : ret
     end
 

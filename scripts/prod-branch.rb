@@ -15,7 +15,7 @@ module ProdBranch
       app.desc 'Switch prod branch'
       app.arg_name '<new-branch>'
       app.command 'set-prod-branch' do |c|
-        c.action &ConfCtl::Cli::Command.run(c, Command, :switch_branch)
+        c.action(&ConfCtl::Cli::Command.run(c, Command, :switch_branch))
       end
     end
   end
@@ -27,7 +27,7 @@ module ProdBranch
       new_branch = args[0]
 
       unless new_branch.start_with?('prod-')
-        fail "Prod branch must start with 'prod-', e.g. 'prod-23.05'"
+        raise "Prod branch must start with 'prod-', e.g. 'prod-23.05'"
       end
 
       machines = ConfCtl::MachineList.new.select do |_, m|
@@ -36,18 +36,18 @@ module ProdBranch
 
       old_branch = nil
 
-      machines.each do |host, machine|
+      machines.each do |_host, machine|
         branch = machine['swpins']['channels'].first
 
         if old_branch.nil?
           old_branch = branch
         elsif old_branch != branch
-          fail "Found conflicting old branches: #{old_branch} and #{branch}; can replace just one"
+          raise "Found conflicting old branches: #{old_branch} and #{branch}; can replace just one"
         end
       end
 
       ask_confirmation! do
-        puts "The following machines will be reconfigured:"
+        puts 'The following machines will be reconfigured:'
         print_changes(machines, new_branch)
         puts
         puts "Channel #{old_branch} will be removed."
@@ -59,7 +59,7 @@ module ProdBranch
       git_add << 'configs/swpins.nix'
       sed!("s/\"#{old_branch}\"/\"#{new_branch}\"/", 'configs/swpins.nix')
 
-      machines.each do |host, machine|
+      machines.each do |host, _machine|
         machine_module = File.join('cluster', host, 'module.nix')
         puts "Updating #{machine_module}"
         sed!("s/\"#{old_branch}\"/\"#{new_branch}\"/", machine_module)
@@ -85,11 +85,12 @@ module ProdBranch
       puts 'Commiting'
       run!(
         'git', 'commit', '-m', "Switch over nodes from #{old_branch} to #{new_branch}",
-        *git_add,
+        *git_add
       )
     end
 
     protected
+
     def print_changes(machines, new_branch)
       rows = []
 
@@ -97,14 +98,14 @@ module ProdBranch
         rows << {
           name: host,
           current_channel: machine['swpins']['channels'].first,
-          new_channel: new_branch,
+          new_channel: new_branch
         }
       end
 
       ConfCtl::Cli::OutputFormatter.print(
         rows,
-        %i(name current_channel new_channel),
-        layout: :columns,
+        %i[name current_channel new_channel],
+        layout: :columns
       )
     end
 
@@ -117,9 +118,9 @@ module ProdBranch
     end
 
     def run!(*args)
-      unless Kernel.system(*args)
-        fail "Command #{args.join(' ')} failed"
-      end
+      return if Kernel.system(*args)
+
+      raise "Command #{args.join(' ')} failed"
     end
   end
 end

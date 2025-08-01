@@ -16,12 +16,12 @@ module AbuseNoticeParser
       body = message.decoded
 
       if /^This is an email abuse report about the IP address (.+) generated at ([^$]+?)$/ !~ body
-        warn "Fail2Ban: IP / date not found"
+        warn 'Fail2Ban: IP / date not found'
         return []
       end
 
-      addr_str = $1
-      time_str = $2
+      addr_str = ::Regexp.last_match(1)
+      time_str = ::Regexp.last_match(2)
 
       begin
         # Fri Sep 15 18:55:37 EEST 2023
@@ -42,7 +42,7 @@ module AbuseNoticeParser
       text = strip_rt_header(body)
 
       if body.empty?
-        warn "Fail2Ban: empty message body"
+        warn 'Fail2Ban: empty message body'
         return []
       end
 
@@ -53,7 +53,7 @@ module AbuseNoticeParser
         mailbox: mailbox,
         subject: subject,
         text: text,
-        detected_at: time,
+        detected_at: time
       )
 
       incident.save! unless dry_run?

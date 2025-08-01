@@ -5,7 +5,7 @@ module RuntimeKernels
     register
 
     def setup_hooks(hooks)
-      hooks.subscribe(:cluster_deploy) do |machines:, **kwargs|
+      hooks.subscribe(:cluster_deploy) do |machines:, **_kwargs|
         os_machines = machines.select do |_, machine|
           machine.spin == 'vpsadminos' && !machine.carried?
         end
@@ -31,15 +31,15 @@ module RuntimeKernels
           c.switch 'show-trace'
 
           c.desc 'Filter by attribute'
-          c.flag %i(a attr), multiple: true
+          c.flag %i[a attr], multiple: true
 
           c.desc 'Filter by tag'
-          c.flag %i(t tag), multiple: true
+          c.flag %i[t tag], multiple: true
 
           c.desc 'Assume the answer to confirmations is yes'
-          c.switch %w(y yes)
+          c.switch %w[y yes]
 
-          c.action &ConfCtl::Cli::Command.run(c, Command, :update)
+          c.action(&ConfCtl::Cli::Command.run(c, Command, :update))
         end
       end
     end
@@ -47,12 +47,12 @@ module RuntimeKernels
 
   class Command < ConfCtl::Cli::Cluster
     def update
-      require_args!(optional: %w(machine-pattern))
+      require_args!(optional: %w[machine-pattern])
 
       machines = select_machines(args[0]).select { |_, m| m.spin == 'vpsadminos' }
 
       ask_confirmation! do
-        puts "The following machines will be queried:"
+        puts 'The following machines will be queried:'
         list_machines(machines)
       end
 
@@ -84,7 +84,7 @@ module RuntimeKernels
 
       tw.run
 
-      puts sprintf('%-50s %s', 'HOST', 'KERNEL')
+      puts format('%-50s %s', 'HOST', 'KERNEL')
 
       machines.each do |host, _|
         kernel =
@@ -95,7 +95,7 @@ module RuntimeKernels
           end
 
         saved_kernels[host] = kernel if kernel != 'error'
-        puts sprintf('%-50s %s', host, kernel)
+        puts format('%-50s %s', host, kernel)
       end
 
       if errors.any?
@@ -111,6 +111,7 @@ module RuntimeKernels
     end
 
     protected
+
     def load_json
       JSON.parse(File.read(json_path))
     rescue Errno::ENOENT

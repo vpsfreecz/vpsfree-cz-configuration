@@ -15,13 +15,13 @@ module AbuseNoticeParser
     def parse
       body = message.decoded
 
-      if /^Email from ([^\s]+) \/ ([^$]+?)$/ !~ body
-        warn "SpamCop: IP / date not found"
+      if %r{^Email from ([^\s]+) / ([^$]+?)$} !~ body
+        warn 'SpamCop: IP / date not found'
         return []
       end
 
-      addr_str = $1
-      time_str = $2
+      addr_str = ::Regexp.last_match(1)
+      time_str = ::Regexp.last_match(2)
 
       begin
         time = DateTime.rfc2822(time_str).to_time
@@ -41,7 +41,7 @@ module AbuseNoticeParser
       text = strip_rt_header(body)
 
       if body.empty?
-        warn "SpamCop: empty message body"
+        warn 'SpamCop: empty message body'
         return []
       end
 
@@ -52,7 +52,7 @@ module AbuseNoticeParser
         mailbox: mailbox,
         subject: subject,
         text: text,
-        detected_at: time,
+        detected_at: time
       )
 
       incident.save! unless dry_run?

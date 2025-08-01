@@ -21,18 +21,18 @@ module AbuseNoticeParser
       feedback = message.parts[1].decoded
 
       if /^Source-IP: ([^$]+?)$/ !~ feedback
-        warn "USGO: IP not found"
+        warn 'USGO: IP not found'
         return []
       end
 
-      addr_str = $1
+      addr_str = ::Regexp.last_match(1)
 
       if /^Received-Date: ([^\(]+)/ !~ feedback
-        warn "USGO: datetime not found"
+        warn 'USGO: datetime not found'
         return []
       end
 
-      time_str = $1
+      time_str = ::Regexp.last_match(1)
 
       begin
         time = DateTime.rfc2822(time_str).to_time
@@ -57,7 +57,7 @@ module AbuseNoticeParser
       text << "\n\nOffending message:\n\n#{spam_body}"
 
       if body.empty?
-        warn "USGO: empty message body"
+        warn 'USGO: empty message body'
         return []
       end
 
@@ -68,7 +68,7 @@ module AbuseNoticeParser
         mailbox: mailbox,
         subject: subject,
         text: text,
-        detected_at: time,
+        detected_at: time
       )
 
       incident.save! unless dry_run?
