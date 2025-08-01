@@ -1,4 +1,10 @@
-{ config, pkgs, lib, confLib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confLib,
+  ...
+}:
 let
   inherit (lib) nameValuePair listToAttrs;
 
@@ -140,11 +146,23 @@ let
     })
   ];
 
-  mkPlugin = { name, owner, repo, rev, sha256 }:
+  mkPlugin =
+    {
+      name,
+      owner,
+      repo,
+      rev,
+      sha256,
+    }:
     pkgs.stdenvNoCC.mkDerivation {
       inherit name;
       src = pkgs.fetchFromGitHub {
-        inherit owner repo rev sha256;
+        inherit
+          owner
+          repo
+          rev
+          sha256
+          ;
       };
       installPhase = ''
         mkdir -p $out
@@ -167,91 +185,113 @@ let
     '';
   };
 
-  mkSite = { name, host, title, lang, tagline, start, maintainersNamespace, mlfarmMaster, matomoCodeFile }: {
-    templates = [ dokuwiki-template-vpsfree ];
+  mkSite =
+    {
+      name,
+      host,
+      title,
+      lang,
+      tagline,
+      start,
+      maintainersNamespace,
+      mlfarmMaster,
+      matomoCodeFile,
+    }:
+    {
+      templates = [ dokuwiki-template-vpsfree ];
 
-    plugins = kbPlugins;
+      plugins = kbPlugins;
 
-    settings = {
-      inherit title lang tagline start;
-      baseurl = "https://${host}";
-      disableactions = [ "register" "source" "export_raw" ];
-      license = "cc-by-sa";
-      template = "dokuwiki-vpsfree";
-      superuser = "@admin";
-      useacl = true;
-      authtype = "oauth";
-      userewrite = true;
-      useslash = true;
-      youarehere = true;
-      useheading = "1";
-      remote = true;
-      remoteuser = "";
-      plugin = {
-        maintainers = {
-          user_ns = maintainersNamespace;
-        };
+      settings = {
+        inherit
+          title
+          lang
+          tagline
+          start
+          ;
+        baseurl = "https://${host}";
+        disableactions = [
+          "register"
+          "source"
+          "export_raw"
+        ];
+        license = "cc-by-sa";
+        template = "dokuwiki-vpsfree";
+        superuser = "@admin";
+        useacl = true;
+        authtype = "oauth";
+        userewrite = true;
+        useslash = true;
+        youarehere = true;
+        useheading = "1";
+        remote = true;
+        remoteuser = "";
+        plugin = {
+          maintainers = {
+            user_ns = maintainersNamespace;
+          };
 
-        matomo = {
-          track_admin_user = false;
-          track_user = true;
-          js_tracking_code._file = matomoCodeFile;
-        };
+          matomo = {
+            track_admin_user = false;
+            track_user = true;
+            js_tracking_code._file = matomoCodeFile;
+          };
 
-        mlfarm = {
-          master = mlfarmMaster;
-          cache-file = "/var/lib/kb-shared/mlfarm/map.dat";
-        };
+          mlfarm = {
+            master = mlfarmMaster;
+            cache-file = "/var/lib/kb-shared/mlfarm/map.dat";
+          };
 
-        oauth = {
-          register-on-auth = true;
-          overwrite-groups = true;
-        };
+          oauth = {
+            register-on-auth = true;
+            overwrite-groups = true;
+          };
 
-        oauthgeneric = {
-          key = name;
-          secret._file = "/private/kb/${name}.client_secret";
-          authurl = "https://auth.vpsfree.cz/_auth/oauth2/authorize";
-          tokenurl = "https://auth.vpsfree.cz/_auth/oauth2/token";
-          userurl = "https://api.vpsfree.cz/users/current";
-          scopes._raw = "array()";
-          authmethod = 1; # bearer token
-          needs-state = true;
-          json-user = "response.user.login";
-          json-name = "response.user.full_name";
-          json-mail = "response.user.email";
-          json-grps = "response.user.dokuwiki_groups";
-          label = "vpsAdmin";
+          oauthgeneric = {
+            key = name;
+            secret._file = "/private/kb/${name}.client_secret";
+            authurl = "https://auth.vpsfree.cz/_auth/oauth2/authorize";
+            tokenurl = "https://auth.vpsfree.cz/_auth/oauth2/token";
+            userurl = "https://api.vpsfree.cz/users/current";
+            scopes._raw = "array()";
+            authmethod = 1; # bearer token
+            needs-state = true;
+            json-user = "response.user.login";
+            json-name = "response.user.full_name";
+            json-mail = "response.user.email";
+            json-grps = "response.user.dokuwiki_groups";
+            label = "vpsAdmin";
+          };
         };
       };
+
+      usersFile = "/private/kb/users.auth.php";
+
+      acl = [
+        {
+          page = "*";
+          actor = "@ALL";
+          level = "read";
+        }
+        {
+          page = "*";
+          actor = "@user";
+          level = "upload";
+        }
+        {
+          page = "private:*";
+          actor = "@user";
+          level = "upload";
+        }
+        {
+          page = "private:*";
+          actor = "@ALL";
+          level = "none";
+        }
+      ];
     };
-
-    usersFile = "/private/kb/users.auth.php";
-
-    acl = [
-      {
-        page = "*";
-        actor = "@ALL";
-        level = "read";
-      }
-      {
-        page = "*";
-        actor = "@user";
-        level = "upload";
-      }
-      {
-        page = "private:*";
-        actor = "@user";
-        level = "upload";
-      }
-      {
-        page = "private:*";
-        actor = "@ALL";
-        level = "none";
-      }
-    ];
-  };
-in {
+in
+{
   imports = [
     ../../../../environments/base.nix
     ../../../../profiles/ct.nix
@@ -270,12 +310,15 @@ in {
     "d /var/lib/kb-shared/mlfarm 0750 dokuwiki nginx - -"
   ];
 
-  fileSystems = listToAttrs (map (site:
-    nameValuePair "${config.services.dokuwiki.sites.${site.name}.stateDir}/media" {
-      device = "/var/lib/kb-shared/media";
-      options = [ "bind" ];
-    }
-  ) kbSites);
+  fileSystems = listToAttrs (
+    map (
+      site:
+      nameValuePair "${config.services.dokuwiki.sites.${site.name}.stateDir}/media" {
+        device = "/var/lib/kb-shared/media";
+        options = [ "bind" ];
+      }
+    ) kbSites
+  );
 
   services.dokuwiki = {
     webserver = "nginx";

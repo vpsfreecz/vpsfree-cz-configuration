@@ -28,7 +28,8 @@ let
     ./system/logging/vpsadminos.nix
     ./system/serial-console.nix
   ];
-in {
+in
+{
   nixos = shared ++ nixos;
   vpsadminos = shared ++ vpsadminos;
 }

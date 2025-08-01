@@ -1,8 +1,14 @@
-{ lib, config, confMachine, confLib }:
+{
+  lib,
+  config,
+  confMachine,
+  confLib,
+}:
 with lib;
 let
   topLevelConfig = config;
-in rec {
+in
+rec {
   cfg = topLevelConfig.system.logging;
 
   machines = confLib.getClusterMachines topLevelConfig.cluster;
@@ -11,9 +17,9 @@ in rec {
 
   locationLoggers = filter (d: d.metaConfig.host.location == confMachine.host.location) loggers;
 
-  anyLogger = if loggers == [] then null else head loggers;
+  anyLogger = if loggers == [ ] then null else head loggers;
 
-  logger = if locationLoggers == [] then anyLogger else head locationLoggers;
+  logger = if locationLoggers == [ ] then anyLogger else head locationLoggers;
 
   enable = cfg.enable && !isNull logger && logger.metaConfig.host.fqdn != confMachine.host.fqdn;
 

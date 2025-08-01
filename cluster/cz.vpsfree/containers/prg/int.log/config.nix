@@ -1,12 +1,20 @@
-{ config, pkgs, lib, confLib, confData, confMachine, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confLib,
+  confData,
+  confMachine,
+  ...
+}:
 with lib;
 let
   rsyslogTcpPort = confMachine.services.rsyslog-tcp.port;
   rsyslogUdpPort = confMachine.services.rsyslog-udp.port;
 
-  loggedAddresses = filter (a:
-    a.metaConfig.logging.enable
-  ) (confLib.getAllAddressesOf config.cluster 4);
+  loggedAddresses = filter (a: a.metaConfig.logging.enable) (
+    confLib.getAllAddressesOf config.cluster 4
+  );
 
   allMachines = confLib.getClusterMachines config.cluster;
 
@@ -14,11 +22,16 @@ let
 
   getAlias = host: "${host.name}${optionalString (!isNull host.location) ".${host.location}"}";
 
-  syslogExporterHosts = listToAttrs (map (m: nameValuePair m.name {
-    alias = getAlias m.metaConfig.host;
-    fqdn = m.metaConfig.host.fqdn;
-    os = m.metaConfig.spin;
-  }) possibleMachines);
+  syslogExporterHosts = listToAttrs (
+    map (
+      m:
+      nameValuePair m.name {
+        alias = getAlias m.metaConfig.host;
+        fqdn = m.metaConfig.host.fqdn;
+        os = m.metaConfig.spin;
+      }
+    ) possibleMachines
+  );
 
   syslogExporterPort = confMachine.services.syslog-exporter.port;
 
@@ -27,7 +40,8 @@ let
   reloadRsyslog = ''
     kill -HUP `systemctl show --property MainPID --value syslog`
   '';
-in {
+in
+{
   imports = [
     ../../../../../environments/base.nix
     ../../../../../profiles/ct.nix
@@ -57,10 +71,12 @@ in {
       '') loggedAddresses}
 
       ### Syslog-exporter
-      ${concatStringsSep "\n" (map (d: ''
-        # Allow access to syslog-exporter from ${d.metaConfig.host.fqdn}
-        iptables -A nixos-fw -p tcp -m tcp -s ${d.metaConfig.addresses.primary.address} --dport ${toString syslogExporterPort} -j nixos-fw-accept
-      '') monitorings)}
+      ${concatStringsSep "\n" (
+        map (d: ''
+          # Allow access to syslog-exporter from ${d.metaConfig.host.fqdn}
+          iptables -A nixos-fw -p tcp -m tcp -s ${d.metaConfig.addresses.primary.address} --dport ${toString syslogExporterPort} -j nixos-fw-accept
+        '') monitorings
+      )}
     '';
   };
 

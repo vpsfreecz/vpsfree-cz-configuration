@@ -1,17 +1,41 @@
 { config, ... }:
 let
   allAddresses = {
-    primary = { address = "172.16.0.6"; prefix = 32; };
+    primary = {
+      address = "172.16.0.6";
+      prefix = 32;
+    };
     teng0 = {
-      v4 = [ { address = "172.16.253.58"; prefix = 30; } ];
-      v6 = [ { address = "2a03:3b40:42:0:15::2"; prefix = 80; } ];
+      v4 = [
+        {
+          address = "172.16.253.58";
+          prefix = 30;
+        }
+      ];
+      v6 = [
+        {
+          address = "2a03:3b40:42:0:15::2";
+          prefix = 80;
+        }
+      ];
     };
     teng1 = {
-      v4 = [ { address = "172.16.252.58"; prefix = 30; } ];
-      v6 = [ { address = "2a03:3b40:42:1:15::2"; prefix = 80; } ];
+      v4 = [
+        {
+          address = "172.16.252.58";
+          prefix = 30;
+        }
+      ];
+      v6 = [
+        {
+          address = "2a03:3b40:42:1:15::2";
+          prefix = 80;
+        }
+      ];
     };
   };
-in {
+in
+{
   cluster."cz.vpsfree/nodes/prg/nasbox" = rec {
     spin = "vpsadminos";
 
@@ -62,12 +86,24 @@ in {
           routerId = "172.16.0.6";
           bgpNeighbours = {
             v4 = [
-              { address = "172.16.253.57"; as = 4200001999; }
-              { address = "172.16.252.57"; as = 4200001998; }
+              {
+                address = "172.16.253.57";
+                as = 4200001999;
+              }
+              {
+                address = "172.16.252.57";
+                as = 4200001998;
+              }
             ];
             v6 = [
-              { address = "2a03:3b40:42:0:15::1"; as = 4200001999; }
-              { address = "2a03:3b40:42:1:15::1"; as = 4200001998; }
+              {
+                address = "2a03:3b40:42:0:15::1";
+                as = 4200001999;
+              }
+              {
+                address = "2a03:3b40:42:1:15::1";
+                as = 4200001998;
+              }
             ];
           };
         };
@@ -77,11 +113,11 @@ in {
     };
 
     services = {
-      goresheat = {};
-      ipmi-exporter = {};
-      ksvcmon-exporter = {};
-      node-exporter = {};
-      osctl-exporter = {};
+      goresheat = { };
+      ipmi-exporter = { };
+      ksvcmon-exporter = { };
+      node-exporter = { };
+      osctl-exporter = { };
     };
   };
 }

@@ -26,7 +26,10 @@
     };
 
     addresses = {
-      primary = { address = "172.19.0.15"; prefix = 23; };
+      primary = {
+        address = "172.19.0.15";
+        prefix = 23;
+      };
     };
 
     osNode = {
@@ -48,12 +51,12 @@
     };
 
     services = {
-      goresheat = {};
-      ipmi-exporter = {};
-      ksvcmon-exporter = {};
-      node-exporter = {};
-      osctl-exporter = {};
-      vpsadmin-console = {};
+      goresheat = { };
+      ipmi-exporter = { };
+      ksvcmon-exporter = { };
+      node-exporter = { };
+      osctl-exporter = { };
+      vpsadmin-console = { };
     };
   };
 }

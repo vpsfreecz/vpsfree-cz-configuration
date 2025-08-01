@@ -1,11 +1,19 @@
-{ config, pkgs, lib, confLib, confMachine, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confLib,
+  confMachine,
+  ...
+}:
 with lib;
 let
   proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };
-in {
+in
+{
   imports = [
     ../../../../environments/base.nix
     ../../../../profiles/ct.nix

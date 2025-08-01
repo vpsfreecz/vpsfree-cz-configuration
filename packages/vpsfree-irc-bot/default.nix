@@ -1,4 +1,8 @@
-{ bundlerEnv, fetchFromGitHub, lib }:
+{
+  bundlerEnv,
+  fetchFromGitHub,
+  lib,
+}:
 let
   vpsfbot = fetchFromGitHub {
     owner = "vpsfreecz";
@@ -6,7 +10,8 @@ let
     rev = "ea34a456ed69d50f8c97112750cef6c722b0d42a";
     sha256 = "sha256-rxIBi0GyzhsGXrHdwyg3ndHJxAXC4fkjeIrJxj1olQc=";
   };
-in bundlerEnv {
+in
+bundlerEnv {
   name = "vpsfree-irc-bot";
   gemdir = vpsfbot;
   postBuild = ''
@@ -16,7 +21,7 @@ in bundlerEnv {
   meta = with lib; {
     homepage = "https://github.com/vpsfreecz/vpsfree-irc-bot";
     platforms = platforms.linux;
-    maintainers = [];
+    maintainers = [ ];
     license = licenses.mit;
   };
 }

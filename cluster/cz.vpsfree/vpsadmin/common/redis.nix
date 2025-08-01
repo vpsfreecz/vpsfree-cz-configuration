@@ -1,4 +1,10 @@
-{ pkgs, lib, config, confLib, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  confLib,
+  ...
+}:
 let
   webui1 = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -9,7 +15,8 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.webui2";
   };
-in {
+in
+{
   vpsadmin.redis = {
     enable = true;
 

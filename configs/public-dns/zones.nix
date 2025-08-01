@@ -1,4 +1,8 @@
-{ lib, primary, filterZones ? null }:
+{
+  lib,
+  primary,
+  filterZones ? null,
+}:
 let
   inherit (lib) concatMapStringsSep filter;
 
@@ -16,22 +20,33 @@ let
   zoneDir = "/var/named";
 
   zones = [
-    { name = "vpsfree.cz."; file = ./zone.vpsfree.cz.; }
+    {
+      name = "vpsfree.cz.";
+      file = ./zone.vpsfree.cz.;
+    }
     "167.8.185.in-addr.arpa."
-    { name = "2.0.0.4.b.3.3.0.a.2.ip6.arpa."; primaries = [ "37.205.8.113" ]; }
-    { name = "3.0.0.4.b.3.3.0.a.2.ip6.arpa."; primaries = [ "37.205.8.113" ]; }
+    {
+      name = "2.0.0.4.b.3.3.0.a.2.ip6.arpa.";
+      primaries = [ "37.205.8.113" ];
+    }
+    {
+      name = "3.0.0.4.b.3.3.0.a.2.ip6.arpa.";
+      primaries = [ "37.205.8.113" ];
+    }
   ];
 
   ipsToBind = ips: concatMapStringsSep " " (ip: "${ip};") ips;
 
   makeZones = map makeZone zones;
 
-  makeZone = zone:
+  makeZone =
+    zone:
     let
       fn =
         if !primary || ((builtins.isAttrs zone) && (builtins.hasAttr "primaries" zone)) then
           makeSecondaryZone
-        else makePrimaryZone;
+        else
+          makePrimaryZone;
 
       attrset =
         if builtins.isAttrs zone then
@@ -40,7 +55,8 @@ let
           { name = zone; }
         else
           abort "zone has to be attrset or string";
-    in fn attrset;
+    in
+    fn attrset;
 
   makePrimaryZone = zone: {
     inherit (zone) name;
@@ -59,10 +75,7 @@ let
     '';
   };
 
-  filteredZones = zones:
-    if isNull filterZones then
-      zones
-    else
-      filter filterZones zones;
+  filteredZones = zones: if isNull filterZones then zones else filter filterZones zones;
 
-in filteredZones makeZones
+in
+filteredZones makeZones

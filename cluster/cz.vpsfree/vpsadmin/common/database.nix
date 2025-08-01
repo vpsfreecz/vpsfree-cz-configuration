@@ -1,4 +1,11 @@
-{ pkgs, lib, config, confLib, confData, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  confLib,
+  confData,
+  ...
+}:
 let
   api1 = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -15,10 +22,22 @@ let
     name = "cz.vpsfree/vpsadmin/int.vpsadmin1";
   };
 
-  nameservers = map (ns: confLib.findMetaConfig {
-    cluster = config.cluster;
-    name = "cz.vpsfree/containers/${ns}";
-  }) [ "ns0" "ns1" "ns2" "ns3" "ns4" ];
+  nameservers =
+    map
+      (
+        ns:
+        confLib.findMetaConfig {
+          cluster = config.cluster;
+          name = "cz.vpsfree/containers/${ns}";
+        }
+      )
+      [
+        "ns0"
+        "ns1"
+        "ns2"
+        "ns3"
+        "ns4"
+      ];
 
   proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -29,7 +48,8 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.utils";
   };
-in {
+in
+{
   vpsadmin.database = {
     enable = true;
 
@@ -37,8 +57,8 @@ in {
 
     allowedIPv4Ranges =
       let
-        management = map (net:
-          "${net.address}/${toString net.prefix}"
+        management = map (
+          net: "${net.address}/${toString net.prefix}"
         ) confData.vpsadmin.networks.management.ipv4;
 
         others = [
@@ -48,6 +68,7 @@ in {
           "${proxyPrg.addresses.primary.address}/32"
           "${utils.addresses.primary.address}/32"
         ] ++ (map (ns: "${ns.addresses.primary.address}/32") nameservers);
-      in management ++ others;
+      in
+      management ++ others;
   };
 }

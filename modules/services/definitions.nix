@@ -21,7 +21,8 @@ let
         };
       };
     };
-in {
+in
+{
   options = {
     serviceDefinitions = mkOption {
       type = types.attrsOf (types.submodule service);

@@ -1,4 +1,9 @@
-{ config, lib, confLib, ... }:
+{
+  config,
+  lib,
+  confLib,
+  ...
+}:
 with lib;
 let
   allMachines = confLib.getClusterMachines config.cluster;
@@ -9,16 +14,22 @@ let
 
   getAlias = host: "${host.name}${optionalString (!isNull host.location) ".${host.location}"}";
 
-  hosts = listToAttrs (map (m: nameValuePair m.name {
-    alias = getAlias m.metaConfig.host;
-    fqdn = m.metaConfig.host.fqdn;
-    user = "ssh-check";
-    private_key_file = "/secrets/ssh-exporter/id_ecdsa";
-    timeout = 45;
-  }) allNodes);
+  hosts = listToAttrs (
+    map (
+      m:
+      nameValuePair m.name {
+        alias = getAlias m.metaConfig.host;
+        fqdn = m.metaConfig.host.fqdn;
+        user = "ssh-check";
+        private_key_file = "/secrets/ssh-exporter/id_ecdsa";
+        timeout = 45;
+      }
+    ) allNodes
+  );
 
   port = config.serviceDefinitions.ssh-exporter.port;
-in {
+in
+{
   services.prometheus.confExporters.ssh = {
     enable = true;
     port = port;

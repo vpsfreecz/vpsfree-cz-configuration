@@ -1,12 +1,21 @@
 { config, confLib, ... }:
 let
-  rabbitmqs = map (name:
-    confLib.findMetaConfig {
-      cluster = config.cluster;
-      name = "cz.vpsfree/vpsadmin/int.${name}";
-    }
-  ) [ "rabbitmq1" "rabbitmq2" "rabbitmq3" ];
-in {
+  rabbitmqs =
+    map
+      (
+        name:
+        confLib.findMetaConfig {
+          cluster = config.cluster;
+          name = "cz.vpsfree/vpsadmin/int.${name}";
+        }
+      )
+      [
+        "rabbitmq1"
+        "rabbitmq2"
+        "rabbitmq3"
+      ];
+in
+{
   vpsadmin = {
     plugins = [
       "monitoring"

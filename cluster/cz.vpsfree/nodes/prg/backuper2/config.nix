@@ -1,9 +1,16 @@
-{ config, lib, pkgs, confData, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  confData,
+  ...
+}:
 let
   inherit (lib) concatMapStringsSep "\n";
 
   crashdumpNetworks = with confData.vpsadmin.networks.management; ipv4 ++ dev ++ dhcp;
-in {
+in
+{
   imports = [
     ../../common/intel.nix
     ../../common/storage.nix
@@ -12,7 +19,10 @@ in {
 
   vpsadmin.nodectld.settings = {
     vpsadmin = {
-      net_interfaces = [ "teng0" "teng1" ];
+      net_interfaces = [
+        "teng0"
+        "teng1"
+      ];
       queues = {
         storage.threads = 8;
         zfs_recv.threads = 48;
@@ -32,7 +42,12 @@ in {
     };
   };
 
-  boot.kernelModules = [ "8021q" "nvmet" "nvmet-tcp" "configfs" ];
+  boot.kernelModules = [
+    "8021q"
+    "nvmet"
+    "nvmet-tcp"
+    "configfs"
+  ];
 
   boot.zfs.pools = {
     storage = {
@@ -42,7 +57,9 @@ in {
 
       datasets = {
         "vpsfree.cz/crashdump".properties = {
-          sharenfs = concatMapStringsSep "," (net: "rw=${net.address}/${toString net.prefix},no_root_squash") crashdumpNetworks;
+          sharenfs = concatMapStringsSep "," (
+            net: "rw=${net.address}/${toString net.prefix},no_root_squash"
+          ) crashdumpNetworks;
         };
       };
 

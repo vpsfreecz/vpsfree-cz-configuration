@@ -1,4 +1,12 @@
-{ config, lib, pkgs, confLib, confMachine, confData, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  confLib,
+  confMachine,
+  confData,
+  ...
+}:
 with lib;
 let
 
@@ -32,7 +40,8 @@ let
     "cz.vpsfree/containers/prg/int.alerts2"
   ];
 
-in {
+in
+{
   boot = {
     loader.grub = {
       enable = true;
@@ -67,18 +76,21 @@ in {
 
   networking.firewall.extraCommands =
     let
-      alerterRules = concatMapStringsSep "\n" (machine:
+      alerterRules = concatMapStringsSep "\n" (
+        machine:
         let
           alerter = confLib.findMetaConfig {
             cluster = config.cluster;
             name = machine;
           };
-        in ''
+        in
+        ''
           # Allow access to sachet from ${machine}
           iptables -A nixos-fw -p tcp --dport ${toString config.services.sachet.port} -s ${alerter.addresses.primary.address} -j nixos-fw-accept
         ''
       ) alerters;
-    in ''
+    in
+    ''
       ### Alertmanagers to sachet
       ${alerterRules}
     '';
@@ -86,7 +98,11 @@ in {
   systemd.services.modemNet = {
     description = "modemNet";
     enable = true;
-    path = with pkgs; [ iproute2 libqmi busybox ];
+    path = with pkgs; [
+      iproute2
+      libqmi
+      busybox
+    ];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = "${modemNetBringUp}/bin/modem-network-bring-up";

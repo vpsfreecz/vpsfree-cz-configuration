@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 with lib;
 let
   cfg = config.services.sachet;
@@ -12,7 +17,8 @@ let
       cfg.configPath
     else
       pkgs.writeText "sachet-config.json" (builtins.toJSON cfg.settings);
-in {
+in
+{
   options = {
     services.sachet = {
       enable = mkEnableOption "Enable sachet, SMS alerts for Prometheus' Alertmanager";
@@ -62,7 +68,7 @@ in {
 
       settings = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         description = ''
           Create the config file from an attrset.
 
@@ -76,7 +82,7 @@ in {
   config = mkIf cfg.enable {
     assertions = [
       {
-        assertion = (isNull cfg.configPath) || cfg.settings == {};
+        assertion = (isNull cfg.configPath) || cfg.settings == { };
         message = "Use either services.sachet.configPath or services.sachet.settings";
       }
     ];

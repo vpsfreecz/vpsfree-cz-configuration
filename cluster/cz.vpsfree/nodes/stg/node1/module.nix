@@ -1,25 +1,41 @@
 { config, ... }:
 let
   allAddresses = {
-    primary = { address = "172.16.0.66"; prefix = 32; };
+    primary = {
+      address = "172.16.0.66";
+      prefix = 32;
+    };
     teng0 = {
       v4 = [
-        { address = "172.16.253.62"; prefix = 30; }
+        {
+          address = "172.16.253.62";
+          prefix = 30;
+        }
       ];
       v6 = [
-        { address = "2a03:3b40:42:0:16::2"; prefix = 80; }
+        {
+          address = "2a03:3b40:42:0:16::2";
+          prefix = 80;
+        }
       ];
     };
     teng1 = {
       v4 = [
-        { address = "172.16.252.62"; prefix = 30; }
+        {
+          address = "172.16.252.62";
+          prefix = 30;
+        }
       ];
       v6 = [
-        { address = "2a03:3b40:42:1:16::2"; prefix = 80; }
+        {
+          address = "2a03:3b40:42:1:16::2";
+          prefix = 80;
+        }
       ];
     };
   };
-in {
+in
+{
   cluster."cz.vpsfree/nodes/stg/node1" = rec {
     spin = "vpsadminos";
 
@@ -56,7 +72,7 @@ in {
     osNode = {
       networking = {
         interfaces = {
-          names= {
+          names = {
             teng0 = "0c:c4:7a:88:70:14";
             teng1 = "0c:c4:7a:88:70:15";
           };
@@ -70,12 +86,24 @@ in {
           routerId = "172.16.0.66";
           bgpNeighbours = {
             v4 = [
-              { address = "172.16.253.61"; as = 4200001999; }
-              { address = "172.16.252.61"; as = 4200001998; }
+              {
+                address = "172.16.253.61";
+                as = 4200001999;
+              }
+              {
+                address = "172.16.252.61";
+                as = 4200001998;
+              }
             ];
             v6 = [
-              { address = "2a03:3b40:42:0:16::1"; as = 4200001999; }
-              { address = "2a03:3b40:42:1:16::1"; as = 4200001998; }
+              {
+                address = "2a03:3b40:42:0:16::1";
+                as = 4200001999;
+              }
+              {
+                address = "2a03:3b40:42:1:16::1";
+                as = 4200001998;
+              }
             ];
           };
         };
@@ -85,12 +113,12 @@ in {
     };
 
     services = {
-      goresheat = {};
-      ipmi-exporter = {};
-      ksvcmon-exporter = {};
-      node-exporter = {};
-      osctl-exporter = {};
-      vpsadmin-console = {};
+      goresheat = { };
+      ipmi-exporter = { };
+      ksvcmon-exporter = { };
+      node-exporter = { };
+      osctl-exporter = { };
+      vpsadmin-console = { };
     };
   };
 }

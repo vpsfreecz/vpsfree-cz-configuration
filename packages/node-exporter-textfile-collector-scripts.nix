@@ -1,8 +1,15 @@
-{ stdenvNoCC, lib, fetchFromGitHub, bash, smartmontools }:
+{
+  stdenvNoCC,
+  lib,
+  fetchFromGitHub,
+  bash,
+  smartmontools,
+}:
 let
   rev = "fd6ed02e26c11995386d1f7a9db75025fae85de9";
   shortRev = builtins.substring 0 7 rev;
-in stdenvNoCC.mkDerivation rec {
+in
+stdenvNoCC.mkDerivation rec {
   pname = "node-exporter-textfile-collector-scripts";
   version = shortRev;
 
@@ -36,6 +43,6 @@ in stdenvNoCC.mkDerivation rec {
     homepage = "https://github.com/prometheus-community/node-exporter-textfile-collector-scripts";
     license = licenses.asl20;
     platforms = platforms.all;
-    maintainers = with maintainers; [];
+    maintainers = with maintainers; [ ];
   };
 }

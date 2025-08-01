@@ -1,4 +1,12 @@
-{ pkgs, lib, confLib, config, confData, confMachine, ... }:
+{
+  pkgs,
+  lib,
+  confLib,
+  config,
+  confData,
+  confMachine,
+  ...
+}:
 with lib;
 let
   cfg = config.clusterconf.alerter;
@@ -21,10 +29,12 @@ let
 
   allContainers = filter (m: m.metaConfig.container != null) allMachines;
 
-  containerInhibitRules = map (ct:
+  containerInhibitRules = map (
+    ct:
     let
       ctData = confData.vpsadmin.containers.${ct.metaConfig.host.fqdn};
-    in {
+    in
+    {
       target_match = {
         fqdn = "${ct.metaConfig.host.fqdn}";
       };
@@ -150,7 +160,8 @@ let
     {{ end }}
     {{ end }}
   '';
-in {
+in
+{
   options = {
     clusterconf.alerter = {
       enable = mkEnableOption "Enable alertmanager";
@@ -162,7 +173,7 @@ in {
 
       allowedMachines = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         description = ''
           List of confctl machine names that are allowed to access this monitor
           internally
@@ -171,7 +182,7 @@ in {
 
       clusterPeers = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         description = ''
           List of confctl machine names that are added as --cluster.peer for HA
           setup
@@ -183,48 +194,50 @@ in {
   config = mkIf cfg.enable {
     networking = {
       firewall.extraCommands = concatStringsSep "\n" (
-        (map (machine:
-          ''
-            # Allow access to alertmanager from monitor on ${machine.name}
-            iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${machine.metaConfig.addresses.primary.address} -j nixos-fw-accept
-          ''
-          ) allMonitors)
-        ++
-        (map (machine:
+        (map (machine: ''
+          # Allow access to alertmanager from monitor on ${machine.name}
+          iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${machine.metaConfig.addresses.primary.address} -j nixos-fw-accept
+        '') allMonitors)
+        ++ (map (
+          machine:
           let
             m = confLib.findMetaConfig {
               cluster = config.cluster;
               name = machine;
             };
-          in ''
+          in
+          ''
             # Allow access to alertmanager from ${machine}
             iptables -A nixos-fw -p tcp --dport ${toString alertmanagerPort} -s ${m.addresses.primary.address} -j nixos-fw-accept
           ''
-          ) cfg.allowedMachines)
-        ++
-        (map (machine:
+        ) cfg.allowedMachines)
+        ++ (map (
+          machine:
           let
             m = confLib.findMetaConfig {
               cluster = config.cluster;
               name = machine;
             };
-          in ''
+          in
+          ''
             # Allow access to alertmanager cluster from ${machine}
             iptables -A nixos-fw -p tcp --dport 9094 -s ${m.addresses.primary.address} -j nixos-fw-accept
           ''
-          ) cfg.clusterPeers)
-        );
+        ) cfg.clusterPeers)
+      );
     };
 
     services.prometheus.alertmanager = {
       enable = true;
-      extraFlags = map (machine:
+      extraFlags = map (
+        machine:
         let
           m = confLib.findMetaConfig {
             cluster = config.cluster;
             name = machine;
           };
-        in "--cluster.peer ${m.addresses.primary.address}:9094"
+        in
+        "--cluster.peer ${m.addresses.primary.address}:9094"
       ) (filter (v: v != confMachine.name) cfg.clusterPeers);
       port = alertmanagerPort;
       webExternalUrl = cfg.externalUrl;
@@ -238,7 +251,10 @@ in {
           telegramTemplate
         ];
         route = {
-          group_by = [ "alertname" "alias" ];
+          group_by = [
+            "alertname"
+            "alias"
+          ];
           group_wait = "30s";
           group_interval = "2m";
           repeat_interval = "4h";
@@ -383,7 +399,10 @@ in {
             source_match = {
               alertclass = "lxcstartfail";
             };
-            equal = [ "fqdn" "id" ];
+            equal = [
+              "fqdn"
+              "id"
+            ];
           }
 
           # Disable less-important alerts when more important alerts of the same
@@ -398,7 +417,10 @@ in {
             source_match = {
               severity = "fatal";
             };
-            equal = [ "alertclass" "instance" ];
+            equal = [
+              "alertclass"
+              "instance"
+            ];
           }
           {
             target_match = {
@@ -410,7 +432,10 @@ in {
             source_match = {
               severity = "critical";
             };
-            equal = [ "alertclass" "instance" ];
+            equal = [
+              "alertclass"
+              "instance"
+            ];
           }
 
           # Disable critical alerts during quiet hours. Use fatal alerts to bypass

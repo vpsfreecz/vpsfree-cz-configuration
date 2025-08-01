@@ -8,7 +8,8 @@ let
   };
 
   phps = import nix-phps;
-in {
+in
+{
   services.nginx.virtualHosts."foto.vpsfree.cz" = {
     enableACME = false;
     forceSSL = false;
@@ -44,6 +45,6 @@ in {
       description = "vpsfree photogallery";
     };
 
-    groups.foto = {};
+    groups.foto = { };
   };
 }

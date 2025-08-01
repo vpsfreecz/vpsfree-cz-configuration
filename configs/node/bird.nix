@@ -1,4 +1,11 @@
-{ config, lib, confLib, confData, confMachine, ... }:
+{
+  config,
+  lib,
+  confLib,
+  confData,
+  confMachine,
+  ...
+}:
 with lib;
 let
   cfg = confMachine;
@@ -60,46 +67,54 @@ let
     }
 
     ${optionalString isBGP ''
-    protocol direct {
-      ipv4;
-      ipv6;
-      interface "*";
-    }
+      protocol direct {
+        ipv4;
+        ipv6;
+        interface "*";
+      }
 
-    ${bgpFragment "ipv4" birdCfg.bgpNeighbours.v4 0}
+      ${bgpFragment "ipv4" birdCfg.bgpNeighbours.v4 0}
 
-    ${bgpFragment "ipv6" birdCfg.bgpNeighbours.v6 (length birdCfg.bgpNeighbours.v4)}
+      ${bgpFragment "ipv6" birdCfg.bgpNeighbours.v6 (length birdCfg.bgpNeighbours.v4)}
     ''}
 
     ${optionalString isOSPF ''
-    ${ospfFragment "ipv4" 4}
-    ${ospfFragment "ipv6" 6}
+      ${ospfFragment "ipv4" 4}
+      ${ospfFragment "ipv6" 6}
     ''}
 
     ${birdCfg.extraConfig}
   '';
 
-  bgpFragment = proto: neighbours: startIndex: concatNl (imap0 (i: neighbour: ''
-    protocol bgp bgp${toString (startIndex + i)} {
-      local as ${toString birdCfg.as};
-      neighbor ${neighbour.address} as ${toString neighbour.as};
-      ${optionalString (!isNull neighbour.keepaliveTime) "keepalive time ${toString neighbour.keepaliveTime};"}
-      ${optionalString (!isNull neighbour.holdTime) "hold time ${toString neighbour.holdTime};"}
+  bgpFragment =
+    proto: neighbours: startIndex:
+    concatNl (
+      imap0 (i: neighbour: ''
+        protocol bgp bgp${toString (startIndex + i)} {
+          local as ${toString birdCfg.as};
+          neighbor ${neighbour.address} as ${toString neighbour.as};
+          ${optionalString (
+            !isNull neighbour.keepaliveTime
+          ) "keepalive time ${toString neighbour.keepaliveTime};"}
+          ${optionalString (!isNull neighbour.holdTime) "hold time ${toString neighbour.holdTime};"}
 
-      ${proto} {
-        export where source !~ [ RTS_BGP ];
-        import all;
-      };
+          ${proto} {
+            export where source !~ [ RTS_BGP ];
+            import all;
+          };
 
-      graceful restart;
-    }
-  '') neighbours);
+          graceful restart;
+        }
+      '') neighbours
+    );
 
   ospfFragment = proto: i: ''
     protocol ospf ${if proto == "ipv4" then "v2" else "v3"} ospf${toString i} {
       area 0.0.0.0 {
         networks {
-          ${concatMapStringsSep "\n      " (v: "${v};") confData.vpsadmin.networks.ospf.${confMachine.host.location}.${proto}}
+          ${concatMapStringsSep "\n      " (
+            v: "${v};"
+          ) confData.vpsadmin.networks.ospf.${confMachine.host.location}.${proto}}
         };
 
         interface "bond0" {
@@ -118,25 +133,34 @@ let
 
   allNetworks = confData.vpsadmin.networks.containers;
 
-  importNetworkFilter = ipVer:
+  importNetworkFilter =
+    ipVer:
     let
       networks = allNetworks.${"ipv${toString ipVer}"};
       list = map (net: "${net.address}/${toString net.prefix}+") networks;
-    in ''
+    in
+    ''
       net ~ [ ${concatStringsSep ", " list} ]
     '';
 
-  importInterfaceFilter = ipVer: optionalString (cfg.osNode.networking.interfaces.addresses != {}) (
-    let
-      ifconds = concatMapStringsSep " || " (v: "ifname = \"${v}\"") (attrNames cfg.osNode.networking.interfaces.addresses);
-      netLen = {
-        "ipv4" = 30;
-        "ipv6" = 80;
-      };
-    in ''
-      (${ifconds}) && net.len = ${toString netLen.${"ipv${toString ipVer}"}}
-    '');
-in {
+  importInterfaceFilter =
+    ipVer:
+    optionalString (cfg.osNode.networking.interfaces.addresses != { }) (
+      let
+        ifconds = concatMapStringsSep " || " (v: "ifname = \"${v}\"") (
+          attrNames cfg.osNode.networking.interfaces.addresses
+        );
+        netLen = {
+          "ipv4" = 30;
+          "ipv6" = 80;
+        };
+      in
+      ''
+        (${ifconds}) && net.len = ${toString netLen.${"ipv${toString ipVer}"}}
+      ''
+    );
+in
+{
   config = mkIf (confMachine.osNode != null) {
     services.bird2 = mkIf useBird {
       enable = true;
@@ -154,24 +178,33 @@ in {
       let
         bgpPort = toString config.serviceDefinitions.bird-bgp.port;
 
-        bfdPorts = [ 3784 4784 ];
+        bfdPorts = [
+          3784
+          4784
+        ];
 
         bgpRules = optionalString isBGP ''
           ${concatMapStringsSep "\n" (neigh: ''
-          iptables -A nixos-fw -p tcp -s ${neigh.address} --dport ${bgpPort} -j nixos-fw-accept
+            iptables -A nixos-fw -p tcp -s ${neigh.address} --dport ${bgpPort} -j nixos-fw-accept
           '') cfg.osNode.networking.bird.bgpNeighbours.v4}
           ${concatMapStringsSep "\n" (neigh: ''
-          ip6tables -A nixos-fw -p tcp -s ${neigh.address} --dport ${bgpPort} -j nixos-fw-accept
+            ip6tables -A nixos-fw -p tcp -s ${neigh.address} --dport ${bgpPort} -j nixos-fw-accept
           '') cfg.osNode.networking.bird.bgpNeighbours.v6}
         '';
 
         bfdRules = optionalString isBGP ''
-          ${concatMapStringsSep "\n" (neigh: concatMapStringsSep "\n" (bfdPort: ''
-          iptables -A nixos-fw -p udp -s ${neigh.address} --dport ${toString bfdPort} -j nixos-fw-accept
-          '') bfdPorts) cfg.osNode.networking.bird.bgpNeighbours.v4}
-          ${concatMapStringsSep "\n" (neigh: concatMapStringsSep "\n" (bfdPort: ''
-          ip6tables -A nixos-fw -p udp -s ${neigh.address} --dport ${toString bfdPort} -j nixos-fw-accept
-          '') bfdPorts) cfg.osNode.networking.bird.bgpNeighbours.v6}
+          ${concatMapStringsSep "\n" (
+            neigh:
+            concatMapStringsSep "\n" (bfdPort: ''
+              iptables -A nixos-fw -p udp -s ${neigh.address} --dport ${toString bfdPort} -j nixos-fw-accept
+            '') bfdPorts
+          ) cfg.osNode.networking.bird.bgpNeighbours.v4}
+          ${concatMapStringsSep "\n" (
+            neigh:
+            concatMapStringsSep "\n" (bfdPort: ''
+              ip6tables -A nixos-fw -p udp -s ${neigh.address} --dport ${toString bfdPort} -j nixos-fw-accept
+            '') bfdPorts
+          ) cfg.osNode.networking.bird.bgpNeighbours.v6}
         '';
 
         ospfProto = toString config.serviceDefinitions.bird-ospf.port;
@@ -180,6 +213,11 @@ in {
           iptables -A nixos-fw -p ${ospfProto} -j nixos-fw-accept
           ip6tables -A nixos-fw -p ${ospfProto} -j nixos-fw-accept
         '';
-      in concatStringsSep "\n\n" [ bgpRules bfdRules ospfRules ];
+      in
+      concatStringsSep "\n\n" [
+        bgpRules
+        bfdRules
+        ospfRules
+      ];
   };
 }

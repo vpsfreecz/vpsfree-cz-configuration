@@ -1,21 +1,35 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   inherit (lib) mkOption types;
 
-  makeAuthorizedKeys = name: admin: map (pubkey: (lib.concatStringsSep "," [
-    ''environment="VPSFCONF_ADMIN=${name}"''
-    ''environment="VPSADMIN_USER_ID=${toString admin.vpsadmin.id}"''
-    ''environment="VPSADMIN_USER_NAME=${admin.vpsadmin.name}"''
-  ]) + " " + pubkey) admin.publicKeys;
+  makeAuthorizedKeys =
+    name: admin:
+    map (
+      pubkey:
+      (lib.concatStringsSep "," [
+        ''environment="VPSFCONF_ADMIN=${name}"''
+        ''environment="VPSADMIN_USER_ID=${toString admin.vpsadmin.id}"''
+        ''environment="VPSADMIN_USER_NAME=${admin.vpsadmin.name}"''
+      ])
+      + " "
+      + pubkey
+    ) admin.publicKeys;
 
-  makeInteractiveShellInit = admins:
+  makeInteractiveShellInit =
+    admins:
     let
       withShell = lib.filterAttrs (name: admin: admin.interactiveShellInit != null) admins;
       script = name: admin: pkgs.writeText "admin-${name}.sh" admin.interactiveShellInit;
       fragments = lib.mapAttrsToList (name: admin: ''
         [ "$VPSADMIN_USER_ID" == "${toString admin.vpsadmin.id}" ] && . ${script name admin}
       '') withShell;
-    in lib.concatStringsSep "\n" fragments;
+    in
+    lib.concatStringsSep "\n" fragments;
 
   adminModule =
     { config, name, ... }:
@@ -42,7 +56,7 @@ let
 
         publicKeys = mkOption {
           type = types.listOf types.str;
-          default = [];
+          default = [ ];
           description = "SSH public keys";
         };
 
@@ -67,11 +81,12 @@ let
         authorizedKeys = makeAuthorizedKeys name config;
       };
     };
-in {
+in
+{
   options = {
     vpsfconf.admins = mkOption {
       type = types.attrsOf (types.submodule adminModule);
-      default = {};
+      default = { };
       description = lib.mdDoc ''
         Declare vpsFree.cz admins.
 

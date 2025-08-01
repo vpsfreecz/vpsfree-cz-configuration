@@ -1,4 +1,11 @@
-{ config, pkgs, lib, confLib, confMachine, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confLib,
+  confMachine,
+  ...
+}:
 let
   proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -124,7 +131,8 @@ let
 
     rm -f "$BUILDS_FILE"
   '';
-in {
+in
+{
   imports = [
     ../../../../environments/base.nix
     ../../../../profiles/ct.nix

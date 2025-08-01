@@ -1,9 +1,18 @@
-{ config, lib, pkgs, confData, confMachine, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  confData,
+  confMachine,
+  ...
+}:
 with lib;
 let
-  mkZoneFile = file: pkgs.replaceVars file {
-    fqdn = confMachine.host.fqdn;
-  };
+  mkZoneFile =
+    file:
+    pkgs.replaceVars file {
+      fqdn = confMachine.host.fqdn;
+    };
 
   formatNetworks = list: map (net: "${net.address}/${toString net.prefix}") list;
 
@@ -12,7 +21,8 @@ let
   managementNetworks = formatNetworks confData.vpsadmin.networks.management.ipv4;
 
   allNetworks = containerNetworks ++ managementNetworks;
-in {
+in
+{
   services.bind = {
     enable = true;
     forwarders = [
@@ -37,11 +47,13 @@ in {
     ];
   };
 
-  networking.firewall.extraCommands = ''
-    iptables -A nixos-fw -p udp -s 172.16.0.0/12 --dport 53 -j nixos-fw-accept
-    iptables -A nixos-fw -p tcp -s 172.16.0.0/12 --dport 53 -j nixos-fw-accept
-  '' + (concatMapStringsSep "\n" (net: ''
-    iptables -A nixos-fw -p udp -s ${net} --dport 53 -j nixos-fw-accept
-    iptables -A nixos-fw -p tcp -s ${net} --dport 53 -j nixos-fw-accept
-  '') allNetworks);
+  networking.firewall.extraCommands =
+    ''
+      iptables -A nixos-fw -p udp -s 172.16.0.0/12 --dport 53 -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp -s 172.16.0.0/12 --dport 53 -j nixos-fw-accept
+    ''
+    + (concatMapStringsSep "\n" (net: ''
+      iptables -A nixos-fw -p udp -s ${net} --dport 53 -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp -s ${net} --dport 53 -j nixos-fw-accept
+    '') allNetworks);
 }

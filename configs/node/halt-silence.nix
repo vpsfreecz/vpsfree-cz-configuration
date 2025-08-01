@@ -1,4 +1,10 @@
-{ pkgs, lib, config, confMachine, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  confMachine,
+  ...
+}:
 with lib;
 let
   alerters = [
@@ -6,13 +12,16 @@ let
     "https://alerts2.prg.vpsfree.cz"
   ];
 
-  httpConfigFile = pkgs.writeText "am-http-config.yml" (builtins.toJSON {
-    basic_auth = {
-      username = "node";
-      password_file = "/var/secrets/alertmanager-http-password";
-    };
-  });
-in {
+  httpConfigFile = pkgs.writeText "am-http-config.yml" (
+    builtins.toJSON {
+      basic_auth = {
+        username = "node";
+        password_file = "/var/secrets/alertmanager-http-password";
+      };
+    }
+  );
+in
+{
   environment.etc = {
     "amtool/config.yml".text = builtins.toJSON {
       "alertmanager.url" = elemAt alerters 0;

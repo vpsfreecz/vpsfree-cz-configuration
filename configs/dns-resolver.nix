@@ -1,4 +1,12 @@
-{ config, lib, pkgs, confLib, confData, confMachine, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  confLib,
+  confData,
+  confMachine,
+  ...
+}:
 let
   inherit (lib) concatMapStringsSep filter optionals;
 
@@ -10,16 +18,21 @@ let
 
   managementV4Networks = formatNetworks confData.vpsadmin.networks.management.ipv4;
 
-  v4Networks = [
-    "172.16.0.0/12"
-  ] ++ managementV4Networks
+  v4Networks =
+    [
+      "172.16.0.0/12"
+    ]
+    ++ managementV4Networks
     ++ containerV4Networks;
 
   v6Networks = containerV6Networks;
 
   allNetworks = v4Networks ++ v6Networks;
 
-  kresdNetworks = [ "127.0.0.0/8" "::1/128" ] ++ allNetworks;
+  kresdNetworks = [
+    "127.0.0.0/8"
+    "::1/128"
+  ] ++ allNetworks;
 
   managementPort = confMachine.services.kresd-management.port;
 
@@ -27,14 +40,13 @@ let
 
   monitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
 
-  makeListenAddress = version: addr:
-    if version == 4 then
-      addr.address
-    else
-      "[${addr.address}]";
+  makeListenAddress = version: addr: if version == 4 then addr.address else "[${addr.address}]";
 
-  makeListen = version: map (addr: "${makeListenAddress version addr}:${toString confMachine.services.kresd-plain.port}");
-in {
+  makeListen =
+    version:
+    map (addr: "${makeListenAddress version addr}:${toString confMachine.services.kresd-plain.port}");
+in
+{
   environment.systemPackages = with pkgs; [
     dnsutils
   ];
@@ -77,7 +89,7 @@ in {
 
       -- allow access from our networks
       ${concatMapStringsSep "" (addr: ''
-      view:addr('${addr}', policy.all(policy.PASS))
+        view:addr('${addr}', policy.all(policy.PASS))
       '') kresdNetworks}
 
       -- drop everything that hasn't matched

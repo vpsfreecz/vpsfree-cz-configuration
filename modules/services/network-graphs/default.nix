@@ -1,4 +1,9 @@
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 with lib;
 let
   cfg = config.services.network-graphs;
@@ -16,7 +21,8 @@ let
   user = config.services.nginx.user;
 
   group = config.services.nginx.group;
-in {
+in
+{
   options = {
     services.network-graphs = {
       enable = mkEnableOption ''

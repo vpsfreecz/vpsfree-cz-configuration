@@ -21,7 +21,8 @@ let
       '';
     };
   }) levels;
-in [
+in
+[
   {
     name = "test";
     rules = rules;

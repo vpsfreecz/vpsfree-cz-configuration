@@ -1,10 +1,17 @@
-{ pkgs, lib, config, confLib, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  confLib,
+  ...
+}:
 let
   proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };
-in {
+in
+{
   vpsadmin.webui = {
     enable = true;
 

@@ -9,14 +9,21 @@ with lib;
     };
 
     role = mkOption {
-      type = types.enum [ "hypervisor" "storage" ];
+      type = types.enum [
+        "hypervisor"
+        "storage"
+      ];
       description = ''
         Node role
       '';
     };
 
     storageType = mkOption {
-      type = types.enum [ "hdd" "ssd" "nvme" ];
+      type = types.enum [
+        "hdd"
+        "ssd"
+        "nvme"
+      ];
       description = ''
         Main storage type, used for monitoring checks
       '';

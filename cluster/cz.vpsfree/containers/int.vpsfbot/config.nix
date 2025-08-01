@@ -1,4 +1,11 @@
-{ config, pkgs, lib, confLib, confMachine, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confLib,
+  confMachine,
+  ...
+}:
 with lib;
 let
   proxyPrg = confLib.findMetaConfig {
@@ -6,15 +13,25 @@ let
     name = "cz.vpsfree/containers/prg/proxy";
   };
 
-  mailingLists = [ "community" "news" "outage" ];
+  mailingLists = [
+    "community"
+    "news"
+    "outage"
+  ];
 
-  getUid = instance:
-    let name = config.services.vpsfree-irc-bot.instances.${instance}.user;
-    in config.users.users.${name}.uid;
+  getUid =
+    instance:
+    let
+      name = config.services.vpsfree-irc-bot.instances.${instance}.user;
+    in
+    config.users.users.${name}.uid;
 
-  getGid = instance:
-    let name = config.services.vpsfree-irc-bot.instances.${instance}.group;
-    in config.users.groups.${name}.gid;
+  getGid =
+    instance:
+    let
+      name = config.services.vpsfree-irc-bot.instances.${instance}.group;
+    in
+    config.users.groups.${name}.gid;
 
   botUser = config.services.vpsfree-irc-bot.instances.libera.user;
   botGroup = config.services.vpsfree-irc-bot.instances.libera.user;
@@ -68,7 +85,8 @@ let
       channel="#vpsadminos:matrix.org"
   '';
 
-in {
+in
+{
   imports = [
     ../../../../environments/base.nix
     ../../../../profiles/ct.nix
@@ -217,7 +235,7 @@ in {
       "vpsfbot.vpsfree.cz" = {
         serverAliases = [ "im.vpsfree.cz" ];
         locations."/archive" = {
-          root = pkgs.runCommand "vpsfbot-archive-root" {} ''
+          root = pkgs.runCommand "vpsfbot-archive-root" { } ''
             mkdir $out
             ln -s ${archiveDir}/html $out/archive
           '';

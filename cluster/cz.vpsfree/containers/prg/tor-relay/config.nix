@@ -1,4 +1,11 @@
-{ pkgs, lib, confLib, config, confMachine, ... }:
+{
+  pkgs,
+  lib,
+  confLib,
+  config,
+  confMachine,
+  ...
+}:
 {
   imports = [
     ../../../../../environments/base.nix

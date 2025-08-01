@@ -1,15 +1,20 @@
 {
   cluster,
   tags,
-  dynamicTags ? [],
-  buildAttribute ? [ "system" "build" "dist" ],
+  dynamicTags ? [ ],
+  buildAttribute ? [
+    "system"
+    "build"
+    "dist"
+  ],
   buildGenerations,
-  hostGenerations
+  hostGenerations,
 }:
 let
   machines = import ../cluster/netbootable.nix;
 
-  carried = map (name:
+  carried = map (
+    name:
     let
       clusterMachine = cluster.${name};
 
@@ -18,20 +23,19 @@ let
           clusterMachine.host.name
         else
           "${clusterMachine.host.location}/${clusterMachine.host.name}";
-    in {
+    in
+    {
       machine = name;
 
       inherit alias;
 
       extraModules =
-        if clusterMachine.spin == "vpsadminos" then
-          [ ../configs/node/pxe-only.nix ]
-        else
-          [];
+        if clusterMachine.spin == "vpsadminos" then [ ../configs/node/pxe-only.nix ] else [ ];
 
       tags = tags ++ (map (t: "${t}#${alias}") dynamicTags);
 
       inherit buildAttribute buildGenerations hostGenerations;
     }
   ) machines;
-in carried
+in
+carried

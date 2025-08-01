@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   imports = [
     ../common.nix
@@ -11,9 +16,22 @@
   boot.zfs.pools = {
     tank = {
       install = true;
-      wipe = [ "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ];
+      wipe = [
+        "nvme0n1"
+        "nvme1n1"
+        "nvme2n1"
+        "nvme3n1"
+      ];
       layout = [
-        { type = "raidz"; devices = [ "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ]; }
+        {
+          type = "raidz";
+          devices = [
+            "nvme0n1"
+            "nvme1n1"
+            "nvme2n1"
+            "nvme3n1"
+          ];
+        }
       ];
       properties = {
         ashift = "12";

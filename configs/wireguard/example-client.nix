@@ -12,7 +12,8 @@
 
       allowedIPsAsRoutes = true;
       peers = [
-        { # vpn.vpsfree.cz
+        {
+          # vpn.vpsfree.cz
           publicKey = "gGEYszgEW2s9wPC3KrBvduNVUjZbsUaB+0yKw8JVI1s=";
           # Set your preshared key
           presharedKeyFile = "/private/wireguard/vpsfree.cz/preshared_key";

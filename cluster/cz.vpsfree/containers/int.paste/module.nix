@@ -2,22 +2,37 @@
 {
   cluster."cz.vpsfree/containers/int.paste" = {
     spin = "nixos";
-    swpins.channels = [ "nixos-stable" "os-staging" ];
+    swpins.channels = [
+      "nixos-stable"
+      "os-staging"
+    ];
     container.id = 23695;
-    host = { name = "paste"; location = "int"; domain = "vpsfree.cz"; };
+    host = {
+      name = "paste";
+      location = "int";
+      domain = "vpsfree.cz";
+    };
     addresses = {
-      v4 = [ { address = "172.16.9.157"; prefix = 32; } ];
+      v4 = [
+        {
+          address = "172.16.9.157";
+          prefix = 32;
+        }
+      ];
     };
     services = {
-      node-exporter = {};
-      bepasty = {};
+      node-exporter = { };
+      bepasty = { };
     };
     tags = [ "auto-update" ];
 
     healthChecks = {
       systemd.unitProperties = {
         "bepasty-server-paste.vpsfree.cz-gunicorn.service" = [
-          { property = "ActiveState"; value = "active"; }
+          {
+            property = "ActiveState";
+            value = "active";
+          }
         ];
       };
     };

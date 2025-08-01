@@ -1,4 +1,10 @@
-{ config, pkgs, lib, confLib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confLib,
+  ...
+}:
 let
   inherit (lib) concatStringsSep filter;
 
@@ -18,7 +24,8 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };
-in {
+in
+{
   imports = [
     ../../../../environments/base.nix
     ../../../../profiles/ct.nix

@@ -1,4 +1,8 @@
-{ lib, pkgs, config }:
+{
+  lib,
+  pkgs,
+  config,
+}:
 let
   # Override kernels per-node which are used for boot from PXE
   bootKernels = {
@@ -20,12 +24,13 @@ let
     if builtins.pathExists ./kernels.json then
       builtins.fromJSON (builtins.readFile ./kernels.json)
     else
-      {};
+      { };
 
   vpsadminosKernels = import <vpsadminos/os/packages/linux/packages.nix> { inherit pkgs lib config; };
 
   defaultKernel = vpsadminosKernels.defaultVersion;
-in {
+in
+{
   getBootKernelForMachine = name: bootKernels.${name} or defaultKernel;
 
   getRuntimeKernelForMachine = name: runtimeKernels.${name} or (jsonKernels.${name} or defaultKernel);

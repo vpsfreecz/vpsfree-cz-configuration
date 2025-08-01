@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   imports = [
     ../common.nix
@@ -12,9 +17,28 @@
   boot.zfs.pools = {
     tank = {
       install = true;
-      wipe = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" ];
+      wipe = [
+        "sda"
+        "sdb"
+        "sdc"
+        "sdd"
+        "sde"
+        "sdf"
+        "sdg"
+      ];
       layout = [
-        { type = "raidz"; devices = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" ]; }
+        {
+          type = "raidz";
+          devices = [
+            "sda"
+            "sdb"
+            "sdc"
+            "sdd"
+            "sde"
+            "sdf"
+            "sdg"
+          ];
+        }
       ];
       properties = {
         ashift = "12";
@@ -29,9 +53,28 @@
 
     dozer = {
       install = true;
-      wipe = [ "sdh" "sdi" "sdj" "sdk" "sdl" "sdm" "sdn" ];
+      wipe = [
+        "sdh"
+        "sdi"
+        "sdj"
+        "sdk"
+        "sdl"
+        "sdm"
+        "sdn"
+      ];
       layout = [
-        { type = "raidz"; devices = [ "sdh" "sdi" "sdj" "sdk" "sdl" "sdm" "sdn" ]; }
+        {
+          type = "raidz";
+          devices = [
+            "sdh"
+            "sdi"
+            "sdj"
+            "sdk"
+            "sdl"
+            "sdm"
+            "sdn"
+          ];
+        }
       ];
       properties = {
         ashift = "12";

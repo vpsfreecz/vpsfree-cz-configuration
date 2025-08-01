@@ -2,19 +2,39 @@
 {
   cluster."cz.vpsfree/vpsadmin/int.db" = rec {
     spin = "nixos";
-    swpins.channels = [ "nixos-stable" "os-staging" "vpsadmin" ];
+    swpins.channels = [
+      "nixos-stable"
+      "os-staging"
+      "vpsadmin"
+    ];
     container.id = 20272;
-    host = { name = "db"; location = "int"; domain = "vpsfree.cz"; };
-    addresses = {
-      v4 = [ { address = "172.16.9.127"; prefix = 32; } ];
+    host = {
+      name = "db";
+      location = "int";
+      domain = "vpsfree.cz";
     };
-    services.node-exporter = {};
-    tags = [ "vpsadmin" "db" "manual-update" ];
+    addresses = {
+      v4 = [
+        {
+          address = "172.16.9.127";
+          prefix = 32;
+        }
+      ];
+    };
+    services.node-exporter = { };
+    tags = [
+      "vpsadmin"
+      "db"
+      "manual-update"
+    ];
 
     healthChecks = {
       systemd.unitProperties = {
         "mysql.service" = [
-          { property = "ActiveState"; value = "active"; }
+          {
+            property = "ActiveState";
+            value = "active";
+          }
         ];
       };
     };

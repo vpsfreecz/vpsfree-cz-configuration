@@ -1,4 +1,9 @@
-{ config, lib, confLib, ... }:
+{
+  config,
+  lib,
+  confLib,
+  ...
+}:
 with lib;
 let
   node = {
@@ -7,8 +12,10 @@ let
         interfaces = {
           names = mkOption {
             type = types.attrsOf types.str;
-            default = {};
-            example = { teng0 = "00:11:22:33:44:55"; };
+            default = { };
+            example = {
+              teng0 = "00:11:22:33:44:55";
+            };
             description = ''
               Ensure network interface names based on MAC addresses
             '';
@@ -16,11 +23,11 @@ let
 
           addresses = mkOption {
             type = types.attrsOf (types.submodule interfaceAddresses);
-            default = {};
+            default = { };
             example = {
               teng0 = {
                 v4 = [ "1.2.3.4/32" ];
-                v6 = [];
+                v6 = [ ];
               };
             };
             description = ''
@@ -59,7 +66,10 @@ let
           };
 
           routingProtocol = mkOption {
-            type = types.enum [ "bgp" "ospf" ];
+            type = types.enum [
+              "bgp"
+              "ospf"
+            ];
             default = "bgp";
             description = "Routing protocol";
           };
@@ -67,12 +77,12 @@ let
           bgpNeighbours = {
             v4 = mkOption {
               type = types.listOf (types.submodule (bgpNeighbour 4));
-              default = [];
+              default = [ ];
               description = "IPv4 BGP neighbour addresses";
             };
             v6 = mkOption {
               type = types.listOf (types.submodule (bgpNeighbour 6));
-              default = [];
+              default = [ ];
               description = "IPv6 BGP neighbour addresses";
             };
           };
@@ -99,7 +109,10 @@ let
           type = types.nullOr (types.submodule (confLib.mkOptions.addresses 4));
           default = null;
           description = "Virtual IP for dummy interface";
-          example = { address = "10.0.0.100"; prefix = 32; };
+          example = {
+            address = "10.0.0.100";
+            prefix = 32;
+          };
         };
       };
     };
@@ -109,14 +122,14 @@ let
     options = {
       v4 = mkOption {
         type = types.listOf (types.submodule (confLib.mkOptions.addresses 4));
-        default = [];
+        default = [ ];
         description = ''
           A lisf of IPv4 addresses with prefix
         '';
       };
       v6 = mkOption {
         type = types.listOf (types.submodule (confLib.mkOptions.addresses 4));
-        default = [];
+        default = [ ];
         description = ''
           A lisf of IPv6 addresses with prefix
         '';
@@ -149,4 +162,5 @@ let
       };
     };
   };
-in node
+in
+node

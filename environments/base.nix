@@ -1,4 +1,13 @@
-{ config, pkgs, lib, confLib, confData, confMachine, swpins, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confLib,
+  confData,
+  confMachine,
+  swpins,
+  ...
+}:
 with lib;
 let
   ns1IntPrg = confLib.findMetaConfig {
@@ -11,20 +20,27 @@ let
     name = "cz.vpsfree/containers/brq/int.ns1";
   };
 
-  defaultInternalDns = [ ns1IntPrg ns1IntBrq ];
+  defaultInternalDns = [
+    ns1IntPrg
+    ns1IntBrq
+  ];
 
   internalDns =
     if isNull confMachine then
       defaultInternalDns
     else if confMachine.host.location == "brq" then
-      [ ns1IntBrq ns1IntPrg ]
+      [
+        ns1IntBrq
+        ns1IntPrg
+      ]
     else
       defaultInternalDns;
 
   internalDnsAddresses = map (m: m.addresses.primary.address) internalDns;
 
   adminSshKeys = flatten (mapAttrsToList (k: v: v.authorizedKeys) config.vpsfconf.admins);
-in {
+in
+{
   imports = [
     ../configs/admins.nix
   ];
@@ -32,7 +48,11 @@ in {
   time.timeZone = "Europe/Amsterdam";
 
   networking = {
-    search = ["vpsfree.cz" "prg.vpsfree.cz" "base48.cz"];
+    search = [
+      "vpsfree.cz"
+      "prg.vpsfree.cz"
+      "base48.cz"
+    ];
     nameservers = internalDnsAddresses ++ [ "1.1.1.1" ];
   };
 
@@ -65,7 +85,8 @@ in {
   programs.bash.promptInit =
     let
       hostname = if confMachine == null then "\\H" else confMachine.host.fqdn;
-    in ''
+    in
+    ''
       # Provide a nice prompt if the terminal supports it.
       if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
         PS1="[\[\e[1;31m\]\u\[\e[0;00m\]@\[\e[1;31m\]${hostname}\[\e[0;00m\]]\n \w \[\e[1;31m\]# \[\e[0;00m\]"

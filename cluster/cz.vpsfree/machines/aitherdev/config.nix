@@ -1,4 +1,13 @@
-{ config, pkgs, lib, confLib, confData, confMachine, swpins, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confLib,
+  confData,
+  confMachine,
+  swpins,
+  ...
+}:
 let
   ns1IntPrg = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -10,21 +19,30 @@ let
     name = "cz.vpsfree/containers/brq/int.ns1";
   };
 
-  internalDns = [ ns1IntPrg ns1IntBrq ];
+  internalDns = [
+    ns1IntPrg
+    ns1IntBrq
+  ];
 
   internalDnsAddresses = map (m: m.addresses.primary.address) internalDns;
 
   homeTmuxinator =
-    { config, lib, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     with lib;
     let
       cfg = config.programs.tmux;
-    in {
+    in
+    {
       options = {
         programs.tmux.tmuxinator = {
           projects = mkOption {
             type = types.attrsOf types.attrs;
-            default = {};
+            default = { };
             description = ''
               tmuxinator projects
             '';
@@ -32,14 +50,16 @@ let
         };
       };
 
-      config = mkIf (cfg.tmuxinator.enable && cfg.tmuxinator.projects != {}) {
-        home.file = mapAttrs' (name: project:
+      config = mkIf (cfg.tmuxinator.enable && cfg.tmuxinator.projects != { }) {
+        home.file = mapAttrs' (
+          name: project:
           let
             projectPath = ".config/tmuxinator/${projectName}.yml";
             projectName = if hasName then project.name else name;
             hasName = hasAttr "name" project;
             attrs = if hasName then project else project // { inherit name; };
-          in nameValuePair projectPath {
+          in
+          nameValuePair projectPath {
             text = builtins.toJSON attrs;
           }
         ) cfg.tmuxinator.projects;
@@ -63,11 +83,12 @@ let
     lxc.mount.entry = /etc/ssh/authorized_keys.d/aither etc/ssh/authorized_keys.d/aither none bind,create=file 0 0
     lxc.mount.entry = /home/aither/workspace home/aither/workspace none bind,create=dir 0 0
   '';
-in {
+in
+{
   # NOTE: environments/base.nix is not imported, this is a standalone system
   imports = [
     ./hardware.nix
-    "${builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz}/nixos"
+    "${builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz"}/nixos"
   ];
 
   boot.loader.grub.enable = true;
@@ -77,12 +98,18 @@ in {
 
   networking.bridges.br0.interfaces = [ "enp1s0" ];
   networking.interfaces.br0.ipv4.addresses = [
-    { address = "172.16.106.40"; prefixLength = 24; }
+    {
+      address = "172.16.106.40";
+      prefixLength = 24;
+    }
   ];
 
   # Network for PXE development
   networking.interfaces.enp8s0.ipv4.addresses = [
-    { address = "192.168.100.10"; prefixLength = 24; }
+    {
+      address = "192.168.100.10";
+      prefixLength = 24;
+    }
   ];
 
   networking.defaultGateway = "172.16.106.1";
@@ -115,7 +142,8 @@ in {
     keyMap = "us";
   };
 
-  users.users.root.openssh.authorizedKeys.keys = confData.sshKeys.builders ++ confData.sshKeys.aither.all;
+  users.users.root.openssh.authorizedKeys.keys =
+    confData.sshKeys.builders ++ confData.sshKeys.aither.all;
 
   users.users.aither = {
     isNormalUser = true;
@@ -140,7 +168,10 @@ in {
   security.sudo = {
     enable = true;
     extraRules = [
-      { groups = [ "wheel" ]; commands = [ "ALL" ]; }
+      {
+        groups = [ "wheel" ];
+        commands = [ "ALL" ];
+      }
     ];
     extraConfig = ''
       Defaults:aither timestamp_timeout=90
@@ -157,9 +188,12 @@ in {
   # Bridge for VMs
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 
-  networking.bridges.virbr0.interfaces = [];
+  networking.bridges.virbr0.interfaces = [ ];
   networking.interfaces.virbr0.ipv4.addresses = [
-    { address = "192.168.122.1"; prefixLength = 24; }
+    {
+      address = "192.168.122.1";
+      prefixLength = 24;
+    }
   ];
 
   networking.firewall.allowedTCPPorts = [
@@ -216,177 +250,179 @@ in {
 
   environment.homeBinInPath = true;
 
-  home-manager.users.aither = { config, ... }: {
-    imports = [
-      homeTmuxinator
-    ];
+  home-manager.users.aither =
+    { config, ... }:
+    {
+      imports = [
+        homeTmuxinator
+      ];
 
-    programs.home-manager.enable = true;
+      programs.home-manager.enable = true;
 
-    home.stateVersion = "23.11";
+      home.stateVersion = "23.11";
 
-    home.packages = with pkgs; [
-      asciinema
-      bind
-      bundix
-      cloc
-      git
-      go
-      inetutils
-      nix-prefetch-git
-      openssl
-      php
-      ruby
-      screen
-      tmux
-      tree
-      unzip
-      vpsfree-client
-    ];
+      home.packages = with pkgs; [
+        asciinema
+        bind
+        bundix
+        cloc
+        git
+        go
+        inetutils
+        nix-prefetch-git
+        openssl
+        php
+        ruby
+        screen
+        tmux
+        tree
+        unzip
+        vpsfree-client
+      ];
 
-    home.file = {
-      ".gitconfig".text = ''
-        [user]
-          name = Jakub Skokan
-          email = jakub.skokan@havefun.cz
+      home.file = {
+        ".gitconfig".text = ''
+          [user]
+            name = Jakub Skokan
+            email = jakub.skokan@havefun.cz
 
-        [push]
-          default = current
-      '';
-
-      "bin/dev-shell" = {
-        text = ''
-          #!/usr/bin/env bash
-          # Run nix-shell with custom prompt
-          SHELL_PROMPT="\n\[\033[1;35m\][nix-shell:\w]\$\[\033[0m\] "
-          export PROMPT_COMMAND="export PS1=\"$SHELL_PROMPT\"; unset PROMPT_COMMAND"
-          exec nix-shell "$@"
+          [push]
+            default = current
         '';
-        executable = true;
+
+        "bin/dev-shell" = {
+          text = ''
+            #!/usr/bin/env bash
+            # Run nix-shell with custom prompt
+            SHELL_PROMPT="\n\[\033[1;35m\][nix-shell:\w]\$\[\033[0m\] "
+            export PROMPT_COMMAND="export PS1=\"$SHELL_PROMPT\"; unset PROMPT_COMMAND"
+            exec nix-shell "$@"
+          '';
+          executable = true;
+        };
       };
-    };
 
-    programs.bash = {
-      enable = true;
-      historySize = 10000;
-      historyFileSize = 10000;
-      initExtra = ''
-        export PS1="\n\[\033[1;35m\][\[\e]0;\u@\h: \w\a\]\u@\h:\w]\$\[\033[0m\] "
-      '';
-    };
-
-    programs.tmux = {
-      enable = true;
-      extraConfig = ''
-        set -g mouse on
-        setw -g mode-keys vi
-      '';
-
-      tmuxinator = {
+      programs.bash = {
         enable = true;
-        projects = {
-          vpsadminos-nodes = {
-            root = "~/workspace/vpsf-dev";
-            windows = [
-              { build = "./vpsadminos-shell"; }
-              {
-                qemu = {
-                  layout = "tiled";
-                  panes = [
-                    "./vpsadminos-shell"
-                    "./vpsadminos-shell"
-                    "# ssh root@172.16.106.41"
-                    "# ssh root@172.16.106.42"
-                    "# ssh root@172.16.106.41"
-                    "# ssh root@172.16.106.42"
-                  ];
-                };
-              }
-            ];
-          };
+        historySize = 10000;
+        historyFileSize = 10000;
+        initExtra = ''
+          export PS1="\n\[\033[1;35m\][\[\e]0;\u@\h: \w\a\]\u@\h:\w]\$\[\033[0m\] "
+        '';
+      };
 
-          vpsadminos-dev = {
-            root = "~/workspace/vpsf-dev";
-            windows = [
-              {
-                repo = {
-                  layout = "tiled";
-                  panes = [
-                    "./vpsadminos-shell"
-                    "./vpsadminos-shell"
-                  ];
-                };
-              }
-            ];
-          };
+      programs.tmux = {
+        enable = true;
+        extraConfig = ''
+          set -g mouse on
+          setw -g mode-keys vi
+        '';
 
-          vpsadmin-dev = {
-            root = "~/workspace/vpsf-dev";
-            windows = [
-              {
-                repo = {
-                  layout = "tiled";
-                  panes = [
-                    "./vpsadmin-shell"
-                    "./vpsadmin-shell"
-                  ];
-                };
-              }
+        tmuxinator = {
+          enable = true;
+          projects = {
+            vpsadminos-nodes = {
+              root = "~/workspace/vpsf-dev";
+              windows = [
+                { build = "./vpsadminos-shell"; }
+                {
+                  qemu = {
+                    layout = "tiled";
+                    panes = [
+                      "./vpsadminos-shell"
+                      "./vpsadminos-shell"
+                      "# ssh root@172.16.106.41"
+                      "# ssh root@172.16.106.42"
+                      "# ssh root@172.16.106.41"
+                      "# ssh root@172.16.106.42"
+                    ];
+                  };
+                }
+              ];
+            };
 
-              {
-                api-mgmt = {
-                  layout = "tiled";
-                  panes = [
-                    "./vpsadmin-api-shell"
-                    "./vpsadmin-api-shell"
-                  ];
-                };
-              }
+            vpsadminos-dev = {
+              root = "~/workspace/vpsf-dev";
+              windows = [
+                {
+                  repo = {
+                    layout = "tiled";
+                    panes = [
+                      "./vpsadminos-shell"
+                      "./vpsadminos-shell"
+                    ];
+                  };
+                }
+              ];
+            };
 
-              {
-                api-servers = {
-                  layout = "tiled";
-                  panes = [
-                    "./vpsadmin-api-shell"
-                    "./vpsadmin-api-shell"
-                  ];
-                };
-              }
+            vpsadmin-dev = {
+              root = "~/workspace/vpsf-dev";
+              windows = [
+                {
+                  repo = {
+                    layout = "tiled";
+                    panes = [
+                      "./vpsadmin-shell"
+                      "./vpsadmin-shell"
+                    ];
+                  };
+                }
 
-              { webui = "cd ~/workspace/vpsadmin/vpsadmin/webui; dev-shell"; }
+                {
+                  api-mgmt = {
+                    layout = "tiled";
+                    panes = [
+                      "./vpsadmin-api-shell"
+                      "./vpsadmin-api-shell"
+                    ];
+                  };
+                }
 
-              { console = "cd ~/workspace/vpsadmin/vpsadmin/console_router ; dev-shell"; }
-            ];
-          };
+                {
+                  api-servers = {
+                    layout = "tiled";
+                    panes = [
+                      "./vpsadmin-api-shell"
+                      "./vpsadmin-api-shell"
+                    ];
+                  };
+                }
 
-          nixos-conf = {
-            root = "~/workspace";
-            windows = [
-              { vpsfree-cz-configuration = "cd vpsfree.cz/vpsfree-cz-configuration ; dev-shell"; }
-              { vpsadminos-org-configuration = ""; }
-              { confctl = "cd confctl ; dev-shell"; }
-            ];
-          };
+                { webui = "cd ~/workspace/vpsadmin/vpsadmin/webui; dev-shell"; }
 
-          pxe-dev = {
-            root = "~";
-            windows = [
-              {
-                deploy = {
-                  layout = "tiled";
-                  panes = [
-                    "cd ~/workspace/confctl ; dev-shell"
-                    "cd ~/workspace/pxe-cluster ; dev-shell"
-                  ];
-                };
-              }
-              { pxe-server = "# ssh root@192.168.100.5"; }
-            ];
+                { console = "cd ~/workspace/vpsadmin/vpsadmin/console_router ; dev-shell"; }
+              ];
+            };
+
+            nixos-conf = {
+              root = "~/workspace";
+              windows = [
+                { vpsfree-cz-configuration = "cd vpsfree.cz/vpsfree-cz-configuration ; dev-shell"; }
+                { vpsadminos-org-configuration = ""; }
+                { confctl = "cd confctl ; dev-shell"; }
+              ];
+            };
+
+            pxe-dev = {
+              root = "~";
+              windows = [
+                {
+                  deploy = {
+                    layout = "tiled";
+                    panes = [
+                      "cd ~/workspace/confctl ; dev-shell"
+                      "cd ~/workspace/pxe-cluster ; dev-shell"
+                    ];
+                  };
+                }
+                { pxe-server = "# ssh root@192.168.100.5"; }
+              ];
+            };
           };
         };
       };
     };
-  };
 
   containers.vpsfree-web = {
     autoStart = true;

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   osctl.pools.tank = {
     parallelStart = lib.mkDefault 4;

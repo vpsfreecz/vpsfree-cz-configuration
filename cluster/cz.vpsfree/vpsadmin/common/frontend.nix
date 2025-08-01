@@ -1,4 +1,11 @@
-{ pkgs, lib, config, confMachine, confLib, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  confMachine,
+  confLib,
+  ...
+}:
 with lib;
 let
   db = confLib.findMetaConfig {
@@ -36,9 +43,15 @@ let
     name = "cz.vpsfree/containers/prg/proxy";
   };
 
-  apis = [ api1 api2 ];
+  apis = [
+    api1
+    api2
+  ];
 
-  webuis = [ webui1 webui2 ];
+  webuis = [
+    webui1
+    webui2
+  ];
 
   consoles = apis;
 
@@ -49,7 +62,8 @@ let
   haproxyExporterPort = confMachine.services.haproxy-exporter.port;
 
   varnishExporterPort = confMachine.services.varnish-exporter.port;
-in {
+in
+{
   networking.firewall.extraCommands =
     (concatMapStringsSep "\n" (m: ''
       iptables -A nixos-fw -p tcp -m tcp -s ${m.addresses.primary.address} --dport 5000 -j nixos-fw-accept

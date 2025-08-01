@@ -32,7 +32,8 @@ let
   vpsadminosStaging = osBranch "staging";
 
   vpsadminMaster = vpsadminBranch "master";
-in {
+in
+{
   confctl.swpins.core.pins = {
     nixpkgs = {
       type = "git-rev";
@@ -61,10 +62,16 @@ in {
       vpsadmin = vpsadminMaster;
     };
 
-    os-staging = { vpsadminos = osBranch "staging"; };
+    os-staging = {
+      vpsadminos = osBranch "staging";
+    };
 
-    nixos-unstable = { nixpkgs = nixpkgsBranch "nixos-unstable"; };
+    nixos-unstable = {
+      nixpkgs = nixpkgsBranch "nixos-unstable";
+    };
 
-    nixos-stable = { nixpkgs = nixpkgsBranch "nixos-25.05"; };
+    nixos-stable = {
+      nixpkgs = nixpkgsBranch "nixos-25.05";
+    };
   };
 }

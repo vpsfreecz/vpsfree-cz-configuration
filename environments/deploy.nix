@@ -1,25 +1,35 @@
-{ config, lib, pkgs, confMachine, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  confMachine,
+  ...
+}:
 
 let
-  customVim =
-    pkgs.vim-full.customize {
-      name = "myvim";
-      vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
-        start = [ vim-nix sensible ]; # load plugin on startup
-      };
+  customVim = pkgs.vim-full.customize {
+    name = "myvim";
+    vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
+      start = [
+        vim-nix
+        sensible
+      ]; # load plugin on startup
     };
+  };
 
   alerters = [
     "https://alerts1.prg.vpsfree.cz"
     "https://alerts2.prg.vpsfree.cz"
   ];
 
-  httpConfigFile = pkgs.writeText "am-http-config.yml" (builtins.toJSON {
-    basic_auth = {
-      username = "build";
-      password_file = "/secrets/alertmanager-http-password";
-    };
-  });
+  httpConfigFile = pkgs.writeText "am-http-config.yml" (
+    builtins.toJSON {
+      basic_auth = {
+        username = "build";
+        password_file = "/secrets/alertmanager-http-password";
+      };
+    }
+  );
 in
 {
   nix.settings = {

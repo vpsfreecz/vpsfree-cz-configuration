@@ -1,4 +1,10 @@
-{ pkgs, lib, config, confLib, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  confLib,
+  ...
+}:
 {
   vpsadmin.nodectld = {
     enable = true;

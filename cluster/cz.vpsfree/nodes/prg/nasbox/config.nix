@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   imports = [
     ../../common/intel.nix
@@ -8,7 +13,10 @@
 
   vpsadmin.nodectld.settings = {
     vpsadmin = {
-      net_interfaces = [ "teng0" "teng1" ];
+      net_interfaces = [
+        "teng0"
+        "teng1"
+      ];
     };
     console = {
       enable = false;
@@ -19,8 +27,8 @@
   boot.kernelModules = [ "8021q" ];
 
   boot.zfs.moduleParams.zfs = {
-    "zfs_arc_min" = 48 * 1024*1024*1024;
-    "zfs_arc_max" = 128 * 1024*1024*1024;
+    "zfs_arc_min" = 48 * 1024 * 1024 * 1024;
+    "zfs_arc_max" = 128 * 1024 * 1024 * 1024;
   };
 
   boot.zfs.pools.storage = {

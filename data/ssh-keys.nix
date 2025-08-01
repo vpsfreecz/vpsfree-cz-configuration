@@ -1,8 +1,8 @@
 rec {
-  admins =
-    aither.all
-    ++
-    [ kerrycze snajpa ];
+  admins = aither.all ++ [
+    kerrycze
+    snajpa
+  ];
 
   builders = [
     build-vpsfree-cz
@@ -17,7 +17,12 @@ rec {
 
     phone = "ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBAFWQ2RH3djYFGodLdUVqp0uCEGRkCo/yA3CTFMS5zo3uqkvXlDKtWJbmNiq8Jo6oYge8DAEYigEaaCT4+/zQ8TaQQFVc8F/EmP+nKiNuXJNmSvSOFXZQJlP7XJFTlClWyiPKLqhS1lKNNI1pwjSR/F5CZf3movZ996+D4iGYyrhrOTWIA== aither@iphone";
 
-    all = [ yk_5c1 yk_sk1 ipad phone ];
+    all = [
+      yk_5c1
+      yk_sk1
+      ipad
+      phone
+    ];
   };
 
   kerrycze = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCgP+2I9jKam2j11qLTsJ1X49LXvBVvlspBCdDfUosxPQcXLHNoKgUxRyG5OInu5QmTrzZtc0/urXvcJLPhBzUnWrVejK4uNQbbgy8BymUtCaVECNfimnsJAeJm8uMNuVFj0jFICoKq62onjdvya8c1fITkS/jPa3nFbMFDLA2p+LZqv6uzZSj5N0hKCiozPCIgtJAdvXtSVDHfOaPCuvo1ugwz/fLTbGPMYUYvaZ+5Wj6H3lH6MjXrCMVxSmKbn665MkmN6jS4oJA6L7KhvhFi+4tPoIfz59X1CKvUuXLrDJT/GB603+GnV0Zy2xgfaMswXK4OYFtTiWjsDLp5rwWogB06LPShVF0NRp7XcxNxvTkxMHlN/B0GGpfTPcC+ObZCdYbpeJ7g8HwQ5zJaLM6VTCfKCH4hHRXHVpPdONiUI0fDJL9Ywtq2qA/eByA0JYLepFfg1/HIx2L7rzBF1PUUzruCR1hvRMa2GcqzVuKeB9pwQZTP0azp0lXPdNLKqUhH/CSSlmcehXfz9asxamnp5oyF8/SDdrJqP9h/qq6w5KVUlH0yX/snhwyXs9vOR+1VKT178OrB/Zd/AcgLbLn/SUDI6v6HObCqr5rXd/g+gHqiDBCbvhmNaI9lKWOUcxxLf7umgQ+I5oIsOMO5KdWpj7EPYZjH+Id7zvFWpwYp9w== kerrycze@myDELL";

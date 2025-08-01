@@ -1,25 +1,46 @@
-{ config, pkgs, lib, confLib, confData, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confLib,
+  confData,
+  ...
+}:
 with lib;
 let
   allMachines = confLib.getClusterMachines config.cluster;
 
-  findNodes = loc:
-    filter (m: m.metaConfig.node != null && m.metaConfig.host.location == loc && m.metaConfig.monitoring.enable && isNull m.carrier) allMachines;
+  findNodes =
+    loc:
+    filter (
+      m:
+      m.metaConfig.node != null
+      && m.metaConfig.host.location == loc
+      && m.metaConfig.monitoring.enable
+      && isNull m.carrier
+    ) allMachines;
 
-  filterServices = machine: fn:
+  filterServices =
+    machine: fn:
     let
       serviceList = mapAttrsToList (name: svConfig: {
         inherit machine name svConfig;
       }) machine.metaConfig.services;
     in
-      filter (sv: fn sv.svConfig) serviceList;
+    filter (sv: fn sv.svConfig) serviceList;
 
-  findDnsResolverServices = loc:
-    flatten (map (m:
-      optional (m.metaConfig.host.location == loc) (filterServices m (sv: sv.monitor == "dns-resolver"))
-    ) allMachines);
+  findDnsResolverServices =
+    loc:
+    flatten (
+      map (
+        m:
+        optional (m.metaConfig.host.location == loc) (filterServices m (sv: sv.monitor == "dns-resolver"))
+      ) allMachines
+    );
 
-  locationNodes = loc: map (m: {
+  locationNodes =
+    loc:
+    map (m: {
       name = "${m.metaConfig.host.name}.${m.metaConfig.host.location}";
       id = m.metaConfig.node.id;
       ip_address = m.metaConfig.addresses.primary.address;
@@ -27,7 +48,9 @@ let
 
   sortedLocationNodes = loc: sort (a: b: a.id < b.id) (locationNodes loc);
 
-  locationDnsResolvers = loc: map (sv: {
+  locationDnsResolvers =
+    loc:
+    map (sv: {
       name = sv.machine.metaConfig.host.fqdn;
       ip_address = sv.machine.metaConfig.addresses.primary.address;
     }) (findDnsResolverServices loc);
@@ -37,7 +60,8 @@ let
     brq = locationDnsResolvers "brq";
     all = prg ++ brq;
   };
-in {
+in
+{
   services.vpsf-status = {
     enable = true;
     settings = {
@@ -57,10 +81,8 @@ in {
           label = "Praha";
           nodes =
             (sortedLocationNodes "prg") # matches also Praha Storage
-            ++
-            (sortedLocationNodes "pgnd")
-            ++
-            (sortedLocationNodes "stg");
+            ++ (sortedLocationNodes "pgnd")
+            ++ (sortedLocationNodes "stg");
           dns_resolvers = dnsResolvers.prg;
         }
         {
@@ -143,6 +165,8 @@ in {
 
   # To reach the DNS resolvers via the private network instead of LTE
   networking.interfaces.enp1s0.ipv4.routes = map (dns: {
-    address = dns.ip_address; prefixLength = 32; via = "172.16.254.1";
+    address = dns.ip_address;
+    prefixLength = 32;
+    via = "172.16.254.1";
   }) dnsResolvers.all;
 }

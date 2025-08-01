@@ -1,7 +1,14 @@
-{ pkgs, lib, config, confData, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  confData,
+  ...
+}:
 let
   devUser = "vpsadmin-dev";
-in {
+in
+{
   imports = [
     ../common/all.nix
     ../common/webui.nix
@@ -20,7 +27,7 @@ in {
     openssh.authorizedKeys.keys = confData.sshKeys.admins;
   };
 
-  users.groups.${devUser} = {};
+  users.groups.${devUser} = { };
 
   vpsadmin.webui = {
     sourceCodeDir = "${config.users.users.${devUser}.home}/vpsadmin/webui";

@@ -2,7 +2,8 @@
 with lib;
 let
   cfg = config.system.serial-console;
-in {
+in
+{
   options = {
     system.serial-console = {
       enable = mkOption {

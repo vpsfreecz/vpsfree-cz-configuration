@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   imports = [
     ../common.nix
@@ -9,12 +14,37 @@
   boot.zfs.pools = {
     tank = {
       install = true;
-      wipe = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" "sdh" ];
+      wipe = [
+        "sda"
+        "sdb"
+        "sdc"
+        "sdd"
+        "sde"
+        "sdf"
+        "sdg"
+        "sdh"
+      ];
       layout = [
-        { type = "raidz"; devices = [ "sdc" "sdd" "sde" "sdf" "sdg" "sdh" ]; }
+        {
+          type = "raidz";
+          devices = [
+            "sdc"
+            "sdd"
+            "sde"
+            "sdf"
+            "sdg"
+            "sdh"
+          ];
+        }
       ];
       log = [
-        { mirror = true; devices = [ "sda1" "sdb1" ]; }
+        {
+          mirror = true;
+          devices = [
+            "sda1"
+            "sdb1"
+          ];
+        }
       ];
       cache = [
         "sda3"
@@ -22,14 +52,22 @@
       ];
       partition = {
         sda = {
-          p1 = { sizeGB=10; };
-          p2 = { sizeGB=214; };
-          p3 = {};
+          p1 = {
+            sizeGB = 10;
+          };
+          p2 = {
+            sizeGB = 214;
+          };
+          p3 = { };
         };
         sdb = {
-          p1 = { sizeGB=10; };
-          p2 = { sizeGB=214; };
-          p3 = {};
+          p1 = {
+            sizeGB = 10;
+          };
+          p2 = {
+            sizeGB = 214;
+          };
+          p3 = { };
         };
       };
       properties = {

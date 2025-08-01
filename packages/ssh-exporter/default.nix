@@ -6,7 +6,7 @@ bundlerEnv {
   meta = with lib; {
     homepage = "https://github.com/vpsfreecz/ssh-exporter";
     platforms = platforms.linux;
-    maintainers = [];
+    maintainers = [ ];
     license = licenses.mit;
   };
 }

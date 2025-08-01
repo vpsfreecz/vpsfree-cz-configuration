@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
 let
   cfg = config.programs.bepastyrb;
@@ -31,7 +36,14 @@ in
 
             max_life = {
               unit = mkOption {
-                type = types.enum [ "minutes" "hours" "days" "weeks" "months" "forever" ];
+                type = types.enum [
+                  "minutes"
+                  "hours"
+                  "days"
+                  "weeks"
+                  "months"
+                  "forever"
+                ];
                 default = "months";
                 description = ''
                   Unit for file max life
@@ -48,7 +60,7 @@ in
             };
           };
         };
-        default = {};
+        default = { };
         description = ''
           bepastyrb settings, see man bepastyrb(1)
         '';

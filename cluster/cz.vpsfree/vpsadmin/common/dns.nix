@@ -1,4 +1,12 @@
-{ config, pkgs, lib, confLib, confMachine, confData, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confLib,
+  confMachine,
+  confData,
+  ...
+}:
 let
   inherit (lib) concatMapStringsSep filter mkForce;
 
@@ -7,7 +15,8 @@ let
   monitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
 
   exporterPort = confMachine.services.bind-exporter.port;
-in {
+in
+{
   environment.systemPackages = with pkgs; [
     config.services.bind.package
     dnsutils
@@ -40,7 +49,7 @@ in {
   services.bind = {
     enable = true;
     directory = "/var/named";
-    forwarders = mkForce [];
+    forwarders = mkForce [ ];
     extraOptions = ''
       recursion no;
     '';
@@ -67,9 +76,10 @@ in {
   networking.firewall.allowedTCPPorts = [ 53 ];
   networking.firewall.allowedUDPPorts = [ 53 ];
 
-  networking.firewall.extraCommands =
-    (concatMapStringsSep "\n" (m: ''
+  networking.firewall.extraCommands = (
+    concatMapStringsSep "\n" (m: ''
       # bind-exporter from ${m.name}
       iptables -A nixos-fw -p tcp --dport ${toString exporterPort} -s ${m.metaConfig.addresses.primary.address} -j nixos-fw-accept
-    '') monitors);
+    '') monitors
+  );
 }

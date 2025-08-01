@@ -2,23 +2,42 @@
 {
   cluster."cz.vpsfree/containers/prg/proxy" = rec {
     spin = "nixos";
-    swpins.channels = [ "nixos-stable" "os-staging" "vpsadmin" ];
+    swpins.channels = [
+      "nixos-stable"
+      "os-staging"
+      "vpsadmin"
+    ];
     container.id = 14096;
-    host = { name = "proxy"; location = "prg"; domain = "vpsfree.cz"; };
+    host = {
+      name = "proxy";
+      location = "prg";
+      domain = "vpsfree.cz";
+    };
     addresses = {
-      v4 = [ { address = "172.16.9.140"; prefix = 32; } ];
+      v4 = [
+        {
+          address = "172.16.9.140";
+          prefix = 32;
+        }
+      ];
     };
     services = {
-      haproxy-exporter = {};
-      node-exporter = {};
-      varnish-exporter = {};
+      haproxy-exporter = { };
+      node-exporter = { };
+      varnish-exporter = { };
     };
-    tags = [ "vpsadmin" "manual-update" ];
+    tags = [
+      "vpsadmin"
+      "manual-update"
+    ];
 
     healthChecks = {
       systemd.unitProperties = {
         "nginx.service" = [
-          { property = "ActiveState"; value = "active"; }
+          {
+            property = "ActiveState";
+            value = "active";
+          }
         ];
       };
     };

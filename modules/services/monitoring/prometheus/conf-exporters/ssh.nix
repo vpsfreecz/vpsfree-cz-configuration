@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 with lib;
 let
   cfg = config.services.prometheus.confExporters.ssh;
@@ -21,7 +26,8 @@ let
     environment 'production'
     tag 'ssh-exporter'
   '';
-in {
+in
+{
   options = {
     services.prometheus.confExporters.ssh = {
       enable = mkEnableOption "Enable ssh-exporter";
@@ -66,7 +72,7 @@ in {
         type = types.submodule {
           freeformType = settingsFormat.type;
         };
-        default = {};
+        default = { };
         description = ''
           ssh-exporter configuration options
         '';
@@ -107,7 +113,7 @@ in {
     };
 
     users.groups = optionalAttrs (cfg.group == defaultUser) {
-      ${cfg.group} = {};
+      ${cfg.group} = { };
     };
   };
 }

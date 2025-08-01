@@ -1,9 +1,18 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
-  bondIfaces = [ "oneg0" "oneg1" ];
+  bondIfaces = [
+    "oneg0"
+    "oneg1"
+  ];
   bondVlan = 200;
   bondIP = "172.19.0.15/23";
-in {
+in
+{
   imports = [
     ../common.nix
     ../../common/amd.nix
@@ -12,7 +21,10 @@ in {
 
   boot.initrd.kernelModules = [ "bnxt_en" ];
 
-  boot.kernelModules = [ "bonding" "8021q" ];
+  boot.kernelModules = [
+    "bonding"
+    "8021q"
+  ];
   boot.extraModprobeConfig = "options bonding mode=1 miimon=100";
 
   networking.custom = ''
@@ -32,11 +44,22 @@ in {
       install = true;
 
       wipe = [
-        "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1"
+        "nvme0n1"
+        "nvme1n1"
+        "nvme2n1"
+        "nvme3n1"
       ];
 
       layout = [
-        { type = "raidz"; devices = [ "nvme0n1" "nvme1n1" "nvme2n1" "nvme3n1" ]; }
+        {
+          type = "raidz";
+          devices = [
+            "nvme0n1"
+            "nvme1n1"
+            "nvme2n1"
+            "nvme3n1"
+          ];
+        }
       ];
 
       properties = {

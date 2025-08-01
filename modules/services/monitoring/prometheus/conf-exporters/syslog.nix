@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 with lib;
 let
   cfg = config.services.prometheus.confExporters.syslog;
@@ -21,7 +26,8 @@ let
     environment 'production'
     tag 'syslog-exporter'
   '';
-in {
+in
+{
   options = {
     services.prometheus.confExporters.syslog = {
       enable = mkEnableOption "Enable syslog-exporter";
@@ -66,7 +72,7 @@ in {
         type = types.submodule {
           freeformType = settingsFormat.type;
         };
-        default = {};
+        default = { };
         description = ''
           syslog-exporter configuration options
         '';
@@ -107,7 +113,7 @@ in {
     };
 
     users.groups = optionalAttrs (cfg.group == defaultUser) {
-      ${cfg.group} = {};
+      ${cfg.group} = { };
     };
   };
 }

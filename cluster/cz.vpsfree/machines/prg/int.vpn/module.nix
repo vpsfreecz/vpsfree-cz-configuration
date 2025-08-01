@@ -3,10 +3,20 @@
   cluster."cz.vpsfree/machines/prg/int.vpn" = rec {
     spin = "nixos";
     swpins.channels = [ "nixos-stable" ];
-    host = { name = "vpn"; location = "int.prg"; domain = "vpsfree.cz"; target = "172.16.107.1"; };
-    addresses= {
-      v4 = [ { address = "172.16.107.1"; prefix = 24; } ];
+    host = {
+      name = "vpn";
+      location = "int.prg";
+      domain = "vpsfree.cz";
+      target = "172.16.107.1";
     };
-    services.node-exporter = {};
+    addresses = {
+      v4 = [
+        {
+          address = "172.16.107.1";
+          prefix = 24;
+        }
+      ];
+    };
+    services.node-exporter = { };
   };
 }

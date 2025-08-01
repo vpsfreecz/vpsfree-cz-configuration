@@ -1,11 +1,17 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 with lib;
 let
   cfg = config.services.geminabox;
 
   defaultUser = "geminabox";
 
-  nixToRuby = v:
+  nixToRuby =
+    v:
     if isString v then
       if hasPrefix ":" v then v else ''"${v}"''
     else if isBool v then
@@ -27,41 +33,43 @@ let
     ${concatStringsSep "\n" (mapAttrsToList (k: v: "Geminabox.${k} = ${nixToRuby v}") cfg.settings)}
 
     ${optionalString cfg.pushBasicAuth.enable ''
-    # Push authentication
-    AUTH_USERS = {
-      ${concatStringsSep "  \n" (mapAttrsToList (k: v: ''"${k}" => File.read("${v}").strip,'') cfg.pushBasicAuth.users)}
-    }
+      # Push authentication
+      AUTH_USERS = {
+        ${concatStringsSep "  \n" (
+          mapAttrsToList (k: v: ''"${k}" => File.read("${v}").strip,'') cfg.pushBasicAuth.users
+        )}
+      }
 
-    Geminabox::Server.helpers do
-      def protected!
-        unless authorized?
-          response['WWW-Authenticate'] = %(Basic realm="Geminabox")
-          halt 401, "No pushing or deleting without auth.\n"
+      Geminabox::Server.helpers do
+        def protected!
+          unless authorized?
+            response['WWW-Authenticate'] = %(Basic realm="Geminabox")
+            halt 401, "No pushing or deleting without auth.\n"
+          end
+        end
+
+        def authorized?
+          @auth ||= Rack::Auth::Basic::Request.new(request.env)
+          return false if !@auth.provided? || !@auth.basic? || !@auth.credentials
+
+          user, pass = @auth.credentials
+          AUTH_USERS.has_key?(user) && AUTH_USERS[user] == pass
         end
       end
 
-      def authorized?
-        @auth ||= Rack::Auth::Basic::Request.new(request.env)
-        return false if !@auth.provided? || !@auth.basic? || !@auth.credentials
-
-        user, pass = @auth.credentials
-        AUTH_USERS.has_key?(user) && AUTH_USERS[user] == pass
+      Geminabox::Server.before '/upload' do
+        protected!
       end
-    end
 
-    Geminabox::Server.before '/upload' do
-      protected!
-    end
-
-    Geminabox::Server.before do
-      protected! if request.delete?
-    end
-
-    Geminabox::Server.before '/api/v1/gems' do
-      unless env['HTTP_AUTHORIZATION'] == 'API_KEY'
-        halt 401, "Access Denied. Api_key invalid or missing.\n"
+      Geminabox::Server.before do
+        protected! if request.delete?
       end
-    end
+
+      Geminabox::Server.before '/api/v1/gems' do
+        unless env['HTTP_AUTHORIZATION'] == 'API_KEY'
+          halt 401, "Access Denied. Api_key invalid or missing.\n"
+        end
+      end
     ''}
 
     # Extra config
@@ -80,7 +88,8 @@ let
     environment: production
     tag: geminabox
   '';
-in {
+in
+{
   options = {
     services.geminabox = {
       enable = mkEnableOption "Enable Gem in a Box server";
@@ -126,14 +135,14 @@ in {
 
         users = mkOption {
           type = types.attrs;
-          default = {};
+          default = { };
           description = "Users allowed push access";
         };
       };
 
       settings = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         description = ''
           Geminabox settings, see
           https://github.com/geminabox/geminabox/blob/master/lib/geminabox.rb
@@ -182,7 +191,7 @@ in {
     };
 
     users.groups = optionalAttrs (cfg.group == defaultUser) {
-      ${cfg.group} = {};
+      ${cfg.group} = { };
     };
   };
 }

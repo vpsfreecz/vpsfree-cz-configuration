@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 with lib;
 let
   cfg = config.services.vpsf-status;
@@ -13,7 +18,8 @@ let
   } // cfg.settings;
 
   configFile = pkgs.writeText "vpsf-status-config.json" (builtins.toJSON settings);
-in {
+in
+{
   options = {
     services.vpsf-status = {
       enable = mkEnableOption "Enable vpsf-status";
@@ -52,7 +58,7 @@ in {
 
       settings = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
         description = ''
           vpsf-status settings
         '';

@@ -1,9 +1,14 @@
-{ buildGoModule, fetchFromGitHub, lib }:
+{
+  buildGoModule,
+  fetchFromGitHub,
+  lib,
+}:
 let
   owner = "vpsfreecz";
   repo = "vpsf-status";
   rev = "f57270a3c70e02e2769a5556215d08204df9b9b8";
-in buildGoModule rec {
+in
+buildGoModule rec {
   name = "vpsf-status-${version}";
   version = lib.substring 0 7 rev;
 

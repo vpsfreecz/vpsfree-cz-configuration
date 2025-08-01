@@ -1,7 +1,15 @@
-{ config, lib, pkgs, confMachine, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  confMachine,
+  ...
+}:
 {
   boot.initrd.kernelModules = [
-    "igb" "ixgbe" "tg3"
+    "igb"
+    "ixgbe"
+    "tg3"
   ];
 
   boot.initrd.network = {
@@ -80,7 +88,8 @@
         echo "Kexec loaded, run kexec -e"
         exit 0
       '';
-    in ''
+    in
+    ''
       copy_bin_and_libs ${pkgs.kexec-tools}/bin/kexec
 
       cat <<'EOF' > $out/bin/kexec-netboot

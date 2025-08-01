@@ -2,16 +2,31 @@
 {
   cluster."cz.vpsfree/machines/build" = rec {
     spin = "nixos";
-    swpins.channels = [ "nixos-stable" "os-staging" ];
-    host = { name = "build"; domain = "vpsfree.cz"; target = "172.16.106.5"; };
-    addresses = {
-      v4 = [ { address = "172.16.106.5"; prefix = 24; } ];
+    swpins.channels = [
+      "nixos-stable"
+      "os-staging"
+    ];
+    host = {
+      name = "build";
+      domain = "vpsfree.cz";
+      target = "172.16.106.5";
     };
-    tags = [ "build" "pxe-server" ];
+    addresses = {
+      v4 = [
+        {
+          address = "172.16.106.5";
+          prefix = 24;
+        }
+      ];
+    };
+    tags = [
+      "build"
+      "pxe-server"
+    ];
 
     services = {
-      node-exporter = {};
-      ssh-exporter = {};
+      node-exporter = { };
+      ssh-exporter = { };
     };
 
     carrier = {
@@ -20,20 +35,26 @@
       machines = import ../../../../lib/netboot-machines.nix {
         inherit (config) cluster;
 
-        tags = [ "pxe" "pxe-primary" ];
+        tags = [
+          "pxe"
+          "pxe-primary"
+        ];
 
-        dynamicTags = [ "prg" "pxe" ];
+        dynamicTags = [
+          "prg"
+          "pxe"
+        ];
 
         buildGenerations = {
           min = 10;
           max = 20;
-          maxAge = 180*24*60*60;
+          maxAge = 180 * 24 * 60 * 60;
         };
 
         hostGenerations = {
           min = 20;
           max = 30;
-          maxAge = 360*24*60*60;
+          maxAge = 360 * 24 * 60 * 60;
         };
       };
     };
@@ -41,7 +62,10 @@
     healthChecks = {
       systemd.unitProperties = {
         "netboot-atftpd.service" = [
-          { property = "ActiveState"; value = "active"; }
+          {
+            property = "ActiveState";
+            value = "active";
+          }
         ];
       };
     };

@@ -41,6 +41,6 @@
       description = "vpsfree blog";
     };
 
-    groups.blog = {};
+    groups.blog = { };
   };
 }

@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 with lib;
 let
   geminaboxCfg = config.services.geminabox;
@@ -24,14 +29,15 @@ let
 
     exit $exit_status
   '';
-in {
+in
+{
   options = {
     services.geminabox.garbage-collector = {
       enable = mkEnableOption "Enable the gem garbage collector facility";
 
       scripts = mkOption {
         type = types.listOf types.package;
-        default = [];
+        default = [ ];
         description = ''
           A list of scripts that are called to garbage-collect gems
         '';

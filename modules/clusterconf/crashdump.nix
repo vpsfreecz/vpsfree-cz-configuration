@@ -1,7 +1,25 @@
-{ config, pkgs, lib, confLib, confMachine, swpinsInfo, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confLib,
+  confMachine,
+  swpinsInfo,
+  ...
+}:
 let
-  inherit (lib) concatMapStringsSep concatStringsSep imap1 mapAttrsToList mkDefault
-                mkEnableOption mkIf mkOption optionalString types;
+  inherit (lib)
+    concatMapStringsSep
+    concatStringsSep
+    imap1
+    mapAttrsToList
+    mkDefault
+    mkEnableOption
+    mkIf
+    mkOption
+    optionalString
+    types
+    ;
 
   cfg = config.clusterconf.crashdump;
 
@@ -12,7 +30,9 @@ let
 
   networking = confMachine.osNode.networking;
 
-  has10GNetwork = confMachine.osNode.networking.bird.enable && confMachine.osNode.networking.bird.routingProtocol == "bgp";
+  has10GNetwork =
+    confMachine.osNode.networking.bird.enable
+    && confMachine.osNode.networking.bird.routingProtocol == "bgp";
 
   customNetworking = has10GNetwork;
 
@@ -30,7 +50,9 @@ let
   '';
 
   setupNetif = name: addresses: ''
-    ${concatStringsSep "\n" (map (addr: "ip -4 addr add ${addr.address}/${toString addr.prefix} dev ${name}") addresses.v4)}
+    ${concatStringsSep "\n" (
+      map (addr: "ip -4 addr add ${addr.address}/${toString addr.prefix} dev ${name}") addresses.v4
+    )}
     ip link set ${name} up
   '';
 
@@ -39,13 +61,17 @@ let
       [ "dumpfile" ]
     else
       builtins.genList (i: "dumpfile${i + 1}") cfg.dumpFileCount;
-in {
+in
+{
   options = {
     clusterconf.crashdump = {
       enable = mkEnableOption "Enable crashdump";
 
       destination = mkOption {
-        type = types.enum [ "disk" "nfs" ];
+        type = types.enum [
+          "disk"
+          "nfs"
+        ];
         default = "nfs";
         description = ''
           Choose whether the crash dump is uplaoded over NFS or saved to a local disk
@@ -148,13 +174,21 @@ in {
       customSetupCommands = mkIf (cfg.destination != "disk" && customNetworking) ''
         if grep -q this_is_a_crash_kernel /proc/cmdline ; then
           echo "Renaming network interfaces"
-          ${concatStringsSep "\n" (mapAttrsToList (name: mac: renameNetif mac name) networking.interfaces.names)}
+          ${concatStringsSep "\n" (
+            mapAttrsToList (name: mac: renameNetif mac name) networking.interfaces.names
+          )}
 
           echo "Configuring interfaces"
-          ${concatStringsSep "\n" (mapAttrsToList (name: addresses: setupNetif name addresses) networking.interfaces.addresses)}
+          ${concatStringsSep "\n" (
+            mapAttrsToList (name: addresses: setupNetif name addresses) networking.interfaces.addresses
+          )}
 
           echo "Adding default route"
-          ${concatStringsSep "\n" (imap1 (i: n: "ip -4 route add default via ${n.address} metric ${toString (100 + i)}") networking.bird.bgpNeighbours.v4)}
+          ${concatStringsSep "\n" (
+            imap1 (
+              i: n: "ip -4 route add default via ${n.address} metric ${toString (100 + i)}"
+            ) networking.bird.bgpNeighbours.v4
+          )}
         fi
       '';
     };
@@ -177,16 +211,16 @@ in {
           mkdir -p "$mountpoint"
 
           ${optionalString (cfg.destination == "nfs") ''
-          local server
-          server="${nfsTarget.addresses.primary.address}:${cfg.nfs.path}"
+            local server
+            server="${nfsTarget.addresses.primary.address}:${cfg.nfs.path}"
 
-          echo "Mounting NFS"
-          mount.nfs -o vers=4 "$server" "$mountpoint" || fail "Unable to mount NFS share"
+            echo "Mounting NFS"
+            mount.nfs -o vers=4 "$server" "$mountpoint" || fail "Unable to mount NFS share"
           ''}
 
           ${optionalString (cfg.destination == "disk") ''
-          echo "Mounting ${cfg.disk.device}"
-          mount "${cfg.disk.device}" "$mountpoint" || fail "Unable to mount ${cfg.disk.device}"
+            echo "Mounting ${cfg.disk.device}"
+            mount "${cfg.disk.device}" "$mountpoint" || fail "Unable to mount ${cfg.disk.device}"
           ''}
 
           echo "Target dir $target"
@@ -201,22 +235,22 @@ in {
         EOF
 
           ${optionalString cfg.dumpDmesg ''
-          echo "Dumping dmesg"
-          makedumpfile --dump-dmesg /proc/vmcore "$target/dmesg"
+            echo "Dumping dmesg"
+            makedumpfile --dump-dmesg /proc/vmcore "$target/dmesg"
           ''}
 
           ${optionalString cfg.dumpMemory ''
-          cpuCount=${if isNull cfg.threadCount then "$(nproc)" else toString cfg.threadCount}
+            cpuCount=${if isNull cfg.threadCount then "$(nproc)" else toString cfg.threadCount}
 
-          echo "Dumping core file using $cpuCount threads"
-          LD_PRELOAD=$LD_LIBRARY_PATH/libgcc_s.so.1 \
-            makedumpfile \
-            ${optionalString cfg.enableCompression "-c"} \
-            -d ${toString cfg.dumpLevel} \
-            --num-threads $cpuCount \
-            ${optionalString (cfg.dumpFileCount > 1) "--split"} \
-            /proc/vmcore \
-            ${concatMapStringsSep " " (v: "\"$target/${v}\"") dumpFileNames}
+            echo "Dumping core file using $cpuCount threads"
+            LD_PRELOAD=$LD_LIBRARY_PATH/libgcc_s.so.1 \
+              makedumpfile \
+              ${optionalString cfg.enableCompression "-c"} \
+              -d ${toString cfg.dumpLevel} \
+              --num-threads $cpuCount \
+              ${optionalString (cfg.dumpFileCount > 1) "--split"} \
+              /proc/vmcore \
+              ${concatMapStringsSep " " (v: "\"$target/${v}\"") dumpFileNames}
           ''}
         }
 

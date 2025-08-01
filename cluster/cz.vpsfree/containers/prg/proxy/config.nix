@@ -1,4 +1,10 @@
-{ pkgs, lib, config, confLib, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  confLib,
+  ...
+}:
 let
   alerts1Prg = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -59,7 +65,8 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.web";
   };
-in {
+in
+{
   imports = [
     ../../../../../environments/base.nix
     ../../../../../profiles/ct.nix
@@ -70,7 +77,8 @@ in {
 
   networking = {
     firewall.allowedTCPPorts = [
-      80 443 # nginx
+      80
+      443 # nginx
     ];
   };
 
@@ -105,14 +113,16 @@ in {
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/private/nginx/alerts.htpasswd";
-        locations."/".proxyPass = "http://${alerts1Prg.services.alertmanager.address}:${toString alerts1Prg.services.alertmanager.port}";
+        locations."/".proxyPass =
+          "http://${alerts1Prg.services.alertmanager.address}:${toString alerts1Prg.services.alertmanager.port}";
       };
 
       "alerts2.prg.vpsfree.cz" = {
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/private/nginx/alerts.htpasswd";
-        locations."/".proxyPass = "http://${alerts2Prg.services.alertmanager.address}:${toString alerts2Prg.services.alertmanager.port}";
+        locations."/".proxyPass =
+          "http://${alerts2Prg.services.alertmanager.address}:${toString alerts2Prg.services.alertmanager.port}";
       };
 
       "mon1.prg.vpsfree.cz" = {
@@ -120,26 +130,30 @@ in {
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/private/nginx/mon.htpasswd";
-        locations."/".proxyPass = "http://${mon1Prg.services.prometheus.address}:${toString mon1Prg.services.prometheus.port}";
+        locations."/".proxyPass =
+          "http://${mon1Prg.services.prometheus.address}:${toString mon1Prg.services.prometheus.port}";
       };
 
       "mon2.prg.vpsfree.cz" = {
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/private/nginx/mon.htpasswd";
-        locations."/".proxyPass = "http://${mon2Prg.services.prometheus.address}:${toString mon2Prg.services.prometheus.port}";
+        locations."/".proxyPass =
+          "http://${mon2Prg.services.prometheus.address}:${toString mon2Prg.services.prometheus.port}";
       };
 
       "grafana.prg.vpsfree.cz" = {
         enableACME = true;
         forceSSL = true;
-        locations."/".proxyPass = "http://${grafanaPrg.services.grafana.address}:${toString grafanaPrg.services.grafana.port}";
+        locations."/".proxyPass =
+          "http://${grafanaPrg.services.grafana.address}:${toString grafanaPrg.services.grafana.port}";
       };
 
       "rubygems.vpsfree.cz" = {
         enableACME = true;
         forceSSL = true;
-        locations."/".proxyPass = "http://${rubygems.services.geminabox.address}:${toString rubygems.services.geminabox.port}";
+        locations."/".proxyPass =
+          "http://${rubygems.services.geminabox.address}:${toString rubygems.services.geminabox.port}";
       };
 
       "vpsfbot.vpsfree.cz" = {
@@ -159,7 +173,8 @@ in {
         serverAliases = [ "bepasty.vpsfree.cz" ];
         enableACME = true;
         forceSSL = true;
-        locations."/".proxyPass = "http://${paste.services.bepasty.address}:${toString paste.services.bepasty.port}";
+        locations."/".proxyPass =
+          "http://${paste.services.bepasty.address}:${toString paste.services.bepasty.port}";
       };
 
       "utils.vpsfree.cz" = {
@@ -188,7 +203,11 @@ in {
       };
 
       "prasiatko.vpsfree.cz" = {
-        serverAliases = [ "prasiatko.vpsfree.cz" "conference.vpsfree.cz" "piwik.vpsfree.cz" ];
+        serverAliases = [
+          "prasiatko.vpsfree.cz"
+          "conference.vpsfree.cz"
+          "piwik.vpsfree.cz"
+        ];
         enableACME = true;
         forceSSL = true;
         locations."/".proxyPass = "http://37.205.15.53:80";

@@ -8,8 +8,11 @@ let
     vpsStop = "TransactionChains::Vps::Stop";
     vpsMigrateOs = "TransactionChains::Vps::Migrate::OsToOs";
     specials = [
-      backup fullDownload
-      vpsStart vpsRestart vpsStop
+      backup
+      fullDownload
+      vpsStart
+      vpsRestart
+      vpsStop
       vpsMigrateOs
     ];
   };
@@ -20,7 +23,8 @@ let
     "console_vpsfree_cz" = "ConsoleVpsfreeCz";
     "vpsadmin_vpsfree_cz" = "VpsadminVpsfreeCz";
   };
-in [
+in
+[
   {
     name = "vpsadmin";
     rules = [
@@ -397,42 +401,44 @@ in [
   {
     name = "vpsadmin-front";
     interval = "300s";
-    rules = lib.flatten (lib.mapAttrsToList (name: camel: [
-      {
-        alert = "${camel}ExporterDown";
-        expr = ''up{job="http_${name}"} == 0'';
-        for = "10m";
-        labels = {
-          severity = "critical";
-          frequency = "hourly";
-        };
-        annotations = {
-          summary = "Web exporter is down (instance {{ $labels.instance }})";
-          description = ''
-            Unable to check web availability
+    rules = lib.flatten (
+      lib.mapAttrsToList (name: camel: [
+        {
+          alert = "${camel}ExporterDown";
+          expr = ''up{job="http_${name}"} == 0'';
+          for = "10m";
+          labels = {
+            severity = "critical";
+            frequency = "hourly";
+          };
+          annotations = {
+            summary = "Web exporter is down (instance {{ $labels.instance }})";
+            description = ''
+              Unable to check web availability
 
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
+              LABELS: {{ $labels }}
+            '';
+          };
+        }
 
-      {
-        alert = "${camel}WebDown";
-        expr = ''probe_success{job="http_${name}"} == 0'';
-        for = "120s";
-        labels = {
-          severity = "critical";
-          frequency = "5m";
-        };
-        annotations = {
-          summary = "{{ $labels.instance }} web is down";
-          description = ''
-            {{ $labels.instance }} does not respond over HTTP
+        {
+          alert = "${camel}WebDown";
+          expr = ''probe_success{job="http_${name}"} == 0'';
+          for = "120s";
+          labels = {
+            severity = "critical";
+            frequency = "5m";
+          };
+          annotations = {
+            summary = "{{ $labels.instance }} web is down";
+            description = ''
+              {{ $labels.instance }} does not respond over HTTP
 
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
-    ]) httpSites);
+              LABELS: {{ $labels }}
+            '';
+          };
+        }
+      ]) httpSites
+    );
   }
 ]

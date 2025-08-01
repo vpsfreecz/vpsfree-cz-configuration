@@ -1,4 +1,12 @@
-{ config, lib, pkgs, confData, confMachine, confLib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  confData,
+  confMachine,
+  confLib,
+  ...
+}:
 let
   bpftraceGit = config.boot.kernelPackages.bpftrace.overrideAttrs (oldAttrs: rec {
     version = "0.23.3";
@@ -8,15 +16,23 @@ let
       rev = "1f227964439d82a7a8765932787314464009660a";
       sha256 = "sha256-Jvl8Up3IH2/G0QMb0pZmQ2SSXOmjTj08KXoJXOR3Z48=";
     };
-    patches = [];
+    patches = [ ];
   });
 
-  rabbitmqs = map (name:
-    confLib.findMetaConfig {
-      cluster = config.cluster;
-      name = "cz.vpsfree/vpsadmin/int.${name}";
-    }
-  ) [ "rabbitmq1" "rabbitmq2" "rabbitmq3" ];
+  rabbitmqs =
+    map
+      (
+        name:
+        confLib.findMetaConfig {
+          cluster = config.cluster;
+          name = "cz.vpsfree/vpsadmin/int.${name}";
+        }
+      )
+      [
+        "rabbitmq1"
+        "rabbitmq2"
+        "rabbitmq3"
+      ];
 
   proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -45,10 +61,14 @@ in
     "ipmi_devintf"
   ];
 
-  boot.extraModulePackages =
-    lib.optional (lib.versionOlder config.boot.kernelPackages.kernel.version "5.6") config.boot.kernelPackages.wireguard;
+  boot.extraModulePackages = lib.optional (lib.versionOlder config.boot.kernelPackages.kernel.version "5.6") config.boot.kernelPackages.wireguard;
 
-  boot.kernelParams = [ "slub_nomerge" "preempt=full" "iommu=off" "cgroup_favordynmods=false" ];
+  boot.kernelParams = [
+    "slub_nomerge"
+    "preempt=full"
+    "iommu=off"
+    "cgroup_favordynmods=false"
+  ];
 
   boot.kernel.sysctl = {
     "kernel.hung_task_warnings" = -1;
@@ -102,20 +122,20 @@ in
       let
         nodeCfg = confMachine;
         nfsCfg = config.services.nfs.server;
-        monitors =
-          lib.filter
-            (m: m.metaConfig.monitoring.isMonitor)
-            (confLib.getClusterMachines config.cluster);
+        monitors = lib.filter (m: m.metaConfig.monitoring.isMonitor) (
+          confLib.getClusterMachines config.cluster
+        );
         sshCfg = config.services.openssh;
-        sshRules = map (port:
-          "iptables -A nixos-fw -p tcp --dport ${toString port} -j nixos-fw-accept"
+        sshRules = map (
+          port: "iptables -A nixos-fw -p tcp --dport ${toString port} -j nixos-fw-accept"
         ) sshCfg.ports;
         managementNetworks = confData.vpsadmin.networks.management.ipv4;
         vpsadminSendRecvRules = map (net: ''
           # ${net.location}
           iptables -A nixos-fw -p tcp -s ${net.address}/${toString net.prefix} --dport 10000:20000 -j nixos-fw-accept
         '') managementNetworks;
-      in ''
+      in
+      ''
         # sshd
         ${lib.concatStringsSep "\n" sshRules}
 
@@ -152,8 +172,8 @@ in
         ${lib.concatStringsSep "\n" vpsadminSendRecvRules}
 
         ${lib.optionalString (lib.hasAttr "vpsadmin-console" nodeCfg.services) ''
-        # vpsadmin remote console
-        iptables -A nixos-fw -p tcp -s 172.16.9.140 --dport ${toString nodeCfg.services.vpsadmin-console.port} -j nixos-fw-accept
+          # vpsadmin remote console
+          iptables -A nixos-fw -p tcp -s 172.16.9.140 --dport ${toString nodeCfg.services.vpsadmin-console.port} -j nixos-fw-accept
         ''}
       '';
   };

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   # Scrub HDD-backed nodes only between 23h-07h
   boot.zfs.pools.tank.scrub = {

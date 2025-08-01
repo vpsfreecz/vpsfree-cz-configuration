@@ -1,11 +1,18 @@
-{ config, pkgs, lib, confLib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confLib,
+  ...
+}:
 with lib;
 let
   proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };
-in {
+in
+{
   imports = [
     ../../../../environments/base.nix
     ../../../../profiles/ct.nix
@@ -22,7 +29,7 @@ in {
       createHome = true;
       group = "adminer";
     };
-    groups.adminer = {};
+    groups.adminer = { };
   };
 
   services.phpfpm.pools.adminer = {
@@ -55,12 +62,13 @@ in {
             sha256 = "sha256-ShqyKfU7/+V8E7Dk8IstrvZ2rUFSmxnBWQPG3iwJ7f4=";
           };
 
-          rootDir = pkgs.runCommand "adminer-root" {} ''
+          rootDir = pkgs.runCommand "adminer-root" { } ''
             mkdir -p $out/adminer
             ln -s ${script} $out/adminer.php
             ln -s ${script} $out/adminer/adminer.php
           '';
-        in {
+        in
+        {
           root = rootDir;
           extraConfig = ''
             fastcgi_split_path_info ^(.+\.php)(/.+)$;

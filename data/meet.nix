@@ -3,7 +3,10 @@
     host = "meet.vpsfree.cz";
     url = "https://${host}";
     alias = host;
-    jvbExporterPorts = [ 9100 9700 ];
+    jvbExporterPorts = [
+      9100
+      9700
+    ];
     videoBridges = {
       jvb1 = "37.205.14.138";
       jvb2 = "37.205.14.150";

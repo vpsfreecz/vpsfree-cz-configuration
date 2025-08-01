@@ -1,4 +1,11 @@
-{ pkgs, lib, confLib, config, confMachine, ... }:
+{
+  pkgs,
+  lib,
+  confLib,
+  config,
+  confMachine,
+  ...
+}:
 let
   proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -6,7 +13,8 @@ let
   };
 
   grafanaPort = confMachine.services.grafana.port;
-in {
+in
+{
   imports = [
     ../../../../../environments/base.nix
     ../../../../../profiles/ct.nix

@@ -1,23 +1,42 @@
-{ config, lib, confLib, ... }:
+{
+  config,
+  lib,
+  confLib,
+  ...
+}:
 let
-  inherit (lib) concatMapStringsSep filter flatten hasAttr replaceStrings;
+  inherit (lib)
+    concatMapStringsSep
+    filter
+    flatten
+    hasAttr
+    replaceStrings
+    ;
 
   allMachines = confLib.getClusterMachines config.cluster;
 
   muninCrons = filter (m: hasAttr "munin-cron" m.metaConfig.services) allMachines;
 
-  disabledNetifPlugins = flatten (map (v: [ "if_${v}" "if_err_${v}" ]) [
-    "dummy*"
-    "eth*"
-    "ifb*"
-    "osrtr*"
-    "veth*"
-    "erspan*"
-    "gretap*"
-    "tun*"
-    "virtip"
-  ]);
-in {
+  disabledNetifPlugins = flatten (
+    map
+      (v: [
+        "if_${v}"
+        "if_err_${v}"
+      ])
+      [
+        "dummy*"
+        "eth*"
+        "ifb*"
+        "osrtr*"
+        "veth*"
+        "erspan*"
+        "gretap*"
+        "tun*"
+        "virtip"
+      ]
+  );
+in
+{
   services.munin-node = {
     enable = true;
     disabledPlugins = [
@@ -31,7 +50,7 @@ in {
     ] ++ disabledNetifPlugins;
     extraConfig = concatMapStringsSep "\n\n" (m: ''
       # Allow access from ${m.metaConfig.host.fqdn}
-      allow ^${replaceStrings ["."] ["\\."] m.metaConfig.addresses.primary.address}$
+      allow ^${replaceStrings [ "." ] [ "\\." ] m.metaConfig.addresses.primary.address}$
     '') muninCrons;
   };
 

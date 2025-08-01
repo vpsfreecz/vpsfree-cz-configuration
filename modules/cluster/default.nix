@@ -1,4 +1,9 @@
-{ config, lib, confLib, ... }@args:
+{
+  config,
+  lib,
+  confLib,
+  ...
+}@args:
 with lib;
 let
   topLevelConfig = config;
@@ -42,7 +47,7 @@ let
 
           labels = mkOption {
             type = types.attrs;
-            default = {};
+            default = { };
             description = ''
               Custom labels added to the Prometheus target
             '';
@@ -69,18 +74,21 @@ let
 
         services = mkOption {
           type = types.attrsOf (types.submodule service);
-          default = {};
+          default = { };
           description = ''
             Services published by this machine
           '';
-          apply = mapAttrs (name: sv:
+          apply = mapAttrs (
+            name: sv:
             let
               def = topLevelConfig.serviceDefinitions.${name};
-            in {
+            in
+            {
               address = if isNull sv.address then config.addresses.primary.address else sv.address;
               port = if isNull sv.port then def.port else sv.port;
               monitor = if isNull sv.monitor then def.monitor else sv.monitor;
-            });
+            }
+          );
         };
       };
 
@@ -94,13 +102,23 @@ let
           hostGenerations = {
             min = mkDefault 3;
             max = mkDefault 6;
-            maxAge = mkDefault (360*24*60*60);
+            maxAge = mkDefault (360 * 24 * 60 * 60);
           };
 
           healthChecks = {
             machineCommands = [
-              { command = [ "osctl" "ping" ]; }
-              { command = [ "nodectl" "ping" ]; }
+              {
+                command = [
+                  "osctl"
+                  "ping"
+                ];
+              }
+              {
+                command = [
+                  "nodectl"
+                  "ping"
+                ];
+              }
             ];
           };
         })
@@ -109,7 +127,15 @@ let
           healthChecks = {
             machineCommands = [
               {
-                command = [ "osctl" "pool" "show" "-H" "-o" "state" "tank" ];
+                command = [
+                  "osctl"
+                  "pool"
+                  "show"
+                  "-H"
+                  "-o"
+                  "state"
+                  "tank"
+                ];
                 standardOutput.match = "active\n\n";
                 timeout = 600;
                 cooldown = 5;
@@ -127,13 +153,16 @@ let
           hostGenerations = {
             min = mkDefault 6;
             max = mkDefault 30;
-            maxAge = mkDefault (60*24*60*60);
+            maxAge = mkDefault (60 * 24 * 60 * 60);
           };
 
           healthChecks = {
             systemd.unitProperties = {
               "firewall.service" = [
-                { property = "ActiveState"; value = "active"; }
+                {
+                  property = "ActiveState";
+                  value = "active";
+                }
               ];
             };
           };
@@ -186,7 +215,8 @@ let
       };
     };
 
-in {
+in
+{
   imports = [
     ../services/definitions.nix
   ];

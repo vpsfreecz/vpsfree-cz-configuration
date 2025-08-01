@@ -7,7 +7,7 @@
   };
 
   boot.zfs.moduleParams.zfs = {
-    "zfs_arc_min" = 256 * 1024*1024*1024;
-    "zfs_arc_max" = 400 * 1024*1024*1024;
+    "zfs_arc_min" = 256 * 1024 * 1024 * 1024;
+    "zfs_arc_max" = 400 * 1024 * 1024 * 1024;
   };
 }

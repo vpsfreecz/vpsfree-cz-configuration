@@ -1,4 +1,11 @@
-{ config, pkgs, lib, confMachine, confLib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confMachine,
+  confLib,
+  ...
+}:
 with lib;
 let
   db = confLib.findMetaConfig {
@@ -10,7 +17,8 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };
-in {
+in
+{
   vpsadmin.api = {
     enable = true;
 

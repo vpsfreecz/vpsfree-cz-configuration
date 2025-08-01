@@ -1,11 +1,18 @@
-{ config, pkgs, lib, confMachine, confLib, confData, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confMachine,
+  confLib,
+  confData,
+  ...
+}:
 let
   inherit (lib) filter;
 
-  monitors =
-    filter
-      (m: m.metaConfig.monitoring.isMonitor)
-      (confLib.getClusterMachines config.cluster);
+  monitors = filter (m: m.metaConfig.monitoring.isMonitor) (
+    confLib.getClusterMachines config.cluster
+  );
 
   api1 = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -22,11 +29,24 @@ let
     name = "cz.vpsfree/vpsadmin/int.vpsadmin1";
   };
 
-  nameservers = map (ns: confLib.findMetaConfig {
-    cluster = config.cluster;
-    name = "cz.vpsfree/containers/${ns}";
-  }) [ "ns0" "ns1" "ns2" "ns3" "ns4" ];
-in {
+  nameservers =
+    map
+      (
+        ns:
+        confLib.findMetaConfig {
+          cluster = config.cluster;
+          name = "cz.vpsfree/containers/${ns}";
+        }
+      )
+      [
+        "ns0"
+        "ns1"
+        "ns2"
+        "ns3"
+        "ns4"
+      ];
+in
+{
   vpsadmin.rabbitmq = {
     enable = true;
 
@@ -37,11 +57,13 @@ in {
         "172.16.9.177/32"
       ];
 
-      clients = [
-        "${api1.addresses.primary.address}/32"
-        "${api2.addresses.primary.address}/32"
-        "${vpsadmin1.addresses.primary.address}/32"
-      ] ++ (map (n: "${n.address}/${toString n.prefix}") confData.vpsadmin.networks.management.ipv4)
+      clients =
+        [
+          "${api1.addresses.primary.address}/32"
+          "${api2.addresses.primary.address}/32"
+          "${vpsadmin1.addresses.primary.address}/32"
+        ]
+        ++ (map (n: "${n.address}/${toString n.prefix}") confData.vpsadmin.networks.management.ipv4)
         ++ (map (ns: "${ns.addresses.primary.address}/32") nameservers);
 
       management = [

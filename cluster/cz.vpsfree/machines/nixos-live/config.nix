@@ -1,16 +1,26 @@
-{ config, pkgs, lib, confMachine, swpinsInfo, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  confMachine,
+  swpinsInfo,
+  ...
+}:
 let
-  machineJson = pkgs.writeText "machine-${config.networking.hostName}.json" (builtins.toJSON {
-    spin = "nixos";
-    fqdn = confMachine.host.fqdn;
-    label = confMachine.host.fqdn;
-    toplevel = builtins.unsafeDiscardStringContext config.system.build.toplevel;
-    version = config.system.nixos.version;
-    revision = config.system.nixos.revision;
-    macs = confMachine.netboot.macs;
-    swpins-info = swpinsInfo;
-  });
-in {
+  machineJson = pkgs.writeText "machine-${config.networking.hostName}.json" (
+    builtins.toJSON {
+      spin = "nixos";
+      fqdn = confMachine.host.fqdn;
+      label = confMachine.host.fqdn;
+      toplevel = builtins.unsafeDiscardStringContext config.system.build.toplevel;
+      version = config.system.nixos.version;
+      revision = config.system.nixos.revision;
+      macs = confMachine.netboot.macs;
+      swpins-info = swpinsInfo;
+    }
+  );
+in
+{
   imports = [
     ../../../../environments/base.nix
     <nixpkgs/nixos/modules/installer/netboot/netboot-minimal.nix>

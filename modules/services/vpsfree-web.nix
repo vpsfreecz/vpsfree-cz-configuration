@@ -1,6 +1,17 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
-  inherit (lib) mapAttrs mkEnableOption mkIf mkOption types;
+  inherit (lib)
+    mapAttrs
+    mkEnableOption
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.services.vpsfree-web;
 
@@ -17,7 +28,7 @@ let
     define ('ENVIRONMENT_ID', 1);
   '';
 
-  configured = pkgs.runCommand "vpsfree-web" {} ''
+  configured = pkgs.runCommand "vpsfree-web" { } ''
     mkdir $out
     cp -r ${source}/. $out/
 
@@ -28,37 +39,43 @@ let
 
   web = import configured { inherit pkgs; };
 
-  vhost = { domain, web, language }: {
-    serverAliases = [ "www.${domain}" ];
-    enableACME = false;
-    forceSSL = false;
-    root = "${web}/${language}/";
-    locations."~ \.php$".extraConfig = ''
-      ssi on;
-      gzip off;
-      fastcgi_pass  unix:${config.services.phpfpm.pools.vpsfree.socket};
-    '';
-    locations."/".extraConfig = ''
-      gzip off;
-      ssi on;
-    '';
-    locations."/prihlaska/".extraConfig = ''
-      gzip off;
-      ssi on;
-    '';
-    locations."/css/".extraConfig = ''
-      alias ${web}/css/;
-    '';
-    locations."/js/".extraConfig = ''
-      alias ${web}/js/;
-    '';
-    locations."/obrazky/".extraConfig = ''
-      alias ${web}/obrazky/;
-    '';
-    locations."/download/".extraConfig = ''
-      alias ${web}/download/;
-    '';
-  };
+  vhost =
+    {
+      domain,
+      web,
+      language,
+    }:
+    {
+      serverAliases = [ "www.${domain}" ];
+      enableACME = false;
+      forceSSL = false;
+      root = "${web}/${language}/";
+      locations."~ \.php$".extraConfig = ''
+        ssi on;
+        gzip off;
+        fastcgi_pass  unix:${config.services.phpfpm.pools.vpsfree.socket};
+      '';
+      locations."/".extraConfig = ''
+        gzip off;
+        ssi on;
+      '';
+      locations."/prihlaska/".extraConfig = ''
+        gzip off;
+        ssi on;
+      '';
+      locations."/css/".extraConfig = ''
+        alias ${web}/css/;
+      '';
+      locations."/js/".extraConfig = ''
+        alias ${web}/js/;
+      '';
+      locations."/obrazky/".extraConfig = ''
+        alias ${web}/obrazky/;
+      '';
+      locations."/download/".extraConfig = ''
+        alias ${web}/download/;
+      '';
+    };
 
   virtualHostModule = {
     options = {
@@ -68,11 +85,15 @@ let
       };
 
       language = mkOption {
-        type = types.enum [ "cs" "en" ];
+        type = types.enum [
+          "cs"
+          "en"
+        ];
       };
     };
   };
-in {
+in
+{
   options = {
     services.vpsfree-web = {
       enable = mkEnableOption "vpsFree.cz web presentation";
@@ -91,10 +112,13 @@ in {
     services.nginx = {
       enable = true;
 
-      virtualHosts = mapAttrs (name: vhostCfg: vhost {
-        domain = name;
-        inherit (vhostCfg) web language;
-      }) cfg.virtualHosts;
+      virtualHosts = mapAttrs (
+        name: vhostCfg:
+        vhost {
+          domain = name;
+          inherit (vhostCfg) web language;
+        }
+      ) cfg.virtualHosts;
     };
 
     services.phpfpm.pools.vpsfree = {
@@ -119,7 +143,7 @@ in {
         description = "vpsfree main web account";
       };
 
-      groups.vpsfree = {};
+      groups.vpsfree = { };
     };
   };
 }

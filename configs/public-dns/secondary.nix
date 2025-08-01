@@ -1,6 +1,9 @@
 { config, lib, ... }:
 {
   services.bind = {
-    zones = import ./zones.nix { inherit lib; primary = false; };
+    zones = import ./zones.nix {
+      inherit lib;
+      primary = false;
+    };
   };
 }

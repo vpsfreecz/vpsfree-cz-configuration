@@ -1,4 +1,11 @@
-{ lib, config, pkgs, confMachine, confLib, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  confMachine,
+  confLib,
+  ...
+}:
 with lib;
 let
   cfg = config.system.monitoring;
@@ -17,37 +24,49 @@ let
   # Handle exporters defined in nixpkgs or vpsAdminOS, dependending on confMachine
   nixpkgsExporters = rec {
     # Exporters handled by this module
-    known = [
-      "ipmi"
-      "node"
-    ] ++ (optionals (confMachine.spin == "vpsadminos") [ "ksvcmon" "osctl" ]);
+    known =
+      [
+        "ipmi"
+        "node"
+      ]
+      ++ (optionals (confMachine.spin == "vpsadminos") [
+        "ksvcmon"
+        "osctl"
+      ]);
 
     # Exporters declared in machine metadata
     declared = attrNames confMachine.services;
 
     # Exporters available in nixpkgs or vpsAdminOS
     # Non-exporter attributes and deprecated exporters are filtered out
-    available =
-      filter
-        (exporter: !(elem exporter [ "assertions" "warnings" "minio" "tor" "unifi-poller" ]))
-        (attrNames config.services.prometheus.exporters);
+    available = filter (
+      exporter:
+      !(elem exporter [
+        "assertions"
+        "warnings"
+        "minio"
+        "tor"
+        "unifi-poller"
+      ])
+    ) (attrNames config.services.prometheus.exporters);
 
     # Exporters enabled in machine configuration
-    enabled =
-      filter
-        (exporter: config.services.prometheus.exporters.${exporter}.enable)
-        available;
+    enabled = filter (exporter: config.services.prometheus.exporters.${exporter}.enable) available;
 
-    ruleList = map (exporter: concatMapStringsSep "\n" (m:
-      mkExporterRules exporter config.services.prometheus.exporters.${exporter} m
-    ) monitorings) enabled;
+    ruleList = map (
+      exporter:
+      concatMapStringsSep "\n" (
+        m: mkExporterRules exporter config.services.prometheus.exporters.${exporter} m
+      ) monitorings
+    ) enabled;
   };
 
   mkExporterRules = exporter: exporterCfg: m: ''
     # Allow access to ${exporter}-exporter from ${m.metaConfig.host.fqdn}
     iptables -A nixos-fw -p tcp -m tcp -s ${m.metaConfig.addresses.primary.address} --dport ${toString exporterCfg.port} -j nixos-fw-accept
   '';
-in {
+in
+{
   options = {
     system.monitoring = {
       enable = mkOption {
@@ -64,9 +83,14 @@ in {
 
     # Set ports of known exporters to ports from service definition list
     (mkIf cfg.enable {
-      services.prometheus.exporters = listToAttrs (map (exporter: nameValuePair exporter {
-        port = confMachine.services."${exporter}-exporter".port;
-      }) (with nixpkgsExporters; intersectLists known declared));
+      services.prometheus.exporters = listToAttrs (
+        map (
+          exporter:
+          nameValuePair exporter {
+            port = confMachine.services."${exporter}-exporter".port;
+          }
+        ) (with nixpkgsExporters; intersectLists known declared)
+      );
     })
 
     # All machines
