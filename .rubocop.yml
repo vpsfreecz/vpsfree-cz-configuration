@@ -61,6 +61,8 @@ Style/NumericPredicate:
   EnforcedStyle: comparison
 Style/PreferredHashMethods:
   EnforcedStyle: verbose
+Style/RedundantFormat:
+  Enabled: false
 Style/SafeNavigation:
   Enabled: false
 Style/SpecialGlobalVars:
