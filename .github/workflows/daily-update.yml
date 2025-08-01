@@ -54,6 +54,7 @@ jobs:
             
             rm -f gemset.nix Gemfile.lock
             nix-shell -p bundix --run "bundix -l"
+            nix-shell -p nixfmt-rfc-style --run "nixfmt gemset.nix"
             
             git add gemset.nix Gemfile.lock
 
