@@ -375,7 +375,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       )
     end
 
-    object { |dip| dip.dataset }
+    object(&:dataset)
     value do |dip|
       if dip.used && dip.used > 0
         dip.avail.to_f / (dip.pool.refquota_check ? dip.refquota : dip.dataset.effective_quota) * 100
@@ -433,8 +433,8 @@ VpsAdmin::API::Plugins::Monitoring.config do
       ).group('user_id')
     end
 
-    object { |tr| tr.user }
-    value { |tr| tr.bytes_all }
+    object(&:user)
+    value(&:bytes_all)
     check { |_tr, v| v < 30 * 1024 * 1024 * 1024 * 1024 }
     action :alert_admins
   end
@@ -459,9 +459,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
         )
     end
 
-    user do |vps|
-      vps.user
-    end
+    user(&:user)
 
     value do |vps|
       vps.zombie_process_count.to_i
@@ -563,13 +561,9 @@ VpsAdmin::API::Plugins::Monitoring.config do
       )
     end
 
-    user do |ds|
-      ds.user
-    end
+    user(&:user)
 
-    value do |ds|
-      ds.refquota
-    end
+    value(&:refquota)
 
     check do |ds, _value|
       ds.referenced < ds.dataset_expansion.original_refquota

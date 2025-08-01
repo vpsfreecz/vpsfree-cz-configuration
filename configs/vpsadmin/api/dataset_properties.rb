@@ -20,7 +20,7 @@ VpsAdmin::API::DatasetProperties.register do
     default 128 * 1024
 
     validate do |raw|
-      raw >= 4096 && raw <= 128 * 1024 && (raw & (raw - 1)) == 0
+      raw.between?(4096, 128 * 1024) && raw.nobits?(raw - 1)
     end
   end
 

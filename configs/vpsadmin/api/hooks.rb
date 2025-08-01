@@ -87,12 +87,16 @@ def get_netif_shaper_limit(netif)
   get_vps_shaper_limit(netif.vps)
 end
 
+# rubocop:disable Naming/AccessorMethodName
+
 def set_netif_shaper_limit(netif)
   max_tx, max_rx = get_netif_shaper_limit(netif)
   return if max_tx.nil?
 
   netif.update!(max_tx: max_tx, max_rx: max_rx)
 end
+
+# rubocop:enable Naming/AccessorMethodName
 
 NetworkInterface.connect_hook(:create) do |ret, netif|
   set_netif_shaper_limit(netif)

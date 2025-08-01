@@ -18,7 +18,7 @@ module AbuseNoticeParser
       'IPv6-Accessible-SMTP',
       'IPv6-Accessible-SSH',
       'IPv6-Accessible-SSL'
-    ]
+    ].freeze
 
     def self.match_subject?(subject)
       subject.start_with?('PROKI - upozorneni na nalezene incidenty')
@@ -37,7 +37,7 @@ module AbuseNoticeParser
         string_io = StringIO.new(attachment.decoded)
 
         Zip::InputStream.open(string_io) do |io|
-          while entry = io.get_next_entry
+          while (entry = io.get_next_entry)
             next unless entry.name.end_with?('.csv')
 
             csv = CSV.parse(io.read, col_sep: ',', quote_char: '"', headers: true)
@@ -148,8 +148,8 @@ module AbuseNoticeParser
         ).order('created_at DESC').take
 
         if existing && existing.created_at + proki_cooldown > now
-          warn "PROKI: found previous incident ##{existing.id} for " +
-               "user=#{existing.user_id} vps=#{existing.vps_id} " +
+          warn "PROKI: found previous incident ##{existing.id} for " \
+               "user=#{existing.user_id} vps=#{existing.vps_id} " \
                "ip=#{existing.ip_address_assignment.ip_addr} code=#{existing.codename}"
           next(false)
         else
