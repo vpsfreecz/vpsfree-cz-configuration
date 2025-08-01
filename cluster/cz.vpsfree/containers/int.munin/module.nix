@@ -29,7 +29,7 @@
         type = "git-rev";
         git-rev = {
           url = "https://github.com/aither64/nixpkgs";
-          update.ref = "refs/heads/munin-fastcgi";
+          update.ref = "refs/heads/25.05-munin-fastcgi";
         };
       };
     };
