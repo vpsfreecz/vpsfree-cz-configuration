@@ -36,7 +36,7 @@ module ProdBranch
 
       old_branch = nil
 
-      machines.each do |_host, machine|
+      machines.each_value do |machine|
         branch = machine['swpins']['channels'].first
 
         if old_branch.nil?
@@ -59,7 +59,7 @@ module ProdBranch
       git_add << 'configs/swpins.nix'
       sed!("s/\"#{old_branch}\"/\"#{new_branch}\"/", 'configs/swpins.nix')
 
-      machines.each do |host, _machine|
+      machines.each_key do |host|
         machine_module = File.join('cluster', host, 'module.nix')
         puts "Updating #{machine_module}"
         sed!("s/\"#{old_branch}\"/\"#{new_branch}\"/", machine_module)
@@ -80,6 +80,7 @@ module ProdBranch
         File.unlink(old_swpin)
         git_add << old_swpin
       rescue Errno::ENOENT
+        # pass
       end
 
       puts 'Commiting'
@@ -92,10 +93,8 @@ module ProdBranch
     protected
 
     def print_changes(machines, new_branch)
-      rows = []
-
-      machines.each do |host, machine|
-        rows << {
+      rows = machines.map do |host, machine|
+        {
           name: host,
           current_channel: machine['swpins']['channels'].first,
           new_channel: new_branch

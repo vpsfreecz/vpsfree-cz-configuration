@@ -86,7 +86,7 @@ module RuntimeKernels
 
       puts format('%-50s %s', 'HOST', 'KERNEL')
 
-      machines.each do |host, _|
+      machines.each_key do |host|
         kernel =
           if results[host]
             results[host].out.strip.split('.')[0..2].join('.')
