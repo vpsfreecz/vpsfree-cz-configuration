@@ -358,10 +358,10 @@ in
             equal = [ "fqdn" ];
           }
 
-          # Ignore NodeSshDown alerts when NodeOffline is firing as well
+          # Ignore NodeSshDown/NodeSshLogin alerts when NodeOffline is firing as well
           {
-            target_match = {
-              alertclass = "sshdown";
+            target_match_re = {
+              alertclass = "sshdown|sshtime";
             };
             source_match = {
               alertclass = "nodeoffline";
