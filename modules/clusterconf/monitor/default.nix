@@ -175,7 +175,7 @@ let
           } // m.metaConfig.monitoring.labels;
         }) machines;
 
-        pingConfigs = map (m: {
+        hostnamePingConfigs = map (m: {
           targets = [ m.metaConfig.host.fqdn ];
           labels = {
             alias = getAlias m.metaConfig.host;
@@ -186,6 +186,30 @@ let
             os = m.metaConfig.spin;
           };
         }) machines;
+
+        netifPingConfigs = flatten (
+          map (
+            m:
+            flatten (
+              mapAttrsToList (
+                netif: addrs:
+                map (ip: {
+                  targets = [ ip.address ];
+                  labels = {
+                    alias = getAlias m.metaConfig.host;
+                    fqdn = m.metaConfig.host.fqdn;
+                    domain = m.metaConfig.host.domain;
+                    location = ensureLocation m.metaConfig.host.location;
+                    role = m.metaConfig.node.role;
+                    os = m.metaConfig.spin;
+                    network_interface = netif;
+                    ip_address = ip.address;
+                  };
+                }) addrs.v4
+              ) m.metaConfig.osNode.networking.interfaces.addresses
+            )
+          ) machines
+        );
 
         mgmtPingConfigs = map (
           m:
@@ -594,14 +618,37 @@ in
               static_configs = scrapeConfigs.nodes.exporterConfigs;
             }
           ]
-          ++ (optional (scrapeConfigs.nodes.pingConfigs != [ ]) {
-            job_name = "nodes-ping";
+          ++ (optional (scrapeConfigs.nodes.hostnamePingConfigs != [ ]) {
+            job_name = "nodes-ping-host";
             scrape_interval = "15s";
             metrics_path = "/probe";
             params = {
               module = [ "icmp" ];
             };
-            static_configs = scrapeConfigs.nodes.pingConfigs;
+            static_configs = scrapeConfigs.nodes.hostnamePingConfigs;
+            relabel_configs = [
+              {
+                source_labels = [ "__address__" ];
+                target_label = "__param_target";
+              }
+              {
+                source_labels = [ "__param_target" ];
+                target_label = "instance";
+              }
+              {
+                target_label = "__address__";
+                replacement = "127.0.0.1:9115";
+              }
+            ];
+          })
+          ++ (optional (scrapeConfigs.nodes.netifPingConfigs != [ ]) {
+            job_name = "nodes-ping-netif";
+            scrape_interval = "15s";
+            metrics_path = "/probe";
+            params = {
+              module = [ "icmp" ];
+            };
+            static_configs = scrapeConfigs.nodes.netifPingConfigs;
             relabel_configs = [
               {
                 source_labels = [ "__address__" ];

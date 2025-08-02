@@ -358,10 +358,32 @@ in
             equal = [ "fqdn" ];
           }
 
-          # Ignore NodeSshDown alerts when NodeDown is firing as well
+          # Ignore NodeSshDown alerts when NodeOffline is firing as well
           {
             target_match = {
               alertclass = "sshdown";
+            };
+            source_match = {
+              alertclass = "nodeoffline";
+            };
+            equal = [ "fqdn" ];
+          }
+
+          # Ignore NodeOffline alerts when NodeDown is firing
+          {
+            target_match = {
+              alertclass = "nodeoffline";
+            };
+            source_match = {
+              alertclass = "nodedown";
+            };
+            equal = [ "fqdn" ];
+          }
+
+          # Ignore NodeNetifDown when NodeDown is firing
+          {
+            target_match = {
+              alertclass = "nodenetifdown";
             };
             source_match = {
               alertclass = "nodedown";

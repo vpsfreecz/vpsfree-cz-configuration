@@ -933,12 +933,12 @@
   }
 
   {
-    name = "nodes-ping";
+    name = "nodes-ping-host";
     interval = "15s";
     rules = [
       {
-        alert = "PingExporterDown";
-        expr = ''up{job="nodes-ping"} == 0'';
+        alert = "PingHostExporterDown";
+        expr = ''up{job="nodes-ping-host"} == 0'';
         for = "5m";
         labels = {
           severity = "critical";
@@ -955,16 +955,16 @@
       }
 
       {
-        alert = "NodeDownCritical";
-        expr = ''probe_success{job="nodes-ping"} == 0'';
+        alert = "NodeOfflineCritical";
+        expr = ''probe_success{job="nodes-ping-host"} == 0'';
         for = "30s";
         labels = {
-          alertclass = "nodedown";
+          alertclass = "nodeoffline";
           severity = "critical";
           frequency = "2m";
         };
         annotations = {
-          summary = "Node is down (instance {{ $labels.instance }})";
+          summary = "Node is offline (instance {{ $labels.instance }})";
           description = ''
             {{ $labels.instance }} does not respond to ping
 
@@ -974,16 +974,16 @@
       }
 
       {
-        alert = "NodeDownFatal";
-        expr = ''probe_success{job="nodes-ping"} == 0'';
+        alert = "NodeOfflineFatal";
+        expr = ''probe_success{job="nodes-ping-host"} == 0'';
         for = "90s";
         labels = {
-          alertclass = "nodedown";
+          alertclass = "nodeoffline";
           severity = "fatal";
           frequency = "2m";
         };
         annotations = {
-          summary = "Node is down (instance {{ $labels.instance }})";
+          summary = "Node is offline (instance {{ $labels.instance }})";
           description = ''
             {{ $labels.instance }} does not respond to ping
 
@@ -994,7 +994,7 @@
 
       {
         alert = "NodeHighPing";
-        expr = ''probe_duration_seconds{job="nodes-ping"} >= 1 and on(job, instance) probe_success == 1'';
+        expr = ''probe_duration_seconds{job="nodes-ping-host"} >= 1 and on(job, instance) probe_success == 1'';
         for = "1m";
         labels = {
           severity = "warning";
@@ -1004,6 +1004,86 @@
           summary = "Node is slow to respond (instance {{ $labels.instance }})";
           description = ''
             {{ $labels.instance }} takes more than a second to ping
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+    ];
+  }
+
+  {
+    name = "nodes-ping-netif";
+    interval = "15s";
+    rules = [
+      {
+        alert = "PingNetifExporterDown";
+        expr = ''up{job="nodes-ping-netif"} == 0'';
+        for = "5m";
+        labels = {
+          severity = "critical";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Ping exporter is down (instance {{ $labels.instance }})";
+          description = ''
+            Unable to check node availability
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeNetifDown";
+        expr = ''probe_success{job="nodes-ping-netif"} == 0'';
+        for = "30s";
+        labels = {
+          severity = "critical";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "Node network interface is down (instance {{ $labels.instance }})";
+          description = ''
+            {{ $labels.instance }} does not respond to ping on {{ $labels.network_interface }} ({{ $labels.ip_address }})
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeDownCritical";
+        expr = ''max by (fqdn) (probe_success{job="nodes-ping-netif"}) == 0'';
+        for = "30s";
+        labels = {
+          alertclass = "nodedown";
+          severity = "critical";
+          frequency = "2m";
+        };
+        annotations = {
+          summary = "Node is down (instance {{ $labels.instance }})";
+          description = ''
+            {{ $labels.instance }} does not respond to ping on any network interface
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeDownFatal";
+        expr = ''max by (fqdn) (probe_success{job="nodes-ping-netif"}) == 0'';
+        for = "90s";
+        labels = {
+          alertclass = "nodedown";
+          severity = "fatal";
+          frequency = "2m";
+        };
+        annotations = {
+          summary = "Node is down (instance {{ $labels.instance }})";
+          description = ''
+            {{ $labels.instance }} does not respond to ping on any network interface
 
             LABELS: {{ $labels }}
           '';
