@@ -459,7 +459,9 @@ VpsAdmin::API::Plugins::Monitoring.config do
         )
     end
 
-    user(&:user)
+    user do |vps, _|
+      vps.user
+    end
 
     value do |vps|
       vps.zombie_process_count.to_i
@@ -561,7 +563,9 @@ VpsAdmin::API::Plugins::Monitoring.config do
       )
     end
 
-    user(&:user)
+    user do |ds, _|
+      ds.user
+    end
 
     value(&:refquota)
 
