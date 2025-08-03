@@ -1,7 +1,7 @@
 { config, ... }:
 {
   imports = [
-    <vpsadminos/os/lib/nixos-container/vpsadminos.nix>
+    <vpsadminos/os/lib/nixos-container/stable/vpsadminos.nix>
   ];
 
   networking.useDHCP = false;
