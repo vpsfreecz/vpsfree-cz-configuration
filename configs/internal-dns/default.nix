@@ -32,7 +32,8 @@ in
     cacheNetworks = [
       "127.0.0.0/24"
       "172.16.0.0/12"
-    ] ++ allNetworks;
+    ]
+    ++ allNetworks;
     zones = [
       {
         name = "vpsfree.cz.";
@@ -47,13 +48,12 @@ in
     ];
   };
 
-  networking.firewall.extraCommands =
-    ''
-      iptables -A nixos-fw -p udp -s 172.16.0.0/12 --dport 53 -j nixos-fw-accept
-      iptables -A nixos-fw -p tcp -s 172.16.0.0/12 --dport 53 -j nixos-fw-accept
-    ''
-    + (concatMapStringsSep "\n" (net: ''
-      iptables -A nixos-fw -p udp -s ${net} --dport 53 -j nixos-fw-accept
-      iptables -A nixos-fw -p tcp -s ${net} --dport 53 -j nixos-fw-accept
-    '') allNetworks);
+  networking.firewall.extraCommands = ''
+    iptables -A nixos-fw -p udp -s 172.16.0.0/12 --dport 53 -j nixos-fw-accept
+    iptables -A nixos-fw -p tcp -s 172.16.0.0/12 --dport 53 -j nixos-fw-accept
+  ''
+  + (concatMapStringsSep "\n" (net: ''
+    iptables -A nixos-fw -p udp -s ${net} --dport 53 -j nixos-fw-accept
+    iptables -A nixos-fw -p tcp -s ${net} --dport 53 -j nixos-fw-accept
+  '') allNetworks);
 }

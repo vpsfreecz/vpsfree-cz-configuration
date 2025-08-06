@@ -64,7 +64,8 @@ in
 
   nix.nixPath = [
     "nixpkgs=${swpins.nixpkgs}"
-  ] ++ (optional (hasAttr "vpsadminos" swpins) "vpsadminos=${swpins.vpsadminos}");
+  ]
+  ++ (optional (hasAttr "vpsadminos" swpins) "vpsadminos=${swpins.vpsadminos}");
 
   environment.systemPackages = with pkgs; [
     config.boot.kernelPackages.perf

@@ -149,7 +149,8 @@ in
   config = mkIf cfg.enable {
     systemd.tmpfiles.rules = [
       "d '${cfg.stateDir}' 0755 - - - -"
-    ] ++ (mkTmpfilesd cfg.instances);
+    ]
+    ++ (mkTmpfilesd cfg.instances);
 
     systemd.services = mkServices cfg.instances;
 

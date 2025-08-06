@@ -18,12 +18,11 @@ let
 
   managementV4Networks = formatNetworks confData.vpsadmin.networks.management.ipv4;
 
-  v4Networks =
-    [
-      "172.16.0.0/12"
-    ]
-    ++ managementV4Networks
-    ++ containerV4Networks;
+  v4Networks = [
+    "172.16.0.0/12"
+  ]
+  ++ managementV4Networks
+  ++ containerV4Networks;
 
   v6Networks = containerV6Networks;
 
@@ -32,7 +31,8 @@ let
   kresdNetworks = [
     "127.0.0.0/8"
     "::1/128"
-  ] ++ allNetworks;
+  ]
+  ++ allNetworks;
 
   managementPort = confMachine.services.kresd-management.port;
 

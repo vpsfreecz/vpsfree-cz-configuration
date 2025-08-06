@@ -472,7 +472,8 @@ in
           }
 
           # Ignore alerts for containers which are on nodes that are down or booting
-        ] ++ containerInhibitRules;
+        ]
+        ++ containerInhibitRules;
       };
     };
 

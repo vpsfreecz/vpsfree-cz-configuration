@@ -47,7 +47,8 @@ in
       "munin_stats"
       "port_*"
       "swap"
-    ] ++ disabledNetifPlugins;
+    ]
+    ++ disabledNetifPlugins;
     extraConfig = concatMapStringsSep "\n\n" (m: ''
       # Allow access from ${m.metaConfig.host.fqdn}
       allow ^${replaceStrings [ "." ] [ "\\." ] m.metaConfig.addresses.primary.address}$

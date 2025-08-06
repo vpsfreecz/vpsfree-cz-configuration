@@ -15,7 +15,8 @@ let
   settings = {
     listen_address = "${cfg.listenAddress}:${toString cfg.port}";
     data_dir = "${pkgs.vpsf-status}/share/vpsf-status";
-  } // cfg.settings;
+  }
+  // cfg.settings;
 
   configFile = pkgs.writeText "vpsf-status-config.json" (builtins.toJSON settings);
 in

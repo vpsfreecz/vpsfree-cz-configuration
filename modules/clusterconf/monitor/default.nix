@@ -44,30 +44,31 @@ let
         ) monitoredMachines;
       in
       {
-        exporterConfigs =
-          [
-            {
-              targets = [
-                "localhost:${toString promPort}"
-                "localhost:${toString exporterPort}"
-              ];
-              labels = {
-                alias = getAlias confMachine.host;
-                fqdn = confMachine.host.fqdn;
-              } // confMachine.monitoring.labels;
+        exporterConfigs = [
+          {
+            targets = [
+              "localhost:${toString promPort}"
+              "localhost:${toString exporterPort}"
+            ];
+            labels = {
+              alias = getAlias confMachine.host;
+              fqdn = confMachine.host.fqdn;
             }
-          ]
-          ++ (flatten (
-            map (m: {
-              targets = [
-                "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.node-exporter.port}"
-              ];
-              labels = {
-                alias = getAlias m.metaConfig.host;
-                fqdn = m.metaConfig.host.fqdn;
-              } // m.metaConfig.monitoring.labels;
-            }) machines
-          ));
+            // confMachine.monitoring.labels;
+          }
+        ]
+        ++ (flatten (
+          map (m: {
+            targets = [
+              "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.node-exporter.port}"
+            ];
+            labels = {
+              alias = getAlias m.metaConfig.host;
+              fqdn = m.metaConfig.host.fqdn;
+            }
+            // m.metaConfig.monitoring.labels;
+          }) machines
+        ));
 
         pingConfigs = map (m: {
           targets = [ m.metaConfig.host.fqdn ];
@@ -109,18 +110,18 @@ let
       in
       {
         exporterConfigs = map (m: {
-          targets =
-            [
-              "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.node-exporter.port}"
-            ]
-            ++ (optional (hasAttr "osctl-exporter" m.metaConfig.services) "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.osctl-exporter.port}");
+          targets = [
+            "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.node-exporter.port}"
+          ]
+          ++ (optional (hasAttr "osctl-exporter" m.metaConfig.services) "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.osctl-exporter.port}");
           labels = {
             alias = getAlias m.metaConfig.host;
             fqdn = m.metaConfig.host.fqdn;
             domain = m.metaConfig.host.domain;
             location = ensureLocation m.metaConfig.host.location;
             os = m.metaConfig.spin;
-          } // m.metaConfig.monitoring.labels;
+          }
+          // m.metaConfig.monitoring.labels;
         }) exporterMachines;
 
         pingConfigs = map (m: {
@@ -141,12 +142,11 @@ let
       in
       {
         exporterConfigs = map (m: {
-          targets =
-            [
-              "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.node-exporter.port}"
-            ]
-            ++ (optional (hasAttr "osctl-exporter" m.metaConfig.services) "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.osctl-exporter.port}")
-            ++ (optional (hasAttr "ksvcmon-exporter" m.metaConfig.services) "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.ksvcmon-exporter.port}");
+          targets = [
+            "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.node-exporter.port}"
+          ]
+          ++ (optional (hasAttr "osctl-exporter" m.metaConfig.services) "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.osctl-exporter.port}")
+          ++ (optional (hasAttr "ksvcmon-exporter" m.metaConfig.services) "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.ksvcmon-exporter.port}");
           labels = {
             alias = getAlias m.metaConfig.host;
             fqdn = m.metaConfig.host.fqdn;
@@ -156,7 +156,8 @@ let
             os = m.metaConfig.spin;
             role = m.metaConfig.node.role;
             storage_type = m.metaConfig.node.storageType;
-          } // m.metaConfig.monitoring.labels;
+          }
+          // m.metaConfig.monitoring.labels;
         }) machines;
 
         ipmiConfigs = map (m: {
@@ -172,7 +173,8 @@ let
             os = m.metaConfig.spin;
             role = m.metaConfig.node.role;
             storage_type = m.metaConfig.node.storageType;
-          } // m.metaConfig.monitoring.labels;
+          }
+          // m.metaConfig.monitoring.labels;
         }) machines;
 
         hostnamePingConfigs = map (m: {
@@ -572,323 +574,250 @@ in
         listenAddress = "0.0.0.0";
         port = promPort;
         webExternalUrl = "${cfg.externalUrl}";
-        scrapeConfigs =
-          [
-            {
-              job_name = "mon";
-              scrape_interval = "60s";
-              static_configs = scrapeConfigs.monitorings.exporterConfigs;
-            }
-          ]
-          ++ (optional (scrapeConfigs.monitorings.pingConfigs != [ ]) {
-            job_name = "mon-ping";
-            scrape_interval = "15s";
-            metrics_path = "/probe";
-            params = {
-              module = [ "icmp" ];
-            };
-            static_configs = scrapeConfigs.monitorings.pingConfigs;
-            relabel_configs = [
-              {
-                source_labels = [ "__address__" ];
-                target_label = "__param_target";
-              }
-              {
-                source_labels = [ "__param_target" ];
-                target_label = "instance";
-              }
-              {
-                target_label = "__address__";
-                replacement = "127.0.0.1:9115";
-              }
-            ];
-          })
-          ++ [
-            {
-              job_name = "log";
-              scrape_interval = "60s";
-              static_configs = scrapeConfigs.loggers.exporterConfigs;
-            }
-          ]
-          ++ [
-            {
-              job_name = "nodes";
-              scrape_interval = "30s";
-              scrape_timeout = "30s";
-              static_configs = scrapeConfigs.nodes.exporterConfigs;
-            }
-          ]
-          ++ (optional (scrapeConfigs.nodes.hostnamePingConfigs != [ ]) {
-            job_name = "nodes-ping-host";
-            scrape_interval = "15s";
-            metrics_path = "/probe";
-            params = {
-              module = [ "icmp" ];
-            };
-            static_configs = scrapeConfigs.nodes.hostnamePingConfigs;
-            relabel_configs = [
-              {
-                source_labels = [ "__address__" ];
-                target_label = "__param_target";
-              }
-              {
-                source_labels = [ "__param_target" ];
-                target_label = "instance";
-              }
-              {
-                target_label = "__address__";
-                replacement = "127.0.0.1:9115";
-              }
-            ];
-          })
-          ++ (optional (scrapeConfigs.nodes.netifPingConfigs != [ ]) {
-            job_name = "nodes-ping-netif";
-            scrape_interval = "15s";
-            metrics_path = "/probe";
-            params = {
-              module = [ "icmp" ];
-            };
-            static_configs = scrapeConfigs.nodes.netifPingConfigs;
-            relabel_configs = [
-              {
-                source_labels = [ "__address__" ];
-                target_label = "__param_target";
-              }
-              {
-                source_labels = [ "__param_target" ];
-                target_label = "instance";
-              }
-              {
-                target_label = "__address__";
-                replacement = "127.0.0.1:9115";
-              }
-            ];
-          })
-          ++ (optional (scrapeConfigs.nodes.mgmtPingConfigs != [ ]) {
-            job_name = "nodes-mgmt-ping";
+        scrapeConfigs = [
+          {
+            job_name = "mon";
             scrape_interval = "60s";
-            metrics_path = "/probe";
-            params = {
-              module = [ "icmp" ];
-            };
-            static_configs = scrapeConfigs.nodes.mgmtPingConfigs;
-            relabel_configs = [
-              {
-                source_labels = [ "__address__" ];
-                target_label = "__param_target";
-              }
-              {
-                source_labels = [ "__param_target" ];
-                target_label = "instance";
-              }
-              {
-                target_label = "__address__";
-                replacement = "127.0.0.1:9115";
-              }
-            ];
-          })
-          ++ [
+            static_configs = scrapeConfigs.monitorings.exporterConfigs;
+          }
+        ]
+        ++ (optional (scrapeConfigs.monitorings.pingConfigs != [ ]) {
+          job_name = "mon-ping";
+          scrape_interval = "15s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "icmp" ];
+          };
+          static_configs = scrapeConfigs.monitorings.pingConfigs;
+          relabel_configs = [
             {
-              job_name = "nodes-ipmi";
-              scrape_interval = "120s";
-              scrape_timeout = "60s";
-              static_configs = scrapeConfigs.nodes.ipmiConfigs;
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
             }
-          ]
-          ++ [
             {
-              job_name = "infra";
-              scrape_interval = "60s";
-              scrape_timeout = "30s";
-              static_configs = scrapeConfigs.infra.exporterConfigs;
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
             }
-          ]
-          ++ (optional (scrapeConfigs.infra.pingConfigs != [ ]) {
-            job_name = "infra-ping";
-            scrape_interval = "15s";
-            metrics_path = "/probe";
-            params = {
-              module = [ "icmp" ];
-            };
-            static_configs = scrapeConfigs.infra.pingConfigs;
-            relabel_configs = [
-              {
-                source_labels = [ "__address__" ];
-                target_label = "__param_target";
-              }
-              {
-                source_labels = [ "__param_target" ];
-                target_label = "instance";
-              }
-              {
-                target_label = "__address__";
-                replacement = "127.0.0.1:9115";
-              }
-            ];
-          })
-          ++ (optional (scrapeConfigs.sshExporters.exporterConfigs != [ ]) {
-            job_name = "ssh-exporters";
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        })
+        ++ [
+          {
+            job_name = "log";
+            scrape_interval = "60s";
+            static_configs = scrapeConfigs.loggers.exporterConfigs;
+          }
+        ]
+        ++ [
+          {
+            job_name = "nodes";
             scrape_interval = "30s";
-            static_configs = scrapeConfigs.sshExporters.exporterConfigs;
-          })
-          ++ (optional (scrapeConfigs.dnsResolvers.kresdConfigs != [ ]) {
-            job_name = "kresd-management";
+            scrape_timeout = "30s";
+            static_configs = scrapeConfigs.nodes.exporterConfigs;
+          }
+        ]
+        ++ (optional (scrapeConfigs.nodes.hostnamePingConfigs != [ ]) {
+          job_name = "nodes-ping-host";
+          scrape_interval = "15s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "icmp" ];
+          };
+          static_configs = scrapeConfigs.nodes.hostnamePingConfigs;
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        })
+        ++ (optional (scrapeConfigs.nodes.netifPingConfigs != [ ]) {
+          job_name = "nodes-ping-netif";
+          scrape_interval = "15s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "icmp" ];
+          };
+          static_configs = scrapeConfigs.nodes.netifPingConfigs;
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        })
+        ++ (optional (scrapeConfigs.nodes.mgmtPingConfigs != [ ]) {
+          job_name = "nodes-mgmt-ping";
+          scrape_interval = "60s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "icmp" ];
+          };
+          static_configs = scrapeConfigs.nodes.mgmtPingConfigs;
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        })
+        ++ [
+          {
+            job_name = "nodes-ipmi";
+            scrape_interval = "120s";
+            scrape_timeout = "60s";
+            static_configs = scrapeConfigs.nodes.ipmiConfigs;
+          }
+        ]
+        ++ [
+          {
+            job_name = "infra";
             scrape_interval = "60s";
-            static_configs = scrapeConfigs.dnsResolvers.kresdConfigs;
-          })
-          ++ (optional (scrapeConfigs.dnsResolvers.dnsProbes != [ ]) {
-            job_name = "dns-resolvers";
-            scrape_interval = "60s";
-            metrics_path = "/probe";
-            params = {
-              module = [ "dns_resolver" ];
-            };
-            static_configs = scrapeConfigs.dnsResolvers.dnsProbes;
-            relabel_configs = [
-              {
-                source_labels = [ "__address__" ];
-                target_label = "__param_target";
-              }
-              {
-                source_labels = [ "__param_target" ];
-                target_label = "instance";
-              }
-              {
-                target_label = "__address__";
-                replacement = "127.0.0.1:9115";
-              }
-            ];
-          })
-          ++ (optional (scrapeConfigs.dnsAuthoritatives.dnsProbes != [ ]) {
-            job_name = "dns-authoritatives";
-            scrape_interval = "60s";
-            metrics_path = "/probe";
-            params = {
-              module = [ "dns_authoritative" ];
-            };
-            static_configs = scrapeConfigs.dnsAuthoritatives.dnsProbes;
-            relabel_configs = [
-              {
-                source_labels = [ "__address__" ];
-                target_label = "__param_target";
-              }
-              {
-                source_labels = [ "__param_target" ];
-                target_label = "instance";
-              }
-              {
-                target_label = "__address__";
-                replacement = "127.0.0.1:9115";
-              }
-            ];
-          })
-          ++ (optional (scrapeConfigs.dnsAuthoritatives.bindConfigs != [ ]) {
-            job_name = "bind-exporters";
-            scrape_interval = "60s";
-            static_configs = scrapeConfigs.dnsAuthoritatives.bindConfigs;
-          })
-          ++ (optional (scrapeConfigs.rabbitmq.exporterConfigs != [ ]) {
-            job_name = "rabbitmq";
+            scrape_timeout = "30s";
+            static_configs = scrapeConfigs.infra.exporterConfigs;
+          }
+        ]
+        ++ (optional (scrapeConfigs.infra.pingConfigs != [ ]) {
+          job_name = "infra-ping";
+          scrape_interval = "15s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "icmp" ];
+          };
+          static_configs = scrapeConfigs.infra.pingConfigs;
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        })
+        ++ (optional (scrapeConfigs.sshExporters.exporterConfigs != [ ]) {
+          job_name = "ssh-exporters";
+          scrape_interval = "30s";
+          static_configs = scrapeConfigs.sshExporters.exporterConfigs;
+        })
+        ++ (optional (scrapeConfigs.dnsResolvers.kresdConfigs != [ ]) {
+          job_name = "kresd-management";
+          scrape_interval = "60s";
+          static_configs = scrapeConfigs.dnsResolvers.kresdConfigs;
+        })
+        ++ (optional (scrapeConfigs.dnsResolvers.dnsProbes != [ ]) {
+          job_name = "dns-resolvers";
+          scrape_interval = "60s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "dns_resolver" ];
+          };
+          static_configs = scrapeConfigs.dnsResolvers.dnsProbes;
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        })
+        ++ (optional (scrapeConfigs.dnsAuthoritatives.dnsProbes != [ ]) {
+          job_name = "dns-authoritatives";
+          scrape_interval = "60s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "dns_authoritative" ];
+          };
+          static_configs = scrapeConfigs.dnsAuthoritatives.dnsProbes;
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        })
+        ++ (optional (scrapeConfigs.dnsAuthoritatives.bindConfigs != [ ]) {
+          job_name = "bind-exporters";
+          scrape_interval = "60s";
+          static_configs = scrapeConfigs.dnsAuthoritatives.bindConfigs;
+        })
+        ++ (optional (scrapeConfigs.rabbitmq.exporterConfigs != [ ]) {
+          job_name = "rabbitmq";
+          scrape_interval = "30s";
+          static_configs = scrapeConfigs.rabbitmq.exporterConfigs;
+        })
+        ++ (optional (scrapeConfigs.haproxy.exporterConfigs != [ ]) {
+          job_name = "haproxy";
+          scrape_interval = "60s";
+          static_configs = scrapeConfigs.haproxy.exporterConfigs;
+        })
+        ++ (optional (scrapeConfigs.varnish.exporterConfigs != [ ]) {
+          job_name = "varnish";
+          scrape_interval = "60s";
+          static_configs = scrapeConfigs.varnish.exporterConfigs;
+        })
+        ++ scrapeConfigs.http.jobs
+        ++ [
+          {
+            job_name = "meet-jvbs";
             scrape_interval = "30s";
-            static_configs = scrapeConfigs.rabbitmq.exporterConfigs;
-          })
-          ++ (optional (scrapeConfigs.haproxy.exporterConfigs != [ ]) {
-            job_name = "haproxy";
-            scrape_interval = "60s";
-            static_configs = scrapeConfigs.haproxy.exporterConfigs;
-          })
-          ++ (optional (scrapeConfigs.varnish.exporterConfigs != [ ]) {
-            job_name = "varnish";
-            scrape_interval = "60s";
-            static_configs = scrapeConfigs.varnish.exporterConfigs;
-          })
-          ++ scrapeConfigs.http.jobs
-          ++ [
-            {
-              job_name = "meet-jvbs";
-              scrape_interval = "30s";
-              static_configs = scrapeConfigs.jitsiMeet.jvbConfigs;
-            }
-            {
-              job_name = "meet-jvbs-ping";
-              scrape_interval = "15s";
-              metrics_path = "/probe";
-              params = {
-                module = [ "icmp" ];
-              };
-              static_configs = scrapeConfigs.jitsiMeet.jvbPingConfigs;
-              relabel_configs = [
-                {
-                  source_labels = [ "__address__" ];
-                  target_label = "__param_target";
-                }
-                {
-                  source_labels = [ "__param_target" ];
-                  target_label = "instance";
-                }
-                {
-                  target_label = "__address__";
-                  replacement = "127.0.0.1:9115";
-                }
-              ];
-            }
-            {
-              job_name = "outbound-net-ping";
-              scrape_interval = "15s";
-              metrics_path = "/probe";
-              params = {
-                module = [ "icmp" ];
-              };
-              static_configs = scrapeConfigs.outboundNet.pingConfigs;
-              relabel_configs = [
-                {
-                  source_labels = [ "__address__" ];
-                  target_label = "__param_target";
-                }
-                {
-                  source_labels = [ "__param_target" ];
-                  target_label = "instance";
-                }
-                {
-                  target_label = "__address__";
-                  replacement = "127.0.0.1:9115";
-                }
-              ];
-            }
-            {
-              job_name = "ipv6-tunnels-ping";
-              scrape_interval = "15s";
-              metrics_path = "/probe";
-              params = {
-                module = [ "icmp" ];
-              };
-              static_configs = scrapeConfigs.ipv6Tunnels.pingConfigs;
-              relabel_configs = [
-                {
-                  source_labels = [ "__address__" ];
-                  target_label = "__param_target";
-                }
-                {
-                  source_labels = [ "__param_target" ];
-                  target_label = "instance";
-                }
-                {
-                  target_label = "__address__";
-                  replacement = "127.0.0.1:9115";
-                }
-              ];
-            }
-          ]
-          ++ (mapAttrsToList (project: conf: {
-            job_name = "meet-web-${project}";
-            scrape_interval = "60s";
+            static_configs = scrapeConfigs.jitsiMeet.jvbConfigs;
+          }
+          {
+            job_name = "meet-jvbs-ping";
+            scrape_interval = "15s";
             metrics_path = "/probe";
             params = {
-              module = [ "meet_${project}_http_2xx" ];
+              module = [ "icmp" ];
             };
-            static_configs = [
-              scrapeConfigs.jitsiMeet.webConfigs.${project}
-            ];
+            static_configs = scrapeConfigs.jitsiMeet.jvbPingConfigs;
             relabel_configs = [
               {
                 source_labels = [ "__address__" ];
@@ -903,7 +832,79 @@ in
                 replacement = "127.0.0.1:9115";
               }
             ];
-          }) confData.meet);
+          }
+          {
+            job_name = "outbound-net-ping";
+            scrape_interval = "15s";
+            metrics_path = "/probe";
+            params = {
+              module = [ "icmp" ];
+            };
+            static_configs = scrapeConfigs.outboundNet.pingConfigs;
+            relabel_configs = [
+              {
+                source_labels = [ "__address__" ];
+                target_label = "__param_target";
+              }
+              {
+                source_labels = [ "__param_target" ];
+                target_label = "instance";
+              }
+              {
+                target_label = "__address__";
+                replacement = "127.0.0.1:9115";
+              }
+            ];
+          }
+          {
+            job_name = "ipv6-tunnels-ping";
+            scrape_interval = "15s";
+            metrics_path = "/probe";
+            params = {
+              module = [ "icmp" ];
+            };
+            static_configs = scrapeConfigs.ipv6Tunnels.pingConfigs;
+            relabel_configs = [
+              {
+                source_labels = [ "__address__" ];
+                target_label = "__param_target";
+              }
+              {
+                source_labels = [ "__param_target" ];
+                target_label = "instance";
+              }
+              {
+                target_label = "__address__";
+                replacement = "127.0.0.1:9115";
+              }
+            ];
+          }
+        ]
+        ++ (mapAttrsToList (project: conf: {
+          job_name = "meet-web-${project}";
+          scrape_interval = "60s";
+          metrics_path = "/probe";
+          params = {
+            module = [ "meet_${project}_http_2xx" ];
+          };
+          static_configs = [
+            scrapeConfigs.jitsiMeet.webConfigs.${project}
+          ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9115";
+            }
+          ];
+        }) confData.meet);
 
         alertmanagers = [
           {

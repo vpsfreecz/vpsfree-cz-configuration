@@ -57,14 +57,13 @@ in
         "172.16.9.177/32"
       ];
 
-      clients =
-        [
-          "${api1.addresses.primary.address}/32"
-          "${api2.addresses.primary.address}/32"
-          "${vpsadmin1.addresses.primary.address}/32"
-        ]
-        ++ (map (n: "${n.address}/${toString n.prefix}") confData.vpsadmin.networks.management.ipv4)
-        ++ (map (ns: "${ns.addresses.primary.address}/32") nameservers);
+      clients = [
+        "${api1.addresses.primary.address}/32"
+        "${api2.addresses.primary.address}/32"
+        "${vpsadmin1.addresses.primary.address}/32"
+      ]
+      ++ (map (n: "${n.address}/${toString n.prefix}") confData.vpsadmin.networks.management.ipv4)
+      ++ (map (ns: "${ns.addresses.primary.address}/32") nameservers);
 
       management = [
         "172.16.107.0/24"

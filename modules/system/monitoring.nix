@@ -24,15 +24,14 @@ let
   # Handle exporters defined in nixpkgs or vpsAdminOS, dependending on confMachine
   nixpkgsExporters = rec {
     # Exporters handled by this module
-    known =
-      [
-        "ipmi"
-        "node"
-      ]
-      ++ (optionals (confMachine.spin == "vpsadminos") [
-        "ksvcmon"
-        "osctl"
-      ]);
+    known = [
+      "ipmi"
+      "node"
+    ]
+    ++ (optionals (confMachine.spin == "vpsadminos") [
+      "ksvcmon"
+      "osctl"
+    ]);
 
     # Exporters declared in machine metadata
     declared = attrNames confMachine.services;

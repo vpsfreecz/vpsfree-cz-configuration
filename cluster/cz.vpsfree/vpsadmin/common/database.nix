@@ -67,7 +67,8 @@ in
           "${vpsadmin1.addresses.primary.address}/32"
           "${proxyPrg.addresses.primary.address}/32"
           "${utils.addresses.primary.address}/32"
-        ] ++ (map (ns: "${ns.addresses.primary.address}/32") nameservers);
+        ]
+        ++ (map (ns: "${ns.addresses.primary.address}/32") nameservers);
       in
       management ++ others;
   };
