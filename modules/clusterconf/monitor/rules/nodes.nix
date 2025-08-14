@@ -734,6 +734,46 @@
       }
 
       {
+        alert = "NfConntrackEntriesHigh";
+        expr = ''node_nf_conntrack_entries{role="hypervisor"} / node_nf_conntrack_entries_limit * 100 > 80'';
+        for = "5m";
+        labels = {
+          alertclass = "nfconntrackentries";
+          severity = "warning";
+          frequency = "1h";
+        };
+        annotations = {
+          summary = "nf conntrack entries too high (instance {{ $labels.instance }})";
+          description = ''
+            Netfilter conntrack table is more than 80% full
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NfConntrackEntriesCrit";
+        expr = ''node_nf_conntrack_entries{role="hypervisor"} / node_nf_conntrack_entries_limit * 100 > 90'';
+        for = "2m";
+        labels = {
+          alertclass = "nfconntrackentries";
+          severity = "critical";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "nf conntrack entries too high (instance {{ $labels.instance }})";
+          description = ''
+            Netfilter conntrack table is more than 90% full
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NodeOsctldDown";
         expr = ''osctld_up{job="nodes"} == 0 or on(instance) osctld_responsive == 0 or on(instance) osctld_initialized == 0'';
         for = "5m";
