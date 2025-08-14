@@ -127,4 +127,6 @@
   vpsadmin.nodectld.settings = {
     vpsadmin.queues.zfs_send.threads = 6;
   };
+
+  boot.crashDump.reservedMemory = lib.mkForce "4096M";
 }
