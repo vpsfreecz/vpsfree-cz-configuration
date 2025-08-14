@@ -204,6 +204,14 @@ in
     };
   };
 
+  osctl.oomd = {
+    enable = true;
+    settings = {
+      verbose = true;
+      dry_run = true;
+    };
+  };
+
   # Workaround for a bug in kernel which causes node_exporter to get stuck
   # while reading power info from /sys.
   #
