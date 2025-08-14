@@ -1039,6 +1039,7 @@
         expr = ''probe_success{job="nodes-ping-netif"} == 0'';
         for = "30s";
         labels = {
+          alertclass = "nodenetifdown";
           severity = "critical";
           frequency = "10m";
         };
