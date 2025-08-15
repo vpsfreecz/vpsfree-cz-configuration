@@ -208,7 +208,6 @@ in
     enable = true;
     settings = {
       verbose = true;
-      dry_run = true;
     };
   };
 
