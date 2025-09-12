@@ -38,10 +38,10 @@
   "cache.int.vpsadminos.org" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node24.prg.vpsfree.cz";
-      id = 125;
+      fqdn = "node23.prg.vpsfree.cz";
+      id = 124;
       location = "prg";
-      name = "node24";
+      name = "node23";
     };
   };
   "db.int.vpsfree.cz" = {
@@ -209,10 +209,10 @@
   "ns2.brq.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node5.brq.vpsfree.cz";
-      id = 214;
+      fqdn = "node6.brq.vpsfree.cz";
+      id = 215;
       location = "brq";
-      name = "node5";
+      name = "node6";
     };
   };
   "ns2.prg.vpsfree.cz" = {
