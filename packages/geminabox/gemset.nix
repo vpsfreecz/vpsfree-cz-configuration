@@ -161,10 +161,10 @@
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "1pcr8sn02lwzv3z6vx5n41b6ybcnw9g9h05s3lkv4vqdm0f2mq2z";
+      sha256 = "0kvz20sxih8f976ry45b6c8srkh4km0cw4ilc5ynlmyk2nkywkya";
       type = "gem";
     };
-    version = "2.2.17";
+    version = "2.2.18";
   };
   rack-protection = {
     dependencies = [ "rack" ];
