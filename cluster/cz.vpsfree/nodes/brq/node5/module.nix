@@ -20,8 +20,8 @@
     netboot = {
       enable = true;
       macs = [
-        "3c:ec:ef:70:46:ca"
-        "3c:ec:ef:70:46:cb"
+        "3c:ec:ef:73:88:04"
+        "3c:ec:ef:73:88:05"
       ];
     };
 
@@ -36,8 +36,8 @@
       networking = {
         interfaces = {
           names = {
-            teng0 = "3c:ec:ef:70:46:ca";
-            teng1 = "3c:ec:ef:70:46:cb";
+            teng0 = "3c:ec:ef:73:88:04";
+            teng1 = "3c:ec:ef:73:88:05";
           };
         };
 
