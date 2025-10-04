@@ -191,7 +191,7 @@ User.connect_hook(:create) do |ret, user|
   )
 
   dip = use_chain(TransactionChains::Dataset::Create, args: [
-                    Pool.primary.take!,
+                    Pool.primary.joins(:node).where(nodes: { name: 'backuper2' }).take!,
                     nil,
                     [ds],
                     { automount: false,
