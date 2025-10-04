@@ -133,4 +133,9 @@ in
   virtualisation.libvirtd = {
     enable = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    virt-manager
+    xorriso
+  ];
 }
