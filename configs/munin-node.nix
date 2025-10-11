@@ -31,6 +31,7 @@ let
         "veth*"
         "erspan*"
         "gretap*"
+        "nfs-*"
         "tun*"
         "virtip"
       ]
