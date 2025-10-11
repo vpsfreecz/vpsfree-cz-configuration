@@ -24,8 +24,8 @@ in
         "teng1"
       ];
       queues = {
-        storage.threads = 8;
-        zfs_recv.threads = 48;
+        storage.threads = 4;
+        zfs_recv.threads = 36;
       };
     };
     console = {
