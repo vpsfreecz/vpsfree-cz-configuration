@@ -18,6 +18,7 @@ module DiscoverNetbootable
         File.open(dst, 'w') do |f|
           f.puts('# This file is auto-generated on confctl rediscover, changes will be lost')
           f.write(ConfCtl::NixFormat.to_nix(machines))
+          f.puts
         end
       end
     end
