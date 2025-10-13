@@ -119,5 +119,7 @@ in
       node-exporter = { };
       osctl-exporter = { };
     };
+
+    monitoring.enable = false;
   };
 }
