@@ -14,7 +14,7 @@ let
     ip link set down lte0
     echo Y > /sys/class/net/lte0/qmi/raw_ip
     ip link set up lte0
-    qmicli --device=/dev/cdc-wdm0 --device-open-proxy --wds-start-network="ip-type=4,apn=internet.open.s" --client-no-release-cid
+    qmicli --device=/dev/cdc-wdm0 --device-open-proxy --wds-start-network="ip-type=4,apn=internet" --client-no-release-cid
 
     connected=n
 
