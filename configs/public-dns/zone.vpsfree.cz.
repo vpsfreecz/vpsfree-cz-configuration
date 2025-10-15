@@ -139,7 +139,7 @@ munin           IN      CNAME   proxy.prg.vpsfree.cz.
 goresheat       IN      CNAME   proxy.prg.vpsfree.cz.
 
 em1                            IN   A       49.12.231.200
-em1                            IN   AAAA    2a01:4f8:1c1a:7604:
+em1                            IN   AAAA    2a01:4f8:1c1a:7604::1
 
 proxy.prg       IN      A       37.205.14.61
 proxy.prg       IN      AAAA    2a03:3b40:fe:35::1
