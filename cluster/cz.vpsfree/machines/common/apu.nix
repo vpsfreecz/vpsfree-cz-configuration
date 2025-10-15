@@ -55,6 +55,8 @@ in
     };
 
     kernelParams = [ "console=ttyS0,115200n8" ];
+
+    kernel.sysctl."net.ipv4.ip_forward" = 1;
   };
 
   services.udev.extraRules = ''
