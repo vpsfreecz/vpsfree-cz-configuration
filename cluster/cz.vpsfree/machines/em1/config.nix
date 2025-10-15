@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  confData,
   ...
 }:
 {
@@ -37,6 +38,10 @@
   ];
 
   networking.firewall.allowedUDPPorts = [ 51820 ];
+
+  networking.firewall.extraCommands = lib.concatMapStringsSep "\n" (net: ''
+    iptables -A nixos-fw -p tcp --dport 443 -s ${net} -j nixos-fw-accept
+  '') confData.cloudflare.ipv4;
 
   networking.wireguard.interfaces = {
     wg0 = {
@@ -74,6 +79,17 @@
           ];
         }
       ];
+    };
+  };
+
+  services.nginx = {
+    enable = true;
+    recommendedProxySettings = true;
+    virtualHosts."status.vpsf.cz" = {
+      onlySSL = true;
+      sslCertificateKey = "/private/nginx/status.vpsf.cz.key";
+      sslCertificate = "/private/nginx/status.vpsf.cz.crt";
+      locations."/".proxyPass = "http://172.31.0.33:${toString config.services.vpsf-status.port}";
     };
   };
 

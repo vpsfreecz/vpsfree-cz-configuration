@@ -64,6 +64,7 @@ in
 {
   services.vpsf-status = {
     enable = true;
+    listenAddress = "172.31.0.33";
     settings = {
       notice_file = "/etc/status.html";
 
@@ -148,20 +149,9 @@ in
     };
   };
 
-  services.nginx = {
-    enable = true;
-    recommendedProxySettings = true;
-    virtualHosts."status.vpsf.cz" = {
-      onlySSL = true;
-      sslCertificateKey = "/private/nginx/status.vpsf.cz.key";
-      sslCertificate = "/private/nginx/status.vpsf.cz.crt";
-      locations."/".proxyPass = "http://127.0.0.1:${toString config.services.vpsf-status.port}";
-    };
-  };
-
-  networking.firewall.extraCommands = concatMapStringsSep "\n" (net: ''
-    iptables -A nixos-fw -p tcp --dport 443 -s ${net} -j nixos-fw-accept
-  '') confData.cloudflare.ipv4;
+  networking.firewall.extraCommands = ''
+    iptables -A nixos-fw -p tcp --dport 8080 -s 172.31.0.34/32 -j nixos-fw-accept
+  '';
 
   # To reach the DNS resolvers via the private network instead of LTE
   networking.interfaces.enp1s0.ipv4.routes = map (dns: {
