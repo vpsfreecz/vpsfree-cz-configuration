@@ -37,6 +37,8 @@
     }
   ];
 
+  networking.wireguard.interfaces.wg0.ips = [ "172.31.0.33/30" ];
+
   confctl.carrier.netboot = {
     host = "172.16.254.253";
     tftp.bindAddress = "172.16.254.253";

@@ -40,6 +40,11 @@ let
     "cz.vpsfree/containers/prg/int.alerts2"
   ];
 
+  em1 = confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/machines/em1";
+  };
+
 in
 {
   boot = {
@@ -95,6 +100,31 @@ in
       ${alerterRules}
     '';
 
+  # VPN to em1.vpsfree.cz
+  networking.wireguard.interfaces = {
+    wg0 = {
+      listenPort = 51820;
+
+      privateKeyFile = "/private/wireguard/em1.vpsfree.cz/private_key";
+
+      allowedIPsAsRoutes = true;
+
+      peers = [
+        {
+          # em1.vpsfree.cz
+          publicKey = "QEMI1v0Vh1Xh0TJWe8OT9+18Nj9BHZ7PO+TuqaXfxTo=";
+          presharedKeyFile = "/private/wireguard/em1.vpsfree.cz/preshared_key";
+          allowedIPs = [
+            "172.31.0.32/30"
+            "172.31.0.36/30"
+          ];
+          endpoint = "${em1.addresses.primary.address}:51820";
+          persistentKeepalive = 25;
+        }
+      ];
+    };
+  };
+
   systemd.services.modemNet = {
     description = "modemNet";
     enable = true;
@@ -114,9 +144,11 @@ in
 
   services.openssh.enable = true;
   services.openssh.settings.PermitRootLogin = "yes";
+
   environment.systemPackages = with pkgs; [
     modemNetBringUp
     usbutils
+    wireguard-tools
   ];
 
   services.sachet = {
