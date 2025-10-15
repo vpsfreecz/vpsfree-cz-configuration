@@ -82,6 +82,8 @@
     };
   };
 
+  services.openssh.settings.PermitRootLogin = "yes";
+
   services.nginx = {
     enable = true;
     recommendedProxySettings = true;
