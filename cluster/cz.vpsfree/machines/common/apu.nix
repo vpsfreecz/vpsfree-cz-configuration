@@ -16,23 +16,7 @@ let
     ip link set up lte0
     qmicli --device=/dev/cdc-wdm0 --device-open-proxy --wds-start-network="ip-type=4,apn=internet" --client-no-release-cid
 
-    connected=n
-
-    for i in {1..10} ; do
-      if udhcpc -q -f -n -i lte0 ; then
-        connected=y
-        break
-      fi
-
-      sleep 10
-    done
-
-    if [[ "$connected" == "n" ]] ; then
-      echo "Unable to configure the modem"
-      exit 1
-    fi
-
-    echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+    exec udhcpc -f -n -i lte0
   '';
 
   alerters = [
@@ -136,8 +120,10 @@ in
       busybox
     ];
     serviceConfig = {
-      Type = "oneshot";
+      Type = "simple";
       ExecStart = "${modemNetBringUp}/bin/modem-network-bring-up";
+      Restart = "on-failure";
+      RestartSec = 10;
     };
     bindsTo = [ "sys-subsystem-net-devices-lte0.device" ];
     after = [ "sys-subsystem-net-devices-lte0.device" ];
