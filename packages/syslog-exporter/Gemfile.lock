@@ -25,4 +25,4 @@ DEPENDENCIES
   syslog-exporter!
 
 BUNDLED WITH
-   2.7.1
+   2.7.2
