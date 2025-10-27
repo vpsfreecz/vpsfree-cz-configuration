@@ -11,22 +11,22 @@
       "url": "https://github.com/NixOS/nixpkgs"
     },
     "state": {
-      "rev": "01f116e4df6a15f4ccdffb1bcd41096869fb385c",
-      "date": "2025-10-23T04:48:00+00:00"
+      "rev": "6a08e6bb4e46ff7fcbb53d409b253f6bad8a28ce",
+      "date": "2025-10-27T04:53:59+00:00"
     },
     "info": {
-      "rev": "01f116e4df6a15f4ccdffb1bcd41096869fb385c",
-      "sha256": "1vlmhgh1zdr00afxzsd7kfaynkc9zif0kwmbjmzvb1nqrwj05x3z"
+      "rev": "6a08e6bb4e46ff7fcbb53d409b253f6bad8a28ce",
+      "sha256": "0ixzzfdyrkm8mhfrgpdmq0bpfk5ypz63qnbxskj5xvfxvdca3ys3"
     },
     "fetcher": {
       "type": "git-rev",
       "options": {
-        "rev": "01f116e4df6a15f4ccdffb1bcd41096869fb385c",
+        "rev": "6a08e6bb4e46ff7fcbb53d409b253f6bad8a28ce",
         "wrapped_fetcher": {
           "type": "zip",
           "options": {
-            "url": "https://github.com/NixOS/nixpkgs/archive/01f116e4df6a15f4ccdffb1bcd41096869fb385c.tar.gz",
-            "sha256": "1vlmhgh1zdr00afxzsd7kfaynkc9zif0kwmbjmzvb1nqrwj05x3z"
+            "url": "https://github.com/NixOS/nixpkgs/archive/6a08e6bb4e46ff7fcbb53d409b253f6bad8a28ce.tar.gz",
+            "sha256": "0ixzzfdyrkm8mhfrgpdmq0bpfk5ypz63qnbxskj5xvfxvdca3ys3"
           }
         }
       }
