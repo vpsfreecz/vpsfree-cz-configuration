@@ -291,10 +291,10 @@
 
       {
         alert = "NodeCritNoTxgs";
-        expr = ''rate(zpool_txgs_count{job="nodes"}[5m]) * 180 < 1'';
+        expr = ''rate(zpool_txgs_count{job="nodes",role="hypervisor"}[5m]) * 180 < 1'';
         for = "1m";
         labels = {
-          alertclass = "notxgs";
+          alertclass = "nodenotxgs";
           severity = "critical";
           frequency = "2m";
         };
@@ -311,10 +311,10 @@
 
       {
         alert = "NodeFatalNoTxgs";
-        expr = ''rate(zpool_txgs_count{job="nodes"}[2m]) * 240 < 1'';
+        expr = ''rate(zpool_txgs_count{job="nodes",role="hypervisor"}[2m]) * 240 < 1'';
         for = "1m";
         labels = {
-          alertclass = "notxgs";
+          alertclass = "nodenotxgs";
           severity = "fatal";
           frequency = "2m";
         };
@@ -322,6 +322,46 @@
           summary = "ZFS not making TXGs (instance {{ $labels.instance }})";
           description = ''
             ZFS made less than 1 TXG in four minutes
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "StorageCritNoTxgs";
+        expr = ''rate(zpool_txgs_count{job="nodes",role="storage"}[5m]) * 240 < 1'';
+        for = "1m";
+        labels = {
+          alertclass = "storagenotxgs";
+          severity = "critical";
+          frequency = "2m";
+        };
+        annotations = {
+          summary = "ZFS not making TXGs (instance {{ $labels.instance }})";
+          description = ''
+            ZFS made less than 1 TXG in four minutes
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "StorageFatalNoTxgs";
+        expr = ''rate(zpool_txgs_count{job="nodes",role="storage"}[2m]) * 360 < 1'';
+        for = "1m";
+        labels = {
+          alertclass = "storagenotxgs";
+          severity = "fatal";
+          frequency = "2m";
+        };
+        annotations = {
+          summary = "ZFS not making TXGs (instance {{ $labels.instance }})";
+          description = ''
+            ZFS made less than 1 TXG in six minutes
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
