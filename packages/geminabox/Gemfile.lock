@@ -28,7 +28,7 @@ GEM
     nesty (1.0.2)
     net-http (0.7.0)
       uri
-    rack (2.2.20)
+    rack (2.2.21)
     rack-protection (2.2.4)
       rack
     reentrant_flock (0.1.1)
