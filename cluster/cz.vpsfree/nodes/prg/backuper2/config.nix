@@ -26,6 +26,8 @@ in
       queues = {
         storage.threads = 4;
         zfs_recv.threads = 36;
+        zfs_recv.start_delay = 10;
+        zfs_send.start_delay = 10;
       };
     };
     console = {
