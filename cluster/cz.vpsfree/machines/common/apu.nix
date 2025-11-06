@@ -123,8 +123,8 @@ in
     serviceConfig = {
       Type = "simple";
       ExecStart = "${modemNetBringUp}/bin/modem-network-bring-up";
-      Restart = "on-failure";
-      RestartSec = 10;
+      Restart = "always";
+      RuntimeMaxSec = "1d";
     };
     bindsTo = [ "sys-subsystem-net-devices-lte0.device" ];
     after = [ "sys-subsystem-net-devices-lte0.device" ];
