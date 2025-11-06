@@ -49,6 +49,8 @@ jobs:
 
       - name: Update package dependencies
         run: |
+          set -e
+
           for pkg in geminabox ssh-exporter syslog-exporter ; do
             pushd "packages/$pkg"
             
