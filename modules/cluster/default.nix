@@ -36,6 +36,16 @@ let
             '';
           };
 
+          target = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = ''
+              Target hostname/IP address to monitor
+
+              Defaults to machine FQDN.
+            '';
+          };
+
           isMonitor = mkOption {
             type = types.bool;
             default = false;

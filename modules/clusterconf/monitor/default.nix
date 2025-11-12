@@ -27,6 +27,10 @@ let
   getAlias = host: "${host.name}${optionalString (!isNull host.location) ".${host.location}"}";
   ensureLocation = location: if location == null then "global" else location;
 
+  monitorTarget =
+    metaConfig:
+    if isNull metaConfig.monitoring.target then metaConfig.host.fqdn else metaConfig.monitoring.target;
+
   filterServices =
     machine: fn:
     let
@@ -60,7 +64,7 @@ let
         ++ (flatten (
           map (m: {
             targets = [
-              "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.node-exporter.port}"
+              "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.node-exporter.port}"
             ];
             labels = {
               alias = getAlias m.metaConfig.host;
@@ -71,7 +75,7 @@ let
         ));
 
         pingConfigs = map (m: {
-          targets = [ m.metaConfig.host.fqdn ];
+          targets = [ (monitorTarget m.metaConfig) ];
           labels = {
             alias = getAlias m.metaConfig.host;
             fqdn = m.metaConfig.host.fqdn;
@@ -91,7 +95,7 @@ let
       {
         exporterConfigs = map (m: {
           targets = [
-            "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.syslog-exporter.port}"
+            "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.syslog-exporter.port}"
           ];
           labels = {
             logger_alias = getAlias m.metaConfig.host;
@@ -111,9 +115,9 @@ let
       {
         exporterConfigs = map (m: {
           targets = [
-            "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.node-exporter.port}"
+            "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.node-exporter.port}"
           ]
-          ++ (optional (hasAttr "osctl-exporter" m.metaConfig.services) "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.osctl-exporter.port}");
+          ++ (optional (hasAttr "osctl-exporter" m.metaConfig.services) "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.osctl-exporter.port}");
           labels = {
             alias = getAlias m.metaConfig.host;
             fqdn = m.metaConfig.host.fqdn;
@@ -125,7 +129,7 @@ let
         }) exporterMachines;
 
         pingConfigs = map (m: {
-          targets = [ m.metaConfig.host.fqdn ];
+          targets = [ (monitorTarget m.metaConfig) ];
           labels = {
             alias = getAlias m.metaConfig.host;
             fqdn = m.metaConfig.host.fqdn;
@@ -143,10 +147,10 @@ let
       {
         exporterConfigs = map (m: {
           targets = [
-            "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.node-exporter.port}"
+            "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.node-exporter.port}"
           ]
-          ++ (optional (hasAttr "osctl-exporter" m.metaConfig.services) "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.osctl-exporter.port}")
-          ++ (optional (hasAttr "ksvcmon-exporter" m.metaConfig.services) "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.ksvcmon-exporter.port}");
+          ++ (optional (hasAttr "osctl-exporter" m.metaConfig.services) "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.osctl-exporter.port}")
+          ++ (optional (hasAttr "ksvcmon-exporter" m.metaConfig.services) "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.ksvcmon-exporter.port}");
           labels = {
             alias = getAlias m.metaConfig.host;
             fqdn = m.metaConfig.host.fqdn;
@@ -162,7 +166,7 @@ let
 
         ipmiConfigs = map (m: {
           targets = [
-            "${m.metaConfig.host.fqdn}:${toString m.metaConfig.services.ipmi-exporter.port}"
+            "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.ipmi-exporter.port}"
           ];
           labels = {
             alias = getAlias m.metaConfig.host;
@@ -178,7 +182,7 @@ let
         }) machines;
 
         hostnamePingConfigs = map (m: {
-          targets = [ m.metaConfig.host.fqdn ];
+          targets = [ (monitorTarget m.metaConfig) ];
           labels = {
             alias = getAlias m.metaConfig.host;
             fqdn = m.metaConfig.host.fqdn;
