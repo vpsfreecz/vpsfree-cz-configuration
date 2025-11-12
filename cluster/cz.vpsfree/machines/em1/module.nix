@@ -32,5 +32,7 @@
     services = {
       node-exporter = { };
     };
+
+    monitoring.target = "172.31.0.34";
   };
 }
