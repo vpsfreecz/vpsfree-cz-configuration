@@ -6,27 +6,27 @@
       "update": {
         "auto": false,
         "interval": 3600,
-        "ref": "refs/heads/25.05-munin-fastcgi"
+        "ref": "refs/heads/25.11-munin-fastcgi"
       },
       "url": "https://github.com/aither64/nixpkgs"
     },
     "state": {
-      "rev": "fecf38a1de2b437954dde2efb57a61b6bddcaf09",
-      "date": "2025-08-01T16:24:43+02:00"
+      "rev": "58893c976fdbd248f30ca087171b878791de0ed9",
+      "date": "2025-12-01T21:53:23+01:00"
     },
     "info": {
-      "rev": "fecf38a1de2b437954dde2efb57a61b6bddcaf09",
-      "sha256": "1x5v4id2z94bi1291n39fwwdd3ds8467s2gafjk5x31p0jfgf60m"
+      "rev": "58893c976fdbd248f30ca087171b878791de0ed9",
+      "sha256": "0aa46idsh3r0q64mppkpj9ck39rmkag4k62b1qr9f2qmcmjnk7x7"
     },
     "fetcher": {
       "type": "git-rev",
       "options": {
-        "rev": "fecf38a1de2b437954dde2efb57a61b6bddcaf09",
+        "rev": "58893c976fdbd248f30ca087171b878791de0ed9",
         "wrapped_fetcher": {
           "type": "zip",
           "options": {
-            "url": "https://github.com/aither64/nixpkgs/archive/fecf38a1de2b437954dde2efb57a61b6bddcaf09.tar.gz",
-            "sha256": "1x5v4id2z94bi1291n39fwwdd3ds8467s2gafjk5x31p0jfgf60m"
+            "url": "https://github.com/aither64/nixpkgs/archive/58893c976fdbd248f30ca087171b878791de0ed9.tar.gz",
+            "sha256": "0aa46idsh3r0q64mppkpj9ck39rmkag4k62b1qr9f2qmcmjnk7x7"
           }
         }
       }
