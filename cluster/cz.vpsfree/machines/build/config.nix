@@ -69,9 +69,9 @@
   boot.runSize = "50%";
   boot.tmp.useTmpfs = true;
   boot.tmp.tmpfsSize = "50%";
-  services.logind.extraConfig = ''
-    RuntimeDirectorySize=50%
-  '';
+  services.logind.settings.Login = {
+    RuntimeDirectorySize = "50%";
+  };
 
   networking.useDHCP = false;
   networking.interfaces.enp1s0.ipv4.addresses = [
