@@ -137,7 +137,10 @@ in
   vpsadmin.varnish = {
     enable = true;
 
-    bind = "/run/varnish/vpsadmin-varnish.sock,mode=0666";
+    bind = {
+      address = "/run/varnish/vpsadmin-varnish.sock";
+      mode = "0666";
+    };
 
     api.prod = {
       domain = "api.vpsfree.cz";
