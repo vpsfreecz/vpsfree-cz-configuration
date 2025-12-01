@@ -32,10 +32,6 @@ in
     enableACME = true;
     hostname = "discourse.vpsfree.cz";
 
-    plugins = with config.services.discourse.package.plugins; [
-      discourse-oauth2-basic
-    ];
-
     admin = {
       email = "podpora@vpsfree.cz";
       username = "admin";
