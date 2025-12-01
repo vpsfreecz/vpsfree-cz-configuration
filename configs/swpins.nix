@@ -27,7 +27,7 @@ let
     };
   };
 
-  nixpkgsStable = nixpkgsBranch "nixos-25.05";
+  nixpkgsStable = nixpkgsBranch "nixos-25.11";
 
   vpsadminosStaging = osBranch "staging";
 
@@ -71,7 +71,7 @@ in
     };
 
     nixos-stable = {
-      nixpkgs = nixpkgsBranch "nixos-25.05";
+      nixpkgs = nixpkgsBranch "nixos-25.11";
     };
   };
 }
