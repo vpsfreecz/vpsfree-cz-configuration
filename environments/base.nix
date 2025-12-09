@@ -68,7 +68,7 @@ in
   ++ (optional (hasAttr "vpsadminos" swpins) "vpsadminos=${swpins.vpsadminos}");
 
   environment.systemPackages = with pkgs; [
-    config.boot.kernelPackages.perf
+    perf
     config.boot.kernelPackages.cpupower
     iftop
     iptraf-ng

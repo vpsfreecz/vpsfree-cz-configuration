@@ -91,7 +91,7 @@ in
 
     # debug stuff
     # config.boot.kernelPackages.bcc
-    config.boot.kernelPackages.perf
+    perf
     dool
     strace
 
