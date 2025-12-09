@@ -39,6 +39,19 @@
     };
   };
 
+  boot.kernel.sysctl."vm.swappiness" = 100;
+
+  swapDevices = [
+    {
+      device = "/dev/disk/by-uuid/0b034394-e557-4678-9176-9ba392d62c8d";
+      priority = 0;
+    }
+    {
+      device = "/dev/disk/by-uuid/6c6ad700-984f-46e0-bf0d-524d3025bbc1";
+      priority = 0;
+    }
+  ];
+
   osctl.pools.tank = {
     parallelStart = 8;
   };
