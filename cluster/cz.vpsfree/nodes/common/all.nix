@@ -8,17 +8,6 @@
   ...
 }:
 let
-  bpftraceGit = config.boot.kernelPackages.bpftrace.overrideAttrs (oldAttrs: rec {
-    version = "0.23.3";
-    src = pkgs.fetchFromGitHub {
-      owner = "bpftrace";
-      repo = "bpftrace";
-      rev = "1f227964439d82a7a8765932787314464009660a";
-      sha256 = "sha256-Jvl8Up3IH2/G0QMb0pZmQ2SSXOmjTj08KXoJXOR3Z48=";
-    };
-    patches = [ ];
-  });
-
   rabbitmqs =
     map
       (
@@ -87,7 +76,6 @@ in
   '';
 
   environment.systemPackages = with pkgs; [
-    bpftraceGit
     dmidecode
     # Constantly broken
     # ipmicfg
