@@ -40,8 +40,6 @@ in
 
   boot.supportedFilesystems.zfs = true;
 
-  networking.useDHCP = true;
-
   users.users.root.initialHashedPassword = "";
 
   system.stateVersion = config.system.nixos.release;
