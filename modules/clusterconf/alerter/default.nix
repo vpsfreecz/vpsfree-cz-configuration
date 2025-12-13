@@ -328,34 +328,72 @@ in
               routes = intervalRoutes;
             }
 
-            # SMS alerts
+            # SMS alerts - aither
             {
               match_re = {
                 severity = "critical|fatal";
               };
-              receiver = "sms-aither";
-              group_wait = "10s";
-              repeat_interval = "10m";
               continue = true;
-              active_time_intervals = [
-                "daytime-aither"
-              ];
+              routes = [
+                {
+                  match = {
+                    severity = "critical";
+                  };
+                  receiver = "sms-aither";
+                  group_wait = "10s";
+                  repeat_interval = "10m";
+                  continue = false;
+                  active_time_intervals = [
+                    "daytime-aither"
+                  ];
+                  routes = intervalRoutes;
+                }
 
-              routes = intervalRoutes;
+                {
+                  match = {
+                    severity = "fatal";
+                  };
+                  receiver = "sms-aither";
+                  group_wait = "10s";
+                  repeat_interval = "10m";
+                  continue = false;
+                  routes = intervalRoutes;
+                }
+              ];
             }
+
+            # SMS alerts - snajpa
             {
               match_re = {
                 severity = "critical|fatal";
               };
-              receiver = "sms-snajpa";
-              group_wait = "10s";
-              repeat_interval = "10m";
               continue = true;
-              active_time_intervals = [
-                "daytime-snajpa"
-              ];
+              routes = [
+                {
+                  match = {
+                    severity = "critical";
+                  };
+                  receiver = "sms-snajpa";
+                  group_wait = "10s";
+                  repeat_interval = "10m";
+                  continue = false;
+                  active_time_intervals = [
+                    "daytime-snajpa"
+                  ];
+                  routes = intervalRoutes;
+                }
 
-              routes = intervalRoutes;
+                {
+                  match = {
+                    severity = "fatal";
+                  };
+                  receiver = "sms-snajpa";
+                  group_wait = "10s";
+                  repeat_interval = "10m";
+                  continue = false;
+                  routes = intervalRoutes;
+                }
+              ];
             }
 
             # Blackhole
