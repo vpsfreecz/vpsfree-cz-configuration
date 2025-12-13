@@ -151,15 +151,15 @@ in
 
       receivers = [
         {
-          name = "team-sms";
+          name = "sms-aither";
           provider = "modem";
-          to = [
-            # aither
-            "+420775386453"
+          to = [ "+420775386453" ];
+        }
 
-            # snajpa
-            "+420720107791"
-          ];
+        {
+          name = "sms-snajpa";
+          provider = "modem";
+          to = [ "+420720107791" ];
         }
       ];
     };

@@ -247,9 +247,49 @@ in
           smtp_from = "alertmanager@vpsfree.cz";
           smtp_require_tls = false;
         };
+
         templates = [
           telegramTemplate
         ];
+
+        time_intervals = [
+          {
+            name = "daytime-aither";
+            time_intervals = [
+              {
+                times = [
+                  {
+                    start_time = "07:00";
+                    end_time = "22:00";
+                  }
+                ];
+
+                location = "Europe/Prague";
+              }
+            ];
+          }
+
+          {
+            name = "daytime-snajpa";
+            time_intervals = [
+              {
+                times = [
+                  {
+                    start_time = "14:00";
+                    end_time = "24:00";
+                  }
+                  {
+                    start_time = "00:00";
+                    end_time = "01:00";
+                  }
+                ];
+
+                location = "Europe/Prague";
+              }
+            ];
+          }
+        ];
+
         route = {
           group_by = [
             "alertname"
@@ -293,10 +333,27 @@ in
               match_re = {
                 severity = "critical|fatal";
               };
-              receiver = "team-sms";
+              receiver = "sms-aither";
               group_wait = "10s";
               repeat_interval = "10m";
-              continue = false;
+              continue = true;
+              active_time_intervals = [
+                "daytime-aither"
+              ];
+
+              routes = intervalRoutes;
+            }
+            {
+              match_re = {
+                severity = "critical|fatal";
+              };
+              receiver = "sms-snajpa";
+              group_wait = "10s";
+              repeat_interval = "10m";
+              continue = true;
+              active_time_intervals = [
+                "daytime-snajpa"
+              ];
 
               routes = intervalRoutes;
             }
@@ -311,6 +368,7 @@ in
             }
           ];
         };
+
         receivers = [
           {
             name = "team-mail";
@@ -333,7 +391,16 @@ in
             ];
           }
           {
-            name = "team-sms";
+            name = "sms-aither";
+            webhook_configs = [
+              {
+                url = "http://127.0.0.1:5000/alert";
+                send_resolved = true;
+              }
+            ];
+          }
+          {
+            name = "sms-snajpa";
             webhook_configs = [
               {
                 url = "http://127.0.0.1:5000/alert";
@@ -458,17 +525,6 @@ in
               "alertclass"
               "instance"
             ];
-          }
-
-          # Disable critical alerts during quiet hours. Use fatal alerts to bypass
-          # quiet hours.
-          {
-            target_match = {
-              severity = "critical";
-            };
-            source_match = {
-              alertname = "QuietHours";
-            };
           }
 
           # Ignore alerts for containers which are on nodes that are down or booting

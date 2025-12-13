@@ -940,7 +940,6 @@ in
             ./rules/infra.nix
             ./rules/dns.nix
             ./rules/smartmon.nix
-            ./rules/time-of-day.nix
             ./rules/meet.nix
             ./rules/vpsfree-web.nix
             ./rules/systemd.nix
