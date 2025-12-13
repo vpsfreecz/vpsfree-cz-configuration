@@ -231,12 +231,6 @@ in
         locations."/".proxyPass = "http://37.205.15.53:80";
       };
 
-      "mirror.vpsfree.cz" = {
-        enableACME = true;
-        forceSSL = true;
-        locations."/".proxyPass = "http://185.8.165.222:80";
-      };
-
       "rt.vpsfree.cz" = {
         enableACME = true;
         forceSSL = true;
