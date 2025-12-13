@@ -833,46 +833,6 @@
       }
 
       {
-        alert = "VpsOsCritFreeSpace";
-        expr = ''osctl_container_dataset_avail_bytes{job="nodes"} < 256 * 1024 * 1024'';
-        for = "5m";
-        labels = {
-          alertclass = "vpsdiskspace";
-          severity = "critical";
-          frequency = "hourly";
-        };
-        annotations = {
-          summary = "Not enough free space (instance {{ $labels.instance }})";
-          description = ''
-            VPS has less than 256 MB of diskspace left
-
-            VALUE = {{ $value }}
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
-
-      {
-        alert = "VpsOsFatalFreeSpace";
-        expr = ''osctl_container_dataset_avail_bytes{job="nodes"} < 256 * 1024 * 1024'';
-        for = "5m";
-        labels = {
-          alertclass = "vpsdiskspace";
-          severity = "fatal";
-          frequency = "2m";
-        };
-        annotations = {
-          summary = "Not enough free space (instance {{ $labels.instance }})";
-          description = ''
-            VPS has less than 256 MB of diskspace left
-
-            VALUE = {{ $value }}
-            LABELS: {{ $labels }}
-          '';
-        };
-      }
-
-      {
         alert = "VpsNoRefquotaSet";
         expr = ''osctl_container_dataset_refquota_bytes{job="nodes"} == 0'';
         for = "12h";
