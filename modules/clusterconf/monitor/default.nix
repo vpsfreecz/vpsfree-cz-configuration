@@ -414,7 +414,7 @@ let
           name: site:
           nameValuePair "${name}_http_2xx" {
             prober = "http";
-            timeout = "5s";
+            timeout = "30s";
             http = {
               valid_http_versions = [
                 "HTTP/1.1"
