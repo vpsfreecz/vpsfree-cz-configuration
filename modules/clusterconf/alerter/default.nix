@@ -349,6 +349,7 @@ in
                   group_wait = "10s";
                   repeat_interval = "10m";
                   continue = false;
+                  active_time_intervals = [ "daytime-aither" ];
                   routes = intervalRoutesForSms.aither;
                 }
 
@@ -380,6 +381,7 @@ in
                   group_wait = "10s";
                   repeat_interval = "10m";
                   continue = false;
+                  active_time_intervals = [ "daytime-snajpa" ];
                   routes = intervalRoutesForSms.snajpa;
                 }
 
