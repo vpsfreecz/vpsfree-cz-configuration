@@ -132,6 +132,12 @@ let
     }
   ];
 
+  intervalRoutesForSms = {
+    aither = map (v: v // { active_time_intervals = [ "daytime-aither" ]; }) intervalRoutes;
+
+    snajpa = map (v: v // { active_time_intervals = [ "daytime-snajpa" ]; }) intervalRoutes;
+  };
+
   telegramTemplate = pkgs.writeText "telegram.tmpl" ''
     {{ define "alert_list" }}{{ range . }}
     ---
@@ -343,10 +349,7 @@ in
                   group_wait = "10s";
                   repeat_interval = "10m";
                   continue = false;
-                  active_time_intervals = [
-                    "daytime-aither"
-                  ];
-                  routes = intervalRoutes;
+                  routes = intervalRoutesForSms.aither;
                 }
 
                 {
@@ -357,7 +360,7 @@ in
                   group_wait = "10s";
                   repeat_interval = "10m";
                   continue = false;
-                  routes = intervalRoutes;
+                  routes = intervalRoutesForSms.aither;
                 }
               ];
             }
@@ -377,10 +380,7 @@ in
                   group_wait = "10s";
                   repeat_interval = "10m";
                   continue = false;
-                  active_time_intervals = [
-                    "daytime-snajpa"
-                  ];
-                  routes = intervalRoutes;
+                  routes = intervalRoutesForSms.snajpa;
                 }
 
                 {
@@ -391,7 +391,7 @@ in
                   group_wait = "10s";
                   repeat_interval = "10m";
                   continue = false;
-                  routes = intervalRoutes;
+                  routes = intervalRoutesForSms.snajpa;
                 }
               ];
             }
