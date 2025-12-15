@@ -10,16 +10,6 @@
 with lib;
 let
 
-  modemNetBringUp = pkgs.writers.writeBashBin "modem-network-bring-up" ''
-    ip link set down lte0
-    echo Y > /sys/class/net/lte0/qmi/raw_ip
-    ip link set up lte0
-    qmicli --device=/dev/cdc-wdm0 --device-open-proxy --wds-start-network="ip-type=4,apn=internet" --client-no-release-cid
-    qmicli --device=/dev/cdc-wdm0 --wds-set-autoconnect-settings=enabled
-
-    exec udhcpc -f -n -i lte0
-  '';
-
   alerters = [
     "cz.vpsfree/containers/prg/int.alerts1"
     "cz.vpsfree/containers/prg/int.alerts2"
@@ -64,7 +54,7 @@ in
     };
   };
 
-  networking.interfaces.lte0.useDHCP = false;
+  networking.interfaces.lte0.useDHCP = true;
 
   networking.firewall.extraCommands =
     let
@@ -112,30 +102,10 @@ in
     };
   };
 
-  systemd.services.modemNet = {
-    description = "modemNet";
-    enable = true;
-    path = with pkgs; [
-      iproute2
-      libqmi
-      busybox
-    ];
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${modemNetBringUp}/bin/modem-network-bring-up";
-      Restart = "always";
-      RuntimeMaxSec = "4h";
-    };
-    bindsTo = [ "sys-subsystem-net-devices-lte0.device" ];
-    after = [ "sys-subsystem-net-devices-lte0.device" ];
-    wantedBy = [ "multi-user.target" ];
-  };
-
   services.openssh.enable = true;
   services.openssh.settings.PermitRootLogin = "yes";
 
   environment.systemPackages = with pkgs; [
-    modemNetBringUp
     usbutils
     wireguard-tools
   ];
