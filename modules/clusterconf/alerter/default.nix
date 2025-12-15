@@ -360,7 +360,7 @@ in
                   group_wait = "10s";
                   repeat_interval = "10m";
                   continue = false;
-                  routes = intervalRoutesForSms.aither;
+                  routes = intervalRoutes;
                 }
               ];
             }
@@ -391,7 +391,7 @@ in
                   group_wait = "10s";
                   repeat_interval = "10m";
                   continue = false;
-                  routes = intervalRoutesForSms.snajpa;
+                  routes = intervalRoutes;
                 }
               ];
             }
