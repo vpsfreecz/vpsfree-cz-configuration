@@ -26,7 +26,7 @@ GEM
       ruby2_keywords (~> 0.0.1)
     mutex_m (0.3.0)
     nesty (1.0.2)
-    net-http (0.8.0)
+    net-http (0.9.0)
       uri (>= 0.11.1)
     rack (2.2.21)
     rack-protection (2.2.4)
