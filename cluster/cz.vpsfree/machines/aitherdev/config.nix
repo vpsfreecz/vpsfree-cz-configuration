@@ -266,6 +266,7 @@ in
         bind
         bundix
         cloc
+        codex
         git
         go
         inetutils
