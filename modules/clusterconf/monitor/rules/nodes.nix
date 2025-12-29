@@ -351,7 +351,7 @@
 
       {
         alert = "StorageFatalNoTxgs";
-        expr = ''rate(zpool_txgs_count{job="nodes",role="storage"}[2m]) * 1800 < 1'';
+        expr = ''rate(zpool_txgs_count{job="nodes",role="storage"}[5m]) * 1800 < 1'';
         for = "1m";
         labels = {
           alertclass = "storagenotxgs";
