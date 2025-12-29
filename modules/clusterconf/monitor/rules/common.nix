@@ -51,7 +51,7 @@
       }
       {
         alert = "ZpoolLowFreeSpace";
-        expr = "zpool_list_capacity >= 80";
+        expr = "zpool_list_capacity >= 85";
         for = "1h";
         labels = {
           alertclass = "zpoolcap";
@@ -69,8 +69,8 @@
       }
       {
         alert = "ZpoolCritFreeSpace";
-        expr = "zpool_list_capacity >= 85";
-        for = "15m";
+        expr = "zpool_list_capacity >= 90";
+        for = "120m";
         labels = {
           alertclass = "zpoolcap";
           severity = "critical";
@@ -88,8 +88,8 @@
       }
       {
         alert = "ZpoolFatalFreeSpace";
-        expr = "zpool_list_capacity >= 90";
-        for = "15m";
+        expr = "zpool_list_capacity >= 95";
+        for = "30m";
         labels = {
           alertclass = "zpoolcap";
           severity = "fatal";
