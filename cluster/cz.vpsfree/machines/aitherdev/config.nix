@@ -393,6 +393,8 @@ in
                 { webui = "cd ~/workspace/vpsadmin/vpsadmin/webui; dev-shell"; }
 
                 { console = "cd ~/workspace/vpsadmin/vpsadmin/console_router ; dev-shell"; }
+
+                { vnc = "cd ~/workspace/vpsadmin/vpsadmin/vnc_router ; dev-shell"; }
               ];
             };
 
