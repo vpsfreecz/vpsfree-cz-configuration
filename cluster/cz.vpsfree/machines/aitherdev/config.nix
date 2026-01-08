@@ -402,7 +402,7 @@ in
               root = "~/workspace";
               windows = [
                 { vpsfree-cz-configuration = "cd vpsfree.cz/vpsfree-cz-configuration ; dev-shell"; }
-                { vpsadminos-org-configuration = ""; }
+                { vpsadminos-org-configuration = "cd nixos/vpsadminos-org-configuration"; }
                 { confctl = "cd confctl ; dev-shell"; }
               ];
             };
