@@ -403,6 +403,7 @@ in
               windows = [
                 { vpsfree-cz-configuration = "cd vpsfree.cz/vpsfree-cz-configuration ; dev-shell"; }
                 { vpsadminos-org-configuration = "cd nixos/vpsadminos-org-configuration"; }
+                { zima-engineering-configuration = "cd nixos/zima-engineering-configuration"; }
                 { confctl = "cd confctl ; dev-shell"; }
               ];
             };
