@@ -45,7 +45,7 @@ GEM
       eventmachine (~> 1.0, >= 1.0.4)
       logger
       rack (>= 1, < 4)
-    tilt (2.6.1)
+    tilt (2.7.0)
     uri (1.1.1)
 
 PLATFORMS

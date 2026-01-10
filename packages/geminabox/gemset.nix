@@ -245,10 +245,10 @@
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "0w27v04d7rnxjr3f65w1m7xyvr6ch6szjj2v5wv1wz6z5ax9pa9m";
+      sha256 = "1cvaikq1dcbfl008i16c1pi1gmdax7vfkvmhch64jdkakyk9nnqd";
       type = "gem";
     };
-    version = "2.6.1";
+    version = "2.7.0";
   };
   uri = {
     groups = [ "default" ];
