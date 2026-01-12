@@ -38,7 +38,6 @@
   ./cz.vpsfree/nodes/brq/node6/module.nix
   ./cz.vpsfree/nodes/pgnd/node1/module.nix
   ./cz.vpsfree/nodes/prg/backuper2/module.nix
-  ./cz.vpsfree/nodes/prg/nasbox/module.nix
   ./cz.vpsfree/nodes/prg/node19/module.nix
   ./cz.vpsfree/nodes/prg/node20/module.nix
   ./cz.vpsfree/nodes/prg/node21/module.nix

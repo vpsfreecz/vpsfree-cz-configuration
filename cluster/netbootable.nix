@@ -5,7 +5,6 @@
   "cz.vpsfree/nodes/brq/node6"
   "cz.vpsfree/nodes/pgnd/node1"
   "cz.vpsfree/nodes/prg/backuper2"
-  "cz.vpsfree/nodes/prg/nasbox"
   "cz.vpsfree/nodes/prg/node19"
   "cz.vpsfree/nodes/prg/node20"
   "cz.vpsfree/nodes/prg/node21"
