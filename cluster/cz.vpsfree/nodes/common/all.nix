@@ -196,6 +196,7 @@ in
     enable = true;
     settings = {
       verbose = true;
+      load_multiplier = 1.5;
     };
   };
 
