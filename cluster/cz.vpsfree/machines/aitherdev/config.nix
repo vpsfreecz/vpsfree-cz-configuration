@@ -423,6 +423,31 @@ in
                 { pxe-server = "# ssh root@192.168.100.5"; }
               ];
             };
+
+            haveapi-dev = {
+              root = "~/workspace/haveapi/haveapi";
+              windows = [
+                {
+                  repo = {
+                    layout = "tiled";
+                    panes = [
+                      "dev-shell"
+                      "dev-shell"
+                    ];
+                  };
+                }
+
+                { servers-ruby = "cd ~/workspace/haveapi/haveapi/servers/ruby; dev-shell"; }
+
+                { clients-ruby = "cd ~/workspace/haveapi/haveapi/clients/ruby ; dev-shell"; }
+
+                { clients-php = "cd ~/workspace/haveapi/haveapi/clients/php ; dev-shell"; }
+
+                { clients-js = "cd ~/workspace/haveapi/haveapi/clients/js ; dev-shell"; }
+
+                { clients-go = "cd ~/workspace/haveapi/haveapi/clients/go ; dev-shell"; }
+              ];
+            };
           };
         };
       };
