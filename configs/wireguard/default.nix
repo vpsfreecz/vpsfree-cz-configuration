@@ -51,8 +51,8 @@
         }
 
         {
-          # snajpa - ipad
-          publicKey = "scUEKg3klB5pNVCFUnwuq5fa49MgzmzVW2BFCoSdLyM=";
+          # snajpa - mobile
+          publicKey = "7Jl7Nvj2/hdeY66xqoRZSEFVqXhF41FPBrX/jsKrFkg=";
           presharedKeyFile = "/private/wireguard/preshared_keys/snajpa.psk";
           allowedIPs = [ "172.16.107.12/32" ];
         }
