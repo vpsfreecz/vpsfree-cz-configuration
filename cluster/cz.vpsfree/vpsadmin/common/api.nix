@@ -19,6 +19,16 @@ let
   };
 in
 {
+  vpsadmin.databaseSetup = {
+    database = {
+      host = db.addresses.primary.address;
+      user = "vpsadmin-database";
+      name = "vpsadmin";
+      passwordFile = "/private/vpsadmin-database-db.pw";
+    };
+    autoSetup = false;
+  };
+
   vpsadmin.api = {
     enable = true;
 
@@ -36,7 +46,6 @@ in
       user = "vpsadmin-api";
       name = "vpsadmin";
       passwordFile = "/private/vpsadmin-db.pw";
-      autoSetup = false;
     };
 
     rake.enableDefaultTasks = mkDefault false;
@@ -54,7 +63,6 @@ in
       user = "vpsadmin-supervisor";
       name = "vpsadmin";
       passwordFile = "/private/vpsadmin-supervisor-db.pw";
-      autoSetup = false;
     };
 
     rabbitmq = {
