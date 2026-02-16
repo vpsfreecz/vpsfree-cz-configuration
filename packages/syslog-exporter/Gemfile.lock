@@ -7,7 +7,7 @@ GEM
       base64
     puma (6.6.1)
       nio4r (~> 2.0)
-    rack (3.2.4)
+    rack (3.2.5)
 
 GEM
   remote: https://rubygems.vpsfree.cz/
