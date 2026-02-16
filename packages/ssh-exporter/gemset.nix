@@ -46,10 +46,10 @@
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "1xmnrk076sqymilydqgyzhkma3hgqhcv8xhy7ks479l2a3vvcx2x";
+      sha256 = "1lyn3rh71rlf50p44xmsbha0pip4c95004j8kc9pm7xpq1s0kgac";
       type = "gem";
     };
-    version = "3.2.4";
+    version = "3.2.5";
   };
   ssh-exporter = {
     dependencies = [
