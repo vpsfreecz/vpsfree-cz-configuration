@@ -184,7 +184,7 @@ User.connect_hook(:create) do |ret, user|
   ds = Dataset.new(
     name: user.id.to_s,
     user: user,
-    user_editable: false,
+    user_editable: true,
     user_create: true,
     user_destroy: false,
     confirmed: Dataset.confirmed(:confirm_create)
