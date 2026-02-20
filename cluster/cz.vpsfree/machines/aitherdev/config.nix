@@ -5,7 +5,7 @@
   confLib,
   confData,
   confMachine,
-  pins,
+  inputs,
   ...
 }:
 let
@@ -116,7 +116,7 @@ in
   networking.nameservers = internalDnsAddresses ++ [ "172.16.106.1" ];
 
   nix = {
-    nixPath = [ "nixpkgs=${pins.nixpkgs}" ];
+    nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
     settings = {
       sandbox = true;

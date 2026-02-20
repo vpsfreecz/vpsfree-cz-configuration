@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/vpsadmin/int.api2" = rec {
     spin = "nixos";
-    pins.channels = [
+    inputs.channels = [
       "nixos-stable"
       "os-staging"
       "vpsadmin"

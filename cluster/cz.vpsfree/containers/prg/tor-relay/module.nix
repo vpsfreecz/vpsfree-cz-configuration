@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/containers/prg/tor-relay" = rec {
     spin = "nixos";
-    pins.channels = [
+    inputs.channels = [
       "nixos-stable"
       "os-staging"
     ];

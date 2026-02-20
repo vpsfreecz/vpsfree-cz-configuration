@@ -4,8 +4,8 @@
   config,
   pkgs,
   confMachine,
-  pins,
-  pinsInfo,
+  inputs,
+  inputsInfo,
   ...
 }:
 let
@@ -14,7 +14,7 @@ let
       pkgs
       lib
       config
-      pins
+      inputs
       ;
   };
 in
@@ -33,7 +33,7 @@ in
           version = config.system.vpsadminos.version;
           revision = config.system.vpsadminos.revision;
           macs = confMachine.netboot.macs;
-          pins-info = pinsInfo;
+          inputs-info = inputsInfo;
         }
       );
     in

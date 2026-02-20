@@ -2,7 +2,7 @@
   config,
   pkgs,
   confData,
-  pins,
+  inputs,
   ...
 }:
 {
@@ -13,7 +13,8 @@
     ../../../../configs/ssh-exporter.nix
 
     (
-      pins.vpsadminos + "/os/modules/services/misc/build-vpsadminos-container-image-repository/nixos.nix"
+      inputs.vpsadminos
+      + "/os/modules/services/misc/build-vpsadminos-container-image-repository/nixos.nix"
     )
   ];
   boot.loader.grub = {

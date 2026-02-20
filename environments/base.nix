@@ -5,7 +5,7 @@
   confLib,
   confData,
   confMachine,
-  pins,
+  inputs,
   ...
 }:
 with lib;
@@ -63,9 +63,9 @@ in
   nix.settings.sandbox = true;
 
   nix.nixPath = [
-    "nixpkgs=${pins.nixpkgs}"
+    "nixpkgs=${inputs.nixpkgs}"
   ]
-  ++ (optional (hasAttr "vpsadminos" pins) "vpsadminos=${pins.vpsadminos}");
+  ++ (optional (hasAttr "vpsadminos" inputs) "vpsadminos=${inputs.vpsadminos}");
 
   environment.systemPackages = with pkgs; [
     perf

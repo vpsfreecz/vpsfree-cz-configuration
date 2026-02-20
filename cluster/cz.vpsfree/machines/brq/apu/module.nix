@@ -3,7 +3,7 @@
   cluster."cz.vpsfree/machines/brq/apu" = rec {
     spin = "nixos";
 
-    pins.channels = [ "nixos-stable" ];
+    inputs.channels = [ "nixos-stable" ];
 
     host = {
       name = "apu";

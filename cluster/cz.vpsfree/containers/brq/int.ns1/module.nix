@@ -5,7 +5,7 @@ in
 {
   cluster."cz.vpsfree/containers/brq/int.ns1" = rec {
     spin = "nixos";
-    pins.channels = [
+    inputs.channels = [
       "nixos-stable"
       "os-staging"
     ];

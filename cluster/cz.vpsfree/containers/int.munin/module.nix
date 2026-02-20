@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/containers/int.munin" = {
     spin = "nixos";
-    pins.channels = [
+    inputs.channels = [
       "nixos-stable"
       "os-staging"
     ];
@@ -43,6 +43,6 @@
         }
       ];
     };
-    pins.inputs.nixpkgs = "nixpkgsMunin";
+    inputs.overrides.nixpkgs = "nixpkgsMunin";
   };
 }

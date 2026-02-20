@@ -5,8 +5,8 @@
   confLib,
   confData,
   confMachine,
-  pins,
-  pinsInfo,
+  inputs,
+  inputsInfo,
   ...
 }:
 with lib;
@@ -26,7 +26,7 @@ let
       pkgs
       lib
       config
-      pins
+      inputs
       ;
   };
 in
@@ -36,8 +36,8 @@ in
 
     boot.postBootCommands = concatStringsSep "\n" (
       mapAttrsToList (
-        role: info: ''echo "pin ${role}=${info.shortRev or info.rev}" > /dev/kmsg''
-      ) pinsInfo
+        role: info: ''echo "input ${role}=${info.shortRev or info.rev}" > /dev/kmsg''
+      ) inputsInfo
     );
 
     vpsadmin.nodectld.settings = {

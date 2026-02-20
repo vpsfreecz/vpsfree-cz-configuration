@@ -21,7 +21,7 @@
   cluster."org.vpsadminos/int.gh-runner1" = rec {
     managed = false;
     spin = "nixos";
-    pins.channels = [
+    inputs.channels = [
       "nixos-stable"
       "os-staging"
     ];
@@ -42,7 +42,7 @@
   cluster."org.vpsadminos/int.gh-runner2" = rec {
     managed = false;
     spin = "nixos";
-    pins.channels = [
+    inputs.channels = [
       "nixos-stable"
       "os-staging"
     ];
@@ -63,7 +63,7 @@
   cluster."org.vpsadminos/int.images" = rec {
     managed = false;
     spin = "nixos";
-    pins.channels = [
+    inputs.channels = [
       "nixos-stable"
       "os-staging"
     ];

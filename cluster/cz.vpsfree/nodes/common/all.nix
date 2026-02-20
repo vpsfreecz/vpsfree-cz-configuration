@@ -6,11 +6,11 @@
   confMachine,
   confLib,
   flakeInputs,
-  pinsInfo,
+  inputsInfo,
   ...
 }:
 let
-  vpsadminInput = pinsInfo.vpsadmin.input;
+  vpsadminInput = inputsInfo.vpsadmin.input;
   rabbitmqs =
     map
       (

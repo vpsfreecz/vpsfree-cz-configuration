@@ -3,7 +3,7 @@
   pkgs,
   lib,
   confMachine,
-  pinsInfo,
+  inputsInfo,
   ...
 }:
 let
@@ -16,7 +16,7 @@ let
       version = config.system.nixos.version;
       revision = config.system.nixos.revision;
       macs = confMachine.netboot.macs;
-      pins-info = pinsInfo;
+      inputs-info = inputsInfo;
     }
   );
 in

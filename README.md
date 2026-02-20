@@ -40,12 +40,12 @@ Build a machine:
 confctl build <machine>
 ```
 
-Update flake inputs (pins):
+Update flake inputs:
 
 ```bash
-confctl pins ls
-confctl pins channel ls
-confctl pins channel update --commit '{production,staging}' vpsadminos
+confctl inputs ls
+confctl inputs channel ls
+confctl inputs channel update --commit '{production,staging}' vpsadminos
 ```
 
 Hosts can be built and deployed using `confctl`, see

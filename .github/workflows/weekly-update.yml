@@ -37,12 +37,12 @@ jobs:
           restore-keys: |
             confctl-cache-${{ runner.os }}
 
-      - name: Update pins
+      - name: Update inputs
         run: |
           sudo mkdir /nix/var/nix/gcroots/per-user/$USER
           sudo chown $USER /nix/var/nix/gcroots/per-user/$USER
 
-          bundle exec confctl pins update --commit --no-changelog nixpkgsCore
+          bundle exec confctl inputs update --commit --no-changelog nixpkgsCore
 
       - name: Push updates
         run: |
