@@ -4,7 +4,7 @@
   lib,
   confLib,
   confMachine,
-  swpinsInfo,
+  pinsInfo,
   ...
 }:
 let
@@ -230,8 +230,8 @@ in
           uname -r > "$target/kernel-version"
           echo "${config.system.vpsadminos.revision}" > "$target/os-revision"
           echo "${config.system.vpsadminos.version}" > "$target/os-version"
-          cat <<EOF > "$target/swpins-info.json"
-        ${builtins.toJSON swpinsInfo}
+          cat <<EOF > "$target/pins-info.json"
+        ${builtins.toJSON pinsInfo}
         EOF
 
           ${optionalString cfg.dumpDmesg ''

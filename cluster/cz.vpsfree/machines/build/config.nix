@@ -2,6 +2,7 @@
   config,
   pkgs,
   confData,
+  pins,
   ...
 }:
 {
@@ -11,7 +12,9 @@
     ../../../../configs/carrier.nix
     ../../../../configs/ssh-exporter.nix
 
-    <vpsadminos/os/modules/services/misc/build-vpsadminos-container-image-repository/nixos.nix>
+    (
+      pins.vpsadminos + "/os/modules/services/misc/build-vpsadminos-container-image-repository/nixos.nix"
+    )
   ];
   boot.loader.grub = {
     enable = true;
