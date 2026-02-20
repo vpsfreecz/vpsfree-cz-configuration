@@ -5,7 +5,8 @@
   confLib,
   confData,
   confMachine,
-  swpinsInfo,
+  pins,
+  pinsInfo,
   ...
 }:
 with lib;
@@ -20,14 +21,23 @@ let
       ) addresses
     );
 
-  kernels = import ./kernels.nix { inherit pkgs lib config; };
+  kernels = import ./kernels.nix {
+    inherit
+      pkgs
+      lib
+      config
+      pins
+      ;
+  };
 in
 {
   config = mkIf (confMachine.osNode != null) {
     boot.kernelVersion = mkDefault (kernels.getRuntimeKernelForMachine confMachine.name);
 
     boot.postBootCommands = concatStringsSep "\n" (
-      mapAttrsToList (swpin: spec: ''echo "swpin ${swpin}=${spec.rev}" > /dev/kmsg'') swpinsInfo
+      mapAttrsToList (
+        role: info: ''echo "pin ${role}=${info.shortRev or info.rev}" > /dev/kmsg''
+      ) pinsInfo
     );
 
     vpsadmin.nodectld.settings = {

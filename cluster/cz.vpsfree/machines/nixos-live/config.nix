@@ -3,7 +3,7 @@
   pkgs,
   lib,
   confMachine,
-  swpinsInfo,
+  pinsInfo,
   ...
 }:
 let
@@ -16,14 +16,14 @@ let
       version = config.system.nixos.version;
       revision = config.system.nixos.revision;
       macs = confMachine.netboot.macs;
-      swpins-info = swpinsInfo;
+      pins-info = pinsInfo;
     }
   );
 in
 {
   imports = [
     ../../../../environments/base.nix
-    <nixpkgs/nixos/modules/installer/netboot/netboot-minimal.nix>
+    "${pkgs.path}/nixos/modules/installer/netboot/netboot-minimal.nix"
   ];
 
   system.build.dist = pkgs.symlinkJoin {

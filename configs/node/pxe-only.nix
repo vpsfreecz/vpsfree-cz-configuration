@@ -4,11 +4,19 @@
   config,
   pkgs,
   confMachine,
-  swpinsInfo,
+  pins,
+  pinsInfo,
   ...
 }:
 let
-  kernels = import ./kernels.nix { inherit pkgs lib config; };
+  kernels = import ./kernels.nix {
+    inherit
+      pkgs
+      lib
+      config
+      pins
+      ;
+  };
 in
 {
   boot.kernelVersion = kernels.getBootKernelForMachine confMachine.name;
@@ -25,7 +33,7 @@ in
           version = config.system.vpsadminos.version;
           revision = config.system.vpsadminos.revision;
           macs = confMachine.netboot.macs;
-          swpins-info = swpinsInfo;
+          pins-info = pinsInfo;
         }
       );
     in

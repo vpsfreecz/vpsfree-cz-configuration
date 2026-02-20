@@ -1,7 +1,11 @@
-{ config, ... }:
+{
+  config,
+  pins,
+  ...
+}:
 {
   imports = [
-    <vpsadminos/os/lib/nixos-container/stable/vpsadminos.nix>
+    (pins.vpsadminos + "/os/lib/nixos-container/stable/vpsadminos.nix")
   ];
 
   networking.useDHCP = false;
