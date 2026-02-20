@@ -37,15 +37,15 @@ jobs:
           restore-keys: |
             confctl-cache-${{ runner.os }}
 
-      - name: Update swpins
+      - name: Update pins
         run: |
           sudo mkdir /nix/var/nix/gcroots/per-user/$USER
           sudo chown $USER /nix/var/nix/gcroots/per-user/$USER
 
-          bundle exec confctl swpins channel update --commit --no-changelog \
+          bundle exec confctl pins channel update --commit --no-changelog \
                               '{nixos-stable,production,staging}' nixpkgs
-          bundle exec confctl swpins channel update --commit --no-changelog nixos-unstable
-          bundle exec confctl swpins channel update --commit '{staging,os-staging}' vpsadminos
+          bundle exec confctl pins channel update --commit --no-changelog nixos-unstable
+          bundle exec confctl pins channel update --commit '{staging,os-staging}' vpsadminos
 
       - name: Update package dependencies
         run: |
