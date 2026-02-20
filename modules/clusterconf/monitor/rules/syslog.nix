@@ -22,7 +22,7 @@
 
       {
         alert = "NodectldCrashed";
-        expr = ''syslog_nodectld_crash == 1'';
+        expr = "syslog_nodectld_crash == 1";
         labels = {
           severity = "warning";
           frequency = "1m";
@@ -39,7 +39,7 @@
 
       {
         alert = "NodectldSegfault";
-        expr = ''syslog_nodectld_segfault == 1'';
+        expr = "syslog_nodectld_segfault == 1";
         labels = {
           severity = "warning";
           frequency = "1m";
@@ -56,7 +56,7 @@
 
       {
         alert = "NodectldZfsRecvError";
-        expr = ''syslog_nodectld_zfs_stream_receive_error == 1'';
+        expr = "syslog_nodectld_zfs_stream_receive_error == 1";
         labels = {
           severity = "warning";
           frequency = "1m";
@@ -73,7 +73,7 @@
 
       {
         alert = "OsctldInternalError";
-        expr = ''syslog_osctld_internal_error == 1'';
+        expr = "syslog_osctld_internal_error == 1";
         labels = {
           severity = "warning";
           frequency = "1m";
@@ -90,7 +90,7 @@
 
       {
         alert = "LxcStartFailed";
-        expr = ''syslog_lxc_start_failed == 1'';
+        expr = "syslog_lxc_start_failed == 1";
         labels = {
           severity = "critical";
           frequency = "1m";
@@ -107,7 +107,7 @@
 
       {
         alert = "LxcStartNetnsLimit";
-        expr = ''syslog_lxc_start_netns_limit == 1'';
+        expr = "syslog_lxc_start_netns_limit == 1";
         labels = {
           alertclass = "lxcstartfail";
           severity = "fatal";
@@ -143,7 +143,7 @@
 
       {
         alert = "KernelGeneralProtectionFault";
-        expr = ''syslog_kernel_gpf == 1'';
+        expr = "syslog_kernel_gpf == 1";
         labels = {
           severity = "fatal";
           frequency = "1m";
@@ -160,7 +160,7 @@
 
       {
         alert = "KernelEmergencyWarn";
-        expr = ''syslog_kernel_emergency == 1'';
+        expr = "syslog_kernel_emergency == 1";
         labels = {
           severity = "warning";
           frequency = "1h";
@@ -177,7 +177,7 @@
 
       {
         alert = "ZfsPanic";
-        expr = ''syslog_zfs_panic == 1'';
+        expr = "syslog_zfs_panic == 1";
         labels = {
           severity = "fatal";
           frequency = "1m";
@@ -194,7 +194,7 @@
 
       {
         alert = "OomHighRate";
-        expr = ''rate(syslog_kernel_oom_count[10m]) >= 10'';
+        expr = "rate(syslog_kernel_oom_count[10m]) >= 10";
         labels = {
           severity = "warning";
           frequency = "5m";
@@ -211,7 +211,7 @@
 
       {
         alert = "OomCritRate";
-        expr = ''rate(syslog_kernel_oom_count[10m]) >= 50'';
+        expr = "rate(syslog_kernel_oom_count[10m]) >= 50";
         labels = {
           severity = "critical";
           frequency = "5m";
@@ -228,7 +228,7 @@
 
       {
         alert = "OomFatalRate";
-        expr = ''rate(syslog_kernel_oom_count[10m]) >= 100'';
+        expr = "rate(syslog_kernel_oom_count[10m]) >= 100";
         labels = {
           severity = "fatal";
           frequency = "5m";

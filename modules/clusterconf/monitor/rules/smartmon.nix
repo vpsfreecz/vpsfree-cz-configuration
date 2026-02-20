@@ -5,7 +5,7 @@
     rules = [
       {
         alert = "DiskLowAvailableReservedSpace";
-        expr = ''smartmon_available_reservd_space_value < 75'';
+        expr = "smartmon_available_reservd_space_value < 75";
         labels = {
           severity = "warning";
           frequency = "weekly";
@@ -23,7 +23,7 @@
 
       {
         alert = "DiskCritAvailableReservedSpace";
-        expr = ''smartmon_available_reservd_space_value < 20'';
+        expr = "smartmon_available_reservd_space_value < 20";
         labels = {
           severity = "critical";
           frequency = "daily";
@@ -41,7 +41,7 @@
 
       {
         alert = "DiskHighMediaWearoutIndicator";
-        expr = ''smartmon_media_wearout_indicator_value < 25'';
+        expr = "smartmon_media_wearout_indicator_value < 25";
         labels = {
           severity = "warning";
           frequency = "weekly";
@@ -59,7 +59,7 @@
 
       {
         alert = "DiskLowSsdLifeLeft";
-        expr = ''smartmon_ssd_life_left_value < 25'';
+        expr = "smartmon_ssd_life_left_value < 25";
         labels = {
           severity = "warning";
           frequency = "weekly";

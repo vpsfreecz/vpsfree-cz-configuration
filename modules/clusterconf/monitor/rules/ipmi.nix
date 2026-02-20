@@ -41,7 +41,7 @@
 
       {
         alert = "FanWarning";
-        expr = ''ipmi_fan_speed_state != 0'';
+        expr = "ipmi_fan_speed_state != 0";
         labels = {
           severity = "warning";
           frequency = "6h";

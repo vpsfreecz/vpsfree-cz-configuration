@@ -4,7 +4,7 @@
     rules = [
       {
         alert = "NodectldPaused";
-        expr = ''nodectld_state_paused == 1'';
+        expr = "nodectld_state_paused == 1";
         for = "30m";
         labels = {
           severity = "critical";

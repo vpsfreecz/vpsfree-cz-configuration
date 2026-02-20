@@ -101,7 +101,7 @@ in
 
       {
         alert = "TransactionChainFatal";
-        expr = ''vpsadmin_transaction_chain_fatal == 1'';
+        expr = "vpsadmin_transaction_chain_fatal == 1";
         labels = {
           severity = "warning";
           frequency = "1h";
@@ -270,7 +270,7 @@ in
 
       {
         alert = "DatasetExpansionCountWarn";
-        expr = ''vpsadmin_dataset_expansion_count > 3'';
+        expr = "vpsadmin_dataset_expansion_count > 3";
         labels = {
           severity = "warning";
           frequency = "6h";
@@ -288,7 +288,7 @@ in
 
       {
         alert = "DatasetExpansionCountCrit";
-        expr = ''vpsadmin_dataset_expansion_count > 5'';
+        expr = "vpsadmin_dataset_expansion_count > 5";
         labels = {
           severity = "critical";
           frequency = "6h";
@@ -306,7 +306,7 @@ in
 
       {
         alert = "DatasetExpansionSpaceWarn";
-        expr = ''vpsadmin_dataset_expansion_added_bytes > 100*1024*1024*1024'';
+        expr = "vpsadmin_dataset_expansion_added_bytes > 100*1024*1024*1024";
         labels = {
           severity = "warning";
           frequency = "6h";
@@ -324,7 +324,7 @@ in
 
       {
         alert = "DatasetExpansionDeadlineWarn";
-        expr = ''vpsadmin_dataset_expansion_over_refquota_seconds > vpsadmin_dataset_expansion_max_over_refquota_seconds'';
+        expr = "vpsadmin_dataset_expansion_over_refquota_seconds > vpsadmin_dataset_expansion_max_over_refquota_seconds";
         labels = {
           severity = "warning";
           frequency = "12h";
@@ -342,7 +342,7 @@ in
 
       {
         alert = "ExportHostIpOwnerMismatch";
-        expr = ''vpsadmin_export_host_ip_owner_mismatch == 1'';
+        expr = "vpsadmin_export_host_ip_owner_mismatch == 1";
         labels = {
           severity = "warning";
           frequency = "1h";
@@ -379,7 +379,7 @@ in
 
       {
         alert = "DnsRecordAnswerError";
-        expr = ''vpsadmin_dns_record_answer_error == 1'';
+        expr = "vpsadmin_dns_record_answer_error == 1";
         for = "10m";
         labels = {
           severity = "warning";
