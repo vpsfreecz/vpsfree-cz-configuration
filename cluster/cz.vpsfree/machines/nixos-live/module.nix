@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/machines/nixos-live" = rec {
     spin = "nixos";
-    swpins.channels = [ "nixos-stable" ];
+    pins.channels = [ "nixos-stable" ];
     host = {
       name = "nixos-live";
       fqdn = "nixos-live";

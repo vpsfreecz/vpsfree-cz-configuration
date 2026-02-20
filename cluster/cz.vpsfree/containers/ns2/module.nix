@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/containers/ns2" = {
     spin = "nixos";
-    swpins.channels = [
+    pins.channels = [
       "nixos-stable"
       "os-staging"
       "vpsadmin"

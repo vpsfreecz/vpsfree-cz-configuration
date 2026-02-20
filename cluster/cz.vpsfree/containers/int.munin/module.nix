@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/containers/int.munin" = {
     spin = "nixos";
-    swpins.channels = [
+    pins.channels = [
       "nixos-stable"
       "os-staging"
     ];
@@ -43,14 +43,6 @@
         }
       ];
     };
-    swpins.pins = {
-      nixpkgs = {
-        type = "git-rev";
-        git-rev = {
-          url = "https://github.com/aither64/nixpkgs";
-          update.ref = "refs/heads/25.11-munin-fastcgi";
-        };
-      };
-    };
+    pins.inputs.nixpkgs = "nixpkgsMunin";
   };
 }

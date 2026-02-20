@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/containers/prg/tor-relay" = rec {
     spin = "nixos";
-    swpins.channels = [
+    pins.channels = [
       "nixos-stable"
       "os-staging"
     ];
