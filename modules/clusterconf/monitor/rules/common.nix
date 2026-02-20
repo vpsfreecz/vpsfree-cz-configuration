@@ -244,7 +244,7 @@
       }
       {
         alert = "OsctlHealthCheckError";
-        expr = ''osctl_health_check_error_count > 0'';
+        expr = "osctl_health_check_error_count > 0";
         for = "15m";
         labels = {
           severity = "warning";
@@ -262,7 +262,7 @@
       }
       {
         alert = "MemoryCorrectableErrors";
-        expr = ''node_edac_correctable_errors_total > 0'';
+        expr = "node_edac_correctable_errors_total > 0";
         labels = {
           severity = "warning";
           frequency = "1h";
@@ -279,7 +279,7 @@
       }
       {
         alert = "MemoryUncorrectableErrors";
-        expr = ''node_edac_uncorrectable_errors_total > 0'';
+        expr = "node_edac_uncorrectable_errors_total > 0";
         labels = {
           severity = "fatal";
           frequency = "10m";

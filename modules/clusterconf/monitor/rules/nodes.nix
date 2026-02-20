@@ -490,7 +490,7 @@
 
       {
         alert = "NodeOverallCritLoad";
-        expr = ''node_load1 - on (fqdn) group_left() sum by (fqdn) (topk by (fqdn)(5, osctl_container_load1)) > 400'';
+        expr = "node_load1 - on (fqdn) group_left() sum by (fqdn) (topk by (fqdn)(5, osctl_container_load1)) > 400";
         for = "5m";
         labels = {
           alertclass = "loadavg";
@@ -735,7 +735,7 @@
 
       {
         alert = "KernelPtyWarn";
-        expr = ''sysctl_kernel_pty_nr >= 6*600*2'';
+        expr = "sysctl_kernel_pty_nr >= 6*600*2";
         for = "5m";
         labels = {
           alertclass = "pty_nr";
@@ -755,7 +755,7 @@
 
       {
         alert = "KernelPtyCrit";
-        expr = ''sysctl_kernel_pty_max - sysctl_kernel_pty_reserve - sysctl_kernel_pty_nr <= 1024'';
+        expr = "sysctl_kernel_pty_max - sysctl_kernel_pty_reserve - sysctl_kernel_pty_nr <= 1024";
         for = "5m";
         labels = {
           alertclass = "pty_nr";
