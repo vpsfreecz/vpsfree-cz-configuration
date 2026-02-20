@@ -5,9 +5,12 @@
   confData,
   confMachine,
   confLib,
+  flakeInputs,
+  pinsInfo,
   ...
 }:
 let
+  vpsadminInput = pinsInfo.vpsadmin.input;
   rabbitmqs =
     map
       (
@@ -36,7 +39,7 @@ let
 in
 {
   imports = [
-    <vpsadmin/nixos/modules/vpsadminos-modules.nix>
+    flakeInputs.${vpsadminInput}.nixosModules.vpsadminos-modules
     ../../../../environments/base.nix
     ../../../../configs/node
     ../../../../configs/munin-node.nix
