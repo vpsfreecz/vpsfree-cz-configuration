@@ -1,9 +1,26 @@
-{ config, ... }:
+{
+  lib,
+  flakeInputs,
+  pinsInfo,
+  ...
+}:
+let
+  vpsadminInput = pinsInfo.vpsadmin.input;
+in
 {
   imports = [
     ../../../../environments/base.nix
     ../../../../profiles/ct.nix
-    <vpsadmin/nixos/modules/nixos-modules.nix>
+    flakeInputs.${vpsadminInput}.nixosModules.nixos-modules
     ./settings.nix
   ];
+
+  nixpkgs.overlays = [
+    (final: prev: {
+      vpsadminPath = flakeInputs.${vpsadminInput}.outPath;
+    })
+    flakeInputs.${vpsadminInput}.overlays.default
+  ];
+
+  vpsadmin.enableOverlay = lib.mkForce false;
 }
