@@ -3,7 +3,7 @@
   cluster."cz.vpsfree/machines/em1" = rec {
     spin = "nixos";
 
-    swpins.channels = [ "nixos-stable" ];
+    pins.channels = [ "nixos-stable" ];
 
     host = {
       name = "em1";

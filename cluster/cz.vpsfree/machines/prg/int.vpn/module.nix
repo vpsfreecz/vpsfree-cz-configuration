@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/machines/prg/int.vpn" = rec {
     spin = "nixos";
-    swpins.channels = [ "nixos-stable" ];
+    pins.channels = [ "nixos-stable" ];
     host = {
       name = "vpn";
       location = "int.prg";

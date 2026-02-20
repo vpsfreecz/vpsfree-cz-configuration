@@ -39,7 +39,7 @@ in
   cluster."cz.vpsfree/nodes/prg/backuper2" = rec {
     spin = "vpsadminos";
 
-    swpins.channels = [ "production" ];
+    pins.channels = [ "production" ];
 
     node = {
       id = 161;

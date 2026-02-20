@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/containers/prg/int.log" = rec {
     spin = "nixos";
-    swpins.channels = [
+    pins.channels = [
       "nixos-stable"
       "os-staging"
     ];

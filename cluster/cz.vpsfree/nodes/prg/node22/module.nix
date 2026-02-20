@@ -39,7 +39,7 @@ in
   cluster."cz.vpsfree/nodes/prg/node22" = rec {
     spin = "vpsadminos";
 
-    swpins.channels = [ "production" ];
+    pins.channels = [ "production" ];
 
     node = {
       id = 123;

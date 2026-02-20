@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/vpsadmin/int.rabbitmq2" = rec {
     spin = "nixos";
-    swpins.channels = [
+    pins.channels = [
       "nixos-stable"
       "os-staging"
       "vpsadmin"

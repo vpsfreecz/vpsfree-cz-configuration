@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/containers/int.utils" = {
     spin = "nixos";
-    swpins.channels = [
+    pins.channels = [
       "nixos-stable"
       "os-staging"
     ];
