@@ -9,22 +9,43 @@ vpsAdminOS-powered nodes, machines and related services run in containers.
 - [Nix](https://nixos.org/nix/)
 - [confctl](https://github.com/vpsfreecz/confctl)
 
-## Usage
-First, setup [confctl](https://github.com/vpsfreecz/confctl). For now, `confctl`
-and `vpsfree-cz-configuration` should be cloned to adjacent directories.
+## Development environment
 
-Clone the repositories:
+Enter the development environment:
 
 ```bash
-git clone https://github.com/vpsfreecz/confctl
-git clone https://github.com/vpsfreecz/vpsfree-cz-configuration
+nix develop
 ```
 
-Change into the configuration directory and run `nix-shell`:
+This provides `confctl` from the **pinned flake input** (see `flake.lock`), installs Ruby gems into `./.gems`,
+and generates man pages into `./.man` so `man confctl` works.
+
+If you prefer `nix-shell`, `shell.nix` is a compatibility shim:
 
 ```bash
-cd vpsfree-cz-configuration
 nix-shell
+```
+
+## Common tasks
+
+List machines:
+
+```bash
+confctl ls
+```
+
+Build a machine:
+
+```bash
+confctl build <machine>
+```
+
+Update flake inputs (pins):
+
+```bash
+confctl pins ls
+confctl pins channel ls
+confctl pins channel update --commit '{production,staging}' vpsadminos
 ```
 
 Hosts can be built and deployed using `confctl`, see
