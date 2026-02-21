@@ -78,10 +78,10 @@
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "1c7a3jb88qyc4mdqf6kyn8k08xcr9gmd459lni0g47bw4a1qzwf7";
+      sha256 = "18f8n7nkh787lszpmqm7qiq1lz8rilxfivbd4pcq26zv6c9jxxaq";
       type = "gem";
     };
-    version = "2.1.0";
+    version = "2.2.0";
   };
   httpclient = {
     dependencies = [ "mutex_m" ];
