@@ -5,11 +5,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1772270920,
-        "narHash": "sha256-BAP/9vslV3eWau8sB+uBPuNEIjvVmzwBjwEZ8KLiIuY=",
+        "lastModified": 1772314540,
+        "narHash": "sha256-pOp0WEQDW/6HouzENi6rhk2AlDJ9v/SFUaV1Er7NTZU=",
         "owner": "vpsfreecz",
         "repo": "confctl",
-        "rev": "d157a7fa96f9643af1ccc18671c52e015b36ee12",
+        "rev": "58b4914fa8606ba5f000395c53580083fb7e34d9",
         "type": "github"
       },
       "original": {
