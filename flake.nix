@@ -2,26 +2,44 @@
   description = "vpsFree.cz configuration (confctl flake)";
 
   inputs = {
-    confctl.url = "github:vpsfreecz/confctl/2026-02-15-flakes";
+    confctl.url = "github:vpsfreecz/confctl";
 
-    nixpkgs.follows = "nixpkgsCore";
-    nixpkgsCore.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.follows = "nixpkgsStable";
+
     nixpkgsStable.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgsUnstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     nixpkgsMunin.url = "github:aither64/nixpkgs/25.11-munin-fastcgi";
 
-    vpsadminosStaging.url = "github:vpsfreecz/vpsadminos/2026-02-19-flakes";
-    vpsadminosProduction.url = "github:vpsfreecz/vpsadminos/2026-02-19-flakes";
+    nixpkgsStaging.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgsProduction.url = "github:NixOS/nixpkgs/nixos-25.11";
+
+    vpsadminosStaging = {
+      url = "github:vpsfreecz/vpsadminos";
+      inputs.nixpkgs.follows = "nixpkgsStaging";
+    };
+
+    vpsadminosProduction = {
+      url = "github:vpsfreecz/vpsadminos";
+      inputs.nixpkgs.follows = "nixpkgsProduction";
+    };
 
     vpsadminStaging = {
-      url = "github:vpsfreecz/vpsadmin/2026-02-19-flakes";
+      url = "github:vpsfreecz/vpsadmin";
+      inputs.nixpkgs.follows = "nixpkgsStaging";
       inputs.vpsadminos.follows = "vpsadminosStaging";
     };
 
     vpsadminProduction = {
-      url = "github:vpsfreecz/vpsadmin/2026-02-19-flakes";
+      url = "github:vpsfreecz/vpsadmin";
+      inputs.nixpkgs.follows = "nixpkgsProduction";
       inputs.vpsadminos.follows = "vpsadminosProduction";
+    };
+
+    vpsadminServices = {
+      url = "github:vpsfreecz/vpsadmin";
+      inputs.nixpkgs.follows = "nixpkgsStable";
+      inputs.vpsadminos.follows = "vpsadminosStaging";
     };
   };
 
@@ -30,19 +48,19 @@
     let
       channels = {
         staging = {
-          nixpkgs = "nixpkgsStable";
+          nixpkgs = "nixpkgsStaging";
           vpsadminos = "vpsadminosStaging";
           vpsadmin = "vpsadminStaging";
         };
 
         production = {
-          nixpkgs = "nixpkgsStable";
+          nixpkgs = "nixpkgsProduction";
           vpsadminos = "vpsadminosProduction";
           vpsadmin = "vpsadminProduction";
         };
 
         vpsadmin = {
-          vpsadmin = "vpsadminStaging";
+          vpsadmin = "vpsadminServices";
         };
 
         os-staging = {
@@ -73,7 +91,7 @@
       };
       devShells.x86_64-linux.default = inputs.confctl.lib.mkDevShell {
         system = "x86_64-linux";
-        pkgs = import inputs.nixpkgsCore { system = "x86_64-linux"; };
+        pkgs = import inputs.nixpkgs { system = "x86_64-linux"; };
       };
     };
 }
