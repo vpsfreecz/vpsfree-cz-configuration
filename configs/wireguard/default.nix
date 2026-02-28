@@ -65,6 +65,13 @@
         }
 
         {
+          # snajpa - mbair
+          publicKey = "r7+pklGshluvOjDnnEqwBGK925SFNgYZAwNLMtHTzxc=";
+          presharedKeyFile = "/private/wireguard/preshared_keys/snajpa.psk";
+          allowedIPs = [ "172.16.107.14/32" ];
+        }
+
+        {
           # aither - ws
           publicKey = "74Q77kXuMJ4Kz4Tn52n7xRreRvvuuqAnAND4HbVythI=";
           presharedKeyFile = "/private/wireguard/preshared_keys/aither.psk";
