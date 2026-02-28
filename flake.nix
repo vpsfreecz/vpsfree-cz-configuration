@@ -9,6 +9,11 @@
     nixpkgsStable.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgsUnstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    home-manager = {
+      url = "github:nix-community/home-manager/release-25.11";
+      inputs.nixpkgs.follows = "nixpkgsStable";
+    };
+
     nixpkgsMunin.url = "github:aither64/nixpkgs/25.11-munin-fastcgi";
 
     nixpkgsStaging.url = "github:NixOS/nixpkgs/nixos-25.11";
@@ -73,6 +78,10 @@
 
         nixos-stable = {
           nixpkgs = "nixpkgsStable";
+        };
+
+        home-manager = {
+          home-manager = "home-manager";
         };
       };
 

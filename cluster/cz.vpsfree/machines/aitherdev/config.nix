@@ -5,10 +5,14 @@
   confLib,
   confData,
   confMachine,
+  flakeInputs,
+  inputsInfo,
   inputs,
   ...
 }:
 let
+  homeManagerInput = inputsInfo."home-manager".input;
+
   ns1IntPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/int.ns1";
@@ -88,7 +92,7 @@ in
   # NOTE: environments/base.nix is not imported, this is a standalone system
   imports = [
     ./hardware.nix
-    "${builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz"}/nixos"
+    flakeInputs.${homeManagerInput}.nixosModules.home-manager
   ];
 
   boot.loader.grub.enable = true;

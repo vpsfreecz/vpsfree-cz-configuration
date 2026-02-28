@@ -2,7 +2,7 @@
 {
   cluster."cz.vpsfree/machines/aitherdev" = rec {
     spin = "nixos";
-    inputs.channels = [ "nixos-stable" ];
+    inputs.channels = [ "nixos-stable" "home-manager" ];
     host = {
       name = "aitherdev";
       location = "int";

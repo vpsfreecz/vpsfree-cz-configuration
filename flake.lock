@@ -21,6 +21,27 @@
     "home-manager": {
       "inputs": {
         "nixpkgs": [
+          "nixpkgsStable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1772302941,
+        "narHash": "sha256-TL3+ckbOTILXrR0qSK3dJj2BJ0S5yz/YSsUF1oEgd9g=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "9b9142b5fe214c2adabe86257c33e022372b7c96",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "release-25.11",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "home-manager_2": {
+      "inputs": {
+        "nixpkgs": [
           "vpsadminosProduction",
           "impermanence",
           "nixpkgs"
@@ -40,7 +61,7 @@
         "type": "github"
       }
     },
-    "home-manager_2": {
+    "home-manager_3": {
       "inputs": {
         "nixpkgs": [
           "vpsadminosStaging",
@@ -64,7 +85,7 @@
     },
     "impermanence": {
       "inputs": {
-        "home-manager": "home-manager",
+        "home-manager": "home-manager_2",
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
@@ -83,7 +104,7 @@
     },
     "impermanence_2": {
       "inputs": {
-        "home-manager": "home-manager_2",
+        "home-manager": "home-manager_3",
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
@@ -231,6 +252,7 @@
     "root": {
       "inputs": {
         "confctl": "confctl",
+        "home-manager": "home-manager",
         "nixpkgs": [
           "nixpkgsStable"
         ],
