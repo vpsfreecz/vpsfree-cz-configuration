@@ -60,12 +60,17 @@ in
 
   nixpkgs.overlays = import ../overlays;
 
-  nix.settings.sandbox = true;
-
   nix.nixPath = [
     "nixpkgs=${inputs.nixpkgs}"
-  ]
-  ++ (optional (hasAttr "vpsadminos" inputs) "vpsadminos=${inputs.vpsadminos}");
+  ];
+
+  nix.settings = {
+    sandbox = true;
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+  };
 
   environment.systemPackages = with pkgs; [
     perf
