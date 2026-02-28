@@ -1,11 +1,15 @@
 {
   config,
-  inputs,
+  flakeInputs,
+  inputsInfo,
   ...
 }:
+let
+  vpsadminosInput = inputsInfo.vpsadminos.input;
+in
 {
   imports = [
-    (inputs.vpsadminos + "/os/lib/nixos-container/stable/vpsadminos.nix")
+    flakeInputs.${vpsadminosInput}.nixosConfigurations.container
   ];
 
   networking.useDHCP = false;
