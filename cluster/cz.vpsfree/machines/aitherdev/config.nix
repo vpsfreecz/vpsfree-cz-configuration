@@ -136,6 +136,10 @@ in
       trusted-users = [ "aither" ];
       substituters = [ "https://cache.vpsadminos.org" ];
       trusted-public-keys = [ "cache.vpsadminos.org:wpIJlNZQIhS+0gFf1U3MC9sLZdLW3sh5qakOWGDoDrE=" ];
+      extra-substituters = [ "https://cache.numtide.com" ];
+      extra-trusted-public-keys = [
+        "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+      ];
       fallback = true;
       connect-timeout = 10;
     };
