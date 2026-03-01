@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  modulesPath,
   confMachine,
   inputsInfo,
   ...
@@ -23,7 +24,7 @@ in
 {
   imports = [
     ../../../../environments/base.nix
-    "${pkgs.path}/nixos/modules/installer/netboot/netboot-minimal.nix"
+    (modulesPath + "/installer/netboot/netboot-minimal.nix")
   ];
 
   system.build.dist = pkgs.symlinkJoin {
