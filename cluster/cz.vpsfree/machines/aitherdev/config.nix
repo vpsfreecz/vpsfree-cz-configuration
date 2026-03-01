@@ -12,6 +12,8 @@
 }:
 let
   homeManagerInput = inputsInfo."home-manager".input;
+  llmAgentsInput = inputsInfo."llm-agents".input;
+  llmAgentsPkgs = flakeInputs.${llmAgentsInput}.packages.${pkgs.stdenv.hostPlatform.system};
 
   ns1IntPrg = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -160,9 +162,13 @@ in
     openssh.authorizedKeys.keys = confData.sshKeys.aither.all;
   };
 
-  environment.systemPackages = with pkgs; [
-    vim
-  ];
+  environment.systemPackages =
+    (with pkgs; [
+      vim
+    ])
+    ++ [
+      llmAgentsPkgs.codex
+    ];
 
   services.openssh = {
     enable = true;
@@ -274,7 +280,6 @@ in
         bind
         bundix
         cloc
-        codex
         git
         go
         inetutils

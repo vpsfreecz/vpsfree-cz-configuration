@@ -14,6 +14,8 @@
       inputs.nixpkgs.follows = "nixpkgsStable";
     };
 
+    llm-agents.url = "github:numtide/llm-agents.nix";
+
     nixpkgsMunin.url = "github:aither64/nixpkgs/25.11-munin-fastcgi";
 
     nixpkgsStaging.url = "github:NixOS/nixpkgs/nixos-25.11";
@@ -82,6 +84,10 @@
 
         home-manager = {
           home-manager = "home-manager";
+        };
+
+        llm-agents = {
+          llm-agents = "llm-agents";
         };
       };
 
