@@ -281,21 +281,32 @@ in
 
       home.packages = with pkgs; [
         asciinema
+        bat
         bind
         bundix
         cloc
+        curl
+        fd
+        file
         git
         go
+        gnumake
         inetutils
+        jq
         nix-prefetch-git
         openssl
         php
+        python3
+        ripgrep
         ruby
         screen
         tmux
         tree
         unzip
         vpsfree-client
+        wget
+        which
+        zip
       ];
 
       home.file = {
