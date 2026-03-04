@@ -114,6 +114,7 @@ in
 
     services = {
       goresheat = { };
+      ebpf-exporter = { };
       ipmi-exporter = { };
       ksvcmon-exporter = { };
       node-exporter = { };
