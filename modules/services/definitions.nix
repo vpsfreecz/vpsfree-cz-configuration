@@ -67,6 +67,7 @@ in
         port = 8453;
         monitor = "kresd-management";
       };
+      ebpf-exporter.port = 9435;
       ipmi-exporter.port = 9290;
       node-exporter.port = 9100;
       osctl-exporter.port = 9101;

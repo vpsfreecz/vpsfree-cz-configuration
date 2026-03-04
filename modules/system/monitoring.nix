@@ -29,6 +29,7 @@ let
       "node"
     ]
     ++ (optionals (confMachine.spin == "vpsadminos") [
+      "ebpf"
       "ksvcmon"
       "osctl"
     ]);
@@ -146,6 +147,11 @@ in
     # vpsAdminOS nodes
     (mkIf (cfg.enable && confMachine.spin == "vpsadminos") {
       services.prometheus.exporters = {
+        ebpf = {
+          enable = true;
+          names = [ "rtnl_lock-latency" ];
+        };
+
         ipmi.enable = true;
 
         ksvcmon.enable = false;
