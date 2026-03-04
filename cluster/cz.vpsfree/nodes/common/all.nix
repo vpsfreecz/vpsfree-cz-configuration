@@ -79,6 +79,7 @@ in
   '';
 
   environment.systemPackages = with pkgs; [
+    bpftrace
     dmidecode
     # Constantly broken
     # ipmicfg
