@@ -130,10 +130,6 @@ in
     vpsadmin.net_interfaces = [ "bond0" ];
   };
 
-  virtualisation.libvirtd = {
-    enable = true;
-  };
-
   environment.systemPackages = with pkgs; [
     virt-manager
     xorriso
