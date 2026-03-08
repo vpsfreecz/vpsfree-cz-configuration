@@ -129,9 +129,4 @@ in
   vpsadmin.nodectld.settings = {
     vpsadmin.net_interfaces = [ "bond0" ];
   };
-
-  environment.systemPackages = with pkgs; [
-    virt-manager
-    xorriso
-  ];
 }
