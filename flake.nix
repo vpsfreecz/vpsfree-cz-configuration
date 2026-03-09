@@ -24,11 +24,13 @@
     vpsadminosStaging = {
       url = "github:vpsfreecz/vpsadminos";
       inputs.nixpkgs.follows = "nixpkgsStaging";
+      inputs.nixpkgsUnstable.follows = "nixpkgsUnstable";
     };
 
     vpsadminosProduction = {
       url = "github:vpsfreecz/vpsadminos";
       inputs.nixpkgs.follows = "nixpkgsProduction";
+      inputs.nixpkgsUnstable.follows = "nixpkgsUnstable";
     };
 
     vpsadminStaging = {
