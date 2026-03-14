@@ -106,9 +106,10 @@
           };
         };
       };
-      devShells.x86_64-linux.default = inputs.confctl.lib.mkDevShell {
+      devShells.x86_64-linux.default = inputs.confctl.lib.mkConfigDevShell {
         system = "x86_64-linux";
         pkgs = import inputs.nixpkgs { system = "x86_64-linux"; };
+        mode = "tools";
       };
     };
 }
