@@ -436,8 +436,6 @@ in
                 { webui = "cd ~/workspace/vpsadmin/vpsadmin/webui; nix develop"; }
 
                 { console = "cd ~/workspace/vpsadmin/vpsadmin/console_router ; nix develop"; }
-
-                { vnc = "cd ~/workspace/vpsadmin/vpsadmin/vnc_router ; nix develop"; }
               ];
             };
 
