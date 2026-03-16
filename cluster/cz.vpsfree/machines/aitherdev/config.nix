@@ -344,17 +344,6 @@ in
           [push]
             default = current
         '';
-
-        "bin/dev-shell" = {
-          text = ''
-            #!/usr/bin/env bash
-            # Run nix-shell with custom prompt
-            SHELL_PROMPT="\n\[\033[1;35m\][nix-shell:\w]\$\[\033[0m\] "
-            export PROMPT_COMMAND="export PS1=\"$SHELL_PROMPT\"; unset PROMPT_COMMAND"
-            exec nix-shell "$@"
-          '';
-          executable = true;
-        };
       };
 
       programs.bash = {
