@@ -460,6 +460,7 @@ in
               windows = [
                 (mkNixosConfWindow "vpsfree-cz-configuration" "vpsfree.cz/vpsfree-cz-configuration")
                 (mkNixosConfWindow "vpsadminos-org-configuration" "nixos/vpsadminos-org-configuration")
+                (mkNixosConfWindow "havefun-cz-configuration" "nixos/havefun-cz-configuration")
                 (mkNixosConfWindow "zima-engineering-configuration" "nixos/zima-engineering-configuration")
                 (mkNixosConfWindow "confctl" "confctl")
               ];
