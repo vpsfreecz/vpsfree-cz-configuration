@@ -444,21 +444,21 @@ in
                   };
                 }
 
-                { webui = "cd ~/workspace/vpsadmin/vpsadmin/webui; dev-shell"; }
+                { webui = "cd ~/workspace/vpsadmin/vpsadmin/webui; nix develop"; }
 
-                { console = "cd ~/workspace/vpsadmin/vpsadmin/console_router ; dev-shell"; }
+                { console = "cd ~/workspace/vpsadmin/vpsadmin/console_router ; nix develop"; }
 
-                { vnc = "cd ~/workspace/vpsadmin/vpsadmin/vnc_router ; dev-shell"; }
+                { vnc = "cd ~/workspace/vpsadmin/vpsadmin/vnc_router ; nix develop"; }
               ];
             };
 
             nixos-conf = {
               root = "~/workspace";
               windows = [
-                { vpsfree-cz-configuration = "cd vpsfree.cz/vpsfree-cz-configuration ; dev-shell"; }
+                { vpsfree-cz-configuration = "cd vpsfree.cz/vpsfree-cz-configuration ; nix develop"; }
                 { vpsadminos-org-configuration = "cd nixos/vpsadminos-org-configuration"; }
                 { zima-engineering-configuration = "cd nixos/zima-engineering-configuration"; }
-                { confctl = "cd confctl ; dev-shell"; }
+                { confctl = "cd confctl ; nix develop"; }
               ];
             };
 
@@ -469,8 +469,8 @@ in
                   deploy = {
                     layout = "tiled";
                     panes = [
-                      "cd ~/workspace/confctl ; dev-shell"
-                      "cd ~/workspace/pxe-cluster ; dev-shell"
+                      "cd ~/workspace/confctl ; nix develop"
+                      "cd ~/workspace/pxe-cluster ; nix develop"
                     ];
                   };
                 }
@@ -485,21 +485,21 @@ in
                   repo = {
                     layout = "tiled";
                     panes = [
-                      "dev-shell"
-                      "dev-shell"
+                      "nix develop"
+                      "nix develop"
                     ];
                   };
                 }
 
-                { servers-ruby = "cd ~/workspace/haveapi/haveapi/servers/ruby; dev-shell"; }
+                { servers-ruby = "cd ~/workspace/haveapi/haveapi/servers/ruby; nix develop"; }
 
-                { clients-ruby = "cd ~/workspace/haveapi/haveapi/clients/ruby ; dev-shell"; }
+                { clients-ruby = "cd ~/workspace/haveapi/haveapi/clients/ruby ; nix develop"; }
 
-                { clients-php = "cd ~/workspace/haveapi/haveapi/clients/php ; dev-shell"; }
+                { clients-php = "cd ~/workspace/haveapi/haveapi/clients/php ; nix develop"; }
 
-                { clients-js = "cd ~/workspace/haveapi/haveapi/clients/js ; dev-shell"; }
+                { clients-js = "cd ~/workspace/haveapi/haveapi/clients/js ; nix develop"; }
 
-                { clients-go = "cd ~/workspace/haveapi/haveapi/clients/go ; dev-shell"; }
+                { clients-go = "cd ~/workspace/haveapi/haveapi/clients/go ; nix develop"; }
               ];
             };
           };
