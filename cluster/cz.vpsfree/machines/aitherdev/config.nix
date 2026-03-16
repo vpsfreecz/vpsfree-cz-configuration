@@ -183,6 +183,29 @@ in
 
   services.postfix.enable = true;
 
+  services.samba = {
+    enable = true;
+    openFirewall = false;
+    nmbd.enable = false;
+    winbindd.enable = false;
+    settings = {
+      global = {
+        "hosts allow" = [ "172.16.107.31" ];
+        "hosts deny" = [ "0.0.0.0/0" ];
+        "disable netbios" = "yes";
+      };
+      workspace = {
+        path = "/home/aither/workspace";
+        comment = "aither workspace";
+        browseable = "yes";
+        "read only" = "no";
+        "valid users" = [ "aither" ];
+        "create mask" = "0644";
+        "directory mask" = "0755";
+      };
+    };
+  };
+
   security.sudo = {
     enable = true;
     extraRules = [
@@ -237,6 +260,9 @@ in
     # vpsf-status
     iptables -A nixos-fw -p tcp -m tcp --dport 8080 -s 172.16.106.0/24 -j ACCEPT
     iptables -A nixos-fw -p tcp -m tcp --dport 8080 -s 172.16.107.0/24 -j ACCEPT
+
+    # Samba workspace share
+    iptables -A nixos-fw -p tcp -m tcp --dport 445 -s 172.16.107.31/32 -j ACCEPT
 
     # socket network for vpsAdminOS test-runner
     iptables -A nixos-fw -m pkttype --pkt-type multicast -p udp --dport 10000:30000 -j ACCEPT
