@@ -296,6 +296,22 @@ in
 
   home-manager.users.aither =
     { config, ... }:
+    let
+      mkNixosConfWindow =
+        name: path:
+        let
+          cmd = "cd ${path} ; nix develop";
+        in
+        {
+          ${name} = {
+            layout = "tiled";
+            panes = [
+              cmd
+              cmd
+            ];
+          };
+        };
+    in
     {
       imports = [
         homeTmuxinator
@@ -442,10 +458,10 @@ in
             nixos-conf = {
               root = "~/workspace";
               windows = [
-                { vpsfree-cz-configuration = "cd vpsfree.cz/vpsfree-cz-configuration ; nix develop"; }
-                { vpsadminos-org-configuration = "cd nixos/vpsadminos-org-configuration"; }
-                { zima-engineering-configuration = "cd nixos/zima-engineering-configuration"; }
-                { confctl = "cd confctl ; nix develop"; }
+                (mkNixosConfWindow "vpsfree-cz-configuration" "vpsfree.cz/vpsfree-cz-configuration")
+                (mkNixosConfWindow "vpsadminos-org-configuration" "nixos/vpsadminos-org-configuration")
+                (mkNixosConfWindow "zima-engineering-configuration" "nixos/zima-engineering-configuration")
+                (mkNixosConfWindow "confctl" "confctl")
               ];
             };
 
