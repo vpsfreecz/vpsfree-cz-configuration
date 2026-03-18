@@ -5,6 +5,7 @@
     inputs.channels = [
       "nixos-stable"
       "os-staging"
+      "vpsfree-web"
     ];
     container.id = 22523;
     host = {

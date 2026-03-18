@@ -2,10 +2,13 @@
   config,
   pkgs,
   lib,
+  inputs ? { },
   ...
 }:
 let
   inherit (lib)
+    any
+    attrValues
     mapAttrs
     mkEnableOption
     mkIf
@@ -15,12 +18,7 @@ let
 
   cfg = config.services.vpsfree-web;
 
-  source = pkgs.fetchFromGitHub {
-    owner = "vpsfreecz";
-    repo = "web";
-    rev = "af7824e6167a42c766a6963510ced28efe9feb6c";
-    sha256 = "sha256-QjjQRJXGWHhoPryO1jnDRFxNTGAUSyFkzn3/nbrGIuA=";
-  };
+  source = if inputs ? vpsfreeWeb then inputs.vpsfreeWeb else null;
 
   configFile = pkgs.writeText "vpsfree-config.php" ''
     <?php
@@ -28,16 +26,28 @@ let
     define ('ENVIRONMENT_ID', 1);
   '';
 
-  configured = pkgs.runCommand "vpsfree-web" { } ''
-    mkdir $out
-    cp -r ${source}/. $out/
+  configured =
+    if source == null then
+      null
+    else
+      pkgs.runCommand "vpsfree-web" { } ''
+        mkdir $out
+        cp -r ${source}/. $out/
 
-    # NOTE: ln doesn't work properly, possibly due to composer2nix. The dependency
-    # is not tracked by Nix and configFile is not copied to the target system.
-    cp ${configFile} $out/config.php
-  '';
+        # NOTE: ln doesn't work properly, possibly due to composer2nix. The dependency
+        # is not tracked by Nix and configFile is not copied to the target system.
+        cp ${configFile} $out/config.php
+      '';
 
-  web = import configured { inherit pkgs; };
+  needsDefaultWeb = any (vhostCfg: vhostCfg.web == null) (attrValues cfg.virtualHosts);
+
+  defaultWeb =
+    if !needsDefaultWeb then
+      null
+    else if configured == null then
+      throw "services.vpsfree-web requires the vpsfreeWeb input; enable the vpsfree-web channel on this machine"
+    else
+      import configured { inherit pkgs; };
 
   vhost =
     {
@@ -80,8 +90,8 @@ let
   virtualHostModule = {
     options = {
       web = mkOption {
-        type = types.path;
-        default = web;
+        type = types.nullOr types.path;
+        default = null;
       };
 
       language = mkOption {
@@ -116,7 +126,8 @@ in
         name: vhostCfg:
         vhost {
           domain = name;
-          inherit (vhostCfg) web language;
+          web = if vhostCfg.web != null then vhostCfg.web else defaultWeb;
+          inherit (vhostCfg) language;
         }
       ) cfg.virtualHosts;
     };

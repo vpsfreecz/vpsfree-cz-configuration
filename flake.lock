@@ -463,7 +463,8 @@
         "vpsadminServices": "vpsadminServices",
         "vpsadminStaging": "vpsadminStaging",
         "vpsadminosProduction": "vpsadminosProduction",
-        "vpsadminosStaging": "vpsadminosStaging"
+        "vpsadminosStaging": "vpsadminosStaging",
+        "vpsfreeWeb": "vpsfreeWeb"
       }
     },
     "systems": {
@@ -635,6 +636,22 @@
       "original": {
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
+        "type": "github"
+      }
+    },
+    "vpsfreeWeb": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1763547402,
+        "narHash": "sha256-QjjQRJXGWHhoPryO1jnDRFxNTGAUSyFkzn3/nbrGIuA=",
+        "owner": "vpsfreecz",
+        "repo": "web",
+        "rev": "af7824e6167a42c766a6963510ced28efe9feb6c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vpsfreecz",
+        "repo": "web",
         "type": "github"
       }
     }
