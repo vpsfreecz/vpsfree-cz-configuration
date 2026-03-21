@@ -115,7 +115,7 @@
       )
     ];
     osVm = {
-      memory = 10240;
+      memory = 24576;
       cpus = 16;
       cpu.cores = 16;
       disks = [
