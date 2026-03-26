@@ -22,7 +22,7 @@ GEM
       sinatra (~> 4.0)
     httpclient (2.9.0)
       mutex_m
-    json (2.19.2)
+    json (2.19.3)
     logger (1.7.0)
     mustermann (3.0.4)
       ruby2_keywords (~> 0.0.1)
