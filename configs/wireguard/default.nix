@@ -79,7 +79,7 @@
         }
 
         {
-          # aither - laptop
+          # aither - laptop (deprecated)
           publicKey = "PWtq9d/f3FXoor6M7yxdvmL3fFDoGELwS3oNIYz1nEo=";
           presharedKeyFile = "/private/wireguard/preshared_keys/aither.psk";
           allowedIPs = [ "172.16.107.31/32" ];
@@ -97,6 +97,13 @@
           publicKey = "XzwrDrBRYaA2N3mPDBnX9cwVP3koAJ6vD+1BqVea5zU=";
           presharedKeyFile = "/private/wireguard/preshared_keys/aither.psk";
           allowedIPs = [ "172.16.107.33/32" ];
+        }
+
+        {
+          # aither - mbp
+          publicKey = "QpDmDOp4aYwSE9ZoctcajLhNFpglATpEcBMzorOi3gY=";
+          presharedKeyFile = "/private/wireguard/preshared_keys/aither.psk";
+          allowedIPs = [ "172.16.107.34/32" ];
         }
 
         {
