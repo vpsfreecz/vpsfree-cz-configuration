@@ -128,6 +128,23 @@ in
         '';
       };
 
+      prepareCommands = mkOption {
+        type = types.lines;
+        default = "";
+        example = ''
+          mdadm --assemble --scan || fail "Unable to assemble MD RAID arrays"
+        '';
+        description = ''
+          Shell commands to run in the crash kernel before mounting the configured
+          crashdump destination.
+
+          This can be used to prepare local storage, for example by assembling an
+          MD RAID array and exposing it under `disk.device`. On nodes using MD RAID,
+          enable `boot.swraid.enable` so that `mdadm` and the required kernel modules
+          are available in the initrd.
+        '';
+      };
+
       disk = {
         device = mkOption {
           type = types.str;
@@ -209,6 +226,11 @@ in
           target="$mountpoint/${confMachine.name}/$date"
 
           mkdir -p "$mountpoint"
+
+          ${optionalString (cfg.prepareCommands != "") ''
+            echo "Preparing crashdump destination"
+            ${cfg.prepareCommands}
+          ''}
 
           ${optionalString (cfg.destination == "nfs") ''
             local server
