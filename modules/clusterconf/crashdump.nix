@@ -60,7 +60,34 @@ let
     if cfg.dumpFileCount == 1 then
       [ "dumpfile" ]
     else
-      builtins.genList (i: "dumpfile${i + 1}") cfg.dumpFileCount;
+      builtins.genList (i: "dumpfile${toString (i + 1)}") cfg.dumpFileCount;
+
+  useSplitDiskDevices = cfg.destination == "disk" && cfg.disk.devices != [ ];
+
+  splitDiskMountCommands = concatStringsSep "\n" (
+    imap1 (i: device: ''
+      mountpoint${toString i}="/mnt/crashdump${toString i}"
+      target${toString i}="$mountpoint${toString i}/${confMachine.name}/$date"
+
+      mkdir -p "$mountpoint${toString i}"
+
+      echo "Mounting ${device} on $mountpoint${toString i}"
+      mount ${
+        optionalString (cfg.disk.fsType != null) "-t ${cfg.disk.fsType} "
+      }"${device}" "$mountpoint${toString i}" \
+        || fail "Unable to mount ${device}"
+
+      mkdir -p "$target${toString i}"
+    '') cfg.disk.devices
+  );
+
+  splitDiskDumpFilePaths = concatStringsSep " " (
+    imap1 (i: name: "\"$target${toString i}/${name}\"") dumpFileNames
+  );
+
+  splitDiskLayout = concatStringsSep "\n" (
+    imap1 (i: device: "${builtins.elemAt dumpFileNames (i - 1)} ${device}") cfg.disk.devices
+  );
 in
 {
   options = {
@@ -147,9 +174,29 @@ in
 
       disk = {
         device = mkOption {
-          type = types.str;
+          type = types.nullOr types.str;
+          default = null;
           description = ''
-            Device to be mounted
+            Device to be mounted when storing the dump on a single local filesystem
+          '';
+        };
+
+        devices = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          description = ''
+            Devices to be mounted separately when split dump files should be written
+            to multiple local filesystems.
+
+            When set, `dumpFileCount` must match the number of devices.
+          '';
+        };
+
+        fsType = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = ''
+            Filesystem type used when mounting local crashdump storage
           '';
         };
       };
@@ -175,6 +222,22 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion =
+          cfg.destination != "disk"
+          || (
+            (cfg.disk.device != null && cfg.disk.devices == [ ])
+            || (cfg.disk.device == null && cfg.disk.devices != [ ])
+          );
+        message = "clusterconf.crashdump.disk: set either disk.device or disk.devices when destination = \"disk\"";
+      }
+      {
+        assertion = !useSplitDiskDevices || cfg.dumpFileCount == builtins.length cfg.disk.devices;
+        message = "clusterconf.crashdump.disk.devices: dumpFileCount must match the number of devices";
+      }
+    ];
+
     boot.initrd.kernelModules = [
       "lockd"
       "netfs"
@@ -241,12 +304,29 @@ in
           ''}
 
           ${optionalString (cfg.destination == "disk") ''
-            echo "Mounting ${cfg.disk.device}"
-            mount "${cfg.disk.device}" "$mountpoint" || fail "Unable to mount ${cfg.disk.device}"
+            ${optionalString useSplitDiskDevices ''
+              ${splitDiskMountCommands}
+              target="$target1"
+            ''}
+
+            ${optionalString (!useSplitDiskDevices) ''
+              echo "Mounting ${cfg.disk.device}"
+              mount ${
+                optionalString (cfg.disk.fsType != null) "-t ${cfg.disk.fsType} "
+              }"${cfg.disk.device}" "$mountpoint" \
+                || fail "Unable to mount ${cfg.disk.device}"
+            ''}
           ''}
 
           echo "Target dir $target"
           mkdir -p "$target"
+
+          ${optionalString useSplitDiskDevices ''
+              echo "Saving split dump layout"
+              cat <<EOF > "$target/dumpfile-layout"
+            ${splitDiskLayout}
+            EOF
+          ''}
 
           echo "Saving metadata"
           uname -r > "$target/kernel-version"
@@ -272,7 +352,12 @@ in
               --num-threads $cpuCount \
               ${optionalString (cfg.dumpFileCount > 1) "--split"} \
               /proc/vmcore \
-              ${concatMapStringsSep " " (v: "\"$target/${v}\"") dumpFileNames}
+              ${
+                if useSplitDiskDevices then
+                  splitDiskDumpFilePaths
+                else
+                  concatMapStringsSep " " (v: "\"$target/${v}\"") dumpFileNames
+              }
           ''}
         }
 
