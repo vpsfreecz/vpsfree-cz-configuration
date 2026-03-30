@@ -19,7 +19,10 @@ in
     ../../common/tunables-512g.nix
   ];
 
-  boot.initrd.kernelModules = [ "bnxt_en" ];
+  boot.initrd.kernelModules = [
+    "bnxt_en"
+    "ext4"
+  ];
 
   boot.kernelModules = [
     "bonding"
@@ -121,6 +124,19 @@ in
   };
 
   boot.enableUnifiedCgroupHierarchy = true;
+
+  clusterconf.crashdump = {
+    destination = "disk";
+    dumpFileCount = 3;
+    disk.devices = [
+      "/dev/disk/by-id/wwn-0x5002538c400a6c18-part1"
+      "/dev/disk/by-id/wwn-0x5002538c400a6c14-part1"
+      "/dev/disk/by-id/wwn-0x5002538c400a6c06-part1"
+    ];
+    disk.fsType = "ext4";
+    dumpMemory = true;
+    dumpLevel = 0;
+  };
 
   swapDevices = [
     # { label = "swap1"; }
