@@ -151,7 +151,10 @@ in
         type = types.nullOr types.ints.positive;
         default = null;
         description = ''
-          Number of threads for makedumpfile
+          Number of threads for makedumpfile.
+
+          Ignored when `dumpFileCount` is greater than one, because
+          `makedumpfile --split` cannot be combined with `--num-threads`.
         '';
       };
 
@@ -342,14 +345,20 @@ in
           ''}
 
           ${optionalString cfg.dumpMemory ''
-            cpuCount=${if isNull cfg.threadCount then "$(nproc)" else toString cfg.threadCount}
+            ${optionalString (cfg.dumpFileCount == 1) ''
+              cpuCount=${if isNull cfg.threadCount then "$(nproc)" else toString cfg.threadCount}
+              echo "Dumping core file using $cpuCount threads"
+            ''}
 
-            echo "Dumping core file using $cpuCount threads"
+            ${optionalString (cfg.dumpFileCount > 1) ''
+              echo "Dumping core file in split mode"
+            ''}
+
             LD_PRELOAD=$LD_LIBRARY_PATH/libgcc_s.so.1 \
               makedumpfile \
               ${optionalString cfg.enableCompression "-c"} \
               -d ${toString cfg.dumpLevel} \
-              --num-threads $cpuCount \
+              ${optionalString (cfg.dumpFileCount == 1) "--num-threads $cpuCount"} \
               ${optionalString (cfg.dumpFileCount > 1) "--split"} \
               /proc/vmcore \
               ${
