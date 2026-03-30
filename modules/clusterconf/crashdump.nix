@@ -121,6 +121,15 @@ in
         '';
       };
 
+      debug = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Keep the crashdump system running after the dump attempt and start an
+          interactive shell instead of rebooting automatically.
+        '';
+      };
+
       dumpLevel = mkOption {
         type = types.ints.between 0 31;
         default = 16;
@@ -375,6 +384,11 @@ in
 
         echo "Syncing filesystems"
         sync
+
+        ${optionalString cfg.debug ''
+          echo "Crashdump debug mode enabled, starting interactive shell"
+          setsid sh -c "exec sh < /dev/$console >/dev/$console 2>/dev/$console"
+        ''}
 
         echo "Rebooting"
         reboot -f
