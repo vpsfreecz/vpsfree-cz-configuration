@@ -123,7 +123,7 @@ in
     parallelStop = 20;
   };
 
-  boot.enableUnifiedCgroupHierarchy = true;
+  boot.enableUnifiedCgroupHierarchy = false;
 
   clusterconf.crashdump = {
     destination = "disk";
