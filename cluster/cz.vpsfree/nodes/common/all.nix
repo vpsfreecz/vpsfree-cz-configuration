@@ -46,7 +46,7 @@ in
     ../../vpsadmin/common/settings.nix
   ];
 
-  users.users.root.initialHashedPassword = "$y$j9T$WXTPc7ms74FZcj6c7HDOO/$bAOvRUTPg8ClT5RX2pqHWezXXJM82khUZVmwxaumbpD";
+  users.users.root.initialHashedPassword = "$y$j9T$wSFP/NufsKCLNwpCjiMGQ/$PCUdKaiPwWlLp1wi8Tbz3MRhHBHLytShkdfH/orQz1C";
 
   boot.kernelModules = [
     "ipmi_si"
