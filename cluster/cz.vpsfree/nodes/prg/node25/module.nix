@@ -1,0 +1,123 @@
+{ config, ... }:
+let
+  allAddresses = {
+    primary = {
+      address = "172.16.0.35";
+      prefix = 32;
+    };
+    teng0 = {
+      v4 = [
+        {
+          address = "172.16.253.38";
+          prefix = 30;
+        }
+      ];
+      v6 = [
+        {
+          address = "2a03:3b40:42:0:10::2";
+          prefix = 80;
+        }
+      ];
+    };
+    teng1 = {
+      v4 = [
+        {
+          address = "172.16.252.38";
+          prefix = 30;
+        }
+      ];
+      v6 = [
+        {
+          address = "2a03:3b40:42:1:10::2";
+          prefix = 80;
+        }
+      ];
+    };
+  };
+in
+{
+  cluster."cz.vpsfree/nodes/prg/node25" = rec {
+    spin = "vpsadminos";
+
+    inputs.channels = [ "production" ];
+
+    node = {
+      id = 126;
+      role = "hypervisor";
+      storageType = "ssd";
+    };
+
+    host = {
+      name = "node25";
+      location = "prg";
+      domain = "vpsfree.cz";
+    };
+
+    netboot = {
+      enable = true;
+      macs = [
+        "cc:48:3a:21:26:44"
+        "cc:48:3a:21:26:45"
+      ];
+    };
+
+    addresses = with allAddresses; {
+      inherit primary;
+      v4 = teng0.v4 ++ teng1.v4;
+      v6 = teng0.v6 ++ teng1.v6;
+    };
+
+    osNode = {
+      networking = {
+        interfaces = {
+          names = {
+            teng0 = "b8:ce:f6:3f:c6:c2";
+            teng1 = "b8:ce:f6:3f:c6:c3";
+          };
+          addresses = {
+            inherit (allAddresses) teng0 teng1;
+          };
+        };
+
+        bird = {
+          as = 4200001008;
+          routerId = "172.16.0.35";
+          bgpNeighbours = {
+            v4 = [
+              {
+                address = "172.16.253.37";
+                as = 4200001999;
+              }
+              {
+                address = "172.16.252.37";
+                as = 4200001998;
+              }
+            ];
+            v6 = [
+              {
+                address = "2a03:3b40:42:0:10::1";
+                as = 4200001999;
+              }
+              {
+                address = "2a03:3b40:42:1:10::1";
+                as = 4200001998;
+              }
+            ];
+          };
+        };
+
+        virtIP = addresses.primary;
+      };
+    };
+
+    services = {
+      goresheat = { };
+      ebpf-exporter = { };
+      ipmi-exporter = { };
+      ksvcmon-exporter = { };
+      node-exporter = { };
+      osctl-exporter = { };
+      vpsadmin-console = { };
+    };
+  };
+}
