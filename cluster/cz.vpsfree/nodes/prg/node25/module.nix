@@ -71,8 +71,8 @@ in
       networking = {
         interfaces = {
           names = {
-            teng0 = "b8:ce:f6:3f:c6:c2";
-            teng1 = "b8:ce:f6:3f:c6:c3";
+            teng0 = "b8:ce:f6:3f:c6:c3";
+            teng1 = "b8:ce:f6:3f:c6:c2";
           };
           addresses = {
             inherit (allAddresses) teng0 teng1;
