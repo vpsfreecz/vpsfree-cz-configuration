@@ -11,6 +11,7 @@ let
   ];
   bondVlan = 200;
   bondIP = "172.19.0.14/23";
+  teng0IP = "10.0.0.15/24";
 in
 {
   imports = [
@@ -40,6 +41,9 @@ in
 
     ip link set bond0 up
     ip addr add ${bondIP} dev bond0
+
+    ip link set teng0 up
+    ip addr add ${teng0IP} dev teng0
   '';
 
   boot.zfs.pools = {
