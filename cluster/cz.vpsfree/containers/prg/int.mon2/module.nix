@@ -27,6 +27,7 @@
     monitoring.isMonitor = true;
     tags = [
       "monitor"
+      "prometheus"
       "all-internal-dns"
       "auto-update"
     ];
