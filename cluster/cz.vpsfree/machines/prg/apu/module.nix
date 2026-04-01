@@ -22,6 +22,7 @@
 
     tags = [
       "apu"
+      "monitor"
       "vpsf-status"
       "pxe-server"
     ];

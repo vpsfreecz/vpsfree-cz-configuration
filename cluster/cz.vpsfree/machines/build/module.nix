@@ -21,6 +21,7 @@
     };
     tags = [
       "build"
+      "monitor"
       "pxe-server"
     ];
 

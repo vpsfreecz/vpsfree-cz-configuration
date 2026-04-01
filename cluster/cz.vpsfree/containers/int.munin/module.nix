@@ -26,6 +26,7 @@
     };
     tags = [
       "munin"
+      "monitor"
       "auto-update"
     ];
     healthChecks = {
