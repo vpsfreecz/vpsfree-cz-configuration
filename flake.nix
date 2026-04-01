@@ -32,6 +32,12 @@
       inputs.nixpkgsUnstable.follows = "nixpkgsUnstable";
     };
 
+    vpsadminosOsStaging = {
+      url = "github:vpsfreecz/vpsadminos";
+      inputs.nixpkgs.follows = "nixpkgsStable";
+      inputs.nixpkgsUnstable.follows = "nixpkgsUnstable";
+    };
+
     vpsadminosProduction = {
       url = "github:vpsfreecz/vpsadminos";
       inputs.nixpkgs.follows = "nixpkgsProduction";
@@ -78,7 +84,7 @@
         };
 
         os-staging = {
-          vpsadminos = "vpsadminosStaging";
+          vpsadminos = "vpsadminosOsStaging";
         };
 
         nixos-unstable = {
