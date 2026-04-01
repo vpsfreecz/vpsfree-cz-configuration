@@ -66,7 +66,7 @@
 
       {
         alert = "HypervisorHighCpuLoad";
-        expr = ''100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
         labels = {
           alertclass = "cpuload";
@@ -85,7 +85,7 @@
 
       {
         alert = "HypervisorCritOsCpuLoad";
-        expr = ''100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",os="vpsadminos"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",os="vpsadminos"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
         labels = {
           alertclass = "cpuload";
@@ -104,7 +104,7 @@
 
       {
         alert = "HypervisorHighIoWait";
-        expr = ''(avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 20 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''(avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 20 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
         labels = {
           alertclass = "iowait";
@@ -123,7 +123,7 @@
 
       {
         alert = "HypervisorCritIoWait";
-        expr = ''(avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 40 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''(avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 40 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
         labels = {
           alertclass = "iowait";
@@ -142,7 +142,7 @@
 
       {
         alert = "HypervisorFatalIoWait";
-        expr = ''(avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 50 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''(avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 50 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "20m";
         labels = {
           alertclass = "iowait";
@@ -161,7 +161,7 @@
 
       {
         alert = "HypervisorLongHighIoWait";
-        expr = ''(avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 10 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''(avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 10 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "6h";
         labels = {
           alertclass = "iowait";
@@ -180,7 +180,7 @@
 
       {
         alert = "StorageHighCpuLoad";
-        expr = ''100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",role="storage"}[5m])) * 100) > 80'';
+        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="storage"}[5m])) * 100) > 80'';
         for = "15m";
         labels = {
           severity = "warning";
@@ -198,7 +198,7 @@
 
       {
         alert = "StorageHighIoWait";
-        expr = ''(avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="storage"}[5m])) * 100) > 30'';
+        expr = ''(avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="iowait",role="storage"}[5m])) * 100) > 30'';
         for = "15m";
         labels = {
           severity = "warning";

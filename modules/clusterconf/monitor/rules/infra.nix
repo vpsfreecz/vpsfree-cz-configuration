@@ -22,7 +22,7 @@
 
       {
         alert = "InfraHighCpuLoad";
-        expr = ''100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle",job="infra"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",job="infra"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
         labels = {
           severity = "warning";
@@ -40,7 +40,7 @@
 
       {
         alert = "InfraHighIoWait";
-        expr = ''(avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",job="infra"}[5m])) * 100) > 30 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''(avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="iowait",job="infra"}[5m])) * 100) > 30 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
         labels = {
           severity = "warning";
