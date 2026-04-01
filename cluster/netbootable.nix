@@ -13,4 +13,5 @@
   "cz.vpsfree/nodes/prg/node24"
   "cz.vpsfree/nodes/prg/node25"
   "cz.vpsfree/nodes/stg/node1"
+  "cz.vpsfree/nodes/stg/node2"
 ]

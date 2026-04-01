@@ -46,6 +46,7 @@
   ./cz.vpsfree/nodes/prg/node24/module.nix
   ./cz.vpsfree/nodes/prg/node25/module.nix
   ./cz.vpsfree/nodes/stg/node1/module.nix
+  ./cz.vpsfree/nodes/stg/node2/module.nix
   ./cz.vpsfree/vpsadmin/int.api1/module.nix
   ./cz.vpsfree/vpsadmin/int.api2/module.nix
   ./cz.vpsfree/vpsadmin/int.db/module.nix
