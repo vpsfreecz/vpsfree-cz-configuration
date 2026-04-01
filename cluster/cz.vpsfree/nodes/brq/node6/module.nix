@@ -38,6 +38,8 @@
           names = {
             oneg0 = "b0:7b:25:bd:ef:4a";
             oneg1 = "b0:7b:25:bd:ef:4b";
+            teng0 = "94:6d:ae:47:8f:fe";
+            teng1 = "94:6d:ae:47:8f:ff";
           };
         };
 
