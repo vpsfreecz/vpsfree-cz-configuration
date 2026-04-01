@@ -6,8 +6,8 @@
 }:
 let
   bondIfaces = [
-    "teng0"
-    "teng1"
+    "oneg0"
+    "oneg1"
   ];
   bondVlan = 200;
   bondIP = "172.19.0.14/23";

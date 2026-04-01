@@ -36,8 +36,8 @@
       networking = {
         interfaces = {
           names = {
-            teng0 = "3c:ec:ef:73:88:04";
-            teng1 = "3c:ec:ef:73:88:05";
+            oneg0 = "3c:ec:ef:73:88:04";
+            oneg1 = "3c:ec:ef:73:88:05";
           };
         };
 
