@@ -27,6 +27,7 @@
       varnish-exporter = { };
     };
     tags = [
+      "monitor"
       "vpsadmin"
       "manual-update"
     ];
