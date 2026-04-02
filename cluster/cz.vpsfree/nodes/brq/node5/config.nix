@@ -11,6 +11,11 @@ let
   ];
   bondVlan = 200;
   bondIP = "172.19.0.14/23";
+  dozerDisks = [
+    "/dev/disk/by-id/wwn-0x5002538c400a6c18"
+    "/dev/disk/by-id/wwn-0x5002538c400a6c14"
+    "/dev/disk/by-id/wwn-0x5002538c400a6c06"
+  ];
   teng0IP = "10.0.0.15/24";
 in
 {
@@ -120,27 +125,61 @@ in
         };
       };
     };
+
+    dozer = {
+      install = true;
+
+      wipe = dozerDisks;
+
+      layout = [
+        {
+          type = "raidz";
+          devices = dozerDisks;
+        }
+      ];
+
+      properties = {
+        ashift = "12";
+      };
+
+      # Configure datasets and scrub as they would be in common/tank.nix
+      datasets = {
+        "/".properties = {
+          compression = "on";
+          direct = "disabled";
+          dnodesize = "legacy";
+          recordsize = "128k";
+          sync = "disabled";
+          xattr = "sa";
+        };
+        "ct".properties = {
+          acltype = "posixacl";
+        };
+        "reservation".properties = {
+          refreservation = lib.mkDefault "200G";
+          canmount = "off";
+        };
+      };
+
+      scrub = {
+        enable = true;
+        startIntervals = [ "0 4 1-7 * *" ];
+        startCommand = ''[ "$(LC_ALL=C date '+\%a')" = "Sun" ] && scrubctl start dozer'';
+      };
+    };
   };
 
   osctl.pools.tank = {
-    parallelStart = 8;
+    parallelStart = 10;
     parallelStop = 20;
   };
 
-  boot.enableUnifiedCgroupHierarchy = false;
-
-  clusterconf.crashdump = {
-    destination = "disk";
-    dumpFileCount = 3;
-    disk.devices = [
-      "/dev/disk/by-id/wwn-0x5002538c400a6c18-part1"
-      "/dev/disk/by-id/wwn-0x5002538c400a6c14-part1"
-      "/dev/disk/by-id/wwn-0x5002538c400a6c06-part1"
-    ];
-    disk.fsType = "ext4";
-    dumpMemory = true;
-    dumpLevel = 0;
+  osctl.pools.dozer = {
+    parallelStart = 5;
+    parallelStop = 10;
   };
+
+  boot.enableUnifiedCgroupHierarchy = false;
 
   swapDevices = [
     # { label = "swap1"; }
