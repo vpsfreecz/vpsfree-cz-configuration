@@ -16,6 +16,7 @@
       "/".properties = {
         dnodesize = "legacy";
         recordsize = "128k";
+        sync = "disabled";
         xattr = "sa";
       };
       "reservation".properties = {
