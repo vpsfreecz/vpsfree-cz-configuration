@@ -83,7 +83,7 @@ in
     parallelStop = 20;
   };
 
-  boot.enableUnifiedCgroupHierarchy = false;
+  boot.enableUnifiedCgroupHierarchy = true;
 
   swapDevices = [
     # none
