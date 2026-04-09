@@ -6,8 +6,8 @@
 }:
 let
   bondIfaces = [
-    "oneg0"
-    "oneg1"
+    "teng0"
+    "teng1"
   ];
   bondVlan = 200;
   bondIP = "172.19.0.14/23";
@@ -16,7 +16,6 @@ let
     "/dev/disk/by-id/wwn-0x5002538c400a6c14"
     "/dev/disk/by-id/wwn-0x5002538c400a6c06"
   ];
-  teng0IP = "10.0.0.15/24";
 in
 {
   imports = [
@@ -46,9 +45,6 @@ in
 
     ip link set bond0 up
     ip addr add ${bondIP} dev bond0
-
-    ip link set teng0 up
-    ip addr add ${teng0IP} dev teng0
   '';
 
   boot.zfs.pools = {
