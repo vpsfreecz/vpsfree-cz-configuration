@@ -17,8 +17,25 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
   };
+
+  allMachines = confLib.getClusterMachines config.cluster;
+  monitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
+  addressCidrs =
+    addresses:
+    map (addr: "${addr.address}/${toString addr.prefix}") (
+      (addresses.v4 or [ ]) ++ (addresses.v6 or [ ])
+    );
+  monitorCidrs = unique (concatMap (m: addressCidrs m.metaConfig.addresses) monitors);
+  proxyCidrs = unique (addressCidrs proxyPrg.addresses);
 in
 {
+  vpsadmin.deploymentConfig = {
+    monitoring.download_pool_service_discovery = {
+      allowed_networks = monitorCidrs;
+      trusted_proxies = proxyCidrs;
+    };
+  };
+
   vpsadmin.databaseSetup = {
     database = {
       host = db.addresses.primary.address;
@@ -31,7 +48,6 @@ in
 
   vpsadmin.api = {
     enable = true;
-
     configDirectory = ../../../../configs/vpsadmin/api;
 
     address = confMachine.addresses.primary.address;
@@ -53,7 +69,6 @@ in
 
   vpsadmin.supervisor = {
     enable = true;
-
     configDirectory = ../../../../configs/vpsadmin/api;
 
     servers = 2;
