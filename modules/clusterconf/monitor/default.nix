@@ -13,6 +13,38 @@ let
 
   promPort = confMachine.services.prometheus.port;
   exporterPort = confMachine.services.node-exporter.port;
+  vpsadminDownloadHealthcheckProbe = pkgs.writeShellApplication {
+    name = "vpsadmin-download-healthcheck-probe";
+    runtimeInputs = [ pkgs.curl ];
+    text = ''
+      set -euo pipefail
+
+      if [ "$#" -ne 2 ]; then
+        echo "expected arguments: <target_url> <pool_id>" >&2
+        exit 1
+      fi
+
+      target_url="$1"
+      expected_pool_id="$2"
+
+      actual_pool_id="$(
+        curl \
+          --fail \
+          --silent \
+          --show-error \
+          --location \
+          --max-time "''${SCRIPT_TIMEOUT:-30}" \
+          "$target_url"
+      )"
+
+      if [ "$actual_pool_id" != "$expected_pool_id" ]; then
+        printf \
+          'unexpected download healthcheck content for %s: expected %s, got %s\n' \
+          "$target_url" "$expected_pool_id" "$actual_pool_id" >&2
+        exit 1
+      fi
+    '';
+  };
 
   allMachines = confLib.getClusterMachines config.cluster;
 
@@ -432,6 +464,53 @@ let
         ) sites;
       };
 
+    vpsadminDownload = {
+      jobs = [
+        {
+          job_name = "vpsadmin-download-healthchecks";
+          scrape_interval = "300s";
+          scrape_timeout = "30s";
+          metrics_path = "/probe";
+          params = {
+            script = [ "vpsadmin_download_healthcheck" ];
+            params = [ "target_url,pool_id" ];
+          };
+          http_sd_configs = [
+            {
+              url = "https://api.vpsfree.cz/sd/download-pools";
+              refresh_interval = "300s";
+            }
+          ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target_url";
+            }
+            {
+              source_labels = [ "pool_id" ];
+              target_label = "__param_pool_id";
+            }
+            {
+              source_labels = [ "__param_target_url" ];
+              target_label = "download_url";
+            }
+            {
+              source_labels = [
+                "node_fqdn"
+                "pool_id"
+              ];
+              separator = "/";
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9172";
+            }
+          ];
+        }
+      ];
+    };
+
     outboundNet = {
       pingConfigs =
         map
@@ -810,6 +889,7 @@ in
           static_configs = scrapeConfigs.varnish.exporterConfigs;
         })
         ++ scrapeConfigs.http.jobs
+        ++ scrapeConfigs.vpsadminDownload.jobs
         ++ [
           {
             job_name = "meet-jvbs";
@@ -950,6 +1030,7 @@ in
             ./rules/ipmi.nix
             ./rules/outbound-net.nix
             ./rules/ipv6-tunnels.nix
+            ./rules/vpsadmin-download.nix
           ])
           ++ (map (v: import v { inherit lib; }) [
             ./rules/test.nix
@@ -1012,6 +1093,20 @@ in
             }
           );
         };
+
+      prometheus.exporters.script = {
+        enable = true;
+        listenAddress = "127.0.0.1";
+        settings = {
+          scripts = [
+            {
+              name = "vpsadmin_download_healthcheck";
+              command = [ "${vpsadminDownloadHealthcheckProbe}/bin/vpsadmin-download-healthcheck-probe" ];
+              output.ignore = true;
+            }
+          ];
+        };
+      };
     };
 
     systemd.services."prometheus-blackbox-exporter".serviceConfig = {
