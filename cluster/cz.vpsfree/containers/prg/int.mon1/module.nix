@@ -19,6 +19,12 @@
           prefix = 32;
         }
       ];
+      v6 = [
+        {
+          address = "2a03:3b40:fe:355::1";
+          prefix = 64;
+        }
+      ];
     };
     services = {
       node-exporter = { };
