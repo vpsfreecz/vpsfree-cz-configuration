@@ -677,11 +677,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776037962,
-        "narHash": "sha256-2X9A8H/KkykidUr8xtgwizOJclyv4bpO/t4kFZrBkyM=",
+        "lastModified": 1776143412,
+        "narHash": "sha256-jkCyVjuJ+VomOO8iPb1tZnypkkjGWy4liqByrTh5vTY=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "332bff31dbb5849447996082610585a7760553b8",
+        "rev": "4638e9167d5c27c9991670b239b2451ec79f55a8",
         "type": "github"
       },
       "original": {
@@ -725,11 +725,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776037962,
-        "narHash": "sha256-2X9A8H/KkykidUr8xtgwizOJclyv4bpO/t4kFZrBkyM=",
+        "lastModified": 1776143412,
+        "narHash": "sha256-jkCyVjuJ+VomOO8iPb1tZnypkkjGWy4liqByrTh5vTY=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "332bff31dbb5849447996082610585a7760553b8",
+        "rev": "4638e9167d5c27c9991670b239b2451ec79f55a8",
         "type": "github"
       },
       "original": {
