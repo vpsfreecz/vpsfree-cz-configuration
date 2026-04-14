@@ -126,15 +126,14 @@
     version = "1.7.0";
   };
   mustermann = {
-    dependencies = [ "ruby2_keywords" ];
     groups = [ "default" ];
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "08ma2fmxlm6i7lih4mc3har2fzsbj1pl4hhva65kljf6nfvdryl5";
+      sha256 = "1fb8hy3qaq00kh9s4617abjy3n8d5ridd9q3jfp3wx3zzdph0fz7";
       type = "gem";
     };
-    version = "3.0.4";
+    version = "3.1.0";
   };
   mutex_m = {
     groups = [ "default" ];
@@ -215,16 +214,6 @@
       type = "gem";
     };
     version = "0.1.1";
-  };
-  ruby2_keywords = {
-    groups = [ "default" ];
-    platforms = [ ];
-    source = {
-      remotes = [ "https://rubygems.org" ];
-      sha256 = "1vz322p8n39hz3b4a9gkmz9y7a5jaz41zrm2ywf31dvkqm03glgz";
-      type = "gem";
-    };
-    version = "0.0.5";
   };
   rubygems-generate_index = {
     dependencies = [ "compact_index" ];
