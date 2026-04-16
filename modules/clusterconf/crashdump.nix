@@ -126,7 +126,8 @@ in
         default = false;
         description = ''
           Keep the crashdump system running after the dump attempt and start an
-          interactive shell instead of rebooting automatically.
+          interactive shell. When the shell exits, a new shell is started and
+          the machine stays up until rebooted manually.
         '';
       };
 
@@ -387,7 +388,11 @@ in
 
         ${optionalString cfg.debug ''
           echo "Crashdump debug mode enabled, starting interactive shell"
-          setsid sh -c "exec sh < /dev/$console >/dev/$console 2>/dev/$console"
+          while true; do
+            setsid sh -c "exec sh < /dev/$console >/dev/$console 2>/dev/$console"
+            echo "Interactive shell exited, starting a new shell"
+            sleep 1
+          done
         ''}
 
         echo "Rebooting"
