@@ -19,7 +19,10 @@ in
     ../../common/tunables-1t.nix
   ];
 
-  boot.initrd.kernelModules = [ "bnxt_en" ];
+  boot.initrd.kernelModules = [
+    "bnxt_en"
+    "mlx5_core"
+  ];
 
   boot.kernelModules = [
     "bonding"
