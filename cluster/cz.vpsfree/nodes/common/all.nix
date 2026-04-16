@@ -58,7 +58,10 @@ in
   boot.kernelParams = [
     "slub_nomerge"
     "preempt=full"
-    "iommu=off"
+    "intel_iommu=on"
+    "amd_iommu=on"
+    "iommu.passthrough=0"
+    "iommu.strict=1"
     "cgroup_favordynmods=false"
   ];
 
