@@ -12,6 +12,7 @@ let
     concatMapStringsSep
     concatStringsSep
     imap1
+    isNull
     mapAttrsToList
     mkDefault
     mkEnableOption
@@ -35,6 +36,8 @@ let
     && confMachine.osNode.networking.bird.routingProtocol == "bgp";
 
   customNetworking = has10GNetwork;
+
+  needCrashNetwork = cfg.destination == "nfs" || cfg.debug;
 
   renameNetif = mac: newName: ''
     oldName=$(ip -o link | grep "${mac}" | awk -F': ' '{print $2}')
@@ -129,6 +132,20 @@ in
           interactive shell. When the shell exits, a new shell is started and
           the machine stays up until rebooted manually.
         '';
+      };
+
+      inspect = {
+        enable = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Enable in-place vmcore inspection from the crash kernel using
+            crash(8) before optional memory dumping.
+
+            When disabled, the crash initrd stays on the original lightweight
+            makedumpfile-only path.
+          '';
+        };
       };
 
       dumpLevel = mkOption {
@@ -260,11 +277,12 @@ in
 
     # On nodes with 10G and BGP (Prague), we skip DHCP on 1G interfaces and configure
     # the network manually using the 10G interfaces. On nodes with 1G and OSPF (Brno),
-    # we use the normal initrd setup with DHCP.
-    boot.initrd.network = mkIf (cfg.destination == "disk" || customNetworking) {
-      enableSetupInCrashDump = false;
+    # we use the normal initrd setup with DHCP whenever the crash kernel needs network
+    # access (NFS upload or the debug shell over initrd SSH).
+    boot.initrd.network = mkIf (customNetworking || !needCrashNetwork) {
+      enableSetupInCrashDump = !customNetworking && needCrashNetwork;
 
-      customSetupCommands = mkIf (cfg.destination != "disk" && customNetworking) ''
+      customSetupCommands = mkIf (customNetworking && needCrashNetwork) ''
         if grep -q this_is_a_crash_kernel /proc/cmdline ; then
           echo "Renaming network interfaces"
           ${concatStringsSep "\n" (
@@ -292,6 +310,7 @@ in
 
     boot.crashDump = {
       enable = true;
+      inspect.enable = mkDefault cfg.inspect.enable;
       reservedMemory = "2048M";
       commands = ''
         create_crash_dump() {
@@ -354,6 +373,18 @@ in
             makedumpfile --dump-dmesg /proc/vmcore "$target/dmesg"
           ''}
 
+          ${optionalString cfg.inspect.enable ''
+            echo "Collecting crash inspection data"
+            mkdir -p "$target/inspect"
+            if crash-collect "$target/inspect"; then
+              echo 0 > "$target/inspect.exit-status"
+            else
+              rc=$?
+              echo "$rc" > "$target/inspect.exit-status"
+              echo "crash-collect failed with $rc"
+            fi
+          ''}
+
           ${optionalString cfg.dumpMemory ''
             ${optionalString (cfg.dumpFileCount == 1) ''
               cpuCount=${if isNull cfg.threadCount then "$(nproc)" else toString cfg.threadCount}
@@ -388,6 +419,9 @@ in
 
         ${optionalString cfg.debug ''
           echo "Crashdump debug mode enabled, starting interactive shell"
+          ${optionalString cfg.inspect.enable ''
+            echo "Run 'crash-vmcore' from the shell to inspect /proc/vmcore interactively"
+          ''}
           while true; do
             setsid sh -c "exec sh < /dev/$console >/dev/$console 2>/dev/$console"
             echo "Interactive shell exited, starting a new shell"
