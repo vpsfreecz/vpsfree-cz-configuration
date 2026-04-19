@@ -184,6 +184,7 @@ let
           ]
           ++ (optional (hasAttr "osctl-exporter" m.metaConfig.services) "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.osctl-exporter.port}")
           ++ (optional (hasAttr "ebpf-exporter" m.metaConfig.services) "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.ebpf-exporter.port}")
+          ++ (optional (hasAttr "zfs-exporter" m.metaConfig.services) "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.zfs-exporter.port}")
           ++ (optional (hasAttr "ksvcmon-exporter" m.metaConfig.services) "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.ksvcmon-exporter.port}");
           labels = {
             alias = getAlias m.metaConfig.host;
