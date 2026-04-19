@@ -1,0 +1,19 @@
+From: "fail2ban@example.net via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #10002] Automatic abuse report for IP address 10.42.9.42
+Date: Fri, 15 Sep 2023 18:56:00 +0000
+X-RT-Originator: fail2ban@example.net
+Content-Type: text/plain; charset=UTF-8
+
+Fri Sep 15 18:56:00 2023: Request 10002 was acted upon.
+ Transaction: Ticket created by fail2ban@example.net
+       Queue: abuse
+     Subject: Automatic abuse report for IP address 10.42.9.42
+       Owner: Nobody
+  Requestors: fail2ban@example.net
+      Status: new
+ Ticket <URL: https://rt.vpsfree.cz/rt/Ticket/Display.html?id=10002 >
+
+
+This is an email abuse report about the IP address 10.42.9.42 generated at Fri Sep 15 18:55:37 UTC 2023
+Log line for 10.42.9.42 follows.

@@ -1,0 +1,20 @@
+From: "apiguardian@leakix.net via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #10003] [LeakIX] Critical security issue for 10.42.9.42
+Date: Thu, 02 Jan 2025 03:06:00 +0000
+X-RT-Originator: apiguardian@leakix.net
+Content-Type: text/plain; charset=UTF-8
+
+Thu Jan 02 03:06:00 2025: Request 10003 was acted upon.
+ Transaction: Ticket created by apiguardian@leakix.net
+       Queue: abuse
+     Subject: [LeakIX] Critical security issue for 10.42.9.42
+       Owner: Nobody
+  Requestors: apiguardian@leakix.net
+      Status: new
+ Ticket <URL: https://rt.vpsfree.cz/rt/Ticket/Display.html?id=10003 >
+
+
+| Severity   | Critical          |
+| Discovered | 02 Jan 25 03:04 UTC |
+| Host       | 10.42.9.42       |

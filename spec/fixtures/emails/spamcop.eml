@@ -1,0 +1,19 @@
+From: "report@reports.spamcop.net via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #10004] [SpamCop (10.42.9.42) id:123456] spam report
+Date: Thu, 02 Jan 2025 03:07:00 +0000
+X-RT-Originator: report@reports.spamcop.net
+Content-Type: text/plain; charset=UTF-8
+
+Thu Jan 02 03:07:00 2025: Request 10004 was acted upon.
+ Transaction: Ticket created by report@reports.spamcop.net
+       Queue: abuse
+     Subject: [SpamCop (10.42.9.42) id:123456] spam report
+       Owner: Nobody
+  Requestors: report@reports.spamcop.net
+      Status: new
+ Ticket <URL: https://rt.vpsfree.cz/rt/Ticket/Display.html?id=10004 >
+
+
+Email from 10.42.9.42 / Thu, 02 Jan 2025 03:04:05 +0000
+SpamCop evidence body.

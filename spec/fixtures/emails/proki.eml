@@ -1,0 +1,34 @@
+From: "proki@csirt.cz via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #10006] PROKI - upozorneni na nalezene incidenty
+Date: Thu, 02 Jan 2025 03:09:00 +0000
+X-RT-Originator: proki@csirt.cz
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="proki-boundary"
+
+--proki-boundary
+Content-Type: text/plain; charset=UTF-8
+
+Thu Jan 02 03:09:00 2025: Request 10006 was acted upon.
+ Transaction: Ticket created by proki@csirt.cz
+       Queue: abuse
+     Subject: PROKI - upozorneni na nalezene incidenty
+       Owner: Nobody
+  Requestors: proki@csirt.cz
+      Status: new
+ Ticket <URL: https://rt.vpsfree.cz/rt/Ticket/Display.html?id=10006 >
+
+
+Please see attached PROKI report.
+--proki-boundary
+Content-Type: application/zip; name="proki.zip"
+Content-Disposition: attachment; filename="proki.zip"
+Content-Transfer-Encoding: base64
+
+UEsDBC0AAAAIAGOVk1z8tytw//////////8JABQAcHJva2kuY3N2AQAQAGoAAAAAAAAAYwAAAAAA
+AAANzLEKg1AMBdDdz3DOk5jqUNfObp2kIKnvFgIa5TXg7+tyxvMD8uy6gcI2zBmBJZDJDip6VqOu
+pxakl5Cw9InbxPLmx8DdwP1ELTedNM8bqs2zLRp7oXtRWz/+3cMR9Ae8ri5QSwECNAMtAAAACABj
+lZNc/LcrcP//////////CQAUAAAAAAABAAAApIEAAAAAcHJva2kuY3N2AQAQAGoAAAAAAAAAYwAA
+AAAAAABQSwUGAAAAAAEAAQBLAAAAngAAAAAA
+
+--proki-boundary--

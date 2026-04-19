@@ -1,0 +1,34 @@
+From: "DoNotReply@USGOabuse.net via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #10005] Abuse Feedback Report for 10.42.9.42
+Date: Thu, 02 Jan 2025 03:08:00 +0000
+X-RT-Originator: DoNotReply@USGOabuse.net
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="usgo-boundary"
+
+--usgo-boundary
+Content-Type: text/plain; charset=UTF-8
+
+Thu Jan 02 03:08:00 2025: Request 10005 was acted upon.
+ Transaction: Ticket created by DoNotReply@USGOabuse.net
+       Queue: abuse
+     Subject: Abuse Feedback Report for 10.42.9.42
+       Owner: Nobody
+  Requestors: DoNotReply@USGOabuse.net
+      Status: new
+ Ticket <URL: https://rt.vpsfree.cz/rt/Ticket/Display.html?id=10005 >
+
+
+A USGO abuse feedback report was received.
+--usgo-boundary
+Content-Type: message/feedback-report
+
+Feedback-Type: abuse
+User-Agent: USGO/1.0
+Source-IP: 10.42.9.42
+Received-Date: Thu, 02 Jan 2025 03:04:05 +0000
+--usgo-boundary
+Content-Type: text/plain; charset=UTF-8
+
+Offending message headers and body.
+--usgo-boundary--

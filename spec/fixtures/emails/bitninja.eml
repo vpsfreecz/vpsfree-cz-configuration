@@ -1,0 +1,20 @@
+From: "info@bitninja.com via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #10001] Your server 10.42.9.42 has been registered as an attack source
+Date: Thu, 02 Jan 2025 03:05:00 +0000
+X-RT-Originator: info@bitninja.com
+Content-Type: text/plain; charset=UTF-8
+
+Thu Jan 02 03:05:00 2025: Request 10001 was acted upon.
+ Transaction: Ticket created by info@bitninja.com
+       Queue: abuse
+     Subject: Your server 10.42.9.42 has been registered as an attack source
+       Owner: Nobody
+  Requestors: info@bitninja.com
+      Status: new
+ Ticket <URL: https://rt.vpsfree.cz/rt/Ticket/Display.html?id=10001 >
+
+
+Timestamp (UTC): 2025-01-02 03:04:05
+Attack type: http-botnet
+The source 10.42.9.42 was reported by BitNinja.

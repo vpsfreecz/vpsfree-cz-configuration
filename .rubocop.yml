@@ -1,4 +1,7 @@
 inherit_from: .rubocop_todo.yml
+plugins:
+  - rubocop-rake
+  - rubocop-rspec
 
 AllCops:
   TargetRubyVersion: 3.1.0
@@ -9,12 +12,17 @@ AllCops:
     - <%= path.sub(/^!! /, '').sub(/\/$/, '/**/*') %>
     <% end %>
 
+Bundler/DuplicatedGem:
+  Enabled: false
+
 Gemspec/RequireMFA:
   Enabled: false
 
 Layout/FirstHashElementIndentation:
   Enabled: false
 
+Lint/NestedMethodDefinition:
+  Enabled: false
 Lint/UselessAssignment:
   Enabled: false
 
@@ -37,14 +45,27 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Naming/AccessorMethodName:
+  Enabled: false
 Naming/HeredocDelimiterNaming:
   Enabled: false
 Naming/MethodParameterName:
   Enabled: false
 
+RSpec/BeforeAfterAll:
+  Enabled: false
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
 Style/CaseEquality:
   Enabled: false
 Style/ClassAndModuleChildren:
+  Enabled: false
+Style/CombinableLoops:
   Enabled: false
 Style/Documentation:
   Enabled: false
@@ -55,13 +76,21 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
+Style/MixinUsage:
+  Enabled: false
 Style/MultilineBlockChain:
   Enabled: false
 Style/NumericPredicate:
   EnforcedStyle: comparison
 Style/PreferredHashMethods:
   EnforcedStyle: verbose
+Style/RedundantCondition:
+  Enabled: false
+Style/RedundantConstantBase:
+  Enabled: false
 Style/RedundantFormat:
+  Enabled: false
+Style/RedundantLineContinuation:
   Enabled: false
 Style/SafeNavigation:
   Enabled: false
