@@ -176,6 +176,27 @@ let
     nodes =
       let
         machines = filter (m: m.metaConfig.node != null) monitoredMachines;
+
+        mkNodeLabels =
+          m:
+          {
+            alias = getAlias m.metaConfig.host;
+            fqdn = m.metaConfig.host.fqdn;
+            domain = m.metaConfig.host.domain;
+            location = ensureLocation m.metaConfig.host.location;
+            type = "node";
+            os = m.metaConfig.spin;
+            role = m.metaConfig.node.role;
+            storage_type = m.metaConfig.node.storageType;
+          }
+          // m.metaConfig.monitoring.labels;
+
+        mkNodeZfsConfig = m: {
+          targets = [
+            "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.zfs-exporter.port}"
+          ];
+          labels = mkNodeLabels m;
+        };
       in
       {
         exporterConfigs = map (m: {
@@ -184,36 +205,27 @@ let
           ]
           ++ (optional (hasAttr "osctl-exporter" m.metaConfig.services) "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.osctl-exporter.port}")
           ++ (optional (hasAttr "ebpf-exporter" m.metaConfig.services) "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.ebpf-exporter.port}")
-          ++ (optional (hasAttr "zfs-exporter" m.metaConfig.services) "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.zfs-exporter.port}")
           ++ (optional (hasAttr "ksvcmon-exporter" m.metaConfig.services) "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.ksvcmon-exporter.port}");
-          labels = {
-            alias = getAlias m.metaConfig.host;
-            fqdn = m.metaConfig.host.fqdn;
-            domain = m.metaConfig.host.domain;
-            location = ensureLocation m.metaConfig.host.location;
-            type = "node";
-            os = m.metaConfig.spin;
-            role = m.metaConfig.node.role;
-            storage_type = m.metaConfig.node.storageType;
-          }
-          // m.metaConfig.monitoring.labels;
+          labels = mkNodeLabels m;
         }) machines;
+
+        zfsHypervisorConfigs = map mkNodeZfsConfig (
+          filter (
+            m: m.metaConfig.node.role == "hypervisor" && hasAttr "zfs-exporter" m.metaConfig.services
+          ) machines
+        );
+
+        zfsStorageConfigs = map mkNodeZfsConfig (
+          filter (
+            m: m.metaConfig.node.role == "storage" && hasAttr "zfs-exporter" m.metaConfig.services
+          ) machines
+        );
 
         ipmiConfigs = map (m: {
           targets = [
             "${monitorTarget m.metaConfig}:${toString m.metaConfig.services.ipmi-exporter.port}"
           ];
-          labels = {
-            alias = getAlias m.metaConfig.host;
-            fqdn = m.metaConfig.host.fqdn;
-            domain = m.metaConfig.host.domain;
-            location = ensureLocation m.metaConfig.host.location;
-            type = "node";
-            os = m.metaConfig.spin;
-            role = m.metaConfig.node.role;
-            storage_type = m.metaConfig.node.storageType;
-          }
-          // m.metaConfig.monitoring.labels;
+          labels = mkNodeLabels m;
         }) machines;
 
         hostnamePingConfigs = map (m: {
@@ -705,6 +717,30 @@ in
             static_configs = scrapeConfigs.nodes.exporterConfigs;
           }
         ]
+        ++ (optional (scrapeConfigs.nodes.zfsHypervisorConfigs != [ ]) {
+          job_name = "nodes-zfs-hypervisor";
+          scrape_interval = "60s";
+          scrape_timeout = "60s";
+          static_configs = scrapeConfigs.nodes.zfsHypervisorConfigs;
+          relabel_configs = [
+            {
+              target_label = "job";
+              replacement = "nodes";
+            }
+          ];
+        })
+        ++ (optional (scrapeConfigs.nodes.zfsStorageConfigs != [ ]) {
+          job_name = "nodes-zfs-storage";
+          scrape_interval = "300s";
+          scrape_timeout = "300s";
+          static_configs = scrapeConfigs.nodes.zfsStorageConfigs;
+          relabel_configs = [
+            {
+              target_label = "job";
+              replacement = "nodes";
+            }
+          ];
+        })
         ++ (optional (scrapeConfigs.nodes.hostnamePingConfigs != [ ]) {
           job_name = "nodes-ping-host";
           scrape_interval = "15s";
