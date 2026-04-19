@@ -215,6 +215,66 @@
       }
 
       {
+        alert = "StorageCritPoolFreeSpace";
+        expr = ''zfs_dataset_available_bytes{job="nodes",role="storage",type="filesystem",name!~".*/.*"} < 1024 * 1024 * 1024 * 1024'';
+        for = "5m";
+        labels = {
+          alertclass = "zpoolcap";
+          severity = "critical";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Low top-level pool dataset free space (instance {{ $labels.instance }})";
+          description = ''
+            Top-level pool dataset {{ $labels.name }} on pool {{ $labels.pool }} has less than 1 TB available
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "HypervisorCritPoolFreeSpace";
+        expr = ''zfs_dataset_available_bytes{job="nodes",role="hypervisor",type="filesystem",name!~".*/.*"} < 512 * 1024 * 1024 * 1024'';
+        for = "5m";
+        labels = {
+          alertclass = "zpoolcap";
+          severity = "critical";
+          frequency = "hourly";
+        };
+        annotations = {
+          summary = "Low top-level pool dataset free space (instance {{ $labels.instance }})";
+          description = ''
+            Top-level pool dataset {{ $labels.name }} on pool {{ $labels.pool }} has less than 512 GB available
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "HypervisorFatalPoolFreeSpace";
+        expr = ''zfs_dataset_available_bytes{job="nodes",role="hypervisor",type="filesystem",name!~".*/.*"} < 256 * 1024 * 1024 * 1024'';
+        for = "5m";
+        labels = {
+          alertclass = "zpoolcap";
+          severity = "fatal";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "Low top-level pool dataset free space (instance {{ $labels.instance }})";
+          description = ''
+            Top-level pool dataset {{ $labels.name }} on pool {{ $labels.pool }} has less than 256 GB available
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "HypervisorLowZfsArcC";
         expr = ''node_zfs_arc_c{role="hypervisor"} < (node_memory_MemTotal_bytes / 8) and on(instance) (avg by(instance) (irate(node_cpu_seconds_total{mode="iowait",role="hypervisor"}[5m])) * 100) > 10'';
         for = "5m";
