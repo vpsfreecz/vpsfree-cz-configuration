@@ -119,6 +119,7 @@ in
       ksvcmon-exporter = { };
       node-exporter = { };
       osctl-exporter = { };
+      zfs-exporter = { };
       vpsadmin-console = { };
     };
   };

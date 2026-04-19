@@ -71,6 +71,7 @@ in
       ipmi-exporter.port = 9290;
       node-exporter.port = 9100;
       osctl-exporter.port = 9101;
+      zfs-exporter.port = 9134;
       rabbitmq-exporter = {
         port = 15692;
         monitor = "rabbitmq";

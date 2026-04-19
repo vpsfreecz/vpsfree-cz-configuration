@@ -32,6 +32,7 @@ let
       "ebpf"
       "ksvcmon"
       "osctl"
+      "zfs"
     ]);
 
     # Exporters declared in machine metadata
@@ -176,6 +177,7 @@ in
         };
 
         osctl.enable = true;
+        zfs.enable = true;
       };
 
       services.cron.systemCronJobs = [
