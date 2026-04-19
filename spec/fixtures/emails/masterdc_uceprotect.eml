@@ -1,0 +1,26 @@
+From: "support@master.cz via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #10103] [MasterDC support #702321] UCEPROTECT Monitoring Report (192.168.65.60)
+Date: Fri, 20 Sep 2024 05:40:17 +0200
+X-RT-Originator: support@master.cz
+Content-Type: text/plain; charset=UTF-8
+
+Fri Sep 20 05:40:16 2024: Request 10103 was acted upon.
+ Transaction: Ticket created by support@master.cz
+       Queue: abuse
+     Subject: [MasterDC support #702321] UCEPROTECT Monitoring Report (192.168.65.60)
+       Owner: Nobody
+  Requestors: support@master.cz
+      Status: new
+ Ticket <URL: https://rt.vpsfree.cz/rt/Ticket/Display.html?id=10103 >
+
+
+Dobrý den,
+z Vaší IP adresy 192.168.65.60 pravděpodobně probíhá spamming.
+
+IP,LAST IMPACT TIMESTAMP,LAST IMPACT GermanTime,earliest expiretime GermanTime
+0.0.0.0,,01.01.1970 01:00 ,08.01.1970 02:00
+192.168.65.60,1726798443,20.09.2024 04:14 ,27.09.2024 05:00
+
+--
+MasterDC support

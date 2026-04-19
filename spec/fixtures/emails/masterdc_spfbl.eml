@@ -1,0 +1,50 @@
+From: "abuse@master.cz via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #10101] [rt.i.masterinter.net #755614] Abuse report #1irmmcone from 172.16.15.43
+Date: Tue, 20 May 2025 13:33:24 +0200
+X-RT-Originator: abuse@master.cz
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="masterdc-spfbl-boundary"
+
+--masterdc-spfbl-boundary
+Content-Type: text/plain; charset=UTF-8
+
+Tue May 20 13:33:24 2025: Request 10101 was acted upon.
+ Transaction: Ticket created by abuse@master.cz
+       Queue: abuse
+     Subject: [rt.i.masterinter.net #755614] Abuse report #1irmmcone from 172.16.15.43
+       Owner: Nobody
+  Requestors: abuse@master.cz
+      Status: new
+ Ticket <URL: https://rt.vpsfree.cz/rt/Ticket/Display.html?id=10101 >
+
+
+Dobrý den,
+IP adresa 172.16.15.43 Vašeho serveru byla identifikována jako původce možného nevyžádaného sdělení.
+--masterdc-spfbl-boundary
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: attachment
+
+This is an abuse report for an email message sent by mail server example.test [172.16.15.43] on Tue, 20 May 2025 08:13:52 -0300
+
+	Feedback-Type: abuse
+	User-Agent: SPFBL/3.2
+	Version: 1
+	Original-Mail-From: [sender@example.test]
+	Original-Rcpt-To: [recipient@example.test]
+	Arrival-Date: Tue, 20 May 2025 08:13:52 -0300
+	Reporting-MTA: dns; mx.example.test
+	Source-IP: 172.16.15.43
+--masterdc-spfbl-boundary
+Content-Type: message/feedback-report
+Content-Disposition: attachment
+
+Feedback-Type: abuse
+User-Agent: SPFBL/3.2
+Version: 1
+Original-Mail-From: <sender@example.test>
+Original-Rcpt-To: <recipient@example.test>
+Arrival-Date: Tue, 20 May 2025 08:13:52 -0300
+Reporting-MTA: dns; mx.example.test
+Source-IP: 172.16.15.43
+--masterdc-spfbl-boundary--

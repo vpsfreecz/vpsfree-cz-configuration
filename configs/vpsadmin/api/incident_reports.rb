@@ -23,6 +23,7 @@ VpsAdmin::API::IncidentReports.config do
       AbuseNoticeParser::BitNinja,
       AbuseNoticeParser::Fail2Ban,
       AbuseNoticeParser::LeakIX,
+      AbuseNoticeParser::MasterDc,
       AbuseNoticeParser::Proki,
       AbuseNoticeParser::SpamCop,
       AbuseNoticeParser::UsGo
