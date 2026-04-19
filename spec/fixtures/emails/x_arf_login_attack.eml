@@ -1,0 +1,43 @@
+From: "Abuse Bot via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #10202] abuse report about 10.42.9.42 - 2026-04-17T17:02:02-0400
+Date: Fri, 17 Apr 2026 23:02:19 +0200
+X-RT-Originator: abuse-bot@example.net
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="x-arf-boundary"
+
+--x-arf-boundary
+Content-Type: text/plain; charset=UTF-8
+
+Fri Apr 17 23:02:19 2026: Request 10202 was acted upon.
+ Transaction: Ticket created by abuse-bot@example.net
+       Queue: abuse
+     Subject: abuse report about 10.42.9.42 - 2026-04-17T17:02:02-0400
+       Owner: Nobody
+  Requestors: abuse-bot@example.net
+      Status: new
+ Ticket <URL: https://rt.vpsfree.cz/rt/Ticket/Display.html?id=10202 >
+
+
+The IP address 10.42.9.42 was found attacking a login endpoint on a monitored host.
+--x-arf-boundary
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: attachment; filename="report.txt"
+
+Reported-From: abuse-bot@example.net
+Report-ID: 1776459722@example.net
+Category: abuse
+Report-Type: login-attack
+Service: login
+User-Agent: firewall v1.0
+Date: 2026-04-17T17:02:02-0400
+Source: 10.42.9.42
+Source-Type: ipv4
+Attachment: text/plain
+--x-arf-boundary
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: attachment; filename="logfile.log"
+
+example.com:443 10.42.9.42 - - [17/Apr/2026:16:56:27 -0400] "POST /wp-login.php HTTP/2.0" 200 3271
+example.net:443 10.42.9.42 - - [17/Apr/2026:17:01:48 -0400] "POST /wp-login.php HTTP/2.0" 200 3047
+--x-arf-boundary--

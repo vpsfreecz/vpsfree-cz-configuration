@@ -1,0 +1,23 @@
+From: "Abuse Reporter via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #10201] Abuse from 10.42.9.42
+Date: Sun, 19 Apr 2026 07:19:02 +0200
+X-RT-Originator: log-abuse@example.net
+Content-Type: text/plain; charset=UTF-8
+
+Sun Apr 19 07:19:02 2026: Request 10201 was acted upon.
+ Transaction: Ticket created by log-abuse@example.net
+       Queue: abuse
+     Subject: Abuse from 10.42.9.42
+       Owner: Nobody
+  Requestors: log-abuse@example.net
+      Status: new
+ Ticket <URL: https://rt.vpsfree.cz/rt/Ticket/Display.html?id=10201 >
+
+
+We have detected abuse to our IPv4 block 10.44.0.0/24 from the IP address 10.42.9.42, which appears to be on your network.
+
+Lines containing failures of 10.42.9.42 (max 1000)
+10.42.9.42 - - [19/Apr/2026:03:09:22 +0200] "POST /xmlrpc.php HTTP/2.0" 200 414 "-" "Mozilla/5.0"
+10.42.9.42 - - [19/Apr/2026:05:12:13 +0200] "POST /xmlrpc.php HTTP/2.0" 200 244 "-" "Mozilla/5.0"
+10.42.9.42 - - [19/Apr/2026:07:18:38 +0200] "POST /xmlrpc.php HTTP/2.0" 200 225 "-" "Mozilla/5.0"

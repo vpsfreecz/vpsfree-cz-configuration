@@ -26,12 +26,17 @@ VpsAdmin::API::IncidentReports.config do
       AbuseNoticeParser::MasterDc,
       AbuseNoticeParser::Proki,
       AbuseNoticeParser::SpamCop,
-      AbuseNoticeParser::UsGo
+      AbuseNoticeParser::UsGo,
+      AbuseNoticeParser::XArf
     ].each do |klass|
-      if !klass.match_subject?(subject) \
-         || (check_sender && !klass.match_sender?(originator))
-        next
-      end
+      matches = if klass.respond_to?(:match_message?)
+                  klass.match_message?(subject, originator, check_sender: check_sender)
+                else
+                  klass.match_subject?(subject) \
+                    && (!check_sender || klass.match_sender?(originator))
+                end
+
+      next unless matches
 
       processed = true
 
