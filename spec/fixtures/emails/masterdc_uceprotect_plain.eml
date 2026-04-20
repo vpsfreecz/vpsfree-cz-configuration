@@ -1,0 +1,26 @@
+From: "support@master.cz via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #91270] [MasterDC support #805648] UCEPROTECT Monitoring Report: IP 192.168.65.61
+Date: Mon, 20 Apr 2026 08:56:47 +0200
+X-RT-Originator: support@master.cz
+Content-Type: text/plain; charset=UTF-8
+
+Mon Apr 20 08:56:47 2026: Request 91270 was acted upon.
+ Transaction: Ticket created by support@master.cz
+       Queue: abuse
+     Subject: [MasterDC support #805648] UCEPROTECT Monitoring Report: IP 192.168.65.61
+       Owner: Nobody
+  Requestors: support@master.cz
+      Status: new
+ Ticket <URL: https://rt.vpsfree.cz/rt/Ticket/Display.html?id=91270 >
+
+
+Dobrý den,
+z Vaší IP adresy 192.168.65.61 pravděpodobně probíhá spamming. Spamové e-maily byly doručeny do honeypotů blacklistu UCEPROTECT, což vedlo k zařazení Vaší IP adresy na blacklist.
+Prosíme o bezodkladné řešení vzniklé situace.
+Aktuální stav můžete sledovat na následujícím odkaze:
+http://www.uceprotect.net/en/rblcheck.php
+Díky za Vaši spolupráci.
+
+--
+MasterDC support

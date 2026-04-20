@@ -83,17 +83,37 @@ module AbuseNoticeParser
     def parse_uceprotect
       text = incident_text
       csv_text = uceprotect_csv(text)
+      addr_str = nil
+      time = nil
 
-      if csv_text.nil?
-        warn 'MasterDC UCEPROTECT: csv not found'
-        return []
+      if csv_text
+        addr_str, time = parse_uceprotect_csv(csv_text)
+      else
+        addr_str = uceprotect_notice_ip(text)
+        time = message_date
+
+        if addr_str.nil?
+          warn 'MasterDC UCEPROTECT: IP not found'
+          return []
+        end
+
+        if time.nil?
+          warn 'MasterDC UCEPROTECT: message date not found'
+          return []
+        end
       end
 
+      return [] if addr_str.nil? || time.nil?
+
+      create_incident(addr_str, text, time, label: 'MasterDC UCEPROTECT')
+    end
+
+    def parse_uceprotect_csv(csv_text)
       begin
         csv = CSV.parse(csv_text, headers: true)
       rescue CSV::MalformedCSVError => e
         warn "MasterDC UCEPROTECT: invalid csv: #{e.message}"
-        return []
+        return [nil, nil]
       end
 
       subject_ip = uceprotect_subject_ip
@@ -106,7 +126,7 @@ module AbuseNoticeParser
 
       if row.nil?
         warn 'MasterDC UCEPROTECT: no matching IP found in csv'
-        return []
+        return [nil, nil]
       end
 
       addr_str = row['IP'].to_s.strip
@@ -117,18 +137,18 @@ module AbuseNoticeParser
 
         if time.nil?
           warn 'MasterDC UCEPROTECT: message date not found'
-          return []
+          return [nil, nil]
         end
       else
         begin
           time = Time.at(Integer(timestamp))
         rescue ArgumentError, TypeError => e
           warn "MasterDC UCEPROTECT: invalid timestamp #{timestamp.inspect}: #{e.message}"
-          return []
+          return [nil, nil]
         end
       end
 
-      create_incident(addr_str, text, time, label: 'MasterDC UCEPROTECT')
+      [addr_str, time]
     end
 
     def uceprotect_csv(text)
@@ -149,7 +169,22 @@ module AbuseNoticeParser
     end
 
     def uceprotect_subject_ip
-      return ::Regexp.last_match(1) if /UCEPROTECT Monitoring Report(?: \(| - )([^ )]+)/ =~ strip_rt_prefix(message.subject)
+      subject = strip_rt_prefix(message.subject)
+      pattern = %r{UCEPROTECT Monitoring Report(?: \(| - |: IP )([0-9a-f:.]+)}i
+      return ::Regexp.last_match(1) if pattern =~ subject
+
+      nil
+    end
+
+    def uceprotect_notice_ip(text)
+      subject_ip = uceprotect_subject_ip
+      return subject_ip if subject_ip
+
+      text.each_line do |line|
+        next unless /(?:IP address|IP adres[ay]|IP)\s+([0-9a-f:.]+)/i =~ line
+
+        return ::Regexp.last_match(1).sub(/[.,;]+\z/, '')
+      end
 
       nil
     end

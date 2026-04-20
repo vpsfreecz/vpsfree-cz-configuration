@@ -32,4 +32,17 @@ RSpec.describe AbuseNoticeParser::MasterDc do
     expect(incident.detected_at).to eq(Time.at(1_726_798_443))
     expect(incident.text).to include('192.168.65.60,1726798443')
   end
+
+  it 'parses a MasterDC prose UCEPROTECT monitoring report without CSV data' do
+    incidents = parse_fixture(described_class, 'masterdc_uceprotect_plain', assignments: ['192.168.65.61'])
+
+    expect(incidents.size).to eq(1)
+    incident = incidents.first
+    expect(incident.subject).to eq(
+      '[MasterDC support #805648] UCEPROTECT Monitoring Report: IP 192.168.65.61'
+    )
+    expect(incident.detected_at).to eq(Time.new(2026, 4, 20, 8, 56, 47, '+02:00'))
+    expect(incident.text).to include('z Vaší IP adresy 192.168.65.61')
+    expect(incident.text).to include('honeypotů blacklistu UCEPROTECT')
+  end
 end
