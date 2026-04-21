@@ -47,6 +47,8 @@
     };
   };
 
+  boot.zfs.moduleParams.zfs."zfs_bclone_enabled" = 0;
+
   boot.kernel.sysctl."vm.swappiness" = 100;
 
   swapDevices = [

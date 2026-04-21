@@ -165,6 +165,8 @@ in
     };
   };
 
+  boot.zfs.moduleParams.zfs."zfs_bclone_enabled" = 0;
+
   osctl.pools.tank = {
     parallelStart = 10;
     parallelStop = 20;
