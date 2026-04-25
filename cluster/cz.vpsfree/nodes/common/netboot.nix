@@ -103,4 +103,5 @@
   # are netbooted and other systems do not use boot.initrd.network, which is
   # required to upload the crash dump.
   clusterconf.crashdump.enable = true;
+  clusterconf.crashdump.inspect.enable = true;
 }
