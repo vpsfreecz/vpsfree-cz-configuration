@@ -311,7 +311,7 @@ in
     boot.crashDump = {
       enable = true;
       inspect.enable = mkDefault cfg.inspect.enable;
-      reservedMemory = "2048M";
+      reservedMemory = mkDefault "2048M";
       commands = ''
         create_crash_dump() {
           local date mountpoint target cpuCount

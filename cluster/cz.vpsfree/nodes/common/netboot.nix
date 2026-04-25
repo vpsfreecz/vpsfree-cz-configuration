@@ -104,4 +104,5 @@
   # required to upload the crash dump.
   clusterconf.crashdump.enable = true;
   clusterconf.crashdump.inspect.enable = true;
+  boot.crashDump.reservedMemory = "4096M";
 }
