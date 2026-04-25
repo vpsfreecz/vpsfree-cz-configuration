@@ -77,7 +77,7 @@ in
     options ixgbe allow_unsupported_sfp=1
   '';
 
-  boot.zfs.moduleParams.zfs."zfs_bclone_enabled" = 0;
+  boot.zfs.moduleParams.zfs."zfs_bclone_enabled" = lib.mkDefault 0;
 
   environment.interactiveShellInit = ''
     alias arcstat='arcstat -f time,hits,miss,mtxmis,grow,need,c,size,free'
