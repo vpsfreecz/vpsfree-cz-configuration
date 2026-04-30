@@ -75,6 +75,8 @@ in
 
   boot.extraModprobeConfig = ''
     options ixgbe allow_unsupported_sfp=1
+    # Mitigate CVE-2026-31431 by refusing algif_aead module loads.
+    install algif_aead ${pkgs.coreutils}/bin/false
   '';
 
   boot.zfs.moduleParams.zfs."zfs_bclone_enabled" = lib.mkDefault 0;
