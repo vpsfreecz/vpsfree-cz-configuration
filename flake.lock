@@ -539,6 +539,7 @@
         "vpsadminosOsStaging": "vpsadminosOsStaging",
         "vpsadminosProduction": "vpsadminosProduction",
         "vpsadminosStaging": "vpsadminosStaging",
+        "vpsfStatus": "vpsfStatus",
         "vpsfreeWeb": "vpsfreeWeb"
       }
     },
@@ -736,6 +737,26 @@
       "original": {
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
+        "type": "github"
+      }
+    },
+    "vpsfStatus": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgsStable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1777834726,
+        "narHash": "sha256-Al2615//jEg3gk6OpddGSkXTFdFPlqnk25+qh0u+WB4=",
+        "owner": "vpsfreecz",
+        "repo": "vpsf-status",
+        "rev": "01a4d2448ced89f93ec3c6213f7920dcfd267e10",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vpsfreecz",
+        "repo": "vpsf-status",
         "type": "github"
       }
     },
