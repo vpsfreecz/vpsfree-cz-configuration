@@ -74,6 +74,28 @@
           '';
         };
       }
+
+      {
+        alert = "VpsfStatusIndexRenderStale";
+        expr = ''
+          absent(vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status"})
+            or time() - vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status"} > 300
+        '';
+        labels = {
+          severity = "critical";
+          frequency = "1h";
+        };
+        annotations = {
+          summary = "status.vpsf.cz index page rendering is stale";
+          description = ''
+            status.vpsf.cz has not completed an index page render in more than
+            five minutes, or the render timestamp metric is missing.
+
+            VALUE: {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 ]

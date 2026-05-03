@@ -96,6 +96,12 @@ let
     }
     {
       match = {
+        frequency = "1h";
+      };
+      repeat_interval = "1h";
+    }
+    {
+      match = {
         frequency = "15m";
       };
       repeat_interval = "15m";

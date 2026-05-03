@@ -524,6 +524,26 @@ let
       ];
     };
 
+    vpsfStatus = {
+      jobs = [
+        {
+          job_name = "vpsf-status";
+          scheme = "https";
+          scrape_interval = "60s";
+          metrics_path = "/metrics";
+          static_configs = [
+            {
+              targets = [ "status.vpsf.cz:443" ];
+              labels = {
+                alias = "status.vpsf.cz";
+                type = "vpsf-status";
+              };
+            }
+          ];
+        }
+      ];
+    };
+
     outboundNet = {
       pingConfigs =
         map
@@ -926,6 +946,7 @@ in
           static_configs = scrapeConfigs.varnish.exporterConfigs;
         })
         ++ scrapeConfigs.http.jobs
+        ++ scrapeConfigs.vpsfStatus.jobs
         ++ scrapeConfigs.vpsadminDownload.jobs
         ++ [
           {
