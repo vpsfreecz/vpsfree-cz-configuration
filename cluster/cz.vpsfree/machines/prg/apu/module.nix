@@ -3,7 +3,10 @@
   cluster."cz.vpsfree/machines/prg/apu" = rec {
     spin = "nixos";
 
-    inputs.channels = [ "nixos-stable" ];
+    inputs.channels = [
+      "nixos-stable"
+      "vpsf-status"
+    ];
 
     host = {
       name = "apu";

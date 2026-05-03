@@ -23,6 +23,11 @@
       flake = false;
     };
 
+    vpsfStatus = {
+      url = "github:vpsfreecz/vpsf-status";
+      inputs.nixpkgs.follows = "nixpkgsStable";
+    };
+
     nixpkgsStaging.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgsProduction.url = "github:NixOS/nixpkgs/nixos-25.11";
 
@@ -105,6 +110,10 @@
 
         vpsfree-web = {
           vpsfreeWeb = "vpsfreeWeb";
+        };
+
+        vpsf-status = {
+          vpsf-status = "vpsfStatus";
         };
       };
 

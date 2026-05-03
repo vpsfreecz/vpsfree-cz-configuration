@@ -4,10 +4,14 @@
   lib,
   confLib,
   confData,
+  flakeInputs,
+  inputsInfo,
   ...
 }:
 with lib;
 let
+  vpsfStatusInput = inputsInfo."vpsf-status".input;
+
   allMachines = confLib.getClusterMachines config.cluster;
 
   findNodes =
@@ -62,6 +66,10 @@ let
   };
 in
 {
+  imports = [
+    flakeInputs.${vpsfStatusInput}.nixosModules.vpsf-status
+  ];
+
   services.vpsf-status = {
     enable = true;
     listenAddress = "172.31.0.33";

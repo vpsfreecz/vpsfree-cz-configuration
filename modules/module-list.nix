@@ -17,7 +17,6 @@ let
     ./services/monitoring/prometheus/rules.nix
     ./services/network-graphs
     ./services/sachet.nix
-    ./services/vpsf-status.nix
     ./services/vpsfree-irc-bot.nix
     ./services/vpsfree-web.nix
     ./system/logging/nixos.nix
