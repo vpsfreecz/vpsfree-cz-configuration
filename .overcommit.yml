@@ -1,3 +1,5 @@
+gemfile: Gemfile
+
 PreCommit:
   Nixfmt:
     enabled: true
