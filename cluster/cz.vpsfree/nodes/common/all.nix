@@ -11,6 +11,7 @@
 }:
 let
   vpsadminInput = inputsInfo.vpsadmin.input;
+  isProductionNode = builtins.elem "production" confMachine.inputs.channels;
   rabbitmqs =
     map
       (
@@ -67,10 +68,12 @@ in
 
   boot.kernel.sysctl = {
     "kernel.hung_task_warnings" = -1;
-    "kernel.modprobe" = "${modprobeWrapper}";
     "kernel.printk" = 0;
     "net.ipv4.neigh.default.gc_thresh3" = 16384;
     "net.ipv6.neigh.default.gc_thresh3" = 16384;
+  }
+  // lib.optionalAttrs isProductionNode {
+    "kernel.modprobe" = "${modprobeWrapper}";
   };
 
   boot.extraModprobeConfig = ''
