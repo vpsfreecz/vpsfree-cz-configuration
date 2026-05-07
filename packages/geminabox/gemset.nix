@@ -19,16 +19,6 @@
     };
     version = "3.3.0";
   };
-  compact_index = {
-    groups = [ "default" ];
-    platforms = [ ];
-    source = {
-      remotes = [ "https://rubygems.org" ];
-      sha256 = "12sam0njinsm62030lv7gsqhsqg1yqj9bpjdkxyqm4m8zi540v2w";
-      type = "gem";
-    };
-    version = "0.15.0";
-  };
   daemons = {
     groups = [ "default" ];
     platforms = [ ];
@@ -216,15 +206,14 @@
     version = "0.1.1";
   };
   rubygems-generate_index = {
-    dependencies = [ "compact_index" ];
     groups = [ "default" ];
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "0p1z76iqdn9py7m16jb4hxzn2fslw62n943ab3lrhrb6491l4w9m";
+      sha256 = "1aqa7zrgzhddpfl3frcms0bv0aqd168x680zmjjdnf2sahsvjcyb";
       type = "gem";
     };
-    version = "1.1.3";
+    version = "1.2.0";
   };
   sinatra = {
     dependencies = [
