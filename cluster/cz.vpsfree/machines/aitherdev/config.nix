@@ -226,6 +226,11 @@ in
 
   programs.bepastyrb.enable = true;
 
+  programs.mosh = {
+    enable = true;
+    openFirewall = false;
+  };
+
   # Bridge for VMs
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 
@@ -263,6 +268,10 @@ in
 
     # Samba workspace share
     iptables -A nixos-fw -p tcp -m tcp --dport 445 -s 172.16.107.34/32 -j ACCEPT
+
+    # mosh
+    iptables -A nixos-fw -p udp -m udp --dport 60000:61000 -s 172.16.106.0/24 -j ACCEPT
+    iptables -A nixos-fw -p udp -m udp --dport 60000:61000 -s 172.16.107.0/24 -j ACCEPT
 
     # socket network for vpsAdminOS test-runner
     iptables -A nixos-fw -m pkttype --pkt-type multicast -p udp --dport 10000:30000 -j ACCEPT
