@@ -5,6 +5,8 @@ self: super: {
     super.callPackage ../packages/node-exporter-textfile-collector-scripts.nix
       { };
 
+  mosh-osc-colors = super.callPackage ../packages/mosh-osc-colors.nix { };
+
   ruby-bepasty-client = super.callPackage ../packages/ruby-bepasty-client { };
 
   sachet = super.callPackage ../packages/sachet { };

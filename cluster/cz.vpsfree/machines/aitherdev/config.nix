@@ -229,6 +229,7 @@ in
   programs.mosh = {
     enable = true;
     openFirewall = false;
+    package = pkgs.mosh-osc-colors;
   };
 
   # Bridge for VMs
