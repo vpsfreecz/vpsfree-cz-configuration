@@ -269,4 +269,6 @@ in
   services.irqbalance.enable = true;
 
   services.haveged.enable = true;
+
+  services.ebpf-livepatch.enable = true;
 }
