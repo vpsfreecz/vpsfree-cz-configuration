@@ -7,6 +7,10 @@ self: super: {
 
   mosh-osc-colors = super.callPackage ../packages/mosh-osc-colors.nix { };
 
+  discourse-vpsadmin-oauth-signup-policy =
+    super.callPackage ../packages/discourse-vpsadmin-oauth-signup-policy
+      { };
+
   ruby-bepasty-client = super.callPackage ../packages/ruby-bepasty-client { };
 
   sachet = super.callPackage ../packages/sachet { };
