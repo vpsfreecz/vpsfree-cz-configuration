@@ -1083,6 +1083,7 @@ in
             ./rules/meet.nix
             ./rules/vpsfree-web.nix
             ./rules/systemd.nix
+            ./rules/kernel-livepatches.nix
             ./rules/nodectld.nix
             ./rules/syslog.nix
             ./rules/ipmi.nix
