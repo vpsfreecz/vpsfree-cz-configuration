@@ -33,7 +33,7 @@ in
     hostname = "discourse.vpsfree.cz";
 
     plugins = [
-      pkgs.discourse-vpsadmin-oauth-signup-policy
+      pkgs.discourse-oauth-signup-policy
     ];
 
     admin = {
@@ -74,6 +74,10 @@ in
       };
 
       login = {
+        enable_github_logins = true;
+        github_client_id._secret = "/private/discourse/github_client_id";
+        github_client_secret._secret = "/private/discourse/github_client_secret";
+
         oauth2_enabled = true;
         oauth2_client_id = "discourse.vpsfree.cz";
         # oauth2_client_secret = "set using web UI";

@@ -1,13 +1,18 @@
 # frozen_string_literal: true
 
-# name: discourse-vpsadmin-oauth-signup-policy
-# about: Allow new accounts only after vpsAdmin OAuth authentication
+# name: discourse-oauth-signup-policy
+# about: Allow new accounts only after approved OAuth authentication
 # version: 0.1
 # authors: vpsFree.cz
 
-module ::VpsAdminOauthSignupPolicy
+module ::OauthSignupPolicy
+  ALLOWED_AUTHENTICATORS = %w[
+    github
+    oauth2_basic
+  ].freeze
+
   def create
-    if vpsadmin_local_registration?
+    if local_registration?
       return fail_with('login.new_registrations_disabled')
     end
 
@@ -16,7 +21,7 @@ module ::VpsAdminOauthSignupPolicy
 
   private
 
-  def vpsadmin_local_registration?
+  def local_registration?
     return false if current_user&.admin?
 
     auth = server_session[:authentication]
@@ -24,10 +29,10 @@ module ::VpsAdminOauthSignupPolicy
 
     authenticator_name = auth[:authenticator_name] || auth['authenticator_name']
 
-    authenticator_name != 'oauth2_basic'
+    !ALLOWED_AUTHENTICATORS.include?(authenticator_name)
   end
 end
 
 after_initialize do
-  ::UsersController.prepend(::VpsAdminOauthSignupPolicy)
+  ::UsersController.prepend(::OauthSignupPolicy)
 end
