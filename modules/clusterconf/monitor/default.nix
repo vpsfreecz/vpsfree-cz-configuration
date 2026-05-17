@@ -877,6 +877,7 @@ in
         ++ (optional (scrapeConfigs.dnsResolvers.kresdConfigs != [ ]) {
           job_name = "kresd-management";
           scrape_interval = "60s";
+          metrics_path = "/metrics/prometheus";
           static_configs = scrapeConfigs.dnsResolvers.kresdConfigs;
         })
         ++ (optional (scrapeConfigs.dnsResolvers.dnsProbes != [ ]) {

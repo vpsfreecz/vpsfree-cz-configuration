@@ -8,7 +8,7 @@
   ...
 }:
 let
-  inherit (lib) concatMapStringsSep filter optionals;
+  inherit (lib) concatMapStringsSep filter;
 
   formatNetworks = list: map (net: "${net.address}/${toString net.prefix}") list;
 
@@ -28,11 +28,15 @@ let
 
   allNetworks = v4Networks ++ v6Networks;
 
-  kresdNetworks = [
+  resolverNetworks = [
     "127.0.0.0/8"
     "::1/128"
   ]
   ++ allNetworks;
+
+  cacheTmpfsSizeM = 2048;
+
+  cacheSizeMaxM = cacheTmpfsSizeM - 10;
 
   managementPort = confMachine.services.kresd-management.port;
 
@@ -40,11 +44,12 @@ let
 
   monitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
 
-  makeListenAddress = version: addr: if version == 4 then addr.address else "[${addr.address}]";
-
-  makeListen =
-    version:
-    map (addr: "${makeListenAddress version addr}:${toString confMachine.services.kresd-plain.port}");
+  listenAddresses = [
+    "127.0.0.1"
+    "::1"
+  ]
+  ++ map (addr: addr.address) confMachine.addresses.v4
+  ++ map (addr: addr.address) confMachine.addresses.v6;
 in
 {
   environment.systemPackages = with pkgs; [
@@ -54,47 +59,43 @@ in
   fileSystems."/var/cache/knot-resolver" = {
     fsType = "tmpfs";
     device = "tmpfs";
-    options = [ "rw,size=2G,uid=knot-resolver,gid=knot-resolver,nosuid,nodev,noexec,mode=0700" ];
+    options = [
+      "rw,size=${toString cacheTmpfsSizeM}M,uid=knot-resolver,gid=knot-resolver,nosuid,nodev,noexec,mode=0700"
+    ];
   };
 
-  services.kresd = {
+  services.knot-resolver = {
     enable = true;
-    package = pkgs.knot-resolver.override { extraFeatures = true; };
-    instances = 8;
-    listenPlain =
-      (makeListen 4 [ { address = "127.0.0.1"; } ])
-      ++ (makeListen 6 [ { address = "::1"; } ])
-      ++ (makeListen 4 confMachine.addresses.v4)
-      ++ (makeListen 6 confMachine.addresses.v6);
-    extraConfig = ''
-      net.listen(
-        '${confMachine.addresses.primary.address}',
-        ${toString confMachine.services.kresd-management.port},
-        { kind = 'webmgmt' }
-      )
-
-      cache.size = cache.fssize() - 10*MB
-
-      modules = {
-        'view',
-        'stats',
-        'http'
-      }
-
-      http.config({
-        tls = false,
-      })
-
-      http.prometheus.namespace = 'kresd_'
-
-      -- allow access from our networks
-      ${concatMapStringsSep "" (addr: ''
-        view:addr('${addr}', policy.all(policy.PASS))
-      '') kresdNetworks}
-
-      -- drop everything that hasn't matched
-      view:addr('0.0.0.0/0', policy.all(policy.DROP))
-    '';
+    settings = {
+      workers = 8;
+      network.listen = [
+        {
+          interface = listenAddresses;
+          port = confMachine.services.kresd-plain.port;
+          kind = "dns";
+          freebind = true;
+        }
+      ];
+      management.interface = "${confMachine.addresses.primary.address}@${toString managementPort}";
+      cache = {
+        storage = "/var/cache/knot-resolver";
+        size-max = "${toString cacheSizeMaxM}M";
+      };
+      monitoring.metrics = "always";
+      views = [
+        {
+          subnets = resolverNetworks;
+          answer = "allow";
+        }
+        {
+          subnets = [
+            "0.0.0.0/0"
+            "::/0"
+          ];
+          answer = "refused";
+        }
+      ];
+    };
   };
 
   networking.firewall.extraCommands =
@@ -107,7 +108,7 @@ in
       ip6tables -A nixos-fw -p tcp -s ${net} --dport 53 -j nixos-fw-accept
     '') v6Networks)
     + (concatMapStringsSep "\n" (m: ''
-      # kresd prometheus metrics ${m.name}
+      # knot-resolver prometheus metrics ${m.name}
       iptables -A nixos-fw -p tcp --dport ${toString managementPort} -s ${m.metaConfig.addresses.primary.address} -j nixos-fw-accept
     '') monitors);
 }
