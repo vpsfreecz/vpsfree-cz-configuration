@@ -26,6 +26,7 @@
 
 ## Commit & Pull Request Guidelines
 - Commit messages follow `scope: action` (e.g., `inputs: update nixpkgs`, `cluster: remove ...`); use imperative, lower-case verbs.
+- Use `vpsadmin-config:` for changes to vpsAdmin configuration.
 - Commit messages must explain what is being changed, why it is needed,
   and how it is implemented.
 - Wrap commit message lines at 80 characters or fewer.
