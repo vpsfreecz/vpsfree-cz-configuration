@@ -544,6 +544,54 @@ VpsAdmin::API::Plugins::Monitoring.config do
     action :alert_user_vps_in_rescue
   end
 
+  monitor :dns_secondary_transfer_failure do
+    label 'DNS secondary transfer failure'
+    desc 'DNS secondary zone transfer has failed'
+    period 30 * 60
+    repeat 24 * 60 * 60
+    cooldown 60 * 60
+
+    query do
+      DnsServerZone
+        .joins(dns_zone: :user)
+        .includes(
+          :dns_server,
+          dns_zone: [:user, { dns_zone_transfers: :host_ip_address }]
+        )
+        .where(
+          zone_type: DnsServerZone.zone_types[:secondary_type],
+          dns_zones: {
+            zone_source: DnsZone.zone_sources[:external_source],
+            enabled: true
+          },
+          users: { object_state: User.object_states[:active] }
+        )
+    end
+
+    value do |server_zone|
+      server_zone.last_transfer_status.to_s
+    end
+
+    check do |server_zone, transfer_status|
+      next true if transfer_status != 'failed'
+
+      primary_addr = server_zone.last_transfer_primary_addr.to_s
+      next true if primary_addr.empty?
+
+      server_zone.dns_zone.dns_zone_transfers.none? do |transfer|
+        transfer.primary_type? &&
+          %i[confirm_create confirmed].include?(transfer.confirmed) &&
+          transfer.ip_addr == primary_addr
+      end
+    end
+
+    user do |server_zone, _real|
+      server_zone.dns_zone.user
+    end
+
+    action :alert_user
+  end
+
   monitor :vps_dataset_expansions do
     label 'VPS dataset over quota'
     desc 'VPS dataset is temporarily expanded'
