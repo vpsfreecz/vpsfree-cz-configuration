@@ -145,6 +145,40 @@ in
     };
   };
 
+  systemd.services.nix-store-gc-on-pressure = {
+    description = "Garbage-collect the Nix store when disk usage is high";
+    path = [
+      config.nix.package
+      pkgs.coreutils
+    ];
+    serviceConfig.Type = "oneshot";
+    script = ''
+      usage=$(df --output=pcent /nix/store | tail -n 1 | tr -dc '0-9')
+
+      if [ -z "$usage" ]; then
+        echo "Unable to determine /nix/store disk usage" >&2
+        exit 1
+      fi
+
+      if [ "$usage" -lt 75 ]; then
+        echo "/nix/store usage is $usage%, below threshold"
+        exit 0
+      fi
+
+      echo "/nix/store usage is $usage%, running Nix garbage collection"
+      nix-collect-garbage
+    '';
+  };
+
+  systemd.timers.nix-store-gc-on-pressure = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "15min";
+      OnUnitActiveSec = "15min";
+      RandomizedDelaySec = "5min";
+    };
+  };
+
   nixpkgs.overlays = import ../../../../overlays;
 
   time.timeZone = "Europe/Amsterdam";
