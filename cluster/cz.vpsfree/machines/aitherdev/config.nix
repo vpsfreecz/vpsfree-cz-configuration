@@ -500,6 +500,36 @@ in
               ];
             };
 
+            vpsf-status = {
+              root = "~/workspace/vpsf-status";
+              windows = [
+                {
+                  repo = {
+                    layout = "tiled";
+                    panes = [
+                      "nix develop"
+                      "nix develop"
+                    ];
+                  };
+                }
+              ];
+            };
+
+            terraform-provider-vpsadmin = {
+              root = "~/workspace/vpsadmin/terraform-provider-vpsadmin";
+              windows = [
+                {
+                  repo = {
+                    layout = "tiled";
+                    panes = [
+                      "nix develop"
+                      "nix develop"
+                    ];
+                  };
+                }
+              ];
+            };
+
             nixos-conf = {
               root = "~/workspace";
               windows = [
