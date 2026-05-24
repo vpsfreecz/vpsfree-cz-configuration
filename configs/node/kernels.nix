@@ -21,8 +21,17 @@ let
   # Auto-generated list of currently running kernels within the cluster
   # Update with:
   #   confctl runtime-kernels update
+  #
+  # The generated kernels.json is intentionally ignored by git. In flake
+  # builds, ./kernels.json points into the filtered flake source, where the
+  # ignored file is not present. Since evaluation is already impure, read it
+  # from the live checkout first.
+  pwd = builtins.getEnv "PWD";
+  workingTreeKernelsJson = "${pwd}/configs/node/kernels.json";
   jsonKernels =
-    if builtins.pathExists ./kernels.json then
+    if pwd != "" && builtins.pathExists workingTreeKernelsJson then
+      builtins.fromJSON (builtins.readFile workingTreeKernelsJson)
+    else if builtins.pathExists ./kernels.json then
       builtins.fromJSON (builtins.readFile ./kernels.json)
     else
       { };
