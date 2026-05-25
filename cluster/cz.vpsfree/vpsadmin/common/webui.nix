@@ -22,6 +22,7 @@ in
     api = {
       externalUrl = "https://api.vpsfree.cz";
       internalUrl = "http://${proxyPrg.addresses.primary.address}:5000";
+      oauth2TrustedOrigins = [ "https://auth.vpsfree.cz" ];
     };
 
     extraConfig = ''
