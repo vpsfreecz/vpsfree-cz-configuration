@@ -11,7 +11,10 @@
 - Inventory: `confctl ls`.
 - Evaluate without deploy: `confctl build "cz.vpsfree/nodes/stg/*"` (scope as needed).
 - Dry-run deploy: `confctl deploy "cz.vpsfree/nodes/stg/*" dry-activate`.
-- Update inputs when required: `confctl inputs channel update --commit <channels> <source>`.
+- Update channel inputs with
+  `confctl inputs channel update --commit <channels> [role]`.
+- Pin an exact feature revision with
+  `confctl inputs channel set --commit <channels> <role> <rev>`.
 
 ## Coding Style & Naming Conventions
 - `.editorconfig` enforces UTF-8, LF, and 2-space indents for Nix/Ruby/ERB; trim trailing whitespace.
@@ -32,9 +35,15 @@
 - Wrap commit message lines at 80 characters or fewer.
 - Write commit messages using a temporary file passed to `git commit -F`.
 - Explain which hosts/services are affected when relevant; link tickets.
-- Record validation commands and dry-run results in PRs; add screenshots/logs only when clarifying behavior.
+- Record validation commands and dry-run results in PRs or initiative state,
+  not in input update commit messages. Keep automated `confctl` commit
+  messages in their generated form unless they need a concise changelog edit.
+  Add screenshots/logs only when clarifying behavior.
 
 ## Security & Configuration Tips
 - Do not commit secrets; reference keys from `data/` or GPG-managed content under `gpg/`.
-- Keep input bumps isolated from functional changes.
+- Keep input bumps isolated from functional changes. Use `confctl inputs`
+  commands for flake input updates instead of editing `flake.lock` manually.
+  Leave changelogs enabled for useful service/application updates; use
+  `--no-changelog` for noisy `nixpkgs` and `llm-agents` updates.
 - For network plans or sensitive data, follow patterns in `network-config/` and keep scopes minimal.
