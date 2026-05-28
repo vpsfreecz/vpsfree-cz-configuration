@@ -177,13 +177,21 @@ in
           host = "0.0.0.0";
           port = 8000;
           channels = {
-            "#vpsfree" = [
-              "vpsfreecz/oficialni-dokumenty"
-              "vpsfreecz/vpsfree-client"
-              "vpsfreecz/vpsfree-cz-configuration"
-              "vpsfreecz/vpsfree-mail-templates"
-              "vpsfreecz/web"
-            ];
+            "#vpsfree" = {
+              repositories = [
+                "vpsfreecz/oficialni-dokumenty"
+                "vpsfreecz/vpsfree-client"
+                "vpsfreecz/vpsfree-cz-configuration"
+                "vpsfreecz/vpsfree-mail-templates"
+                "vpsfreecz/web"
+              ];
+              event_types = [
+                "push"
+                "issues"
+                "pull_request"
+              ];
+              default_branch_only = true;
+            };
             "#vpsadminos" = [
               "vpsfreecz/confctl"
               "vpsfreecz/haveapi"
