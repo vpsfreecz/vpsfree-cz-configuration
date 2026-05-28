@@ -374,6 +374,7 @@ in
         curl
         fd
         file
+        gh
         git
         go
         gnumake
