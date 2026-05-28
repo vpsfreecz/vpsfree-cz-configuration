@@ -127,12 +127,6 @@ in
         archive_url = "https://im.vpsfree.cz/archive/";
         archive_dst = archiveDir;
 
-        mailing_lists = {
-          channels = [
-            "#vpsfree"
-          ];
-        };
-
         dokuwiki = [
           {
             url = "https://kb.vpsfree.cz";
