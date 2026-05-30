@@ -336,6 +336,14 @@ in
     allow virbr0
   '';
 
+  security.wrappers.qemu-bridge-helper = {
+    source = "${pkgs.qemu_kvm}/libexec/qemu-bridge-helper";
+    owner = "root";
+    group = "wheel";
+    setuid = true;
+    permissions = "u+rx,g+rx,o-rx";
+  };
+
   environment.homeBinInPath = true;
 
   home-manager.users.aither =
