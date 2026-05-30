@@ -234,6 +234,8 @@ web-en.aitherdev.int           IN   CNAME   aitherdev.int.vpsfree.cz.
 
 ; vpsadmin on aitherdev
 frontend.aitherdev.int         IN   A       172.16.106.53
+ns-hidden.aitherdev.int        IN   A       172.16.106.61
+ns-public.aitherdev.int        IN   A       172.16.106.62
 api.aitherdev.int              IN   CNAME   frontend.aitherdev.int.vpsfree.cz.
 api-tmp.aitherdev.int          IN   CNAME   frontend.aitherdev.int.vpsfree.cz.
 auth.aitherdev.int             IN   CNAME   frontend.aitherdev.int.vpsfree.cz.
