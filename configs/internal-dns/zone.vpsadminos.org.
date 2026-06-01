@@ -1,7 +1,7 @@
 $ORIGIN vpsadminos.org.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2026031101 ; serial number of this zone file
+              2026060101 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -19,6 +19,7 @@ cache.int                      IN   A       172.16.4.30
 check-online                   IN   CNAME   vpsadminos.org.
 gh-runner1.int                 IN   A       172.16.4.21
 gh-runner2.int                 IN   A       172.16.4.22
+gh-runner3.int                 IN   A       172.16.4.25
 images                         IN   CNAME   vpsadminos.org.
 images.int                     IN   A       172.16.4.15
 iso                            IN   CNAME   vpsadminos.org.
