@@ -78,8 +78,8 @@
       {
         alert = "VpsfStatusIndexRenderStale";
         expr = ''
-          absent(vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status"})
-            or time() - vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status"} > 300
+          absent_over_time(vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status"}[5m])
+            or time() - max_over_time(vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status"}[5m]) > 300
         '';
         labels = {
           severity = "critical";
@@ -89,7 +89,8 @@
           summary = "status.vpsf.cz index page rendering is stale";
           description = ''
             status.vpsf.cz has not completed an index page render in more than
-            five minutes, or the render timestamp metric is missing.
+            five minutes, or the render timestamp metric has been missing for
+            five minutes.
 
             VALUE: {{ $value }}
             LABELS: {{ $labels }}
