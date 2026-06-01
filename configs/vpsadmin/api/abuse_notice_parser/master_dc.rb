@@ -170,7 +170,7 @@ module AbuseNoticeParser
 
     def uceprotect_subject_ip
       subject = strip_rt_prefix(message.subject)
-      pattern = %r{UCEPROTECT Monitoring Report(?: \(| - |: IP )([0-9a-f:.]+)}i
+      pattern = /UCEPROTECT Monitoring Report(?: \(| - |: IP )([0-9a-f:.]+)/i
       return ::Regexp.last_match(1) if pattern =~ subject
 
       nil
