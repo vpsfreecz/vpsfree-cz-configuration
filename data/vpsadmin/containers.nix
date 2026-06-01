@@ -65,10 +65,10 @@
   "gh-runner1.int.vpsadminos.org" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node1.stg.vpsfree.cz";
-      id = 400;
+      fqdn = "node2.stg.vpsfree.cz";
+      id = 401;
       location = "stg";
-      name = "node1";
+      name = "node2";
     };
   };
   "gh-runner2.int.vpsadminos.org" = {
@@ -209,10 +209,10 @@
   "ns2.brq.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
-      fqdn = "node6.brq.vpsfree.cz";
-      id = 215;
+      fqdn = "node5.brq.vpsfree.cz";
+      id = 214;
       location = "brq";
-      name = "node6";
+      name = "node5";
     };
   };
   "ns2.prg.vpsfree.cz" = {
