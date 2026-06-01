@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  confMachine,
   confLib,
   ...
 }:
@@ -10,6 +11,7 @@ let
     filter
     flatten
     hasAttr
+    optionalAttrs
     replaceStrings
     ;
 
@@ -56,8 +58,18 @@ in
     '') muninCrons;
   };
 
+}
+// optionalAttrs (confMachine.spin != "vpsadminos") {
   networking.firewall.extraCommands = concatMapStringsSep "\n\n" (m: ''
     # Allow access to munin-node from ${m.metaConfig.host.fqdn}
     iptables -A nixos-fw -p tcp --dport 4949 -s ${m.metaConfig.addresses.primary.address} -j nixos-fw-accept
   '') muninCrons;
+}
+// optionalAttrs (confMachine.spin == "vpsadminos") {
+  networking.firewall.protectedRules = map (m: {
+    protocol = "tcp";
+    ports = [ 4949 ];
+    allowedIPv4Ranges = [ m.metaConfig.addresses.primary.address ];
+    comment = "munin-node";
+  }) muninCrons;
 }

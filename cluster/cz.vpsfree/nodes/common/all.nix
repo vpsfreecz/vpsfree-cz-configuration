@@ -110,64 +110,41 @@ in
   networking = {
     firewall.checkReversePath = false;
 
-    firewall.extraCommands =
+    firewall.protectedRules =
       let
         nodeCfg = confMachine;
-        nfsCfg = config.services.nfs.server;
-        monitors = lib.filter (m: m.metaConfig.monitoring.isMonitor) (
-          confLib.getClusterMachines config.cluster
-        );
-        sshCfg = config.services.openssh;
-        sshRules = map (
-          port: "iptables -A nixos-fw -p tcp --dport ${toString port} -j nixos-fw-accept"
-        ) sshCfg.ports;
-        managementNetworks = confData.vpsadmin.networks.management.ipv4;
-        vpsadminSendRecvRules = map (net: ''
-          # ${net.location}
-          iptables -A nixos-fw -p tcp -s ${net.address}/${toString net.prefix} --dport 10000:20000 -j nixos-fw-accept
-        '') managementNetworks;
+        managementNetworks = map (
+          net: "${net.address}/${toString net.prefix}"
+        ) confData.vpsadmin.networks.management.ipv4;
       in
-      ''
-        # sshd
-        ${lib.concatStringsSep "\n" sshRules}
-
-        # rpcbind
-        iptables -A nixos-fw -p tcp --dport 111 -j nixos-fw-accept
-        iptables -A nixos-fw -p udp --dport 111 -j nixos-fw-accept
-
-        # nfsd
-        iptables -A nixos-fw -p tcp --dport ${toString nfsCfg.nfsd.port} -j nixos-fw-accept
-        iptables -A nixos-fw -p udp --dport ${toString nfsCfg.nfsd.port} -j nixos-fw-accept
-
-        # mountd
-        iptables -A nixos-fw -p tcp --dport ${toString nfsCfg.mountdPort} -j nixos-fw-accept
-        iptables -A nixos-fw -p udp --dport ${toString nfsCfg.mountdPort} -j nixos-fw-accept
-
-        # statd
-        iptables -A nixos-fw -p tcp --dport ${toString nfsCfg.statdPort} -j nixos-fw-accept
-        iptables -A nixos-fw -p udp --dport ${toString nfsCfg.statdPort} -j nixos-fw-accept
-
-        # lockd
-        iptables -A nixos-fw -p tcp --dport ${toString nfsCfg.lockdPort} -j nixos-fw-accept
-        iptables -A nixos-fw -p udp --dport ${toString nfsCfg.lockdPort} -j nixos-fw-accept
-
-        # iperf
-        iptables -A nixos-fw -p tcp --dport 5001 -j nixos-fw-accept
-
-        # goresheat from VPN
-        iptables -A nixos-fw -p tcp -s 172.16.107.0/24 --dport ${toString config.services.goresheat.port} -j nixos-fw-accept
-
-        # goresheat from proxy
-        iptables -A nixos-fw -p tcp -s ${proxyPrg.addresses.primary.address} --dport ${toString config.services.goresheat.port} -j nixos-fw-accept
-
-        # vpsadmin ports for zfs send/recv
-        ${lib.concatStringsSep "\n" vpsadminSendRecvRules}
-
-        ${lib.optionalString (lib.hasAttr "vpsadmin-console" nodeCfg.services) ''
-          # vpsadmin remote console
-          iptables -A nixos-fw -p tcp -s 172.16.9.140 --dport ${toString nodeCfg.services.vpsadmin-console.port} -j nixos-fw-accept
-        ''}
-      '';
+      [
+        {
+          protocol = "tcp";
+          ports = [ config.services.goresheat.port ];
+          allowedIPv4Ranges = [
+            "172.16.107.0/24"
+            proxyPrg.addresses.primary.address
+          ];
+          comment = "goresheat";
+        }
+        {
+          protocol = "tcp";
+          portRanges = [
+            {
+              from = 10000;
+              to = 20000;
+            }
+          ];
+          allowedIPv4Ranges = managementNetworks;
+          comment = "vpsadmin-send-recv";
+        }
+      ]
+      ++ lib.optional (lib.hasAttr "vpsadmin-console" nodeCfg.services) {
+        protocol = "tcp";
+        ports = [ nodeCfg.services.vpsadmin-console.port ];
+        allowedIPv4Ranges = [ "172.16.9.140" ];
+        comment = "vpsadmin-console";
+      };
   };
 
   services.zfs.autoScrub.enable = false;

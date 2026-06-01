@@ -60,12 +60,28 @@ let
         m: mkExporterRules exporter config.services.prometheus.exporters.${exporter} m
       ) monitorings
     ) enabled;
+
+    protectedRuleList = flatten (
+      map (
+        exporter:
+        map (
+          m: mkExporterProtectedRule exporter config.services.prometheus.exporters.${exporter} m
+        ) monitorings
+      ) enabled
+    );
   };
 
   mkExporterRules = exporter: exporterCfg: m: ''
     # Allow access to ${exporter}-exporter from ${m.metaConfig.host.fqdn}
     iptables -A nixos-fw -p tcp -m tcp -s ${m.metaConfig.addresses.primary.address} --dport ${toString exporterCfg.port} -j nixos-fw-accept
   '';
+
+  mkExporterProtectedRule = exporter: exporterCfg: m: {
+    protocol = "tcp";
+    ports = [ exporterCfg.port ];
+    allowedIPv4Ranges = [ m.metaConfig.addresses.primary.address ];
+    comment = "${exporter}-exporter";
+  };
 in
 {
   options = {
@@ -95,13 +111,19 @@ in
     })
 
     # All machines
-    (mkIf cfg.enable {
-      networking.firewall.extraCommands = concatStringsSep "\n" nixpkgsExporters.ruleList;
-
-      services.prometheus.exporters = {
-        node.enable = true;
-      };
-    })
+    (mkIf cfg.enable (
+      {
+        services.prometheus.exporters = {
+          node.enable = true;
+        };
+      }
+      // optionalAttrs (confMachine.spin != "vpsadminos") {
+        networking.firewall.extraCommands = concatStringsSep "\n" nixpkgsExporters.ruleList;
+      }
+      // optionalAttrs (confMachine.spin == "vpsadminos") {
+        networking.firewall.protectedRules = nixpkgsExporters.protectedRuleList;
+      }
+    ))
 
     # NixOS machines
     (mkIf (cfg.enable && confMachine.spin == "nixos" && !config.boot.isContainer) {

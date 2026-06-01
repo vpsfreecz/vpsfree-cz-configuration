@@ -174,50 +174,31 @@ in
       config = birdConfig;
     };
 
-    networking.firewall.extraCommands =
+    networking.firewall.protectedRules =
       let
-        bgpPort = toString config.serviceDefinitions.bird-bgp.port;
+        bgpPort = config.serviceDefinitions.bird-bgp.port;
 
         bfdPorts = [
           3784
           4784
         ];
 
-        bgpRules = optionalString isBGP ''
-          ${concatMapStringsSep "\n" (neigh: ''
-            iptables -A nixos-fw -p tcp -s ${neigh.address} --dport ${bgpPort} -j nixos-fw-accept
-          '') cfg.osNode.networking.bird.bgpNeighbours.v4}
-          ${concatMapStringsSep "\n" (neigh: ''
-            ip6tables -A nixos-fw -p tcp -s ${neigh.address} --dport ${bgpPort} -j nixos-fw-accept
-          '') cfg.osNode.networking.bird.bgpNeighbours.v6}
-        '';
-
-        bfdRules = optionalString isBGP ''
-          ${concatMapStringsSep "\n" (
-            neigh:
-            concatMapStringsSep "\n" (bfdPort: ''
-              iptables -A nixos-fw -p udp -s ${neigh.address} --dport ${toString bfdPort} -j nixos-fw-accept
-            '') bfdPorts
-          ) cfg.osNode.networking.bird.bgpNeighbours.v4}
-          ${concatMapStringsSep "\n" (
-            neigh:
-            concatMapStringsSep "\n" (bfdPort: ''
-              ip6tables -A nixos-fw -p udp -s ${neigh.address} --dport ${toString bfdPort} -j nixos-fw-accept
-            '') bfdPorts
-          ) cfg.osNode.networking.bird.bgpNeighbours.v6}
-        '';
-
-        ospfProto = toString config.serviceDefinitions.bird-ospf.port;
-
-        ospfRules = optionalString isOSPF ''
-          iptables -A nixos-fw -p ${ospfProto} -j nixos-fw-accept
-          ip6tables -A nixos-fw -p ${ospfProto} -j nixos-fw-accept
-        '';
+        allowedIPv4Ranges = map (neigh: neigh.address) cfg.osNode.networking.bird.bgpNeighbours.v4;
+        allowedIPv6Ranges = map (neigh: neigh.address) cfg.osNode.networking.bird.bgpNeighbours.v6;
       in
-      concatStringsSep "\n\n" [
-        bgpRules
-        bfdRules
-        ospfRules
+      optionals isBGP [
+        {
+          protocol = "tcp";
+          ports = [ bgpPort ];
+          inherit allowedIPv4Ranges allowedIPv6Ranges;
+          comment = "bird-bgp";
+        }
+        {
+          protocol = "udp";
+          ports = bfdPorts;
+          inherit allowedIPv4Ranges allowedIPv6Ranges;
+          comment = "bird-bfd";
+        }
       ];
   };
 }
