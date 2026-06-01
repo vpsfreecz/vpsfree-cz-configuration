@@ -38,6 +38,8 @@
 - Record validation commands and dry-run results in PRs or initiative state,
   not in input update commit messages. Keep automated `confctl` commit
   messages in their generated form unless they need a concise changelog edit.
+  Do not amend or rewrap generated `confctl --commit` messages only to satisfy
+  generic commit-message line length rules.
   Add screenshots/logs only when clarifying behavior.
 
 ## Security & Configuration Tips
