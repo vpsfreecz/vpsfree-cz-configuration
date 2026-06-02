@@ -161,6 +161,12 @@ in
           ];
         };
 
+        security_advisories = {
+          channels = [
+            "#vpsfree"
+          ];
+        };
+
         web_event_log = {
           channels = [
             "#vpsfree"
