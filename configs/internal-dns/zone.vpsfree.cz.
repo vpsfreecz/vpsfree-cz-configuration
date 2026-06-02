@@ -246,6 +246,7 @@ vnc.aitherdev.int              IN   CNAME   frontend.aitherdev.int.vpsfree.cz.
 vnc-tmp.aitherdev.int          IN   CNAME   frontend.aitherdev.int.vpsfree.cz.
 download.aitherdev.int         IN   CNAME   frontend.aitherdev.int.vpsfree.cz.
 mailpit.aitherdev.int          IN   CNAME   frontend.aitherdev.int.vpsfree.cz.
+status.aitherdev.int           IN   CNAME   frontend.aitherdev.int.vpsfree.cz.
 webui.aitherdev.int            IN   CNAME   frontend.aitherdev.int.vpsfree.cz.
 webui-tmp.aitherdev.int        IN   CNAME   frontend.aitherdev.int.vpsfree.cz.
 
