@@ -49,6 +49,8 @@ in
     phpEnv."PATH" = lib.makeBinPath [ pkgs.php ];
   };
 
+  vpsfconf.phpfpmSessionCleanup.pools = [ "adminer" ];
+
   services.nginx = {
     enable = true;
 

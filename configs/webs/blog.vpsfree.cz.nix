@@ -34,6 +34,8 @@
     };
   };
 
+  vpsfconf.phpfpmSessionCleanup.pools = [ "blog" ];
+
   users = {
     users.blog = {
       isSystemUser = true;

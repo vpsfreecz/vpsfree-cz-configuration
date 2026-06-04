@@ -327,5 +327,7 @@ in
     sites = listToAttrs (map (site: nameValuePair site.name (mkSite site)) kbSites);
   };
 
+  vpsfconf.phpfpmSessionCleanup.pools = map (site: "dokuwiki-${site.name}") kbSites;
+
   system.stateVersion = "23.05";
 }

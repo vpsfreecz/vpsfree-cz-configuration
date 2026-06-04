@@ -147,6 +147,8 @@ in
       };
     };
 
+    vpsfconf.phpfpmSessionCleanup.pools = [ "vpsfree" ];
+
     users = {
       users.vpsfree = {
         isSystemUser = true;

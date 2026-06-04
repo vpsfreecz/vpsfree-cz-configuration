@@ -38,6 +38,8 @@ in
     };
   };
 
+  vpsfconf.phpfpmSessionCleanup.pools = [ "foto" ];
+
   users = {
     users.foto = {
       isSystemUser = true;

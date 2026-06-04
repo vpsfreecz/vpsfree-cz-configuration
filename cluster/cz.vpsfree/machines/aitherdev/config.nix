@@ -608,6 +608,7 @@ in
       {
         imports = [
           ../../../../modules/services/vpsfree-web.nix
+          ../../../../modules/system/phpfpm-session-cleanup.nix
         ];
 
         services.vpsfree-web = {
