@@ -4,6 +4,7 @@
   lib,
   confLib,
   confData,
+  confMachine,
   flakeInputs,
   inputsInfo,
   ...
@@ -72,7 +73,8 @@ in
 
   services.vpsf-status = {
     enable = true;
-    listenAddress = "172.31.0.33";
+    listenAddress = confMachine.services.vpsf-status.address;
+    port = confMachine.services.vpsf-status.port;
     settings = {
       notice_file = "/etc/status.html";
 

@@ -33,6 +33,9 @@
     services = {
       node-exporter = { };
       sachet = { };
+      vpsf-status = {
+        address = "172.31.0.33";
+      };
     };
 
     carrier = {

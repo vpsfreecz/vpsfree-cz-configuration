@@ -55,6 +55,7 @@ in
       goresheat.port = 8080;
       grafana.port = 3000;
       vpsadmin-console.port = 8081;
+      vpsf-status.port = 8080;
       prometheus.port = 9090;
       munin-cron.port = -1;
       nginx.port = 80;

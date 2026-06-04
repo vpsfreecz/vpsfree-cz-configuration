@@ -3,8 +3,15 @@
   lib,
   pkgs,
   confData,
+  confLib,
   ...
 }:
+let
+  apuPrg = confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/machines/prg/apu";
+  };
+in
 {
   imports = [
     ./hardware.nix
@@ -91,7 +98,8 @@
       onlySSL = true;
       sslCertificateKey = "/private/nginx/status.vpsf.cz.key";
       sslCertificate = "/private/nginx/status.vpsf.cz.crt";
-      locations."/".proxyPass = "http://172.31.0.33:${toString config.services.vpsf-status.port}";
+      locations."/".proxyPass =
+        "http://${apuPrg.services.vpsf-status.address}:${toString apuPrg.services.vpsf-status.port}";
     };
   };
 
