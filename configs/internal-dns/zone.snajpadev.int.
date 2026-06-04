@@ -1,0 +1,37 @@
+$ORIGIN snajpadev.int.
+$TTL 1H                  ; default expiration time of all resource records without their own TTL value
+@  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
+              2026060400 ; serial number of this zone file
+              1D         ; slave refresh (1 day)
+              2H         ; slave retry time in case of a problem (2 hours)
+              4W         ; slave expiration time (4 weeks)
+              1H         ; maximum caching time in case of failed lookups (1 hour)
+              )
+
+@                             IN   NS      ns1.int.prg.vpsfree.cz.
+@                             IN   NS      ns1.int.brq.vpsfree.cz.
+
+; vpsAdmin devcluster frontend
+@                             IN   A       172.16.106.15
+services                      IN   A       172.16.106.15
+frontend                      IN   A       172.16.106.15
+api                           IN   A       172.16.106.15
+adminer                       IN   A       172.16.106.15
+auth                          IN   A       172.16.106.15
+console                       IN   A       172.16.106.15
+download                      IN   A       172.16.106.15
+mailpit                       IN   A       172.16.106.15
+status                        IN   A       172.16.106.15
+webui                         IN   A       172.16.106.15
+
+api-tmp                       IN   A       172.16.106.15
+auth-tmp                      IN   A       172.16.106.15
+console-tmp                   IN   A       172.16.106.15
+webui-tmp                     IN   A       172.16.106.15
+
+; vpsAdmin devcluster machines
+node1                         IN   A       172.16.106.16
+node2                         IN   A       172.16.106.17
+storage1                      IN   A       172.16.106.18
+ns-hidden                     IN   A       172.16.106.19
+ns-public                     IN   A       172.16.106.19

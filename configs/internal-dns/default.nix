@@ -45,6 +45,11 @@ in
         master = true;
         file = mkZoneFile ./zone.vpsadminos.org.;
       }
+      {
+        name = "snajpadev.int.";
+        master = true;
+        file = mkZoneFile ./zone.snajpadev.int.;
+      }
     ];
   };
 
