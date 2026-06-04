@@ -370,22 +370,6 @@
         "type": "github"
       }
     },
-    "nixpkgsMunin": {
-      "locked": {
-        "lastModified": 1764621634,
-        "narHash": "sha256-p59pZWUVC5cyDkuYSZ6aNacxWZJ33luJwSAPqFs0RCk=",
-        "owner": "aither64",
-        "repo": "nixpkgs",
-        "rev": "58893c976fdbd248f30ca087171b878791de0ed9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "aither64",
-        "ref": "25.11-munin-fastcgi",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgsProduction": {
       "locked": {
         "lastModified": 1779796641,
@@ -602,7 +586,6 @@
         "nixpkgs": [
           "nixpkgsStable"
         ],
-        "nixpkgsMunin": "nixpkgsMunin",
         "nixpkgsProduction": "nixpkgsProduction",
         "nixpkgsStable": "nixpkgsStable",
         "nixpkgsStaging": "nixpkgsStaging",

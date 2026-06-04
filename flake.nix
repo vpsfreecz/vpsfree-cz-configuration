@@ -16,8 +16,6 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
-    nixpkgsMunin.url = "github:aither64/nixpkgs/25.11-munin-fastcgi";
-
     vpsfreeWeb = {
       url = "github:vpsfreecz/web";
       flake = false;
