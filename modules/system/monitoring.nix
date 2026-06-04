@@ -46,6 +46,7 @@ let
         "assertions"
         "warnings"
         "minio"
+        "rspamd"
         "tor"
         "unifi-poller"
       ])
