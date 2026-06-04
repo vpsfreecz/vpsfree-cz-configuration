@@ -12,7 +12,7 @@ let
     vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
       start = [
         vim-nix
-        sensible
+        vim-sensible
       ]; # load plugin on startup
     };
   };

@@ -35,6 +35,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.supportedFilesystems.zfs = true;
   boot.zfs.devNodes = "/dev";
+  boot.zfs.forceImportRoot = false;
 
   boot.initrd.availableKernelModules = [
     "ahci"
