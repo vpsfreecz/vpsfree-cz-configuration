@@ -1,0 +1,21 @@
+diff --git a/master/_bin/munin-cgi-graph.in b/master/_bin/munin-cgi-graph.in
+index dffab7d2..1a2ae34b 100755
+--- a/master/_bin/munin-cgi-graph.in
++++ b/master/_bin/munin-cgi-graph.in
+@@ -25,2 +25,6 @@
+ use strict;
+ use warnings;
++
++use Config;
++use lib map { /(.*)/ } split /$Config{path_sep}/ => $ENV{PERL5LIB};
++
+diff --git a/master/_bin/munin-cgi-html.in b/master/_bin/munin-cgi-html.in
+index a5f209a0..765a2691 100755
+--- a/master/_bin/munin-cgi-html.in
++++ b/master/_bin/munin-cgi-html.in
+@@ -25,2 +25,5 @@
+ use strict;
+ use warnings;
++
++use Config;
++use lib map { /(.*)/ } split /$Config{path_sep}/ => $ENV{PERL5LIB};
