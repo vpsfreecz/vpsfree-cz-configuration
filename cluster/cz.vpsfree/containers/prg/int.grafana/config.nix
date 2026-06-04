@@ -36,6 +36,9 @@ in
         domain = "grafana.prg.vpsfree.cz";
         root_url = "https://grafana.prg.vpsfree.cz/";
       };
+      security = {
+        secret_key = "$__file{/private/grafana/secret_key.txt}";
+      };
       "auth.anonymous" = {
         enabled = true;
         org_name = "vpsFree.cz";
