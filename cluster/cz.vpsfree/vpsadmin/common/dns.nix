@@ -48,6 +48,8 @@ in
 
   services.bind = {
     enable = true;
+    # vpsAdmin/nodectld writes the included zone config at runtime.
+    checkConfig = false;
     directory = "/var/named";
     forwarders = mkForce [ ];
     extraOptions = ''
