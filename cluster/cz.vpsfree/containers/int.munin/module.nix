@@ -44,6 +44,5 @@
         }
       ];
     };
-    inputs.overrides.nixpkgs = "nixpkgsMunin";
   };
 }
