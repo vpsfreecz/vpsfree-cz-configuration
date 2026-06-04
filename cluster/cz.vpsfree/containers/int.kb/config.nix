@@ -315,6 +315,7 @@ in
       site:
       nameValuePair "${config.services.dokuwiki.sites.${site.name}.stateDir}/media" {
         device = "/var/lib/kb-shared/media";
+        fsType = "none";
         options = [ "bind" ];
       }
     ) kbSites
