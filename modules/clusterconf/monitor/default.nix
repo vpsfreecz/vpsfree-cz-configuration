@@ -472,6 +472,9 @@ let
                 Host = site.host;
               };
               preferred_ip_protocol = "ip4";
+            }
+            // optionalAttrs (site ? bodyMatches) {
+              fail_if_body_not_matches_regexp = site.bodyMatches;
             };
           }
         ) sites;

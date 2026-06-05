@@ -430,9 +430,9 @@ in
             frequency = "5m";
           };
           annotations = {
-            summary = "{{ $labels.instance }} web is down";
+            summary = "{{ $labels.instance }} web probe failed";
             description = ''
-              {{ $labels.instance }} does not respond over HTTP
+              {{ $labels.instance }} does not return the expected HTTP response
 
               LABELS: {{ $labels }}
             '';
