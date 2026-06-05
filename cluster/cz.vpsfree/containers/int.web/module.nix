@@ -54,9 +54,9 @@
             "--location"
             "--max-time"
             "10"
-            "--resolve"
-            "vpsfree.cz:80:127.0.0.1"
-            "http://vpsfree.cz/"
+            "--header"
+            "Host: vpsfree.cz"
+            "http://localhost/"
           ];
           standardOutput.include = [
             "milujeme servery"
@@ -72,9 +72,9 @@
             "--location"
             "--max-time"
             "10"
-            "--resolve"
-            "vpsfree.org:80:127.0.0.1"
-            "http://vpsfree.org/"
+            "--header"
+            "Host: vpsfree.org"
+            "http://localhost/"
           ];
           standardOutput.include = [
             "we love servers"

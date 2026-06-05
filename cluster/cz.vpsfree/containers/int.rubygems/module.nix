@@ -50,7 +50,7 @@
             "http://localhost:8000/"
           ];
           standardOutput.include = [
-            "Geminabox"
+            "Gem in a Box"
           ];
         }
       ];

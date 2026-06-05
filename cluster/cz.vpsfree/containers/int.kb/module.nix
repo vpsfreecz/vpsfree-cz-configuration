@@ -60,9 +60,9 @@
             "--location"
             "--max-time"
             "10"
-            "--resolve"
-            "kb.vpsfree.cz:80:127.0.0.1"
-            "http://kb.vpsfree.cz/"
+            "--header"
+            "Host: kb.vpsfree.cz"
+            "http://localhost/"
           ];
           standardOutput.include = [
             "Znalostní báze"
@@ -78,9 +78,9 @@
             "--location"
             "--max-time"
             "10"
-            "--resolve"
-            "kb.vpsfree.org:80:127.0.0.1"
-            "http://kb.vpsfree.org/"
+            "--header"
+            "Host: kb.vpsfree.org"
+            "http://localhost/"
           ];
           standardOutput.include = [
             "Knowledge base"
