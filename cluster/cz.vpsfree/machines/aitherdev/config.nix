@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   confLib,
   confData,
   confMachine,
@@ -31,46 +30,6 @@ let
   ];
 
   internalDnsAddresses = map (m: m.addresses.primary.address) internalDns;
-
-  homeTmuxinator =
-    {
-      config,
-      lib,
-      pkgs,
-      ...
-    }:
-    with lib;
-    let
-      cfg = config.programs.tmux;
-    in
-    {
-      options = {
-        programs.tmux.tmuxinator = {
-          projects = mkOption {
-            type = types.attrsOf types.attrs;
-            default = { };
-            description = ''
-              tmuxinator projects
-            '';
-          };
-        };
-      };
-
-      config = mkIf (cfg.tmuxinator.enable && cfg.tmuxinator.projects != { }) {
-        home.file = mapAttrs' (
-          name: project:
-          let
-            projectPath = ".config/tmuxinator/${projectName}.yml";
-            projectName = if hasName then project.name else name;
-            hasName = hasAttr "name" project;
-            attrs = if hasName then project else project // { inherit name; };
-          in
-          nameValuePair projectPath {
-            text = builtins.toJSON attrs;
-          }
-        ) cfg.tmuxinator.projects;
-      };
-    };
 
   lxcVscode = pkgs.writeText "lxc-vscode.conf" ''
     # Distribution configuration
@@ -365,10 +324,6 @@ in
         };
     in
     {
-      imports = [
-        homeTmuxinator
-      ];
-
       programs.home-manager.enable = true;
 
       home.stateVersion = "23.11";
