@@ -27,6 +27,7 @@
 
     tags = [
       "em"
+      "auto-update"
     ];
 
     services = {
