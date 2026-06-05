@@ -53,9 +53,9 @@
             "--location"
             "--max-time"
             "10"
-            "--header"
-            "Host: utils.vpsfree.cz"
-            "http://localhost/adminer/adminer.php"
+            "--resolve"
+            "utils.vpsfree.cz:80:127.0.0.1"
+            "http://utils.vpsfree.cz/adminer/adminer.php"
           ];
           standardOutput.include = [
             "Adminer"
