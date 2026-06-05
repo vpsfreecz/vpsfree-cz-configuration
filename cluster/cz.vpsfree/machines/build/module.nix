@@ -68,6 +68,13 @@
             value = "active";
           }
         ];
+
+        "nginx.service" = [
+          {
+            property = "ActiveState";
+            value = "active";
+          }
+        ];
       };
     };
   };

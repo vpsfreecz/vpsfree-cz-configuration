@@ -41,6 +41,45 @@
           }
         ];
       };
+
+      machineCommands = [
+        {
+          description = "Check proxied vpsfree.cz over HTTPS";
+          command = [
+            "curl"
+            "--fail"
+            "--silent"
+            "--show-error"
+            "--location"
+            "--max-time"
+            "10"
+            "--resolve"
+            "vpsfree.cz:443:127.0.0.1"
+            "https://vpsfree.cz/"
+          ];
+          standardOutput.include = [
+            "milujeme servery"
+          ];
+        }
+        {
+          description = "Check proxied kb.vpsfree.cz over HTTPS";
+          command = [
+            "curl"
+            "--fail"
+            "--silent"
+            "--show-error"
+            "--location"
+            "--max-time"
+            "10"
+            "--resolve"
+            "kb.vpsfree.cz:443:127.0.0.1"
+            "https://kb.vpsfree.cz/"
+          ];
+          standardOutput.include = [
+            "Znalostní báze"
+          ];
+        }
+      ];
     };
   };
 }

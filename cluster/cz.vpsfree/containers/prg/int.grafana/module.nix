@@ -25,5 +25,35 @@
       node-exporter = { };
     };
     tags = [ "auto-update" ];
+
+    healthChecks = {
+      systemd.unitProperties = {
+        "grafana.service" = [
+          {
+            property = "ActiveState";
+            value = "active";
+          }
+        ];
+      };
+
+      machineCommands = [
+        {
+          description = "Check Grafana health endpoint";
+          command = [
+            "curl"
+            "--fail"
+            "--silent"
+            "--show-error"
+            "--max-time"
+            "10"
+            "http://localhost:3000/api/health"
+          ];
+          standardOutput.include = [
+            "database"
+            "ok"
+          ];
+        }
+      ];
+    };
   };
 }

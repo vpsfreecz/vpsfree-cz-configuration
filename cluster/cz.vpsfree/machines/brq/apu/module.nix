@@ -69,6 +69,13 @@
           }
         ];
 
+        "nginx.service" = [
+          {
+            property = "ActiveState";
+            value = "active";
+          }
+        ];
+
         "sachet.service" = [
           {
             property = "ActiveState";

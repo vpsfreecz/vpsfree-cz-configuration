@@ -24,5 +24,69 @@
       node-exporter = { };
     };
     tags = [ "auto-update" ];
+
+    healthChecks = {
+      systemd.unitProperties = {
+        "nginx.service" = [
+          {
+            property = "ActiveState";
+            value = "active";
+          }
+        ];
+
+        "phpfpm-dokuwiki-kb.vpsfree.cz.service" = [
+          {
+            property = "ActiveState";
+            value = "active";
+          }
+        ];
+
+        "phpfpm-dokuwiki-kb.vpsfree.org.service" = [
+          {
+            property = "ActiveState";
+            value = "active";
+          }
+        ];
+      };
+
+      machineCommands = [
+        {
+          description = "Check kb.vpsfree.cz";
+          command = [
+            "curl"
+            "--fail"
+            "--silent"
+            "--show-error"
+            "--location"
+            "--max-time"
+            "10"
+            "--header"
+            "Host: kb.vpsfree.cz"
+            "http://localhost/"
+          ];
+          standardOutput.include = [
+            "Znalostní báze"
+          ];
+        }
+        {
+          description = "Check kb.vpsfree.org";
+          command = [
+            "curl"
+            "--fail"
+            "--silent"
+            "--show-error"
+            "--location"
+            "--max-time"
+            "10"
+            "--header"
+            "Host: kb.vpsfree.org"
+            "http://localhost/"
+          ];
+          standardOutput.include = [
+            "Knowledge base"
+          ];
+        }
+      ];
+    };
   };
 }

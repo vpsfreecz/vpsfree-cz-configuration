@@ -35,6 +35,25 @@
           }
         ];
       };
+
+      machineCommands = [
+        {
+          description = "Check Geminabox web";
+          command = [
+            "curl"
+            "--fail"
+            "--silent"
+            "--show-error"
+            "--location"
+            "--max-time"
+            "10"
+            "http://localhost:8000/"
+          ];
+          standardOutput.include = [
+            "Geminabox"
+          ];
+        }
+      ];
     };
   };
 }
