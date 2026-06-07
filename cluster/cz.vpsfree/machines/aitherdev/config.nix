@@ -237,9 +237,6 @@ in
   ];
 
   networking.firewall.allowedTCPPorts = [
-    # For vpsfree-web
-    80
-
     # vscode container
     2222
   ];
@@ -549,39 +546,6 @@ in
         };
       };
     };
-
-  containers.vpsfree-web = {
-    autoStart = true;
-    bindMounts = {
-      "/vpsfree-web" = {
-        hostPath = "/home/aither/workspace/vpsfree.cz/web";
-        isReadOnly = true;
-      };
-    };
-    config =
-      { config, ... }:
-      {
-        imports = [
-          ../../../../modules/services/vpsfree-web.nix
-          ../../../../modules/system/phpfpm-session-cleanup.nix
-        ];
-
-        services.vpsfree-web = {
-          enable = true;
-          virtualHosts = {
-            "web-cs.aitherdev.int.vpsfree.cz" = {
-              web = "/vpsfree-web";
-              language = "cs";
-            };
-
-            "web-en.aitherdev.int.vpsfree.cz" = {
-              web = "/vpsfree-web";
-              language = "en";
-            };
-          };
-        };
-      };
-  };
 
   virtualisation.lxc.enable = true;
 
