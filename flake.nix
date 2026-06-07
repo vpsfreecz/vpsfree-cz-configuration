@@ -26,8 +26,8 @@
       inputs.nixpkgs.follows = "nixpkgsStable";
     };
 
-    nixpkgsStaging.url = "github:NixOS/nixpkgs/nixos-25.11";
-    nixpkgsProduction.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgsStaging.url = "github:NixOS/nixpkgs/nixos-26.05";
+    nixpkgsProduction.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     vpsadminosStaging = {
       url = "github:vpsfreecz/vpsadminos";
