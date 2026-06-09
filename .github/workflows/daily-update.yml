@@ -10,7 +10,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -24,7 +24,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Restore confctl cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ~/.cache/confctl
           key: confctl-cache-${{ runner.os }}-${{ github.run_id }}
@@ -75,7 +75,7 @@ jobs:
           git push origin master
 
       - name: Save confctl cache
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: ~/.cache/confctl
           key: confctl-cache-${{ runner.os }}-${{ github.run_id }}
