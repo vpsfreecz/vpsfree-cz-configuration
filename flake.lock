@@ -871,11 +871,11 @@
     "vpsfreeWeb": {
       "flake": false,
       "locked": {
-        "lastModified": 1779916092,
-        "narHash": "sha256-tS8QbA3TAVNboN5k6frSHSIXMt+IvaVYH05TBRxx4IA=",
+        "lastModified": 1780818630,
+        "narHash": "sha256-dG8dDw+U0PaHB8ZrjNU4fgc2gKdOSkt/sg6psnrMH2Q=",
         "owner": "vpsfreecz",
         "repo": "web",
-        "rev": "ea0f19ce13b06194faada5b1fd4eeed3dc46c4b8",
+        "rev": "b6a55b769e75d2bf73aa6ea6d7bb6bf83cfcfd75",
         "type": "github"
       },
       "original": {
