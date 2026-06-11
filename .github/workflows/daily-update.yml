@@ -41,6 +41,34 @@ jobs:
           nix develop -c confctl inputs channel update --commit --no-changelog nixos-unstable
           nix develop -c confctl inputs channel update --commit '{staging,os-staging}' vpsadminos
 
+      - name: Update llm-agents when Codex changes
+        run: |
+          set -euo pipefail
+
+          codex_version_expr='let flake = builtins.getFlake (toString ./.); in flake.inputs.llm-agents.packages.x86_64-linux.codex.version'
+
+          current_codex_version=$(nix eval --accept-flake-config --impure --raw \
+                                      --expr "$codex_version_expr")
+          upstream_codex_version=$(nix eval --accept-flake-config --raw \
+                                       github:numtide/llm-agents.nix#packages.x86_64-linux.codex.version)
+
+          if [ "$current_codex_version" = "$upstream_codex_version" ]; then
+            echo "Codex is already up to date at $current_codex_version, skipping llm-agents"
+            exit 0
+          fi
+
+          echo "Updating llm-agents for Codex $current_codex_version -> $upstream_codex_version"
+          nix develop --accept-flake-config -c confctl inputs channel update \
+              --commit --no-changelog llm-agents
+
+          updated_codex_version=$(nix eval --accept-flake-config --impure --raw \
+                                      --expr "$codex_version_expr")
+
+          if [ "$updated_codex_version" != "$upstream_codex_version" ]; then
+            echo "Updated llm-agents contains Codex $updated_codex_version, expected $upstream_codex_version" >&2
+            exit 1
+          fi
+
       - name: Update package dependencies
         run: |
           set -e
