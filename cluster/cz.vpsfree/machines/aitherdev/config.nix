@@ -48,6 +48,14 @@ let
     lxc.mount.entry = /etc/ssh/authorized_keys.d/aither etc/ssh/authorized_keys.d/aither none bind,create=file 0 0
     lxc.mount.entry = /home/aither/workspace home/aither/workspace none bind,create=dir 0 0
   '';
+
+  codexLbImage = pkgs.dockerTools.pullImage {
+    imageName = "ghcr.io/soju06/codex-lb";
+    imageDigest = "sha256:732cbb2d29b3f02ddacaf5aad6458e60fb926e58a5376cab1a288b9c866ea219";
+    sha256 = "sha256-9pynwZojC/4IbZHcpDOWwMTtZ5daZlz6WOynZ2XcuyU=";
+    finalImageName = "ghcr.io/soju06/codex-lb";
+    finalImageTag = "1.19.0";
+  };
 in
 {
   # NOTE: environments/base.nix is not imported, this is a standalone system
@@ -225,6 +233,31 @@ in
     package = pkgs.mosh-osc-colors;
   };
 
+  services.nginx = {
+    enable = true;
+    recommendedProxySettings = true;
+    virtualHosts."codex-lb.aitherdev.int.vpsfree.cz" = {
+      listen = [
+        {
+          addr = "172.16.106.40";
+          port = 80;
+        }
+      ];
+      locations = {
+        "= /v1".return = "403";
+        "^~ /v1/".return = "403";
+        "= /backend-api/codex".return = "403";
+        "^~ /backend-api/codex/".return = "403";
+        "= /backend-api/transcribe".return = "403";
+        "^~ /backend-api/transcribe/".return = "403";
+        "/" = {
+          proxyPass = "http://127.0.0.1:2455";
+          proxyWebsockets = true;
+        };
+      };
+    };
+  };
+
   # Bridge for VMs
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 
@@ -256,6 +289,9 @@ in
     # vpsf-status
     iptables -A nixos-fw -p tcp -m tcp --dport 8080 -s 172.16.106.0/24 -j ACCEPT
     iptables -A nixos-fw -p tcp -m tcp --dport 8080 -s 172.16.107.0/24 -j ACCEPT
+
+    # codex-lb dashboard over WireGuard
+    iptables -A nixos-fw -p tcp -m tcp --dport 80 -s 172.16.107.0/24 -j ACCEPT
 
     # Samba workspace share
     iptables -A nixos-fw -p tcp -m tcp --dport 445 -s 172.16.107.34/32 -j ACCEPT
@@ -546,6 +582,21 @@ in
         };
       };
     };
+
+  virtualisation.oci-containers = {
+    backend = "podman";
+    containers.codex-lb = {
+      image = "ghcr.io/soju06/codex-lb:1.19.0";
+      imageFile = codexLbImage;
+      ports = [
+        "127.0.0.1:2455:2455"
+        "127.0.0.1:1455:1455"
+      ];
+      volumes = [
+        "codex-lb-data:/var/lib/codex-lb"
+      ];
+    };
+  };
 
   virtualisation.lxc.enable = true;
 
