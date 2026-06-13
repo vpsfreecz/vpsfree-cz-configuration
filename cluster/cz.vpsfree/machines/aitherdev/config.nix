@@ -51,10 +51,10 @@ let
 
   codexLbImage = pkgs.dockerTools.pullImage {
     imageName = "ghcr.io/soju06/codex-lb";
-    imageDigest = "sha256:732cbb2d29b3f02ddacaf5aad6458e60fb926e58a5376cab1a288b9c866ea219";
-    sha256 = "sha256-9pynwZojC/4IbZHcpDOWwMTtZ5daZlz6WOynZ2XcuyU=";
+    imageDigest = "sha256:1e192a4be352199c4062ff472129c896ad33c31fc4c17c77cf637c7c640d0a23";
+    sha256 = "sha256-t4jWU737htc8XYbFurohL2+sci34jqh/cOHzsWoHtUk=";
     finalImageName = "ghcr.io/soju06/codex-lb";
-    finalImageTag = "1.19.0";
+    finalImageTag = "1.20.0-beta.2";
   };
 in
 {
@@ -586,7 +586,7 @@ in
   virtualisation.oci-containers = {
     backend = "podman";
     containers.codex-lb = {
-      image = "ghcr.io/soju06/codex-lb:1.19.0";
+      image = "ghcr.io/soju06/codex-lb:1.20.0-beta.2";
       imageFile = codexLbImage;
       ports = [
         "127.0.0.1:2455:2455"
