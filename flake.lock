@@ -354,6 +354,38 @@
         "type": "github"
       }
     },
+    "netlinkrb": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1562850306,
+        "narHash": "sha256-0bXTWUdUDr2XP+bEIfIbxXap8Niva/IoPXTxFeXXImg=",
+        "owner": "vpsfreecz",
+        "repo": "netlinkrb",
+        "rev": "d9de53d843d2586ffa5b7b404887fa801c697ddf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vpsfreecz",
+        "repo": "netlinkrb",
+        "type": "github"
+      }
+    },
+    "netlinkrb_2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1562850306,
+        "narHash": "sha256-0bXTWUdUDr2XP+bEIfIbxXap8Niva/IoPXTxFeXXImg=",
+        "owner": "vpsfreecz",
+        "repo": "netlinkrb",
+        "rev": "d9de53d843d2586ffa5b7b404887fa801c697ddf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vpsfreecz",
+        "repo": "netlinkrb",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1768564909,
@@ -600,6 +632,40 @@
         "vpsfreeWeb": "vpsfreeWeb"
       }
     },
+    "ruby-lxc": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780499941,
+        "narHash": "sha256-guAdOSP9MyCL3BQ1LGXAhcCoXgEU1fUE69d2ATMqUGE=",
+        "owner": "vpsfreecz",
+        "repo": "ruby-lxc",
+        "rev": "004bf35eb90d41ba60b347b5b1e73d868a4f95d9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vpsfreecz",
+        "ref": "2026-06-03-nixos-26-05-port",
+        "repo": "ruby-lxc",
+        "type": "github"
+      }
+    },
+    "ruby-lxc_2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780499941,
+        "narHash": "sha256-guAdOSP9MyCL3BQ1LGXAhcCoXgEU1fUE69d2ATMqUGE=",
+        "owner": "vpsfreecz",
+        "repo": "ruby-lxc",
+        "rev": "004bf35eb90d41ba60b347b5b1e73d868a4f95d9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vpsfreecz",
+        "ref": "2026-06-03-nixos-26-05-port",
+        "repo": "ruby-lxc",
+        "type": "github"
+      }
+    },
     "systems": {
       "locked": {
         "lastModified": 1681028828,
@@ -752,19 +818,21 @@
     "vpsadminosOsStaging": {
       "inputs": {
         "impermanence": "impermanence_2",
+        "netlinkrb": "netlinkrb",
         "nixpkgs": [
           "nixpkgsStable"
         ],
         "nixpkgsUnstable": [
           "nixpkgsUnstable"
-        ]
+        ],
+        "ruby-lxc": "ruby-lxc"
       },
       "locked": {
-        "lastModified": 1781247843,
-        "narHash": "sha256-9fkYSSmDXjHYR2ZOjgybJNxxxwN2yQpZT392ZlZxuaM=",
+        "lastModified": 1781276436,
+        "narHash": "sha256-CxEcDihPjRZZ2+7dbOSV8QpiyRG68470LvTBMa8WfQA=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "14843dbb96820c00369b9bcb6a03d2feb926c6f3",
+        "rev": "0236bcd3c0b632642ba7e2eb217fbe88ddbf3108",
         "type": "github"
       },
       "original": {
@@ -800,19 +868,21 @@
     "vpsadminosStaging": {
       "inputs": {
         "impermanence": "impermanence_4",
+        "netlinkrb": "netlinkrb_2",
         "nixpkgs": [
           "nixpkgsStaging"
         ],
         "nixpkgsUnstable": [
           "nixpkgsUnstable"
-        ]
+        ],
+        "ruby-lxc": "ruby-lxc_2"
       },
       "locked": {
-        "lastModified": 1781247843,
-        "narHash": "sha256-9fkYSSmDXjHYR2ZOjgybJNxxxwN2yQpZT392ZlZxuaM=",
+        "lastModified": 1781276436,
+        "narHash": "sha256-CxEcDihPjRZZ2+7dbOSV8QpiyRG68470LvTBMa8WfQA=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "14843dbb96820c00369b9bcb6a03d2feb926c6f3",
+        "rev": "0236bcd3c0b632642ba7e2eb217fbe88ddbf3108",
         "type": "github"
       },
       "original": {
