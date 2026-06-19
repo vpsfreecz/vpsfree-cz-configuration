@@ -68,115 +68,50 @@ MailTemplate.register :alert_vps_dataset_over_quota,
 VpsAdmin::API::Plugins::Monitoring.config do
   # Action definitions
   action :alert_user do |event|
-    opts = {
-      params: {
-        role: :user,
-        event: event.monitor.name,
-        state: event.state == 'acknowledged' ? 'confirmed' : event.state
-      },
-      user: event.user,
-      vars: {
-        event: event,
-        object: event.object,
-        user: event.user,
-        base_url: SysConfig.get('webui', 'base_url')
-      }
-    }
-
-    if event.state == 'closed'
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-#{event.state}@vpsadmin.vpsfree.cz>"
-      rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-#{event.prev_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-      opts[:in_reply_to] = rpl_to
-      opts[:references] = rpl_to
-
-    else
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-    end
-
-    opts[:message_id] = msg_id
-
-    mail(:alert_role_event_state, opts)
+    route_monitoring_alert!(
+      event,
+      role: 'user',
+      variant: :role_event_state
+    )
   end
 
   action :alert_user_diskspace do |event|
     dip = event.object.primary_dataset_in_pool!
-    opts = {
-      params: {
-        role: :user,
-        state: event.state == 'acknowledged' ? 'confirmed' : event.state,
-        pool: dip.pool.role
-      },
-      user: event.user,
-      vars: {
-        event: event,
+    vps = if dip.pool.role == 'hypervisor'
+            Vps.find_by!(
+              dataset_in_pool: dip.dataset.root.primary_dataset_in_pool!
+            )
+          end
+
+    route_monitoring_alert!(
+      event,
+      role: 'user',
+      variant: :role_diskspace_state_pool,
+      context: {
         dip: dip,
-        ds: event.object,
-        vps: if dip.pool.role == 'hypervisor'
-               Vps.find_by!(
-                 dataset_in_pool: dip.dataset.root.primary_dataset_in_pool!
-               )
-             end,
-        user: event.user,
-        base_url: SysConfig.get('webui', 'base_url')
+        vps: vps,
+        pool_role: dip.pool.role
       }
-    }
-
-    if event.state == 'closed'
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-#{event.state}@vpsadmin.vpsfree.cz>"
-      rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-#{event.prev_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-      opts[:in_reply_to] = rpl_to
-      opts[:references] = rpl_to
-
-    else
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-    end
-
-    opts[:message_id] = msg_id
-
-    mail(:alert_role_diskspace_state_pool, opts)
+    )
   end
 
   action :alert_admins do |event|
-    opts = {
-      params: {
-        role: :admin,
-        event: event.monitor.name,
-        state: event.state == 'acknowledged' ? 'confirmed' : event.state
-      },
-      language: Language.take!,
-      vars: {
-        event: event,
-        base_url: SysConfig.get('webui', 'base_url')
-      }
-    }
-
-    if event.state == 'closed'
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-#{event.state}@vpsadmin.vpsfree.cz>"
-      rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-#{event.prev_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-      opts[:in_reply_to] = rpl_to
-      opts[:references] = rpl_to
-
-    else
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
+    monitoring_admin_recipients.each do |admin|
+      route_monitoring_alert!(
+        event,
+        recipient: admin,
+        role: 'admin',
+        variant: :role_event_state,
+        context: {
+          language: Language.take!
+        }
+      )
     end
-
-    opts[:message_id] = msg_id
-
-    mail(:alert_role_event_state, opts)
   end
 
   action :alert_user_zombie_processes do |event|
     threshold = 10_000
     vps = event.object
-
-    mail_vars = {
-      event: event,
-      vps: vps,
-      zombie_process_count: vps.zombie_process_count,
-      threshold: threshold,
-      user: event.user,
-      base_url: SysConfig.get('webui', 'base_url')
-    }
 
     if vps.zombie_process_count > threshold
       # Plan restart unless one was already planned
@@ -194,16 +129,25 @@ VpsAdmin::API::Plugins::Monitoring.config do
       finish_minutes = (4 * 60) + rand(35..55) # 04:35-55
 
       opts = {
-        user: event.user,
-        vars: mail_vars.merge({
-          finish_weekday: finish_weekday,
-          finish_minutes: finish_minutes
-        })
+        finish_weekday: finish_weekday,
+        finish_minutes: finish_minutes
       }
 
       lock(vps)
 
-      mail(:alert_user_zombie_processes_restart, opts)
+      route_monitoring_alert!(
+        event,
+        role: 'user',
+        alert_kind: 'restart',
+        variant: :zombie_processes_restart,
+        context: {
+          vps: vps,
+          threshold: threshold,
+          finish_weekday: finish_weekday,
+          finish_minutes: finish_minutes
+        },
+        parameters: opts
+      )
 
       append_t(
         Transactions::MaintenanceWindow::Wait,
@@ -232,26 +176,15 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
       next if last_alert && last_alert + (24 * 60 * 60) > Time.now
 
-      opts = {
-        params: {
-          state: event.state == 'acknowledged' ? 'confirmed' : event.state
-        },
-        user: event.user,
-        vars: mail_vars
-      }
-
-      if event.state == 'closed'
-        msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-#{event.state}@vpsadmin.vpsfree.cz>"
-        rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-#{event.prev_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-        opts[:in_reply_to] = rpl_to
-        opts[:references] = rpl_to
-      else
-        msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-      end
-
-      opts[:message_id] = msg_id
-
-      mail(:alert_user_zombie_processes_state, opts)
+      route_monitoring_alert!(
+        event,
+        role: 'user',
+        variant: :zombie_processes_state,
+        context: {
+          vps: vps,
+          threshold: threshold
+        }
+      )
 
       event.action_state ||= {}
       event.action_state['last_alert'] = Time.now.to_i
@@ -262,35 +195,21 @@ VpsAdmin::API::Plugins::Monitoring.config do
   action :alert_user_vps_in_rescue do |event|
     next if event.state == 'closed'
 
-    opts = {
-      user: event.user,
-      vars: {
-        event: event,
-        vps: event.object,
-        user: event.user,
-        base_url: SysConfig.get('webui', 'base_url')
-      }
-    }
-
-    mail(:alert_user_vps_in_rescue, opts)
+    route_monitoring_alert!(
+      event,
+      role: 'user',
+      variant: :vps_in_rescue
+    )
   end
 
   action :alert_vps_dataset_over_quota do |event|
     next if event.state == 'closed'
 
-    opts = {
-      user: event.user,
-      vars: {
-        event: event,
-        dataset: event.object,
-        expansion: event.object.dataset_expansion,
-        vps: event.object.dataset_expansion.vps,
-        user: event.user,
-        base_url: SysConfig.get('webui', 'base_url')
-      }
-    }
-
-    mail(:alert_vps_dataset_over_quota, opts)
+    route_monitoring_alert!(
+      event,
+      role: 'user',
+      variant: :dataset_over_quota
+    )
   end
 
   # Monitors
