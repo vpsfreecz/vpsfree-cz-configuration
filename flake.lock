@@ -981,10 +981,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1782162959,
-        "narHash": "sha256-Ikk+Zfoz66hdo0WqmCBYCHtUHe42U/8a/a3b+/v7k+s=",
-        "ref": "2026-06-15-vpsadmin-events",
-        "rev": "f97dcdd5b7e49365c6d25d69d7948fffec4be107",
+        "lastModified": 1782166446,
+        "narHash": "sha256-ZafsMFpI8Yns1xz+jW3R+ktkcR17O0DmgT8AVDDs11E=",
+        "ref": "refs/heads/2026-06-15-vpsadmin-events",
+        "rev": "730b35c652d0efb596bfe290d0afea76e494a678",
         "revCount": 1,
         "type": "git",
         "url": "ssh://git@github.com/vpsfreecz/vpsfree-sms-gateway.git"
