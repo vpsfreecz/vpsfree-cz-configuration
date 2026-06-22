@@ -645,6 +645,7 @@
         "vpsadminosProduction": "vpsadminosProduction",
         "vpsadminosStaging": "vpsadminosStaging",
         "vpsfStatus": "vpsfStatus",
+        "vpsfreeSmsGateway": "vpsfreeSmsGateway",
         "vpsfreeWeb": "vpsfreeWeb"
       }
     },
@@ -792,11 +793,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782149837,
-        "narHash": "sha256-/d1ffmmWeGqSpoNb75fofV4jUOOjHPt53cGdlJ41udQ=",
+        "lastModified": 1782163754,
+        "narHash": "sha256-FW2D+2wX3o8+oObfRgZLyMPRAk8Fb4xrC04CmWHLUA0=",
         "owner": "vpsfreecz",
         "repo": "vpsadmin",
-        "rev": "527cc7cc30d8326d4f40ab5a413c0648ed1d6a2d",
+        "rev": "1f509de9a2fb0498b966432026a942b230d96500",
         "type": "github"
       },
       "original": {
@@ -971,6 +972,27 @@
         "owner": "vpsfreecz",
         "repo": "vpsf-status",
         "type": "github"
+      }
+    },
+    "vpsfreeSmsGateway": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgsStable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1782162959,
+        "narHash": "sha256-Ikk+Zfoz66hdo0WqmCBYCHtUHe42U/8a/a3b+/v7k+s=",
+        "ref": "2026-06-15-vpsadmin-events",
+        "rev": "f97dcdd5b7e49365c6d25d69d7948fffec4be107",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@github.com/vpsfreecz/vpsfree-sms-gateway.git"
+      },
+      "original": {
+        "ref": "2026-06-15-vpsadmin-events",
+        "type": "git",
+        "url": "ssh://git@github.com/vpsfreecz/vpsfree-sms-gateway.git"
       }
     },
     "vpsfreeWeb": {
