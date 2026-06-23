@@ -150,7 +150,10 @@ in
         "sms-snajpa".to = [ "+420720107791" ];
       };
 
-      inbound.webhooks = [ ];
+      inbound = {
+        enabled = false;
+        webhooks = [ ];
+      };
     };
   };
 

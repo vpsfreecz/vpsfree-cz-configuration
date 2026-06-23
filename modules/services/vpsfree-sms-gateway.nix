@@ -18,6 +18,8 @@ let
           alertmanager_token = "#alertmanager_token#";
           vpsadmin_token = "#vpsadmin_token#";
           status_token = "#status_token#";
+        }
+        // optionalAttrs (cfg.callbackTokenFile != null) {
           callback_token = "#callback_token#";
         };
       }
@@ -95,8 +97,12 @@ in
     };
 
     callbackTokenFile = mkOption {
-      type = types.path;
-      description = "File containing the vpsAdmin callback bearer token.";
+      type = types.nullOr types.path;
+      default = null;
+      description = ''
+        Optional legacy bearer token used for vpsAdmin callbacks that were
+        queued before per-message HMAC callback signatures were available.
+      '';
     };
   };
 
@@ -128,7 +134,9 @@ in
         ${replaceSecret "alertmanager_token" cfg.alertmanagerTokenFile}
         ${replaceSecret "vpsadmin_token" cfg.vpsadminTokenFile}
         ${replaceSecret "status_token" cfg.statusTokenFile}
-        ${replaceSecret "callback_token" cfg.callbackTokenFile}
+        ${optionalString (cfg.callbackTokenFile != null) (
+          replaceSecret "callback_token" cfg.callbackTokenFile
+        )}
         chown ${cfg.user}:${cfg.group} "${cfg.stateDirectory}/config.yml"
         chmod 0440 "${cfg.stateDirectory}/config.yml"
       '';
