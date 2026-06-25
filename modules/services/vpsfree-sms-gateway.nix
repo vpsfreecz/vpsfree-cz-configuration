@@ -123,6 +123,8 @@ in
       "d '${cfg.stateDirectory}' 0750 ${cfg.user} ${cfg.group} - -"
     ];
 
+    environment.systemPackages = [ cfg.package ];
+
     systemd.services.vpsfree-sms-gateway = {
       description = "vpsFree.cz SMS gateway";
       wantedBy = [ "multi-user.target" ];
