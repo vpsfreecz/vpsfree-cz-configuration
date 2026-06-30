@@ -24,11 +24,6 @@ let
     name = "cz.vpsfree/vpsadmin/int.api2";
   };
 
-  vpsadmin1 = confLib.findMetaConfig {
-    cluster = config.cluster;
-    name = "cz.vpsfree/vpsadmin/int.vpsadmin1";
-  };
-
   nameservers =
     map
       (
@@ -60,7 +55,6 @@ in
       clients = [
         "${api1.addresses.primary.address}/32"
         "${api2.addresses.primary.address}/32"
-        "${vpsadmin1.addresses.primary.address}/32"
       ]
       ++ (map (n: "${n.address}/${toString n.prefix}") confData.vpsadmin.networks.management.ipv4)
       ++ (map (ns: "${ns.addresses.primary.address}/32") nameservers);
