@@ -982,11 +982,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782770707,
-        "narHash": "sha256-L/BS1Cmx2CLaLtOOtXZpoJ9e+ZHC6Cy/t/ItEfP0RMU=",
+        "lastModified": 1782802146,
+        "narHash": "sha256-tHsE7fs+81kYdm9WwRyGX3/j0MM2Wt2w3jMiLsAsu9E=",
         "ref": "refs/heads/master",
-        "rev": "2074fe28446ec43212e4e2f2fa9001d2624bd6d3",
-        "revCount": 246,
+        "rev": "83565d6ebce95fc8d208454e76845af1735c25e7",
+        "revCount": 247,
         "type": "git",
         "url": "ssh://git@github.com/vpsfreecz/vpsfree-notification-templates.git"
       },
