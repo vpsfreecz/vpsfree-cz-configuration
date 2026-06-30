@@ -82,6 +82,10 @@ in
         port = 9103;
         monitor = "ssh-exporter";
       };
+      sms-gateway = {
+        port = 9876;
+        monitor = "sms-gateway";
+      };
       varnish-exporter = {
         port = 9131;
         monitor = "varnish-exporter";

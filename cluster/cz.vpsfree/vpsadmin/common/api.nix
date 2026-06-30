@@ -18,6 +18,16 @@ let
     name = "cz.vpsfree/containers/prg/proxy";
   };
 
+  apuBrq = confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/machines/brq/apu";
+  };
+
+  apuPrg = confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/machines/prg/apu";
+  };
+
   allMachines = confLib.getClusterMachines config.cluster;
   monitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
   addressCidrs =
@@ -87,6 +97,25 @@ in
     };
   };
 
+  vpsadmin.notifications.sms = {
+    enable = true;
+    callbackUrl = "https://api.vpsfree.cz/internal/notifications/sms/callback";
+    callbackTokenFile = "/private/vpsadmin-sms-callback-token";
+
+    gateways = [
+      {
+        name = "brq";
+        url = "http://${apuBrq.services.sms-gateway.address}:${toString apuBrq.services.sms-gateway.port}/v1/sms";
+        tokenFile = "/private/vpsadmin-sms-gateway-token";
+      }
+      {
+        name = "prg";
+        url = "http://${apuPrg.services.sms-gateway.address}:${toString apuPrg.services.sms-gateway.port}/v1/sms";
+        tokenFile = "/private/vpsadmin-sms-gateway-token";
+      }
+    ];
+  };
+
   vpsadmin.telegramReceiver = {
     enable = true;
     configDirectory = ../../../../configs/vpsadmin/api;
@@ -110,6 +139,7 @@ in
       "email"
       "telegram"
       "webhook"
+      "sms"
     ];
 
     database = {
