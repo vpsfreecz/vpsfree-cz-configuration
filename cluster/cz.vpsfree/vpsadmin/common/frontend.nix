@@ -113,6 +113,14 @@ in
       }) consoles;
     };
 
+    telegram-receiver.prod = {
+      frontend.bind = [ "unix@/run/haproxy/vpsadmin-telegram-receiver.sock mode 0666" ];
+      backends = map (m: {
+        host = m.addresses.primary.address;
+        port = 9293;
+      }) apis;
+    };
+
     webui = {
       prod = {
         frontend.bind = [ "unix@/run/haproxy/vpsadmin-webui-prod.sock mode 0666" ];
@@ -171,6 +179,11 @@ in
           "ipv4.ddns.vpsfree.cz"
           "ipv6.ddns.vpsfree.cz"
         ];
+        telegramWebhook = {
+          enable = true;
+          path = "/_telegram/webhook";
+          backend.address = "unix:/run/haproxy/vpsadmin-telegram-receiver.sock";
+        };
         backend = {
           address = "unix:/run/varnish/vpsadmin-varnish.sock";
         };
