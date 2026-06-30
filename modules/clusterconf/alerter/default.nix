@@ -20,6 +20,7 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/machines/brq/apu";
   };
+  smsGatewayAlertmanagerTokenFile = "/private/alertmanager/sms_gateway_token.txt";
 
   alertmanagerPort = confMachine.services.alertmanager.port;
 
@@ -443,6 +444,7 @@ in
             webhook_configs = [
               {
                 url = "http://127.0.0.1:5000/alert";
+                http_config.authorization.credentials_file = smsGatewayAlertmanagerTokenFile;
                 send_resolved = true;
               }
             ];
@@ -452,6 +454,7 @@ in
             webhook_configs = [
               {
                 url = "http://127.0.0.1:5000/alert";
+                http_config.authorization.credentials_file = smsGatewayAlertmanagerTokenFile;
                 send_resolved = true;
               }
             ];
@@ -581,9 +584,9 @@ in
       };
     };
 
-    # SMS alerts are primarily sent through sachet on apu.{brq, prg} equipped
-    # with SIM cards. Should those be unreachable, fall back to a local sachet
-    # connected to nexmo.
+    # SMS alerts are primarily sent through the gateway on apu.{brq, prg}
+    # equipped with SIM cards. Should those be unreachable, fall back to a
+    # local sachet connected to nexmo.
     services.haproxy = {
       enable = true;
       config = ''
@@ -615,8 +618,8 @@ in
 
         backend app-sachet
           balance first
-          server apu-prg ${apuPrg.services.sachet.address}:${toString apuPrg.services.sachet.port} check maxconn 32
-          server apu-brq ${apuBrq.services.sachet.address}:${toString apuBrq.services.sachet.port} check maxconn 32
+          server apu-prg ${apuPrg.services.sms-gateway.address}:${toString apuPrg.services.sms-gateway.port} check maxconn 32
+          server apu-brq ${apuBrq.services.sms-gateway.address}:${toString apuBrq.services.sms-gateway.port} check maxconn 32
           server nexmo 127.0.0.1:${toString config.services.sachet.port} check maxconn 32
       '';
     };

@@ -6,6 +6,7 @@
     inputs.channels = [
       "nixos-stable"
       "vpsf-status"
+      "vpsfree-sms-gateway"
     ];
 
     host = {
@@ -32,7 +33,7 @@
 
     services = {
       node-exporter = { };
-      sachet = { };
+      sms-gateway = { };
       vpsf-status = {
         address = "172.31.0.33";
       };
@@ -81,7 +82,7 @@
           }
         ];
 
-        "sachet.service" = [
+        "vpsfree-sms-gateway.service" = [
           {
             property = "ActiveState";
             value = "active";
