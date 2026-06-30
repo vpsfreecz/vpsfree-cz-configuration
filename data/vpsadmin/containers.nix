@@ -341,15 +341,6 @@
       name = "node24";
     };
   };
-  "vpsadmin1.int.vpsfree.cz" = {
-    node = {
-      domain = "vpsfree.cz";
-      fqdn = "node24.prg.vpsfree.cz";
-      id = 125;
-      location = "prg";
-      name = "node24";
-    };
-  };
   "vpsfbot.int.vpsfree.cz" = {
     node = {
       domain = "vpsfree.cz";
