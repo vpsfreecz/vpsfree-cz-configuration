@@ -64,7 +64,70 @@ in
       passwordFile = "/private/vpsadmin-db.pw";
     };
 
+    notifications.rabbitmq = {
+      enable = true;
+      username = "notification";
+      passwordFile = "/private/vpsadmin-notification-rabbitmq.pw";
+    };
+
     rake.enableDefaultTasks = mkDefault false;
+  };
+
+  vpsadmin.notifications.telegram = {
+    enable = true;
+    botTokenFile = "/private/vpsadmin-telegram-bot-token";
+    receiveMode = "webhook";
+
+    webhook = {
+      listenAddress = confMachine.addresses.primary.address;
+      port = 9293;
+      path = "/_telegram/webhook";
+      publicUrl = "https://api.vpsfree.cz/_telegram/webhook";
+      secretTokenFile = "/private/vpsadmin-telegram-webhook-secret";
+    };
+  };
+
+  vpsadmin.telegramReceiver = {
+    enable = true;
+    configDirectory = ../../../../configs/vpsadmin/api;
+
+    allowedIPv4Ranges = [
+      "${proxyPrg.addresses.primary.address}/32"
+    ];
+
+    database = {
+      host = db.addresses.primary.address;
+      user = "vpsadmin-api";
+      name = "vpsadmin";
+      passwordFile = "/private/vpsadmin-db.pw";
+    };
+  };
+
+  vpsadmin.notificationDispatcher = {
+    enable = true;
+    configDirectory = ../../../../configs/vpsadmin/api;
+    actions = [
+      "email"
+      "telegram"
+      "webhook"
+    ];
+
+    database = {
+      host = db.addresses.primary.address;
+      user = "vpsadmin-api";
+      name = "vpsadmin";
+      passwordFile = "/private/vpsadmin-db.pw";
+    };
+
+    rabbitmq = {
+      username = "notification";
+      passwordFile = "/private/vpsadmin-notification-rabbitmq.pw";
+    };
+
+    smtp = {
+      address = "prasiatko.int.vpsfree.cz";
+      port = 25;
+    };
   };
 
   vpsadmin.supervisor = {
