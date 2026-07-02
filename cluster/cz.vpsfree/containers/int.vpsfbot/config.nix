@@ -133,6 +133,9 @@ in
             namespace_slash = true;
             rewrite = 1;
             prefix = "[KB]";
+            exclude_pages = [
+              "drafts:*"
+            ];
             channels = [
               "#vpsfree"
             ];
@@ -142,6 +145,9 @@ in
             namespace_slash = true;
             rewrite = 1;
             prefix = "[KB]";
+            exclude_pages = [
+              "drafts:*"
+            ];
             channels = [
               "#vpsfree"
             ];
