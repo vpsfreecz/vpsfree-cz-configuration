@@ -976,11 +976,11 @@
     "vpsfreeWeb": {
       "flake": false,
       "locked": {
-        "lastModified": 1781272778,
-        "narHash": "sha256-UDfBG1ZJU9xZy14W83lTS1kcp4oNemTZ3zxpbOWNFao=",
+        "lastModified": 1782410427,
+        "narHash": "sha256-vVseVxZDTVFJBkXTEw5oU3MRxhAsHIgJPRzf5062t+w=",
         "owner": "vpsfreecz",
         "repo": "web",
-        "rev": "bae16b505ce3cdea043a9e6be9bd0ffdb7f9c3b8",
+        "rev": "4758b9b963461378cb67285f59a1c5f51a5b7a6b",
         "type": "github"
       },
       "original": {
