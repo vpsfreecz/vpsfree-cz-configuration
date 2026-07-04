@@ -56,6 +56,33 @@ let
     finalImageName = "ghcr.io/soju06/codex-lb";
     finalImageTag = "1.20.0-beta.2";
   };
+
+  codexDeepseekResponsesProxy = pkgs.writeTextFile {
+    name = "codex-deepseek-responses-proxy";
+    destination = "/bin/codex-deepseek-responses-proxy";
+    executable = true;
+    text = builtins.readFile ../../../../packages/codex-deepseek-responses-proxy/proxy.py;
+    checkPhase = ''
+      ${pkgs.python3}/bin/python3 -m py_compile "$target"
+    '';
+  };
+
+  codexDs = pkgs.writeShellScriptBin "codex-ds" ''
+    exec ${llmAgentsPkgs.codex}/bin/codex -p ds "$@"
+  '';
+
+  codexDsConfig = pkgs.writeText "codex-ds.config.toml" ''
+    model_provider = "deepseek"
+    model = "deepseek-v4-pro"
+    model_reasoning_effort = "high"
+    model_supports_reasoning_summaries = true
+
+    [model_providers.deepseek]
+    name = "DeepSeek via local Responses proxy"
+    base_url = "http://127.0.0.1:4141"
+    experimental_bearer_token = "local-codex-deepseek"
+    wire_api = "responses"
+  '';
 in
 {
   # NOTE: environments/base.nix is not imported, this is a standalone system
@@ -145,6 +172,42 @@ in
       RandomizedDelaySec = "5min";
     };
   };
+
+  systemd.services.codex-deepseek-responses-proxy = {
+    description = "Codex DeepSeek Responses API proxy";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+    environment = {
+      DEEPSEEK_API_KEY_FILE = "/home/aither/.codex/deepseek-key";
+      DEEPSEEK_BASE_URL = "https://api.deepseek.com";
+      DEEPSEEK_PROXY_API_KEY = "local-codex-deepseek";
+      DEEPSEEK_PROXY_STATE_DIR = "/var/lib/codex-deepseek-responses-proxy";
+    };
+    serviceConfig = {
+      Type = "simple";
+      User = "aither";
+      Group = "users";
+      ExecStart = "${pkgs.python3}/bin/python3 ${codexDeepseekResponsesProxy}/bin/codex-deepseek-responses-proxy --host 127.0.0.1 --port 4141";
+      Restart = "on-failure";
+      RestartSec = "2s";
+      StateDirectory = "codex-deepseek-responses-proxy";
+      StateDirectoryMode = "0700";
+      NoNewPrivileges = true;
+      PrivateTmp = true;
+      ProtectSystem = "strict";
+    };
+  };
+
+  system.activationScripts.codexDeepseekProfile.text = ''
+    profile=/home/aither/.codex/ds.config.toml
+
+    if [ -L "$profile" ] || [ ! -e "$profile" ]; then
+      install -d -m 0700 -o aither -g users /home/aither/.codex
+      rm -f "$profile"
+      install -m 0600 -o aither -g users ${codexDsConfig} "$profile"
+    fi
+  '';
 
   nixpkgs.overlays = import ../../../../overlays;
 
@@ -367,6 +430,7 @@ in
         bind
         bundix
         cloc
+        codexDs
         curl
         fd
         file
