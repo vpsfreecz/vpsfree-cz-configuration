@@ -1,0 +1,43 @@
+name: Event i18n health
+
+on:
+  push:
+    paths:
+      - ".github/workflows/event-i18n-health.yml"
+      - ".overcommit.yml"
+      - "Gemfile"
+      - "Gemfile.lock"
+      - "Rakefile"
+      - "configs/vpsadmin/api/monitoring.rb"
+      - "configs/vpsadmin/api/locales/**"
+      - "lib/vpsadmin_config/event_i18n/**"
+      - "spec/vpsadmin_config/event_i18n/**"
+  pull_request:
+    paths:
+      - ".github/workflows/event-i18n-health.yml"
+      - ".overcommit.yml"
+      - "Gemfile"
+      - "Gemfile.lock"
+      - "Rakefile"
+      - "configs/vpsadmin/api/monitoring.rb"
+      - "configs/vpsadmin/api/locales/**"
+      - "lib/vpsadmin_config/event_i18n/**"
+      - "spec/vpsadmin_config/event_i18n/**"
+  workflow_dispatch:
+
+jobs:
+  event-i18n:
+    name: Event i18n health
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Check event translations
+        run: nix develop -c bundle exec rake vpsadmin:events:i18n:health
+
+      - name: Run event i18n specs
+        run: nix develop -c bundle exec rspec spec/vpsadmin_config/event_i18n
