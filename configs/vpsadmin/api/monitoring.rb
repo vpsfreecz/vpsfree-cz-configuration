@@ -214,7 +214,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
   action :route_admin_alert do |event|
     route_monitoring_alert!(
       event,
-      recipient: event.user,
+      affected_user: event.user,
       context: {
         language: Language.take!
       }
@@ -525,7 +525,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       v < (limit * 1024 * 1024)
     end
 
-    action :alert_user
+    action :route_alert
   end
 
   monitor :vps_in_rescue_mode do
@@ -604,7 +604,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       server_zone.dns_zone.user
     end
 
-    action :alert_user
+    action :route_alert
   end
 
   monitor :vps_dataset_expansions do
