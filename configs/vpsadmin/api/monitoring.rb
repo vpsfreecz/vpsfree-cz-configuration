@@ -1,182 +1,229 @@
-MailTemplate.register :alert_role_event_state,
-                      name: 'alert_%{role}_%{event}_%{state}', params: {
-                        role: 'user or admin',
-                        event: 'name of event monitor',
-                        state: 'event state'
-                      }, vars: {
-                        event: 'MonitoredEvent',
-                        object: 'object associated with this event',
-                        user: User,
-                        base_url: 'URL to the web UI'
-                      }, roles: %i[admin]
+monitoring_state_vars = {
+  event: 'MonitoredEvent',
+  object: 'object associated with this event',
+  user: User,
+  base_url: 'URL to the web UI'
+}
+monitoring_diskspace_vars = monitoring_state_vars.merge(
+  dip: DatasetInPool,
+  ds: Dataset,
+  vps: '::Vps or nil'
+)
+monitoring_zombie_vars = monitoring_state_vars.merge(
+  vps: Vps,
+  zombie_process_count: Integer,
+  threshold: Integer
+)
 
-MailTemplate.register :alert_role_diskspace_state_pool,
-                      name: 'alert_%{role}_diskspace_%{state}_%{pool}', params: {
-                        role: 'user or admin',
-                        state: 'event state',
-                        pool: 'primary or hypervisor'
-                      }, vars: {
-                        event: 'MonitoredEvent',
-                        dip: DatasetInPool,
-                        ds: Dataset,
-                        vps: '::Vps or nil',
-                        user: User,
-                        base_url: 'URL to the web UI'
-                      }, roles: %i[admin]
+%i[
+  alert_monthly_traffic_closed
+  alert_monthly_traffic_confirmed
+  alert_unpaid_cpu_closed
+  alert_unpaid_cpu_confirmed
+  alert_unpaid_data_flow_closed
+  alert_unpaid_data_flow_confirmed
+  alert_paid_cpu_closed
+  alert_paid_cpu_confirmed
+  alert_outgoing_data_flow_closed
+  alert_outgoing_data_flow_confirmed
+  alert_dns_secondary_transfer_failure_closed
+  alert_dns_secondary_transfer_failure_confirmed
+].each do |template_name|
+  NotificationTemplate.register template_name,
+                                vars: monitoring_state_vars,
+                                public: true
+end
 
-MailTemplate.register :alert_user_zombie_processes_state,
-                      name: 'alert_user_zombie_processes_%{state}', params: {
-                        state: 'event state'
-                      }, vars: {
-                        event: 'MonitoredEvent',
-                        vps: Vps,
-                        zombie_process_count: Integer,
-                        threshold: Integer,
-                        user: User,
-                        base_url: 'URL to the web UI'
-                      }, roles: %i[admin]
+%i[
+  alert_diskspace_closed_hypervisor
+  alert_diskspace_closed_primary
+  alert_diskspace_confirmed_hypervisor
+  alert_diskspace_confirmed_primary
+].each do |template_name|
+  NotificationTemplate.register template_name,
+                                vars: monitoring_diskspace_vars,
+                                public: true
+end
 
-MailTemplate.register :alert_user_zombie_processes_restart,
-                      name: 'alert_user_zombie_processes_restart', vars: {
-                        event: 'MonitoredEvent',
-                        vps: Vps,
-                        zombie_process_count: Integer,
-                        threshold: Integer,
-                        finish_weekday: Integer,
-                        finish_minutes: Integer,
-                        user: User,
-                        base_url: 'URL to the web UI'
-                      }, roles: %i[admin]
+%i[
+  alert_zombie_processes_closed
+  alert_zombie_processes_confirmed
+].each do |template_name|
+  NotificationTemplate.register template_name,
+                                vars: monitoring_zombie_vars,
+                                public: true
+end
 
-MailTemplate.register :alert_user_vps_in_rescue,
-                      name: 'alert_user_vps_in_rescue', vars: {
-                        event: 'MonitoredEvent',
-                        vps: Vps,
-                        user: User,
-                        base_url: 'URL to the web UI'
-                      }, roles: %i[admin]
+NotificationTemplate.register :alert_zombie_processes_restart,
+                              vars: monitoring_zombie_vars.merge(
+                                finish_weekday: Integer,
+                                finish_minutes: Integer
+                              ),
+                              public: true
 
-MailTemplate.register :alert_vps_dataset_over_quota,
-                      name: 'alert_vps_dataset_over_quota', vars: {
-                        dataset: Dataset,
-                        expansion: DatasetExpansion,
-                        vps: Vps,
-                        user: User,
-                        base_url: 'URL to the web UI'
-                      }, roles: %i[admin]
+NotificationTemplate.register :alert_vps_in_rescue,
+                              vars: monitoring_state_vars.merge(vps: Vps),
+                              public: true
+
+NotificationTemplate.register :alert_vps_dataset_over_quota,
+                              vars: {
+                                dataset: Dataset,
+                                expansion: DatasetExpansion,
+                                vps: Vps,
+                                user: User,
+                                base_url: 'URL to the web UI'
+                              },
+                              public: true
+
+monitoring_events = VpsAdmin::API::Plugins::Monitoring::Events
+monitoring_state_template = lambda do |prefix|
+  lambda do |event, _context|
+    :"alert_#{prefix}_#{monitoring_events.template_state(event)}"
+  end
+end
 
 VpsAdmin::API::Plugins::Monitoring.config do
+  alert_event 'monitoring.unpaid_cpu',
+              label: 'Unpaid VPS CPU usage',
+              template: monitoring_state_template.call('unpaid_cpu'),
+              monitors: %i[unpaid_cpu],
+              fields: %i[vps]
+
+  alert_event 'monitoring.unpaid_data_flow',
+              label: 'Unpaid user data flow',
+              template: monitoring_state_template.call('unpaid_data_flow'),
+              monitors: %i[unpaid_data_flow],
+              fields: %i[vps]
+
+  alert_event 'monitoring.monthly_traffic',
+              label: 'Monthly traffic',
+              template: monitoring_state_template.call('monthly_traffic'),
+              monitors: %i[monthly_traffic]
+
+  alert_event 'monitoring.diskspace_low',
+              label: 'Dataset free space',
+              template: lambda { |event, context|
+                pool = monitoring_events.context_value(context, :pool_role)
+                :"alert_diskspace_#{monitoring_events.template_state(event)}_#{pool}"
+              },
+              monitors: %i[diskspace],
+              fields: %i[vps dataset pool_role],
+              vars: lambda { |base, event, context|
+                base.merge(
+                  dip: monitoring_events.context_value(context, :dip),
+                  ds: event.object,
+                  vps: monitoring_events.context_value(context, :vps)
+                )
+              }
+
+  alert_event 'monitoring.paid_cpu',
+              label: 'VPS CPU usage',
+              template: monitoring_state_template.call('paid_cpu'),
+              monitors: %i[paid_cpu],
+              fields: %i[vps]
+
+  alert_event 'monitoring.outgoing_data_flow',
+              label: 'High outgoing data flow',
+              template: monitoring_state_template.call('outgoing_data_flow'),
+              monitors: %i[outgoing_data_flow],
+              fields: %i[vps]
+
+  alert_event 'monitoring.zombie_processes',
+              label: 'Zombie processes',
+              template: lambda { |event, _context|
+                :"alert_zombie_processes_#{monitoring_events.template_state(event)}"
+              },
+              monitors: %i[vps_zombie_processes],
+              fields: %i[vps threshold],
+              vars: lambda { |base, event, context|
+                vps = monitoring_events.context_value(context, :vps) || event.object
+                base.merge(
+                  vps:,
+                  zombie_process_count: vps.zombie_process_count,
+                  threshold: monitoring_events.context_value(context, :threshold)
+                )
+              }
+
+  alert_event 'monitoring.zombie_processes_restart',
+              label: 'Zombie processes restart planned',
+              template: :alert_zombie_processes_restart,
+              fields: %i[vps threshold maintenance],
+              vars: lambda { |base, event, context|
+                vps = monitoring_events.context_value(context, :vps) || event.object
+                base.merge(
+                  vps:,
+                  zombie_process_count: vps.zombie_process_count,
+                  threshold: monitoring_events.context_value(context, :threshold),
+                  finish_weekday: monitoring_events.context_value(context, :finish_weekday),
+                  finish_minutes: monitoring_events.context_value(context, :finish_minutes)
+                )
+              }
+
+  alert_event 'monitoring.vps_in_rescue',
+              label: 'VPS in rescue mode',
+              template: :alert_vps_in_rescue,
+              monitors: %i[vps_in_rescue_mode],
+              fields: %i[vps],
+              vars: lambda { |base, event, _context|
+                base.merge(vps: event.object)
+              }
+
+  alert_event 'monitoring.dns_secondary_transfer_failed',
+              label: 'DNS secondary transfer failed',
+              template: monitoring_state_template.call('dns_secondary_transfer_failure'),
+              monitors: %i[dns_secondary_transfer_failure],
+              fields: %i[dns]
+
+  alert_event 'monitoring.dataset_over_quota',
+              label: 'VPS dataset over quota',
+              template: :alert_vps_dataset_over_quota,
+              monitors: %i[vps_dataset_expansions],
+              fields: %i[vps dataset],
+              vars: lambda { |base, event, _context|
+                expansion = event.object.dataset_expansion
+                base.merge(
+                  dataset: event.object,
+                  expansion:,
+                  vps: expansion.vps
+                )
+              }
+
   # Action definitions
-  action :alert_user do |event|
-    opts = {
-      params: {
-        role: :user,
-        event: event.monitor.name,
-        state: event.state == 'acknowledged' ? 'confirmed' : event.state
-      },
-      user: event.user,
-      vars: {
-        event: event,
-        object: event.object,
-        user: event.user,
-        base_url: SysConfig.get('webui', 'base_url')
-      }
-    }
-
-    if event.state == 'closed'
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-#{event.state}@vpsadmin.vpsfree.cz>"
-      rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-#{event.prev_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-      opts[:in_reply_to] = rpl_to
-      opts[:references] = rpl_to
-
-    else
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-    end
-
-    opts[:message_id] = msg_id
-
-    mail(:alert_role_event_state, opts)
+  action :route_alert do |event|
+    route_monitoring_alert!(event)
   end
 
-  action :alert_user_diskspace do |event|
+  action :route_diskspace_alert do |event|
     dip = event.object.primary_dataset_in_pool!
-    opts = {
-      params: {
-        role: :user,
-        state: event.state == 'acknowledged' ? 'confirmed' : event.state,
-        pool: dip.pool.role
-      },
-      user: event.user,
-      vars: {
-        event: event,
-        dip: dip,
-        ds: event.object,
-        vps: if dip.pool.role == 'hypervisor'
-               Vps.find_by!(
-                 dataset_in_pool: dip.dataset.root.primary_dataset_in_pool!
-               )
-             end,
-        user: event.user,
-        base_url: SysConfig.get('webui', 'base_url')
+    vps = if dip.pool.role == 'hypervisor'
+            Vps.find_by!(
+              dataset_in_pool: dip.dataset.root.primary_dataset_in_pool!
+            )
+          end
+
+    route_monitoring_alert!(
+      event,
+      context: {
+        dip:,
+        pool_role: dip.pool.role,
+        vps:
       }
-    }
-
-    if event.state == 'closed'
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-#{event.state}@vpsadmin.vpsfree.cz>"
-      rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-#{event.prev_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-      opts[:in_reply_to] = rpl_to
-      opts[:references] = rpl_to
-
-    else
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-    end
-
-    opts[:message_id] = msg_id
-
-    mail(:alert_role_diskspace_state_pool, opts)
+    )
   end
 
-  action :alert_admins do |event|
-    opts = {
-      params: {
-        role: :admin,
-        event: event.monitor.name,
-        state: event.state == 'acknowledged' ? 'confirmed' : event.state
-      },
-      language: Language.take!,
-      vars: {
-        event: event,
-        base_url: SysConfig.get('webui', 'base_url')
+  action :route_admin_alert do |event|
+    route_monitoring_alert!(
+      event,
+      recipient: event.user,
+      context: {
+        language: Language.take!
       }
-    }
-
-    if event.state == 'closed'
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-#{event.state}@vpsadmin.vpsfree.cz>"
-      rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-#{event.prev_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-      opts[:in_reply_to] = rpl_to
-      opts[:references] = rpl_to
-
-    else
-      msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-    end
-
-    opts[:message_id] = msg_id
-
-    mail(:alert_role_event_state, opts)
+    )
   end
 
-  action :alert_user_zombie_processes do |event|
+  action :route_zombie_process_alert do |event|
     threshold = 10_000
     vps = event.object
-
-    mail_vars = {
-      event: event,
-      vps: vps,
-      zombie_process_count: vps.zombie_process_count,
-      threshold: threshold,
-      user: event.user,
-      base_url: SysConfig.get('webui', 'base_url')
-    }
 
     if vps.zombie_process_count > threshold
       # Plan restart unless one was already planned
@@ -193,17 +240,20 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
       finish_minutes = (4 * 60) + rand(35..55) # 04:35-55
 
-      opts = {
-        user: event.user,
-        vars: mail_vars.merge({
-          finish_weekday: finish_weekday,
-          finish_minutes: finish_minutes
-        })
-      }
-
       lock(vps)
 
-      mail(:alert_user_zombie_processes_restart, opts)
+      route_monitoring_alert!(
+        event,
+        event_type: 'monitoring.zombie_processes_restart',
+        alert_kind: 'restart',
+        severity: :critical,
+        context: {
+          vps:,
+          threshold:,
+          finish_weekday:,
+          finish_minutes:
+        }
+      )
 
       append_t(
         Transactions::MaintenanceWindow::Wait,
@@ -232,26 +282,13 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
       next if last_alert && last_alert + (24 * 60 * 60) > Time.now
 
-      opts = {
-        params: {
-          state: event.state == 'acknowledged' ? 'confirmed' : event.state
-        },
-        user: event.user,
-        vars: mail_vars
-      }
-
-      if event.state == 'closed'
-        msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-#{event.state}@vpsadmin.vpsfree.cz>"
-        rpl_to = "<vpsadmin-monitoring-alert-#{event.id}-#{event.prev_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-        opts[:in_reply_to] = rpl_to
-        opts[:references] = rpl_to
-      else
-        msg_id = "<vpsadmin-monitoring-alert-#{event.id}-#{event.next_alert_id}-confirmed@vpsadmin.vpsfree.cz>"
-      end
-
-      opts[:message_id] = msg_id
-
-      mail(:alert_user_zombie_processes_state, opts)
+      route_monitoring_alert!(
+        event,
+        context: {
+          vps:,
+          threshold:
+        }
+      )
 
       event.action_state ||= {}
       event.action_state['last_alert'] = Time.now.to_i
@@ -259,38 +296,16 @@ VpsAdmin::API::Plugins::Monitoring.config do
     end
   end
 
-  action :alert_user_vps_in_rescue do |event|
+  action :route_vps_rescue_alert do |event|
     next if event.state == 'closed'
 
-    opts = {
-      user: event.user,
-      vars: {
-        event: event,
-        vps: event.object,
-        user: event.user,
-        base_url: SysConfig.get('webui', 'base_url')
-      }
-    }
-
-    mail(:alert_user_vps_in_rescue, opts)
+    route_monitoring_alert!(event)
   end
 
   action :alert_vps_dataset_over_quota do |event|
     next if event.state == 'closed'
 
-    opts = {
-      user: event.user,
-      vars: {
-        event: event,
-        dataset: event.object,
-        expansion: event.object.dataset_expansion,
-        vps: event.object.dataset_expansion.vps,
-        user: event.user,
-        base_url: SysConfig.get('webui', 'base_url')
-      }
-    }
-
-    mail(:alert_vps_dataset_over_quota, opts)
+    route_monitoring_alert!(event)
   end
 
   # Monitors
@@ -319,7 +334,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       (vps.cpu * 100) - (vps.vps_current_status.cpu_idle * vps.cpu)
     end
     check { |_vps, v| v.nil? || v < 200 }
-    action :alert_admins
+    action :route_admin_alert
   end
 
   monitor :unpaid_data_flow do
@@ -345,7 +360,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
     object { |mon| mon.network_interface.vps }
     value { |mon| (mon.bytes_all * 8).to_i }
     check { |_mon, v| v < 200 * 1024 * 1024 }
-    action :alert_admins
+    action :route_admin_alert
   end
 
   ## Others
@@ -387,7 +402,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
 
     check { |_dip, v| v > 10 }
     user { |dip| dip.dataset.user }
-    action :alert_user_diskspace
+    action :route_diskspace_alert
   end
 
   monitor :paid_cpu do
@@ -412,7 +427,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       (vps.cpu * 100) - (vps.vps_current_status.cpu_idle * vps.cpu)
     end
     check { |_vps, v| v.nil? || v < 300 }
-    action :alert_user
+    action :route_alert
   end
 
   monitor :monthly_traffic do
@@ -436,7 +451,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
     object(&:user)
     value(&:bytes_all)
     check { |_tr, v| v < 30 * 1024 * 1024 * 1024 * 1024 }
-    action :alert_admins
+    action :route_admin_alert
   end
 
   monitor :vps_zombie_processes do
@@ -471,7 +486,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       value < 1000
     end
 
-    action :alert_user_zombie_processes
+    action :route_zombie_process_alert
   end
 
   monitor :outgoing_data_flow do
@@ -541,7 +556,7 @@ VpsAdmin::API::Plugins::Monitoring.config do
       end
     end
 
-    action :alert_user_vps_in_rescue
+    action :route_vps_rescue_alert
   end
 
   monitor :dns_secondary_transfer_failure do
