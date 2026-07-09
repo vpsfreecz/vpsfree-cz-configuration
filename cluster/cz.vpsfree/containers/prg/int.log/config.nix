@@ -22,6 +22,11 @@ let
 
   getAlias = host: "${host.name}${optionalString (!isNull host.location) ".${host.location}"}";
 
+  vpsadminWebuiHosts = [
+    "cz.vpsfree/vpsadmin/int.webui1"
+    "cz.vpsfree/vpsadmin/int.webui2"
+  ];
+
   syslogExporterHosts = listToAttrs (
     map (
       m:
@@ -29,6 +34,7 @@ let
         alias = getAlias m.metaConfig.host;
         fqdn = m.metaConfig.host.fqdn;
         os = m.metaConfig.spin;
+        collectors = optional (elem m.name vpsadminWebuiHosts) "vpsadmin_webui";
       }
     ) possibleMachines
   );

@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
 
-source 'https://rubygems.vpsfree.cz' do
-  gem 'syslog-exporter'
-end
+gem 'syslog-exporter',
+    git: 'https://github.com/vpsfreecz/syslog-exporter.git',
+    ref: 'f3f7a7aeb31f2ee8c850ebe5f8cda42c3587f052'

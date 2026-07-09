@@ -60,10 +60,12 @@
     groups = [ "default" ];
     platforms = [ ];
     source = {
-      remotes = [ "https://rubygems.vpsfree.cz" ];
-      sha256 = "0sc9krfwfvsfac4j2gzlngcdm1bb6zb8jnk0gdy5q0vxw5yp2vqq";
-      type = "gem";
+      fetchSubmodules = false;
+      rev = "f3f7a7aeb31f2ee8c850ebe5f8cda42c3587f052";
+      sha256 = "0m93l3kikn431wl66miggzs6ihb67z7v23805sk2v4c8bix1c9n5";
+      type = "git";
+      url = "https://github.com/vpsfreecz/syslog-exporter.git";
     };
-    version = "0.13.2";
+    version = "0.13.3";
   };
 }

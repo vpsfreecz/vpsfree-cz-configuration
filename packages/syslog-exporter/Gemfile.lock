@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/vpsfreecz/syslog-exporter.git
+  revision: f3f7a7aeb31f2ee8c850ebe5f8cda42c3587f052
+  ref: f3f7a7aeb31f2ee8c850ebe5f8cda42c3587f052
+  specs:
+    syslog-exporter (0.13.3)
+      prometheus-client (~> 4.2.2)
+      puma (~> 6.4)
+      rack (~> 3.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -9,14 +19,6 @@ GEM
       nio4r (~> 2.0)
     rack (3.2.6)
 
-GEM
-  remote: https://rubygems.vpsfree.cz/
-  specs:
-    syslog-exporter (0.13.2)
-      prometheus-client (~> 4.2.2)
-      puma (~> 6.4)
-      rack (~> 3.1)
-
 PLATFORMS
   ruby
   x86_64-linux
@@ -25,4 +27,4 @@ DEPENDENCIES
   syslog-exporter!
 
 BUNDLED WITH
-   2.7.2
+  4.0.14

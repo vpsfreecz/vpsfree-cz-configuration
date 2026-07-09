@@ -89,6 +89,25 @@
       }
 
       {
+        alert = "VpsAdminWebuiFatalError";
+        expr = "syslog_vpsadmin_webui_fatal_error == 1";
+        labels = {
+          severity = "warning";
+          frequency = "1m";
+        };
+        annotations = {
+          summary = "vpsAdmin WebUI fatal PHP error (instance {{ $labels.instance }})";
+          description = ''
+            vpsAdmin WebUI reported a fatal PHP error through nginx.
+
+            Host: {{ $labels.fqdn }}
+            Error type: {{ $labels.error_type }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "LxcStartFailed";
         expr = "syslog_lxc_start_failed == 1";
         labels = {
