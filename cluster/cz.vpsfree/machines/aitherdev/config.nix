@@ -88,6 +88,7 @@ in
   # NOTE: environments/base.nix is not imported, this is a standalone system
   imports = [
     ./hardware.nix
+    ./kb-staging.nix
     flakeInputs.${homeManagerInput}.nixosModules.home-manager
   ];
 

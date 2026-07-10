@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2026061000 ; serial number of this zone file
+              2026071000 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -229,6 +229,8 @@ jvb11                          IN   A       37.205.13.90
 ; aitherdev
 aitherdev.int                  IN   A       172.16.106.40
 codex-lb.aitherdev.int         IN   CNAME   aitherdev.int.vpsfree.cz.
+kb-cs.aitherdev.int            IN   CNAME   aitherdev.int.vpsfree.cz.
+kb-en.aitherdev.int            IN   CNAME   aitherdev.int.vpsfree.cz.
 vscode.aitherdev.int           IN   CNAME   aitherdev.int.vpsfree.cz.
 
 ; vpsadmin on aitherdev
