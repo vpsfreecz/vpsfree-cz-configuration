@@ -95,8 +95,9 @@ let
     })
   ];
 
-  template = pkgs.stdenvNoCC.mkDerivation {
-    name = "dokuwiki-vpsfree-2023-12-09";
+  template = pkgs.stdenvNoCC.mkDerivation rec {
+    name = "dokuwiki-vpsfree";
+    version = "2023-12-09";
     src = pkgs.fetchFromGitHub {
       owner = "vpsfreecz";
       repo = "dokuwiki-template-vpsfree";
