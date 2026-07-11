@@ -250,7 +250,7 @@ in
           ) sites}
           find /var/lib/kb-shared/media -mindepth 1 -delete
           find /var/lib/kb-shared/mlfarm -mindepth 1 -delete
-          systemd-tmpfiles --create
+          systemd-tmpfiles --create --exclude-prefix=/private/kb-staging
           ${lib.concatMapStringsSep "\n" (site: "systemctl start phpfpm-dokuwiki-${site.name}.service") sites}
           systemctl start nginx.service
         '';
