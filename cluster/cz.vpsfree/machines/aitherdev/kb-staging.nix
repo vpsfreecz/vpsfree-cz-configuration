@@ -1,7 +1,30 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
   hostAddress = "192.168.123.1";
   localAddress = "192.168.123.2";
+
+  kbStagingContainerctl = pkgs.writeShellScriptBin "kb-staging-containerctl" ''
+    set -euo pipefail
+
+    if [ "$#" -ne 1 ]; then
+      echo "usage: kb-staging-containerctl start|stop|clear" >&2
+      exit 2
+    fi
+
+    case "$1" in
+      start|stop)
+        exec ${pkgs.nixos-container}/bin/nixos-container "$1" kb-staging
+        ;;
+      clear)
+        exec ${pkgs.nixos-container}/bin/nixos-container \
+          run kb-staging -- kb-staging-clear
+        ;;
+      *)
+        echo "unknown action: $1" >&2
+        exit 2
+        ;;
+    esac
+  '';
 
   mkPlugin =
     {
@@ -119,6 +142,25 @@ in
   systemd.tmpfiles.rules = [
     "d /home/aither/.local/state/kb-stage 0700 aither users - -"
     "d /home/aither/.local/state/kb-stage/credentials 0755 aither users - -"
+  ];
+
+  environment.systemPackages = [ kbStagingContainerctl ];
+
+  security.sudo.extraRules = lib.mkAfter [
+    {
+      users = [ "aither" ];
+      commands =
+        map
+          (action: {
+            command = "/run/current-system/sw/bin/kb-staging-containerctl ${action}";
+            options = [ "NOPASSWD" ];
+          })
+          [
+            "start"
+            "stop"
+            "clear"
+          ];
+    }
   ];
 
   containers.kb-staging = {
