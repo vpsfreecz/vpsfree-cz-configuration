@@ -108,31 +108,37 @@ in
         {
           label = "vpsfree.cz";
           description = "Website in Czech";
+          descriptions.cs = "Webové stránky v češtině";
           url = "https://vpsfree.cz";
         }
         {
           label = "vpsfree.org";
           description = "Website in English";
+          descriptions.cs = "Webové stránky v angličtině";
           url = "https://vpsfree.org";
         }
         {
           label = "kb.vpsfree.cz";
           description = "Knowledge Base in Czech";
+          descriptions.cs = "Znalostní báze v češtině";
           url = "https://kb.vpsfree.cz";
         }
         {
           label = "kb.vpsfree.org";
           description = "Knowledge Base in English";
+          descriptions.cs = "Znalostní báze v angličtině";
           url = "https://kb.vpsfree.org";
         }
         {
           label = "discourse.vpsfree.cz";
           description = "Discussion forum";
+          descriptions.cs = "Diskusní fórum";
           url = "https://discourse.vpsfree.cz";
         }
         {
           label = "ZNC";
           description = "IRC bouncer";
+          descriptions.cs = "IRC bouncer";
           url = "https://im.vpsfree.cz/znc/";
           method = "get";
         }
