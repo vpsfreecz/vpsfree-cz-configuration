@@ -128,6 +128,14 @@ let
       rev = "6cb8d74b9460386ebe827296478b5f3d5e4b00cb";
       sha256 = "sha256-Hfbh70bmhTWO64HTvWhK/fnivizr2oDuqurzQ/Tn5sQ=";
     })
+    # vpsadmindoc
+    (mkPlugin {
+      name = "vpsadmindoc";
+      owner = "vpsfreecz";
+      repo = "dokuwiki-plugin-vpsadmindoc";
+      rev = "ed92a4d02a1a6827fd8be4adf5dc31208ae83f93";
+      sha256 = "sha256-IXc3lmYIMGgPjl1+SV4EPfNZqmuuKXGjcC5zu8MN37A=";
+    })
     # vshare
     (mkPlugin {
       name = "vshare";

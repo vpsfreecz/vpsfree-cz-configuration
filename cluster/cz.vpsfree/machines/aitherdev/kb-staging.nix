@@ -80,6 +80,13 @@ let
       sha256 = "sha256-Hfbh70bmhTWO64HTvWhK/fnivizr2oDuqurzQ/Tn5sQ=";
     })
     (mkPlugin {
+      name = "vpsadmindoc";
+      owner = "vpsfreecz";
+      repo = "dokuwiki-plugin-vpsadmindoc";
+      rev = "ed92a4d02a1a6827fd8be4adf5dc31208ae83f93";
+      sha256 = "sha256-IXc3lmYIMGgPjl1+SV4EPfNZqmuuKXGjcC5zu8MN37A=";
+    })
+    (mkPlugin {
       name = "vshare";
       owner = "splitbrain";
       repo = "dokuwiki-plugin-vshare";
