@@ -33,8 +33,8 @@ jobs:
 
       - name: Update inputs
         run: |
-          sudo mkdir /nix/var/nix/gcroots/per-user/$USER
-          sudo chown $USER /nix/var/nix/gcroots/per-user/$USER
+          sudo mkdir "/nix/var/nix/gcroots/per-user/$USER"
+          sudo chown "$USER" "/nix/var/nix/gcroots/per-user/$USER"
 
           nix develop -c confctl inputs channel update --commit --no-changelog \
                               '{nixos-stable,production,staging}' nixpkgs
