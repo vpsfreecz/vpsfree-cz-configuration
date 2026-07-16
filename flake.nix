@@ -69,6 +69,9 @@
   outputs =
     inputs@{ self, confctl, ... }:
     let
+      system = "x86_64-linux";
+      devPkgs = import inputs.nixpkgs { inherit system; };
+
       channels = {
         staging = {
           nixpkgs = "nixpkgsStaging";
@@ -128,10 +131,11 @@
           };
         };
       };
-      devShells.x86_64-linux.default = inputs.confctl.lib.mkConfigDevShell {
-        system = "x86_64-linux";
-        pkgs = import inputs.nixpkgs { system = "x86_64-linux"; };
+      devShells.${system}.default = inputs.confctl.lib.mkConfigDevShell {
+        inherit system;
+        pkgs = devPkgs;
         mode = "tools";
+        extraPackages = [ devPkgs.bundix ];
       };
     };
 }

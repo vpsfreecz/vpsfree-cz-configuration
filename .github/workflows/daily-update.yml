@@ -73,30 +73,40 @@ jobs:
         run: |
           set -e
 
-          for pkg in geminabox ssh-exporter syslog-exporter ; do
-            pushd "packages/$pkg"
-            
-            rm -f gemset.nix Gemfile.lock
-            nix-shell -p bundix --run "bundix -l"
-            nix-shell -p nixfmt-rfc-style --run "nixfmt gemset.nix"
+          nix develop -c bash <<'EOF'
+            set -euo pipefail
 
-            if ! grep -q 'source =' gemset.nix ; then
-              echo "Invalid $pkg/gemset.nix: missing sources, skipping"
+            # Bundix unsets BUNDLE_PATH before invoking Bundler. Persist the
+            # equivalent setting in a temporary app config so Git gems are not
+            # cached in Bundler's read-only Nix store path.
+            export BUNDLE_APP_CONFIG="$RUNNER_TEMP/bundler-config"
+            bundle config set --local path "$RUNNER_TEMP/bundle"
+
+            for pkg in geminabox ssh-exporter syslog-exporter ; do
+              pushd "packages/$pkg"
+
+              rm -f gemset.nix Gemfile.lock
+              bundix -l
+              nixfmt gemset.nix
+
+              if ! grep -q 'source =' gemset.nix ; then
+                echo "Invalid $pkg/gemset.nix: missing sources, skipping"
+                popd
+                continue
+              fi
+
+              git add gemset.nix Gemfile.lock
+
+              if git diff --cached --quiet ; then
+                popd
+                continue
+              fi
+
+              git commit -m "$pkg: update dependencies"
+
               popd
-              continue
-            fi
-            
-            git add gemset.nix Gemfile.lock
-
-            if git diff --cached --quiet ; then
-              popd
-              continue
-            fi
-
-            git commit -m "$pkg: update dependencies"
-            
-            popd
-          done
+            done
+          EOF
 
       - name: Push updates
         run: |
