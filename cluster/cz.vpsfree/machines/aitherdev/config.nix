@@ -51,10 +51,10 @@ let
 
   codexLbImage = pkgs.dockerTools.pullImage {
     imageName = "ghcr.io/soju06/codex-lb";
-    imageDigest = "sha256:1e192a4be352199c4062ff472129c896ad33c31fc4c17c77cf637c7c640d0a23";
-    sha256 = "sha256-t4jWU737htc8XYbFurohL2+sci34jqh/cOHzsWoHtUk=";
+    imageDigest = "sha256:f8f24d08d7cb4b993e64a52ed87b8eb769788a60df8e921665e817523d0ab945";
+    sha256 = "sha256-qEJueaoH2ppxVh0x9LMttYXVSFtajbzHdNVHYL1YFGQ=";
     finalImageName = "ghcr.io/soju06/codex-lb";
-    finalImageTag = "1.20.0-beta.2";
+    finalImageTag = "1.21.0";
   };
 
   codexDeepseekResponsesProxy = pkgs.writeTextFile {
@@ -651,7 +651,7 @@ in
   virtualisation.oci-containers = {
     backend = "podman";
     containers.codex-lb = {
-      image = "ghcr.io/soju06/codex-lb:1.20.0-beta.2";
+      image = "ghcr.io/soju06/codex-lb:1.21.0";
       imageFile = codexLbImage;
       ports = [
         "127.0.0.1:2455:2455"
