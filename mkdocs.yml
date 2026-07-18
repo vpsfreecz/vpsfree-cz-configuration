@@ -2,5 +2,7 @@ site_name: vpsFree.cz Cluster Configuration
 theme: readthedocs
 extra_css: ['extra.css']
 nav:
+- Operations:
+  - vpsAdmin security evidence deployment: 'operations/vpsadmin-security-evidence-deployment.md'
 - Services:
   - Grafana: 'services/grafana.md'
