@@ -17,10 +17,11 @@ database during the rolling update. New supervisors accept both the old Node
 status payload, which has no security evidence, and the new payload. Deploy
 both supervisors before updating nodectld on any Node.
 
-The history backfills are idempotent. They lock one Node at a time using the
-same lock as status ingestion, so status messages can wait while that Node is
-being reconstructed. Run only one backfill task at a time and watch the
-supervisor logs and RabbitMQ status queues for a growing backlog.
+The history backfills are resumable and idempotent per Node. Historical scans
+run in batches without the Node lock. Only final boundary verification and the
+atomic derived-history/checkpoint writes use the same short lock as status
+ingestion. If status or exact history changes during a scan, the task retries
+the scan up to three times instead of committing a stale result.
 
 A nodectld update is activated without rebooting the Node. It can immediately
 report the current closure and the kernel that is already running. The booted
@@ -94,29 +95,57 @@ confctl deploy cz.vpsfree/vpsadmin/int.webui2 switch
 
 Verify the cluster and Node administration pages through each frontend.
 
-## Backfill stored history
+## Inspect stored history
 
-On `api1.int.vpsfree.cz`, enter `vpsadmin-api-shell` and run the tasks
-sequentially:
+On `api1.int.vpsfree.cz`, enter `vpsadmin-api-shell` and inspect all eligible
+hypervisor/storage Nodes:
 
 ```shell
-bundle exec rake vpsadmin:node:reconstruct_kernel_history
-bundle exec rake vpsadmin:node:reconstruct_system_states
+bundle exec rake vpsadmin:node:history_backfill_status
 ```
 
-Both commands must finish successfully before Node rollout begins. Check a
-sample of active hypervisor and storage Nodes in the API and WebUI. Kernel and
-system history must be ordered correctly, service-only Nodes must have no
-kernel evidence, and reconstruction coverage or gaps must agree with the
-available `node_statuses` samples.
+Do not backfill every active Node far in advance. Immediately before deploying
+one Node, run its combined backfill by numeric vpsAdmin Node ID and verify that
+its overall state is `complete`:
+
+```shell
+NODE_ID=300 bundle exec rake vpsadmin:node:reconstruct_history
+NODE_ID=300 bundle exec rake vpsadmin:node:history_backfill_status
+```
+
+The component tasks remain available for diagnosis or explicit resume:
+
+```shell
+NODE_ID=300 bundle exec rake vpsadmin:node:reconstruct_kernel_history
+NODE_ID=300 bundle exec rake vpsadmin:node:reconstruct_system_states
+```
+
+The default batch size is 10,000 statuses. Set a positive `BATCH_SIZE` only
+when operational load requires it. A completed component is skipped; use
+`FORCE=1` only for an intentional verified rerun. A combined run with one
+successful component and one failure is `partial`, and the next combined run
+resumes only the missing component. Inactive historical Nodes may be
+backfilled separately during an off-peak window.
 
 ## Roll out staging Nodes
 
-Switch `node1.stg` without rebooting it:
+Backfill `node1.stg` on api1 immediately before switching it without rebooting.
+Replace `NODE1_ID` with its numeric vpsAdmin Node ID:
+
+```shell
+NODE_ID=NODE1_ID bundle exec rake vpsadmin:node:reconstruct_history
+NODE_ID=NODE1_ID bundle exec rake vpsadmin:node:history_backfill_status
+```
+
+Leave the API shell. From the configuration workstation, deploy only after the
+Node status row is `complete`:
 
 ```shell
 confctl deploy cz.vpsfree/nodes/stg/node1 switch
 ```
+
+Kernel and system history must be ordered correctly, and reconstruction
+coverage or gaps must agree with the available `node_statuses` samples.
 
 Wait for several status intervals and verify:
 
@@ -133,7 +162,14 @@ Wait for several status intervals and verify:
 - kernel, software, sysctl, cgroup, and capacity histories contain the expected
   changes.
 
-Then switch and verify `node2.stg` in the same way:
+Then backfill and verify `node2.stg` on api1 in the same way:
+
+```shell
+NODE_ID=NODE2_ID bundle exec rake vpsadmin:node:reconstruct_history
+NODE_ID=NODE2_ID bundle exec rake vpsadmin:node:history_backfill_status
+```
+
+Leave the API shell and switch it from the configuration workstation:
 
 ```shell
 confctl deploy cz.vpsfree/nodes/stg/node2 switch
@@ -152,8 +188,18 @@ confctl inputs channel set --commit production vpsadminos VPSADMINOS_REVISION
 confctl inputs channel set --commit production vpsadmin VPSADMIN_REVISION
 ```
 
-Build the selected production Nodes, then switch them gradually in small
-batches. Verify the same evidence checks after each batch and pause if
+Build the selected production Nodes. For each Node, inspect status on api1, run
+its numeric-ID combined backfill immediately before deployment, and verify
+`complete`:
+
+```shell
+NODE_ID=PRODUCTION_NODE_ID bundle exec rake vpsadmin:node:reconstruct_history
+NODE_ID=PRODUCTION_NODE_ID bundle exec rake vpsadmin:node:history_backfill_status
+```
+
+Then leave the API shell and switch that Node from the configuration
+workstation. Repeat gradually in small batches. Verify the same evidence checks
+after each Node or batch and pause if
 supervisor errors, queue growth, evidence errors, or unexpected history
 changes appear. Do not reboot Nodes merely to deploy this feature.
 
