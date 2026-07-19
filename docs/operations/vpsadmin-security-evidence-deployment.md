@@ -23,6 +23,16 @@ atomic derived-history/checkpoint writes use the same short lock as status
 ingestion. If status or exact history changes during a scan, the task retries
 the scan up to three times instead of committing a stale result.
 
+All security-advisory draft mutations and publication now require the content
+revision displayed during review. An old WebUI or administrative client does
+not send that precondition and therefore fails safely against the new API.
+Freeze advisory draft changes, synchronization, and publication from the first
+API deployment until both APIs and both WebUIs run the reviewed release. If an
+API rollback is required, keep the freeze in place: the old API does not
+enforce the revision precondition. Re-read and re-review the current draft
+revision after all API and WebUI hosts are on one version before lifting the
+freeze.
+
 A nodectld update is activated without rebooting the Node. It can immediately
 report the current closure and the kernel that is already running. The booted
 closure's vpsFree.cz configuration revision is unavailable when that older
@@ -31,15 +41,49 @@ is filled in after a later reboot into a closure that contains the metadata.
 
 ## Prepare
 
-Record the vpsAdmin, vpsAdminOS, confctl, and configuration revisions selected
-for the rollout. Build the affected configurations before the maintenance
-window:
+The reviewed source revisions for this rollout are:
+
+- confctl `7bee58a52372b95c2198ce3f2a719807a3c2c66b`;
+- vpsAdminOS `dd4ac220f16d91b478fd299f3c5da105c541dde6`; and
+- vpsAdmin `c7e4b87854fe27619dd5450f93a1e5c4d4f8e4d1`.
+
+Before building, obtain the exact configuration commit approved for rollout
+through the normal change-review channel. Set
+`APPROVED_CONFIGURATION_REVISION` to that out-of-band value; do not derive it
+from the worktree being checked. Then verify the tracked worktree and resolved
+inputs:
+
+```shell
+APPROVED_CONFIGURATION_REVISION=REVISION_APPROVED_FOR_ROLLOUT
+
+test "$(git rev-parse HEAD)" = "$APPROVED_CONFIGURATION_REVISION"
+test -z "$(git status --porcelain --untracked-files=no)"
+test "$(jq -r '.nodes.confctl.locked.rev' flake.lock)" = \
+  7bee58a52372b95c2198ce3f2a719807a3c2c66b
+test "$(jq -r '.nodes.vpsadminosStaging.locked.rev' flake.lock)" = \
+  dd4ac220f16d91b478fd299f3c5da105c541dde6
+test "$(jq -r '.nodes.vpsadminStaging.locked.rev' flake.lock)" = \
+  c7e4b87854fe27619dd5450f93a1e5c4d4f8e4d1
+test "$(jq -r '.nodes.vpsadminServices.locked.rev' flake.lock)" = \
+  c7e4b87854fe27619dd5450f93a1e5c4d4f8e4d1
+confctl inputs ls
+confctl inputs channel ls
+```
+
+The `confctl`, `vpsadminosStaging`, `vpsadminStaging`, and `vpsadminServices`
+locks must resolve to the reviewed revisions above. Stop if they differ. The
+production vpsAdmin and vpsAdminOS inputs intentionally remain unchanged until
+the staging soak is approved.
+
+Build the vpsAdmin application hosts affected by this release and both staging
+Nodes before the maintenance window:
 
 ```shell
 confctl build cz.vpsfree/vpsadmin/int.api1
 confctl build cz.vpsfree/vpsadmin/int.api2
 confctl build cz.vpsfree/vpsadmin/int.webui1
 confctl build cz.vpsfree/vpsadmin/int.webui2
+confctl build cz.vpsfree/vpsadmin/int.vpsadmin1
 confctl build cz.vpsfree/nodes/stg/node1
 confctl build cz.vpsfree/nodes/stg/node2
 ```
@@ -49,6 +93,10 @@ available. Keep the production `vpsadmin` and `vpsadminos` channel pins
 unchanged until staging has completed its soak period.
 
 ## Deploy the API and migrate
+
+Confirm that the security-advisory mutation/publication freeze is in effect.
+Deploy the first API/supervisor host only after administrators and automation
+have stopped changing drafts.
 
 Deploy the first API/supervisor host:
 
@@ -94,6 +142,18 @@ confctl deploy cz.vpsfree/vpsadmin/int.webui2 switch
 ```
 
 Verify the cluster and Node administration pages through each frontend.
+Verify that both WebUIs submit the current advisory content revision before
+lifting the security-advisory mutation/publication freeze.
+
+Deploy the service-only mailer/nodectld host after both supervisors are ready:
+
+```shell
+confctl deploy cz.vpsfree/vpsadmin/int.vpsadmin1 switch
+```
+
+Verify `vpsadmin-nodectld.service`. This host has the mailer role, so it must
+continue reporting ordinary status without kernel evidence and it has no
+history backfill.
 
 ## Inspect stored history
 
@@ -129,12 +189,12 @@ backfilled separately during an off-peak window.
 
 ## Roll out staging Nodes
 
-Backfill `node1.stg` on api1 immediately before switching it without rebooting.
-Replace `NODE1_ID` with its numeric vpsAdmin Node ID:
+Backfill `node1.stg`, whose configured vpsAdmin Node ID is 400, on api1
+immediately before switching it without rebooting:
 
 ```shell
-NODE_ID=NODE1_ID bundle exec rake vpsadmin:node:reconstruct_history
-NODE_ID=NODE1_ID bundle exec rake vpsadmin:node:history_backfill_status
+NODE_ID=400 bundle exec rake vpsadmin:node:reconstruct_history
+NODE_ID=400 bundle exec rake vpsadmin:node:history_backfill_status
 ```
 
 Leave the API shell. From the configuration workstation, deploy only after the
@@ -162,11 +222,12 @@ Wait for several status intervals and verify:
 - kernel, software, sysctl, cgroup, and capacity histories contain the expected
   changes.
 
-Then backfill and verify `node2.stg` on api1 in the same way:
+Then re-enter `vpsadmin-api-shell` on api1 and backfill `node2.stg`, whose
+configured vpsAdmin Node ID is 401:
 
 ```shell
-NODE_ID=NODE2_ID bundle exec rake vpsadmin:node:reconstruct_history
-NODE_ID=NODE2_ID bundle exec rake vpsadmin:node:history_backfill_status
+NODE_ID=401 bundle exec rake vpsadmin:node:reconstruct_history
+NODE_ID=401 bundle exec rake vpsadmin:node:history_backfill_status
 ```
 
 Leave the API shell and switch it from the configuration workstation:
@@ -184,13 +245,32 @@ After staging approval, pin the reviewed revisions without changing them
 during rollout:
 
 ```shell
-confctl inputs channel set --commit production vpsadminos VPSADMINOS_REVISION
-confctl inputs channel set --commit production vpsadmin VPSADMIN_REVISION
+VPSADMINOS_REVISION=dd4ac220f16d91b478fd299f3c5da105c541dde6
+VPSADMIN_REVISION=c7e4b87854fe27619dd5450f93a1e5c4d4f8e4d1
+production_pin_base=$(git rev-parse HEAD)
+
+confctl inputs channel set --commit production vpsadminos \
+  "$VPSADMINOS_REVISION"
+confctl inputs channel set --commit production vpsadmin \
+  "$VPSADMIN_REVISION"
+
+test "$(git rev-list --count "$production_pin_base"..HEAD)" = 2
+test "$(git diff --name-only "$production_pin_base"..HEAD)" = flake.lock
 ```
 
-Build the selected production Nodes. For each Node, inspect status on api1, run
-its numeric-ID combined backfill immediately before deployment, and verify
-`complete`:
+Inspect both resulting generated commits and confirm that each changes only its
+intended production channel input. Keep their confctl-generated commit messages
+unchanged.
+
+Before building, reconcile every active hypervisor/storage row from
+`history_backfill_status` with the current Node deployment inventory under
+`cluster/cz.vpsfree/nodes/`. Use the `node.id` from each Node's `module.nix`;
+do not infer it from the hostname or deployment order. Resolve missing or
+duplicate mappings before continuing.
+
+Build the selected production Nodes. For each Node, enter
+`vpsadmin-api-shell` on api1, run its numeric-ID combined backfill immediately
+before deployment, and verify `complete`:
 
 ```shell
 NODE_ID=PRODUCTION_NODE_ID bundle exec rake vpsadmin:node:reconstruct_history
@@ -212,4 +292,7 @@ migrations during an application rollback.
 
 An older supervisor ignores the new status field, while updated Nodes continue
 to send it. Evidence reporting resumes when a new supervisor is restored. The
-backfills are safe to rerun after recovery.
+backfills are safe to rerun after recovery. Keep all advisory draft mutation,
+synchronization, and publication frozen while any API or WebUI is rolled back.
+After the application fleet is on one version, re-read the advisory content
+revision and repeat human review before allowing changes or publication.
