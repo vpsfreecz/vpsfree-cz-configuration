@@ -11,9 +11,9 @@ The candidate runtime modules were evaluated against nixpkgs source
 `293d6abedf0478e681a4dfcfcb35b30fc796a32f`.
 
 The exact 74-file runtime allowlist is defined in `README.md`. It contains
-2,925,486 bytes and its sorted relative-path `sha256sum` manifest digest is:
+2,925,712 bytes and its sorted relative-path `sha256sum` manifest digest is:
 
-`5e8786f83d39eef241a20983e1364d32ee8bd7276e6bc02613d23c16af9feb49`
+`ed08fa0c02b804d45937181a5c33e6bbe33316ae617c677cd834389b9e62b53e`
 
 From the machine directory, reproduce that digest without creating a
 manifest file:
@@ -31,7 +31,7 @@ manifest file:
 Reviewed complete source hashes are:
 
 - `module.nix`:
-  `c50651c5ffa8ab5eed8c5fda9effc223e9191d0ba46363c9fa70ea33180e20ba`;
+  `b8cc49f754bfe0078a4937514dcccdd06e11941d6a676884f5413d96908983de`;
 - `config.nix`:
   `bc20c8dc2e0ddb9c3013ab5396c8e3ab3f801a81025c2e644f354528bd543e06`;
 - `wordpress.nix`:
@@ -50,9 +50,15 @@ evidence below.
 
 ## Completed offline evidence
 
-All candidate Nix files parse and pass pinned nixfmt 1.4.0. Direct evaluation
-of `module.nix` returns VPS `29942`, `172.16.8.4/32`, and only the reviewed
-`monitor`, `vpsadmin`, and `blog-migration` tags.
+All candidate Nix files parse and pass pinned nixfmt 1.4.0. Historical direct
+evaluation of the original offline `module.nix` returned VPS `29942`,
+`172.16.8.4/32`, and the `monitor`, `vpsadmin`, and `blog-migration` tags.
+Repository integration later proved those first two tags and the default
+monitoring/logging metadata would affect shared consumers. The current module
+keeps the same VPS and address, sets `monitoring.enable = false`, pins its
+future monitoring target to `172.16.8.4`, sets `logging.enable = false`, and
+uses only the `blog-migration` tag. Fresh repository integration evidence must
+replace the historical module evaluation before activation.
 
 Three closures of the source-matched blog runtime modules were built:
 

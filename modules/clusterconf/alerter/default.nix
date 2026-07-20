@@ -27,7 +27,9 @@ let
 
   allMonitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
 
-  allContainers = filter (m: m.metaConfig.container != null) allMachines;
+  allContainers = filter (
+    m: m.metaConfig.container != null && m.metaConfig.monitoring.enable
+  ) allMachines;
 
   containerInhibitRules = map (
     ct:

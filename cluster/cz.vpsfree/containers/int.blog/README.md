@@ -6,14 +6,19 @@ candidate, not deployment or cutover authorization. The controlling runbook
 and execution ledger are on the operator host under
 `~/ai/docs/projects/vpsfree-cz-configuration/state/`.
 
-The source is intentionally isolated from shared modules, overlays, inputs,
-DNS, and proxy configuration. `module.nix` records verified VPS `29942` and
-private address `172.16.8.4/32`; `config.nix` starts in disposable rehearsal
-mode.
+The backend runtime source is intentionally isolated from shared modules,
+overlays, inputs, DNS, and proxy configuration. `module.nix` records verified
+VPS `29942` and private address `172.16.8.4/32`; `config.nix` starts in
+disposable rehearsal mode. During migration, cluster metadata disables shared
+monitoring and logging integration and uses only the `blog-migration` tag.
+The central logger and alerter honor those opt-outs so registering the staged
+machine does not change another machine's configuration. Enable those
+integrations only in a separate reviewed transition with exact builds of all
+five consumers.
 
 ## Runtime integration boundary
 
-The exact runtime-source allowlist is 74 regular files totaling 2,925,486
+The exact runtime-source allowlist is 74 regular files totaling 2,925,712
 bytes:
 
 - `module.nix`, `config.nix`, `wordpress.nix`, and `recovery-export.nix`;
@@ -23,7 +28,7 @@ bytes:
 
 A sorted `sha256sum` manifest of those relative paths has SHA-256:
 
-`5e8786f83d39eef241a20983e1364d32ee8bd7276e6bc02613d23c16af9feb49`
+`ed08fa0c02b804d45937181a5c33e6bbe33316ae617c677cd834389b9e62b53e`
 
 `README.md` and `VALIDATION.md` accompany the integration as documentation;
 they are not runtime inputs and are not included in that 74-file manifest.

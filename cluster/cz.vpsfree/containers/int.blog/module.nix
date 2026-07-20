@@ -67,15 +67,19 @@ in
       }
     ];
 
+    # Keep shared monitoring, alerting, and logging consumers unchanged until
+    # those integrations are reviewed and activated as a separate transition.
+    monitoring = {
+      enable = false;
+      target = verifiedPrivateIPv4;
+    };
+    logging.enable = false;
+
     services.node-exporter = { };
 
     # Keep the candidate out of both broad deployment selectors until the
     # separately reviewed post-cutover tag change.
-    tags = [
-      "monitor"
-      "vpsadmin"
-      "blog-migration"
-    ];
+    tags = [ "blog-migration" ];
 
     healthChecks = {
       systemd.unitProperties = {
