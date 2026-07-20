@@ -45,7 +45,7 @@ The reviewed source revisions for this rollout are:
 
 - confctl `7bee58a52372b95c2198ce3f2a719807a3c2c66b`;
 - vpsAdminOS `736f689391bc3f920e808eb574662ed6a9e6c955`; and
-- vpsAdmin `c7e4b87854fe27619dd5450f93a1e5c4d4f8e4d1`.
+- vpsAdmin `84efbcba5ebe5d78557eaa5738b40e6242c0acde`.
 
 Before building, obtain the exact configuration commit approved for rollout
 through the normal change-review channel. Set
@@ -63,9 +63,9 @@ test "$(jq -r '.nodes.confctl.locked.rev' flake.lock)" = \
 test "$(jq -r '.nodes.vpsadminosStaging.locked.rev' flake.lock)" = \
   736f689391bc3f920e808eb574662ed6a9e6c955
 test "$(jq -r '.nodes.vpsadminStaging.locked.rev' flake.lock)" = \
-  c7e4b87854fe27619dd5450f93a1e5c4d4f8e4d1
+  84efbcba5ebe5d78557eaa5738b40e6242c0acde
 test "$(jq -r '.nodes.vpsadminServices.locked.rev' flake.lock)" = \
-  c7e4b87854fe27619dd5450f93a1e5c4d4f8e4d1
+  84efbcba5ebe5d78557eaa5738b40e6242c0acde
 confctl inputs ls
 confctl inputs channel ls
 ```
@@ -246,7 +246,7 @@ during rollout:
 
 ```shell
 VPSADMINOS_REVISION=736f689391bc3f920e808eb574662ed6a9e6c955
-VPSADMIN_REVISION=c7e4b87854fe27619dd5450f93a1e5c4d4f8e4d1
+VPSADMIN_REVISION=84efbcba5ebe5d78557eaa5738b40e6242c0acde
 production_pin_base=$(git rev-parse HEAD)
 
 confctl inputs channel set --commit production vpsadminos \
