@@ -113,37 +113,15 @@ For the offline WP-CLI isolation probe run as root, use `--allow-root cli info`;
 an invocation without `--allow-root` is expected to be rejected by WP-CLI and
 does not test target isolation.
 
-The pre-integration candidate ran recovery fault injection with the generated
-core exporter, accepted wrapper, and health checker, adapted to task-owned
-operator-host paths with controlled PATH shims, all under
-`/root/ai/tmp/wp-recovery-faults-20260720-YVkmWt`. Its cases passed:
-
-- previous `current` present with post-rename sync failure;
-- previous `current` absent with post-publication verification failure;
-- failed final stdout publication through `/dev/full`;
-- unexpected replacement of the published symlink inode; and
-- accepted-wrapper failure after a successful core export.
-
-Every failed accepted run produced zero dated accepted markers. Safe cases
-restored the previous pointer state; the unexpected-inode case refused to
-overwrite the replacement and reported `current` as non-authoritative. The
-wrapper-failure case left a complete core generation but no accepted marker,
-and the actual health checker rejected it. The health checker contains no
-`current` selector, so only the dated accepted marker can select an accepted
-generation. Final review subsequently added pre-publication identity checking
-for the previous `current` link and no-follow-style creation, metadata, and
-open-identity validation for `export.lock`. Those source changes supersede the
-old fault-injection result; rerun the focused publication, replacement, and
-lock cases from the current exact-target output before activation.
+The superseded pre-integration recovery run is retained in the execution
+ledger. Current exact-target recovery evidence is recorded below.
 
 Theme/package evidence:
 
 - final theme source Nix hash:
   `sha256-MJ0mpnwUtXNgKuhCDZT3DMj+GAbx2naE/VbYb3rRpXU=`;
-- the prior offline built-theme hash
-  `sha256-emt4yii+2+PBEMUqBwtIPCBvROQLrpzyooJ+Y7erJOU=` predates the final
-  repository-style trailing-whitespace normalization and is superseded;
-  record the replacement from the current exact-target build;
+- current exact-target built-theme hash:
+  `sha256-7BM4mozy4tkseI2UAmdll5zFD6izXflmpHNWzmSgZlA=`;
 - injected Bootstrap SHA-256:
   `9ee2fcff6709e4d0d24b09ca0fc56aade12b4961ed9c43fd13b03248bfb57afe`;
 - exact three-phase theme reconstruction, JavaScript syntax, PHP syntax, and
@@ -165,16 +143,13 @@ only through the production firewall.
 Do not integrate the harness or its two PHP test programs. They remain
 scratch-only validation inputs.
 
-## Current repository drift
+## Current repository integration
 
-A read-only build-host recheck on 2026-07-20 found current master at
-`4ef31ca84c09392a98fc8979fa4f24d6326a61a9`, a linear 15-commit fast-forward
-from the prior `5aa82621` base. The existing migration worktree still contains
-the task commit directly on the old base and must not be built or published.
-The upstream range has no path or content overlap with the task paths,
-generated inventories, proxy files, environments, or profiles, but it changes
-`flake.lock` materially. Recreate the task commits on a freshly reviewed
-current base and regenerate every integration result.
+The isolated build-host worktree is based on reviewed master
+`4ef31ca84c09392a98fc8979fa4f24d6326a61a9`. Its linear Pavel-authored task
+commits are `a6079d03`, `47dfb28e`, and `34353395`. The dirty canonical
+checkout and every unrelated path remain untouched. Remote master was still
+`4ef31ca8` at the exact-target build gate.
 
 The current stable nixpkgs pin is
 `fd1462031fdee08f65fd0b4c6b64e22239a77870`. Exact source inspection shows
@@ -212,66 +187,92 @@ hostname is intentionally absent from DNS. The machine metadata now sets
 global hosts-file or DNS change. The module identity and manifest above include
 that metadata-only correction.
 
-Final recovery review also closed two gaps against the runbook: publication
-now requires the previous `current` symlink's target and device/inode identity
-to remain unchanged, and `export.lock` is noclobber-created, required to be a
-real root-owned mode-0600 single-link regular file, opened without truncation,
-and matched to the opened descriptor before locking. The manifest and recovery
-source identity above include these changes. Their current-source focused
-fault-injection rerun remains an activation gate.
+Final recovery review closed three gaps against the runbook: publication
+requires the previous `current` symlink's target and device/inode identity to
+remain unchanged; the post-publication check requires the exact symlink inode
+created by the exporter; and `export.lock` is noclobber-created, required to
+be a real root-owned mode-0600 single-link regular file, opened without
+truncation, and matched to the opened descriptor before locking.
+
+## Current exact-target integration evidence
+
+Commit `343533950aba45fe2c8ff8f43c12e67f613ca902` built only
+`cz.vpsfree/containers/int.blog` as generation
+`2026-07-20--13-42-56`, with toplevel:
+
+`/nix/store/rydy9wn2kihg2clbr2jl50a08a565xwz-nixos-system-blog-26.05.20260719.fd14620`
+
+The generated recovery executable SHA-256 values are:
+
+- core: `0c9b8ab4eb7c79682ba3137c8e17bee66c423bb7aeb648b1e87a016d2b8da8ef`;
+- accepted wrapper:
+  `54df85d501211c17ec090d1580e0013711b9dae3f0a6bc4d956c55882807b484`;
+- manual wrapper:
+  `4fc619f1c2737e9788a0b6c3f4534037ba5fde06a899ade07e2f31bb8b3d553c`;
+  and
+- health checker:
+  `110dc6d4b5d6119ab896045e0328731a9b3780ffcea55accda013993b811946b`.
+
+The accepted and manual wrappers both reference that exact core. The
+current-source harness at
+`/root/ai/tmp/wp-recovery-faults-current-20260720-qklQsiMP` passed 12 cases:
+
+- successful publication with prior `current` present and absent;
+- safe rollback after final-output failure with prior `current` present and
+  absent;
+- same-target replacement of the prior link before publication;
+- same-target replacement of the published link before final verification;
+- unsafe lock symlink, directory, mode, and hard-link count;
+- a competing task-owned lock holder; and
+- accepted-wrapper failure after a successful core export, followed by the
+  actual health checker rejecting the unaccepted generation.
+
+All failure cases produced no dated accepted marker. Safe rollback restored
+the prior state. Externally replaced links were not overwritten; the
+post-publication replacement was reported non-authoritative. The results TSV
+SHA-256 is
+`6e46d540574f6b0c33b47a7fcb07ed2f3a26d37c3d754937f7414893ebd78aaf`.
+
+Generated closure review also passed: nginx syntax, the exact proxy real-IP
+trust and FastCGI `REMOTE_ADDR`, one proxy `/32` IPv4 HTTP accept and no IPv6
+HTTP accept, symmetric SMTP cleanup, socket-only MariaDB, immutable package
+versions and contents, source hashes, and 1,492 PHP lint checks.
 
 ## Pending candidate and integration gates
 
-Before the candidate is ready for any activation:
+Before activation, commit this validation update, rebuild the exact target so
+its embedded source revision matches the reviewed commit, and dry-activate
+only that newly named generation. Then retain these live gates:
 
-1. Copy only the 74 runtime files plus `README.md` and `VALIDATION.md` into the
-   clean build-host worktree, make them visible to Git, and confirm no
-   provenance, harness, test, or unrelated file enters the diff.
-2. Run `confctl rediscover`; require one sorted `int.blog` addition in
-   `cluster/cluster.nix` and no change to `cluster/netbootable.nix`.
-3. Resolve the exact selector to one machine, pass `confctl test-connection`,
-   and build/dry-activate only `cz.vpsfree/containers/int.blog` by recorded
-   named generation.
-4. Re-run the focused recovery publication, unexpected-current-replacement,
-   lock-path, accepted-wrapper, and health-authority fault cases from the
-   current exact-target output.
-5. In the actual-target generated nginx and firewall configuration, require
-   exactly `set_real_ip_from 172.16.9.140/32`, `real_ip_header X-Real-IP`,
-   `real_ip_recursive off`, no trusted `X-Forwarded-For`, and one HTTP accept
-   rule from that same `/32`.
-6. Through the real proxy canary, prove an injected `X-Real-IP` is overwritten,
+1. Through the real proxy canary, prove an injected `X-Real-IP` is overwritten,
    `X-Forwarded-For` cannot alter attribution, PHP/WordPress sees the real
    tester address from IPv4 and a genuine external IPv6 client, and a direct
    unauthorized backend source remains blocked with spoofed headers.
-7. Rehearse the full 5.8.13 to 7.0.2 import/upgrade, plugins, custom theme,
+2. Rehearse the full 5.8.13 to 7.0.2 import/upgrade, plugins, custom theme,
    login/comment behavior, mail/HTTP confinement, controlled reboot, upload
    replacement, and accepted-marker restore. Every staging and restored
    uploads tree must contain real `uploads/fonts` with
    `wordpress:nginx` ownership and mode `0750`, represented in the directory
    manifest.
 
-## Pending live authorization and coordination
+## Pending live gates
 
-The execution ledger remains authoritative. At this snapshot the unresolved
-live gates include:
+The execution ledger records end-to-end execution, guarded publication,
+blog-only credential response, task-owned `SnapshotDownload`, one-time nginx
+transitions, technical go/no-go, and cutover authorization. A genuine external
+IPv6 containment vantage has also passed. The remaining gates are factual:
 
-- the real `tools/deploy-infra.sh` invocation path, owner, checkout, and exact
-  target exclusion/hold;
-- authorization for the task-owned restore `SnapshotDownload` lifecycle;
-- separate one-time nginx restart authorization for `int.web` and the shared
-  proxy, including their rollback restarts and unaffected-vhost checks;
-- guarded publication to `origin/master` as
-  `Pavel Snajdr <snajpa@snajpa.net>` through GitHub account `snajpa`;
-- a genuine external IPv6 validation vantage;
-- the remaining legacy credential, session, user-password, and compromised
-  Akismet response;
-- public cutover timing and the write-enable owner or delegation; and
-- the 60-minute `origin/master` write-coordination window before state `M`.
+- align any `int.web` candidate to its active application inputs so the
+  blog-only transition cannot roll an unrelated shared site backward;
+- prove the narrow automation exclusion/hold before an `int.web` or proxy
+  generation can diverge from active and published state;
+- dry-activate and review each exact named generation before activation;
+- verify the live managed-backup schedule and monitoring consumer before
+  enabling the accepted timer; and
+- pass the real-proxy canary, migration, restore, rollback, and cutover gates.
 
-Until the gate for a particular phase is satisfied, do not run a shared-target
-build, deploy, reload/restart, push, write freeze, DNS change, or traffic
-switch. The VPS is already provisioned as `29942`; do not perform another
-`vpsfreectl` mutation.
+Do not run a broad selector, internal DNS change, production mail transition,
+retained-state destruction, or another `vpsfreectl` provisioning mutation.
 
 For recovery and restore decisions, `current` is non-authoritative. Only a
 valid dated accepted marker may select its immutable generation.
