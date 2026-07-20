@@ -20,6 +20,22 @@
       inputs.nixpkgsUnstable.follows = "intWebNixpkgsUnstableBaseline";
     };
 
+    # Temporary machine-local input baseline for the proxy reload transition.
+    # These revisions match its active generation so the one-time nginx
+    # restart cannot also update unrelated shared-proxy workloads.
+    proxyNixpkgsBaseline.url = "github:NixOS/nixpkgs/95ca1e203c0750115fd4a6f17d5a245dfe6b1edd";
+    proxyNixpkgsUnstableBaseline.url = "github:NixOS/nixpkgs/65179426c83bb3f6bc14898b42ea1c6f01d374b0";
+    proxyVpsadminosBaseline = {
+      url = "github:vpsfreecz/vpsadminos/495957f5ce89b1504a8959bb4dcb3ab85e951bbf";
+      inputs.nixpkgs.follows = "proxyNixpkgsBaseline";
+      inputs.nixpkgsUnstable.follows = "proxyNixpkgsUnstableBaseline";
+    };
+    proxyVpsadminBaseline = {
+      url = "github:vpsfreecz/vpsadmin/850c7574307f3f09c32061442ec4bb0b18a7d0f0";
+      inputs.nixpkgs.follows = "proxyNixpkgsBaseline";
+      inputs.vpsadminos.follows = "proxyVpsadminosBaseline";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgsStable";
