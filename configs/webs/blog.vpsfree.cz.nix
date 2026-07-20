@@ -4,10 +4,18 @@
     enableACME = false;
     forceSSL = false;
     root = "/var/www/blog.vpsfree.cz";
-    locations."~ \.php$".extraConfig = ''
+    locations."~ \\.php$".extraConfig = ''
       try_files $uri =404;
       fastcgi_pass  unix:${config.services.phpfpm.pools.blog.socket};
     '';
+    locations."= /backups".extraConfig = "return 404;";
+    locations."^~ /backups/".extraConfig = "return 404;";
+    locations."= /result".extraConfig = "return 404;";
+    locations."^~ /result/".extraConfig = "return 404;";
+    locations."= /wordpress".extraConfig = "return 404;";
+    locations."^~ /wordpress/".extraConfig = "return 404;";
+    locations."~* (?:~|\\.(?:bak|backup|old|orig|phpb|rar|save|sql(?:\\.(?:bz2|gz|xz))?|tar(?:\\.(?:bz2|gz|xz))?|tbz2?|tgz|txz|zip|7z))$".extraConfig =
+      "return 404;";
     locations."/".extraConfig = ''
       try_files $uri $uri/ /index.php?$args;
       index index.php index.html;

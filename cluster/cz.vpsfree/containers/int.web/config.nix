@@ -12,5 +12,7 @@
     ../../../../configs/webs
   ];
 
+  services.nginx.enableReload = true;
+
   system.stateVersion = "22.05";
 }

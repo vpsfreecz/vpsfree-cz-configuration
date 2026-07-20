@@ -24,7 +24,7 @@
     services = {
       node-exporter = { };
     };
-    tags = [ "auto-update" ];
+    tags = [ "blog-migration" ];
 
     healthChecks = {
       systemd.unitProperties = {
