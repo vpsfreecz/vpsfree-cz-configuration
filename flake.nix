@@ -9,6 +9,17 @@
     nixpkgsStable.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgsUnstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    # Temporary machine-local input baseline for the int.web containment
+    # transition. These revisions match its active generation so enabling
+    # nginx reload support cannot also update unrelated shared workloads.
+    intWebNixpkgsBaseline.url = "github:NixOS/nixpkgs/0ad6f47ea4fe188f4bc8f0380f93ae8523337c6c";
+    intWebNixpkgsUnstableBaseline.url = "github:NixOS/nixpkgs/d407951447dcd00442e97087bf374aad70c04cea";
+    intWebVpsadminosBaseline = {
+      url = "github:vpsfreecz/vpsadminos/ea78b11f34d8270812d25aa3fa4be051724c5289";
+      inputs.nixpkgs.follows = "intWebNixpkgsBaseline";
+      inputs.nixpkgsUnstable.follows = "intWebNixpkgsUnstableBaseline";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgsStable";
