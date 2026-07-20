@@ -265,42 +265,106 @@ trust and FastCGI `REMOTE_ADDR`, one proxy `/32` IPv4 HTTP accept and no IPv6
 HTTP accept, symmetric SMTP cleanup, socket-only MariaDB, immutable package
 versions and contents, source hashes, and 1,492 PHP lint checks.
 
-## Pending candidate and integration gates
+## Published activation and reboot evidence
 
-Activation evidence must use a generation built from the documentation-only
-descendant containing this validation update. Require that rebuild to differ
-from runtime-equivalent commit `d6170bdc` only in the embedded configuration
-revision, then dry-activate only that newly named generation. Retain these live
-gates:
+Published commit
+`2d2e1071cd1470de94b9eca6c6884919a68c8e8e` produced exact target
+generation `2026-07-20--17-44-56` with toplevel:
 
-1. Through the real proxy canary, prove an injected `X-Real-IP` is overwritten,
-   `X-Forwarded-For` cannot alter attribution, PHP/WordPress sees the real
-   tester address from IPv4 and a genuine external IPv6 client, and a direct
-   unauthorized backend source remains blocked with spoofed headers.
-2. Rehearse the full 5.8.13 to 7.0.2 import/upgrade, plugins, custom theme,
-   login/comment behavior, mail/HTTP confinement, controlled reboot, upload
-   replacement, and accepted-marker restore. Every staging and restored
-   uploads tree must contain real `uploads/fonts` with
-   `wordpress:nginx` ownership and mode `0750`, represented in the directory
-   manifest.
+`/nix/store/grprxnxmwrrx7zbi24gpcqax9yam7bbv-nixos-system-blog-26.05.20260719.fd14620`
 
-## Pending live gates
+The generated revision metadata is clean and names that exact commit. A
+store-only review passed nginx syntax, unit verification, immutable package
+identity, socket-only MariaDB, exact proxy trust, firewall policy, timer
+policy, and observability opt-outs. A named dry activation of only
+`cz.vpsfree/containers/int.blog` passed without changing live state. The same
+published named generation was then switched on 2026-07-20 at 18:06 CEST.
+All eight configured confctl health checks passed.
+
+The active rehearsal state is deliberately pre-import:
+
+- the immutable WordPress core reports 7.0.2;
+- MariaDB contains the `wordpress` schema but zero application tables;
+- the site is therefore not installed yet, and `/` and `/feed/` correctly
+  return `302` to the fixed HTTPS installation path;
+- `wordpress-blog-local-health-check.service` is intentionally absent from
+  confctl health metadata until the first reviewed import, because it requires
+  a complete imported site and policy options; and
+- PHP-FPM, nginx, MariaDB, and loopback-only Mailpit are active, while both
+  WordPress timers remain inactive and absent from `timers.target`.
+
+Live database and state checks established:
+
+- MariaDB 11.4.12 uses only `/run/mysqld/mysqld.sock`, has
+  `skip_networking=ON`, and provisions `wordpress@localhost` with the
+  `unix_socket` plugin;
+- the state, uploads, and uploads/fonts directories are real
+  `wordpress:nginx` mode-0750 directories;
+- `secret-keys.php` is a single-link regular file owned
+  `wordpress:nginx`, mode `0440`, and the secret-health service validates its
+  exact eight-definition structure without exposing values;
+- nginx listens only on IPv4 TCP/80, Mailpit only on loopback TCP/1025 and
+  TCP/8025, SSH on IPv4 and IPv6, MariaDB on no TCP socket, and HTTP on no
+  IPv6 socket; and
+- the four writable-tree PHP probes return `403`; all 13 exact, prefix, and
+  suffix denial probes return `404`.
+
+Caller-isolation tests passed before and after reboot. HTTP from the exact
+production proxy `172.16.9.140` reaches the backend. Direct HTTP from
+`build.vpsfree.cz` times out with status `000`, including when it spoofs
+`X-Forwarded-Proto`, `X-Real-IP`, and `X-Forwarded-For`. The live firewall has
+one TCP/80 accept from `172.16.9.140/32`, no IPv6 HTTP accept, and one jump to
+each owner-scoped SMTP rejection chain. Rejected connection counters advanced
+for Unix user `wordpress` on IPv4 and IPv6 for all of ports 25, 465, and 587;
+loopback Mailpit remained reachable.
+
+One controlled in-guest reboot affected only VPS 29942. Boot identity changed
+from `ea150581-60c8-4542-b097-7794f8109f20` to
+`38b2748e-bee7-439b-b1b5-2b1fd0e08b7f`. System profile generation 2,
+`system-2-link`, `/nix/var/nix/profiles/system`, and `/run/current-system` all
+retained the exact closure above. Exact confctl connection, named-generation
+status, and all eight health checks passed after reboot; status reported
+online, `ok`, and generation state `5:2`. The complete service, listener,
+database, secret, timer, denial, caller-isolation, and SMTP matrices also
+passed again.
+
+Post-boot warning-or-higher logs contained only 120 inherited systemd
+cgroup-BPF attachment failures, five inherited device-controller BPF failures,
+the expected boot message, and the harmless unprivileged-LXC `/var/empty`
+attribute warning. The same BPF failure classes predate activation. They mean
+systemd per-unit IP accounting and guest cgroup device ACLs are unavailable;
+they do not replace or invalidate the separately verified iptables firewall
+and service namespaces. No application unit failed, every long-lived service
+has `Result=success` and zero restarts, and no application warning remained
+after filtering the known LXC limitation and intentional denial probes.
+
+No proxy route or DNS record points user traffic at this backend yet. The
+public blog continues to use `int.web`.
+
+## Remaining rehearsal and live gates
 
 The execution ledger records end-to-end execution, guarded publication,
 blog-only credential response, task-owned `SnapshotDownload`, one-time nginx
-transitions, technical go/no-go, and cutover authorization. A genuine external
-IPv6 containment vantage has also passed. The remaining gates are factual:
+transitions, technical go/no-go, and cutover authorization. Remaining factual
+gates are:
 
-- compare the `int.web` candidate with its exact active generation so the
-  blog-only transition cannot roll an unrelated shared site backward; the
-  vpsfreeWeb revision now matches active `26e85847`, while the nixpkgs and
-  vpsAdminOS differences still require explicit proof or narrow alignment;
-- prove the narrow automation exclusion/hold before an `int.web` or proxy
-  generation can diverge from active and published state;
-- dry-activate and review each exact named generation before activation;
-- verify the live managed-backup schedule and monitoring consumer before
-  enabling the accepted timer; and
-- pass the real-proxy canary, migration, restore, rollback, and cutover gates.
+1. Complete the exact blog-only legacy credential response without restarting
+   shared MariaDB, nginx, another FPM pool, or the `int.web` container.
+2. Prepare, build, dry-activate, publish, activate, and validate the proxy's
+   no-route-change reload-ready `O` baseline before any canary route.
+3. Through proxy state `C`, prove hostile forwarded headers are overwritten
+   and WordPress/PHP sees the real tester address from IPv4 and a genuine
+   external IPv6 client.
+4. Rehearse the full 5.8.13 to 7.0.2 import and database upgrade, plugins,
+   custom theme, login/comment behavior, mail/HTTP confinement, exact uploads
+   replacement, managed-backup restore, and proxy rollback. Every staging and
+   restored uploads tree must contain real `uploads/fonts` with
+   `wordpress:nginx` ownership and mode `0750`, represented in the directory
+   manifest.
+5. Revalidate the live managed-backup schedule and static monitoring placement
+   before enabling the accepted recovery timer or observability.
+6. Prebuild and dry-activate the exact `M`, `R`, and `P` states and cross the
+   public write boundary only under the runbook's objective gates.
 
 Do not run a broad selector, internal DNS change, production mail transition,
 retained-state destruction, or another `vpsfreectl` provisioning mutation.
