@@ -44,7 +44,7 @@ is filled in after a later reboot into a closure that contains the metadata.
 The reviewed source revisions for this rollout are:
 
 - confctl `7bee58a52372b95c2198ce3f2a719807a3c2c66b`;
-- vpsAdminOS `dd4ac220f16d91b478fd299f3c5da105c541dde6`; and
+- vpsAdminOS `736f689391bc3f920e808eb574662ed6a9e6c955`; and
 - vpsAdmin `c7e4b87854fe27619dd5450f93a1e5c4d4f8e4d1`.
 
 Before building, obtain the exact configuration commit approved for rollout
@@ -61,7 +61,7 @@ test -z "$(git status --porcelain --untracked-files=no)"
 test "$(jq -r '.nodes.confctl.locked.rev' flake.lock)" = \
   7bee58a52372b95c2198ce3f2a719807a3c2c66b
 test "$(jq -r '.nodes.vpsadminosStaging.locked.rev' flake.lock)" = \
-  dd4ac220f16d91b478fd299f3c5da105c541dde6
+  736f689391bc3f920e808eb574662ed6a9e6c955
 test "$(jq -r '.nodes.vpsadminStaging.locked.rev' flake.lock)" = \
   c7e4b87854fe27619dd5450f93a1e5c4d4f8e4d1
 test "$(jq -r '.nodes.vpsadminServices.locked.rev' flake.lock)" = \
@@ -245,7 +245,7 @@ After staging approval, pin the reviewed revisions without changing them
 during rollout:
 
 ```shell
-VPSADMINOS_REVISION=dd4ac220f16d91b478fd299f3c5da105c541dde6
+VPSADMINOS_REVISION=736f689391bc3f920e808eb574662ed6a9e6c955
 VPSADMIN_REVISION=c7e4b87854fe27619dd5450f93a1e5c4d4f8e4d1
 production_pin_base=$(git rev-parse HEAD)
 
