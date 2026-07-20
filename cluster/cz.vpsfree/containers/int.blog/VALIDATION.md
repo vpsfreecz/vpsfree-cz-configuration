@@ -1,7 +1,8 @@
 # `blog.vpsfree.cz` backend validation
 
-Validation snapshot: 2026-07-20. These results are offline candidate evidence,
-not repository-integration, deployment, publication, or cutover evidence.
+Validation snapshot: 2026-07-20. The offline candidate sections below are not
+repository-integration, deployment, publication, or cutover evidence. Later
+sections explicitly record the current exact-target repository integration.
 
 ## Source identity
 
@@ -146,10 +147,18 @@ scratch-only validation inputs.
 ## Current repository integration
 
 The isolated build-host worktree is based on reviewed master
-`4ef31ca84c09392a98fc8979fa4f24d6326a61a9`. Its linear Pavel-authored task
-commits are `a6079d03`, `47dfb28e`, and `34353395`. The dirty canonical
-checkout and every unrelated path remain untouched. Remote master was still
-`4ef31ca8` at the exact-target build gate.
+`fa8de8a889df7ef97890eae9f19df96b9df51379`. Its linear Pavel-authored,
+runtime-affecting task commits are `84cf0b94`, `c4e313a9`, `3557ae60`, and
+`d6170bdc`; one documentation-only integration-evidence descendant follows
+them. The dirty canonical checkout and every unrelated path remain untouched.
+Remote master was still `fa8de8a8` at the post-rebase exact-target build gate.
+
+The three upstream commits between the previous reviewed base and this base
+updated the vpsAdminOS roles to `702155fb`, the vpsAdmin roles to `08ef5746`,
+and vpsfreeWeb to `26e85847`. Rebuilding this target after the clean rebase
+changed only the embedded configuration revision and embedded vpsAdminOS input
+metadata. Its runtime services, packages, nginx configuration, firewall, and
+recovery executables remained unchanged.
 
 The current stable nixpkgs pin is
 `fd1462031fdee08f65fd0b4c6b64e22239a77870`. Exact source inspection shows
@@ -196,11 +205,17 @@ truncation, and matched to the opened descriptor before locking.
 
 ## Current exact-target integration evidence
 
-Commit `343533950aba45fe2c8ff8f43c12e67f613ca902` built only
+Runtime-equivalent evidence commit
+`d6170bdc24e9e0e37eb5b15eed6edf2b62c3f71d` built only
 `cz.vpsfree/containers/int.blog` as generation
-`2026-07-20--13-42-56`, with toplevel:
+`2026-07-20--14-06-45`, with toplevel:
 
-`/nix/store/rydy9wn2kihg2clbr2jl50a08a565xwz-nixos-system-blog-26.05.20260719.fd14620`
+`/nix/store/24p8bazh9cc199wjk4i8017adyp8ds2q-nixos-system-blog-26.05.20260719.fd14620`
+
+Relative to the pre-rebase tested generation `2026-07-20--13-42-56`, this
+generation changes only the embedded configuration revision and the embedded
+vpsAdminOS input metadata from `37d87632` to `702155fb`. The executable hashes
+and complete generated runtime audit below are unchanged.
 
 The generated recovery executable SHA-256 values are:
 
@@ -240,9 +255,11 @@ versions and contents, source hashes, and 1,492 PHP lint checks.
 
 ## Pending candidate and integration gates
 
-Before activation, commit this validation update, rebuild the exact target so
-its embedded source revision matches the reviewed commit, and dry-activate
-only that newly named generation. Then retain these live gates:
+Activation evidence must use a generation built from the documentation-only
+descendant containing this validation update. Require that rebuild to differ
+from runtime-equivalent commit `d6170bdc` only in the embedded configuration
+revision, then dry-activate only that newly named generation. Retain these live
+gates:
 
 1. Through the real proxy canary, prove an injected `X-Real-IP` is overwritten,
    `X-Forwarded-For` cannot alter attribution, PHP/WordPress sees the real
@@ -262,8 +279,10 @@ blog-only credential response, task-owned `SnapshotDownload`, one-time nginx
 transitions, technical go/no-go, and cutover authorization. A genuine external
 IPv6 containment vantage has also passed. The remaining gates are factual:
 
-- align any `int.web` candidate to its active application inputs so the
-  blog-only transition cannot roll an unrelated shared site backward;
+- compare the `int.web` candidate with its exact active generation so the
+  blog-only transition cannot roll an unrelated shared site backward; the
+  vpsfreeWeb revision now matches active `26e85847`, while the nixpkgs and
+  vpsAdminOS differences still require explicit proof or narrow alignment;
 - prove the narrow automation exclusion/hold before an `int.web` or proxy
   generation can diverge from active and published state;
 - dry-activate and review each exact named generation before activation;

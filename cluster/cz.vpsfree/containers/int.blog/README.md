@@ -109,10 +109,10 @@ files, and build/dry-activate only
 flake environment. The actual-target build must resolve the proxy to
 `172.16.9.140/32`; see `VALIDATION.md` for the remaining gates.
 
-The 2026-07-20 read-only recheck found current master at `4ef31ca8`, while the
-existing migration worktree is still based on old master `5aa82621` and has
-untracked flake-tool state. Do not reuse or build that stale branch. Recheck
-the remote and recreate the reviewed task commits on the current base without
-touching the dirty canonical checkout or its unrelated work. Current master
-also moves stable nixpkgs to `fd146203`; all recorded offline closures use the
-older `293d6abe` pin and must be rebuilt for repository-integration evidence.
+The integrated task series is rebased onto reviewed master `fa8de8a8` in the
+isolated build-host worktree. Its only untracked content is the accounted
+flake-shell state below `.bin/` and `.bundle/`; the dirty canonical checkout
+and all unrelated work remain excluded. See `VALIDATION.md` for the exact task
+commits, generation, and closure evidence. Current stable nixpkgs is
+`fd146203`; the recorded offline closures still use the older `293d6abe` pin
+and are not repository-integration evidence.
