@@ -29,6 +29,8 @@ in
       require "/private/vpsadmin-webui.php";
     '';
 
+    softwareRevisionLinks.system_configuration = "https://github.com/vpsfreecz/vpsfree-cz-configuration/commit/";
+
     allowedIPv4Ranges = [
       "${proxyPrg.addresses.primary.address}/32"
     ];
