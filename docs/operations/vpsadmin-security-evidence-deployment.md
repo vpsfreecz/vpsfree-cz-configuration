@@ -4,6 +4,12 @@ This runbook describes the follow-up rollout that distinguishes evidence
 origin from boot-time precision, exposes immutable per-boot kernel parameters,
 and reconciles the first evidence report with reconstructed boot history.
 
+This is a release-specific runbook. Its exact vpsAdmin and configuration pin
+checks apply only to the boot-evidence rollout described here; they are not
+general assertions about the current channel heads. After a channel advances,
+use the approved revision and rollout plan for that later change instead of
+adapting these checks.
+
 The preceding security-evidence release is assumed to be deployed to the
 entire cluster. Its seven core migrations must already be up and every
 eligible Node/storage record must already have complete kernel and system
