@@ -60,6 +60,12 @@ future monitoring target to `172.16.8.4`, sets `logging.enable = false`, and
 uses only the `blog-migration` tag. Fresh repository integration evidence must
 replace the historical module evaluation before activation.
 
+Later monitoring enablement must first add or reconcile the verified static
+placement `blog.int.vpsfree.cz -> node25.prg.vpsfree.cz` (node ID `126`,
+location `prg`) in `data/vpsadmin/containers.nix`. `confctl rediscover` does
+not update that file. Revalidate live placement if the transition is not
+immediate, then build every affected monitoring and alerting consumer.
+
 Three closures of the source-matched blog runtime modules were built:
 
 - rehearsal:

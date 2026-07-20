@@ -16,6 +16,12 @@ machine does not change another machine's configuration. Enable those
 integrations only in a separate reviewed transition with exact builds of all
 five consumers.
 
+Before monitoring is enabled, explicitly add or reconcile
+`blog.int.vpsfree.cz -> node25.prg.vpsfree.cz` (node ID `126`, location
+`prg`) in `data/vpsadmin/containers.nix`; `confctl rediscover` does not
+populate that file. Revalidate the live placement first if monitoring is
+enabled after the VPS has moved.
+
 ## Runtime integration boundary
 
 The exact runtime-source allowlist is 74 regular files totaling 2,925,712

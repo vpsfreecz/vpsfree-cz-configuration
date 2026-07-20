@@ -18,7 +18,9 @@ let
 
   allMachines = confLib.getClusterMachines config.cluster;
 
-  possibleMachines = filter (m: isNull m.carrier && m.metaConfig.logging.enable) allMachines;
+  possibleMachines = filter (m: isNull m.carrier) allMachines;
+
+  loggedMachines = filter (m: m.metaConfig.logging.enable) possibleMachines;
 
   getAlias = host: "${host.name}${optionalString (!isNull host.location) ".${host.location}"}";
 
@@ -36,7 +38,7 @@ let
         os = m.metaConfig.spin;
         collectors = optional (elem m.name vpsadminWebuiHosts) "vpsadmin_webui";
       }
-    ) possibleMachines
+    ) loggedMachines
   );
 
   syslogExporterPort = confMachine.services.syslog-exporter.port;
