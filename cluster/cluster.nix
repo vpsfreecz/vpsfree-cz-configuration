@@ -4,6 +4,7 @@
   ./cz.vpsfree/containers/brq/ns1/module.nix
   ./cz.vpsfree/containers/brq/ns2/module.nix
   ./cz.vpsfree/containers/discourse/module.nix
+  ./cz.vpsfree/containers/int.blog/module.nix
   ./cz.vpsfree/containers/int.kb/module.nix
   ./cz.vpsfree/containers/int.munin/module.nix
   ./cz.vpsfree/containers/int.paste/module.nix
