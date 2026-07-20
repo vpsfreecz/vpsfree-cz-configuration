@@ -13,7 +13,7 @@ mode.
 
 ## Runtime integration boundary
 
-The exact runtime-source allowlist is 74 regular files totaling 2,925,390
+The exact runtime-source allowlist is 74 regular files totaling 2,925,486
 bytes:
 
 - `module.nix`, `config.nix`, `wordpress.nix`, and `recovery-export.nix`;
@@ -23,7 +23,7 @@ bytes:
 
 A sorted `sha256sum` manifest of those relative paths has SHA-256:
 
-`2ad532dfe49145f30f21a3037b3d7dc982c705914da947fce4617b3682c87311`
+`5e8786f83d39eef241a20983e1364d32ee8bd7276e6bc02613d23c16af9feb49`
 
 `README.md` and `VALIDATION.md` accompany the integration as documentation;
 they are not runtime inputs and are not included in that 74-file manifest.

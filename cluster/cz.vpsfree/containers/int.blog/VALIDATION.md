@@ -10,9 +10,9 @@ The candidate runtime modules were evaluated against nixpkgs source
 `293d6abedf0478e681a4dfcfcb35b30fc796a32f`.
 
 The exact 74-file runtime allowlist is defined in `README.md`. It contains
-2,925,390 bytes and its sorted relative-path `sha256sum` manifest digest is:
+2,925,486 bytes and its sorted relative-path `sha256sum` manifest digest is:
 
-`2ad532dfe49145f30f21a3037b3d7dc982c705914da947fce4617b3682c87311`
+`5e8786f83d39eef241a20983e1364d32ee8bd7276e6bc02613d23c16af9feb49`
 
 From the machine directory, reproduce that digest without creating a
 manifest file:
@@ -36,7 +36,7 @@ Reviewed complete source hashes are:
 - `wordpress.nix`:
   `432c398b7fbd0aa72733d727d6fc5433414931d2d2ee630057f03c8ba983ac53`;
 - `recovery-export.nix`:
-  `0111363c904ecc95c5dbc8b7b03b7e364be2f8adebb1aad903b72b60a18817ef`;
+  `9839d9c8c75c2050954d6e8a8c997fadf65eb40e90ace1f06c6f9c201b777019`;
 - `packages/default.nix`:
   `5010e662c53b1ea463571a6b3c0596af59ec389cc57c64f2e0f788e2a89cc712`;
   and

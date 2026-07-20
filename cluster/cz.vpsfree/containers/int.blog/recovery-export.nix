@@ -550,7 +550,8 @@ let
             sync --file-system "$backup_root"
 
             [[ -L "$current_link" \
-              && "$(readlink -- "$current_link")" == "generations/$export_id" ]] \
+              && "$(readlink -- "$current_link")" == "generations/$export_id" \
+              && "$(stat --format=%d:%i -- "$current_link")" == "$published_current_identity" ]] \
               || fail "published current link verification failed"
 
             printf '%s\n' "$export_id"
