@@ -1,48 +1,4 @@
-{ lib, ... }:
-let
-  # Verified from the account-ID-2 vpsfreectl result and its active address
-  # relation recorded in the migration execution ledger.
-  liveVpsId = 29942;
-  livePrivateIPv4 = "172.16.8.4";
-
-  privateIPv4Octets =
-    if builtins.isString livePrivateIPv4 then lib.splitString "." livePrivateIPv4 else [ ];
-  isCanonicalIPv4Octet =
-    octet:
-    builtins.match "(0|[1-9][0-9]{0,2})" octet != null
-    && (
-      let
-        value = lib.toInt octet;
-      in
-      value >= 0 && value <= 255
-    );
-  isExpectedPrivateIPv4 =
-    builtins.length privateIPv4Octets == 4
-    && lib.all isCanonicalIPv4Octet privateIPv4Octets
-    && builtins.elemAt privateIPv4Octets 0 == "172"
-    && (
-      let
-        secondOctet = lib.toInt (builtins.elemAt privateIPv4Octets 1);
-      in
-      secondOctet >= 16 && secondOctet <= 31
-    );
-
-  verifiedVpsId =
-    assert lib.assertMsg (builtins.isInt liveVpsId && liveVpsId > 0) ''
-      int.blog requires the positive vpsAdmin VPS ID verified for
-      blog.int.vpsfree.cz under account ID 2; recheck the exact live object
-      relation before every promotion
-    '';
-    liveVpsId;
-
-  verifiedPrivateIPv4 =
-    assert lib.assertMsg (builtins.isString livePrivateIPv4 && isExpectedPrivateIPv4) ''
-      int.blog requires the canonical 172.16.0.0/12 private /32 assigned to
-      the same verified vpsAdmin VPS; recheck the exact VPS/address relation
-      before every promotion
-    '';
-    livePrivateIPv4;
-in
+{ ... }:
 {
   cluster."cz.vpsfree/containers/int.blog" = {
     spin = "nixos";
@@ -51,35 +7,31 @@ in
       "os-staging"
     ];
 
-    container.id = verifiedVpsId;
+    container.id = 29942;
 
     host = {
       name = "blog";
       location = "int";
       domain = "vpsfree.cz";
-      target = verifiedPrivateIPv4;
+      target = "172.16.8.4";
     };
 
     addresses.v4 = [
       {
-        address = verifiedPrivateIPv4;
+        address = "172.16.8.4";
         prefix = 32;
       }
     ];
 
-    # Keep shared monitoring, alerting, and logging consumers unchanged until
-    # those integrations are reviewed and activated as a separate transition.
     monitoring = {
       enable = false;
-      target = verifiedPrivateIPv4;
+      target = "172.16.8.4";
     };
     logging.enable = false;
 
     services.node-exporter = { };
 
-    # Keep the candidate out of both broad deployment selectors until the
-    # separately reviewed post-cutover tag change.
-    tags = [ "blog-migration" ];
+    tags = [ "manual-update" ];
 
     healthChecks = {
       systemd.unitProperties = {
@@ -125,13 +77,6 @@ in
             value = "0";
           }
         ];
-
-        "wordpress-recovery-export.timer" = [
-          {
-            property = "ActiveState";
-            value = "active";
-          }
-        ];
       };
 
       machineCommands = [
@@ -150,15 +95,6 @@ in
             "systemctl"
             "start"
             "wordpress-blog-local-health-check.service"
-          ];
-          standardOutput.match = "";
-        }
-        {
-          description = "Revalidate the accepted WordPress recovery export";
-          command = [
-            "systemctl"
-            "start"
-            "wordpress-recovery-export-health-check.service"
           ];
           standardOutput.match = "";
         }

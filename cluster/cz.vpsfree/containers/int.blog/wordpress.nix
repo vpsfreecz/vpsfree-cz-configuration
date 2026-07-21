@@ -7,7 +7,6 @@
 }:
 
 let
-  cfg = config.vpsfree.blog;
   siteName = "blog.vpsfree.cz";
   poolName = "wordpress-${siteName}";
   siteStateDir = "/var/lib/wordpress/${siteName}";
@@ -281,13 +280,6 @@ let
         exit 1
       fi
 
-      ${lib.optionalString (cfg.mode == "rehearsal") ''
-        blog_public="$(${wpBlog}/bin/wp-blog --skip-plugins --skip-themes option get blog_public)"
-        if [[ "$blog_public" != 0 ]]; then
-          printf 'rehearsal blog_public is not disabled: %s\n' "$blog_public" >&2
-          exit 1
-        fi
-      ''}
     '';
   };
 
@@ -303,362 +295,277 @@ let
     permits config.networking.firewall
     || lib.any permits (lib.attrValues config.networking.firewall.interfaces);
 
-  isRehearsal = cfg.mode == "rehearsal";
-  isProduction = cfg.mode == "production";
 in
 {
-  options.vpsfree.blog = {
-    mode = lib.mkOption {
-      type = lib.types.enum [
-        "rehearsal"
-        "production"
-      ];
-      description = ''
-        Selects the reviewed blog runtime state. Rehearsal enables only the
-        loopback Mailpit/msmtp sink and adds noindex response headers.
-        Production removes the sendmail path and Mailpit. This option has no
-        default deliberately: every built generation must name its state.
-      '';
-    };
+  assertions = [
+    {
+      assertion = config.networking.firewall.enable;
+      message = "blog.vpsfree.cz requires the firewall to protect proxy-header trust";
+    }
+    {
+      assertion = config.networking.nftables.enable == false;
+      message = "blog.vpsfree.cz requires the reviewed iptables firewall backend";
+    }
+    {
+      assertion = config.networking.firewall.backend == "iptables";
+      message = "blog.vpsfree.cz SMTP and proxy rules require networking.firewall.backend = iptables";
+    }
+    {
+      assertion = !(tcpPortIsBroadlyAllowed 80);
+      message = "blog.vpsfree.cz TCP/80 must not be opened broadly; only the exact proxy IPv4 rule is allowed";
+    }
+    {
+      assertion = !(tcpPortIsBroadlyAllowed 3306);
+      message = "blog.vpsfree.cz MariaDB is Unix-socket-only; TCP/3306 must remain closed";
+    }
+    {
+      assertion =
+        builtins.match "[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+" proxyPrg.addresses.primary.address != null;
+      message = "blog.vpsfree.cz requires an IPv4 primary address for the prg proxy metadata";
+    }
+    {
+      assertion = config.services.mail.sendmailSetuidWrapper == null;
+      message = "blog.vpsfree.cz production must have no sendmail wrapper";
+    }
+    {
+      assertion = config.services.mailpit.instances == { };
+      message = "blog.vpsfree.cz production must have no Mailpit instance";
+    }
+    {
+      assertion =
+        !config.services.postfix.enable
+        && !config.services.exim.enable
+        && !config.services.opensmtpd.enable
+        && !config.services.nullmailer.enable
+        && !config.services.maddy.enable
+        && !config.services.stalwart.enable;
+      message = "blog.vpsfree.cz production must not enable an MTA";
+    }
+  ];
 
-    enableProductionCron = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = ''
-        Enable the five-minute systemd WP-Cron timer. Set this only in the
-        reviewed final production generation after write enablement; keeping
-        it false leaves both HTTP and systemd cron disabled.
-      '';
-    };
+  networking.firewall.enable = true;
+  networking.nftables.enable = false;
 
-    enableAkismetHost = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = ''
-        Allow WordPress HTTP requests only to rest.akismet.com. Leave false
-        unless a fresh key and the exact HTTPS-only path passed rehearsal.
+  networking.firewall.extraCommands = ''
+    # Accept backend HTTP only from the production proxy's exact IPv4.
+    iptables -w -A nixos-fw -p tcp \
+      -s ${proxyPrg.addresses.primary.address}/32 --dport 80 \
+      -j nixos-fw-accept
+
+    # Fail closed for external SMTP from the WordPress Unix user.
+    while iptables -w -D OUTPUT -j vpsf-blog-smtp4 2>/dev/null; do :; done
+    iptables -w -N vpsf-blog-smtp4 2>/dev/null || true
+    iptables -w -F vpsf-blog-smtp4
+    iptables -w -A vpsf-blog-smtp4 -p tcp \
+      -m owner --uid-owner wordpress ! -d 127.0.0.0/8 \
+      -m multiport --dports 25,465,587 \
+      -j REJECT --reject-with tcp-reset
+    iptables -w -I OUTPUT 1 -j vpsf-blog-smtp4
+
+    while ip6tables -w -D OUTPUT -j vpsf-blog-smtp6 2>/dev/null; do :; done
+    ip6tables -w -N vpsf-blog-smtp6 2>/dev/null || true
+    ip6tables -w -F vpsf-blog-smtp6
+    ip6tables -w -A vpsf-blog-smtp6 -p tcp \
+      -m owner --uid-owner wordpress ! -d ::1/128 \
+      -m multiport --dports 25,465,587 \
+      -j REJECT --reject-with tcp-reset
+    ip6tables -w -I OUTPUT 1 -j vpsf-blog-smtp6
+  '';
+
+  networking.firewall.extraStopCommands = ''
+    while iptables -w -D OUTPUT -j vpsf-blog-smtp4 2>/dev/null; do :; done
+    iptables -w -F vpsf-blog-smtp4 2>/dev/null || true
+    iptables -w -X vpsf-blog-smtp4 2>/dev/null || true
+    while ip6tables -w -D OUTPUT -j vpsf-blog-smtp6 2>/dev/null; do :; done
+    ip6tables -w -F vpsf-blog-smtp6 2>/dev/null || true
+    ip6tables -w -X vpsf-blog-smtp6 2>/dev/null || true
+  '';
+
+  services.mysql.settings.mysqld."skip-networking" = true;
+
+  services.wordpress = {
+    webserver = "nginx";
+
+    sites.${siteName} = {
+      package = blogPackages.wordpress;
+      inherit (blogPackages) plugins themes languages;
+      inherit uploadsDir;
+      # Keep the module's second mutable tree inside the one uploads tree
+      # covered by export manifests, restore, and final synchronization.
+      inherit fontsDir;
+
+      database = {
+        createLocally = true;
+        host = "localhost";
+        socket = "/run/mysqld/mysqld.sock";
+        name = "wordpress";
+        user = "wordpress";
+        tablePrefix = "wp_";
+      };
+
+      settings = {
+        WP_HOME = "https://${siteName}";
+        WP_SITEURL = "https://${siteName}";
+        FORCE_SSL_ADMIN = true;
+        DISABLE_WP_CRON = true;
+        DISALLOW_FILE_MODS = true;
+        WP_HTTP_BLOCK_EXTERNAL = true;
+        WPLANG = "cs_CZ";
+        WP_DEFAULT_THEME = "twentytwentyfive";
+        WP_ENVIRONMENT_TYPE = "production";
+      };
+
+      extraConfig = ''
+        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
+            && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+          $_SERVER['HTTPS'] = 'on';
+        }
       '';
     };
   };
 
-  config = lib.mkMerge [
-    {
-      assertions = [
+  services.nginx = {
+    enableReload = true;
+
+    virtualHosts.${siteName} = {
+      # The public proxy terminates TLS; this backend has one IPv4 HTTP
+      # listener and no ACME, TLS, or IPv6 HTTP listener.
+      listen = [
         {
-          assertion = config.networking.firewall.enable;
-          message = "blog.vpsfree.cz requires the firewall to protect proxy-header trust";
-        }
-        {
-          assertion = config.networking.nftables.enable == false;
-          message = "blog.vpsfree.cz requires the reviewed iptables firewall backend";
-        }
-        {
-          assertion = config.networking.firewall.backend == "iptables";
-          message = "blog.vpsfree.cz SMTP and proxy rules require networking.firewall.backend = iptables";
-        }
-        {
-          assertion = !(tcpPortIsBroadlyAllowed 80);
-          message = "blog.vpsfree.cz TCP/80 must not be opened broadly; only the exact proxy IPv4 rule is allowed";
-        }
-        {
-          assertion = !(tcpPortIsBroadlyAllowed 3306);
-          message = "blog.vpsfree.cz MariaDB is Unix-socket-only; TCP/3306 must remain closed";
-        }
-        {
-          assertion =
-            builtins.match "[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+" proxyPrg.addresses.primary.address != null;
-          message = "blog.vpsfree.cz requires an IPv4 primary address for the prg proxy metadata";
-        }
-        {
-          assertion = !cfg.enableProductionCron || isProduction;
-          message = "blog.vpsfree.cz production cron cannot be enabled in rehearsal mode";
-        }
-        {
-          assertion = !isProduction || config.services.mail.sendmailSetuidWrapper == null;
-          message = "blog.vpsfree.cz production must have no sendmail wrapper";
-        }
-        {
-          assertion = !isProduction || config.services.mailpit.instances == { };
-          message = "blog.vpsfree.cz production must have no Mailpit instance";
-        }
-        {
-          assertion =
-            !isProduction
-            ||
-              !config.services.postfix.enable
-              && !config.services.exim.enable
-              && !config.services.opensmtpd.enable
-              && !config.services.nullmailer.enable
-              && !config.services.maddy.enable
-              && !config.services.stalwart.enable;
-          message = "blog.vpsfree.cz production must not enable an MTA";
-        }
-        {
-          assertion = !isRehearsal || config.services.mail.sendmailSetuidWrapper != null;
-          message = "blog.vpsfree.cz rehearsal requires the loopback msmtp sendmail wrapper";
+          addr = "0.0.0.0";
+          port = 80;
         }
       ];
+      enableACME = false;
+      addSSL = false;
+      forceSSL = false;
 
-      networking.firewall.enable = true;
-      networking.nftables.enable = false;
-
-      networking.firewall.extraCommands = ''
-        # Accept backend HTTP only from the production proxy's exact IPv4.
-        iptables -w -A nixos-fw -p tcp \
-          -s ${proxyPrg.addresses.primary.address}/32 --dport 80 \
-          -j nixos-fw-accept
-
-        # Fail closed for external SMTP from the WordPress Unix user while
-        # retaining loopback Mailpit during rehearsal.
-        while iptables -w -D OUTPUT -j vpsf-blog-smtp4 2>/dev/null; do :; done
-        iptables -w -N vpsf-blog-smtp4 2>/dev/null || true
-        iptables -w -F vpsf-blog-smtp4
-        iptables -w -A vpsf-blog-smtp4 -p tcp \
-          -m owner --uid-owner wordpress ! -d 127.0.0.0/8 \
-          -m multiport --dports 25,465,587 \
-          -j REJECT --reject-with tcp-reset
-        iptables -w -I OUTPUT 1 -j vpsf-blog-smtp4
-
-        while ip6tables -w -D OUTPUT -j vpsf-blog-smtp6 2>/dev/null; do :; done
-        ip6tables -w -N vpsf-blog-smtp6 2>/dev/null || true
-        ip6tables -w -F vpsf-blog-smtp6
-        ip6tables -w -A vpsf-blog-smtp6 -p tcp \
-          -m owner --uid-owner wordpress ! -d ::1/128 \
-          -m multiport --dports 25,465,587 \
-          -j REJECT --reject-with tcp-reset
-        ip6tables -w -I OUTPUT 1 -j vpsf-blog-smtp6
+      extraConfig = ''
+        # The production proxy overwrites X-Real-IP with its directly
+        # observed client. Trust that single header only on connections
+        # from the metadata-resolved proxy /32; never consume an
+        # arbitrary X-Forwarded-For chain.
+        set_real_ip_from ${proxyPrg.addresses.primary.address}/32;
+        real_ip_header X-Real-IP;
+        real_ip_recursive off;
       '';
 
-      networking.firewall.extraStopCommands = ''
-        while iptables -w -D OUTPUT -j vpsf-blog-smtp4 2>/dev/null; do :; done
-        iptables -w -F vpsf-blog-smtp4 2>/dev/null || true
-        iptables -w -X vpsf-blog-smtp4 2>/dev/null || true
-        while ip6tables -w -D OUTPUT -j vpsf-blog-smtp6 2>/dev/null; do :; done
-        ip6tables -w -F vpsf-blog-smtp6 2>/dev/null || true
-        ip6tables -w -X vpsf-blog-smtp6 2>/dev/null || true
-      '';
+      locations = {
+        "= /wp-config.php".extraConfig = "return 404;";
+        "= /wp-cron.php".extraConfig = "return 404;";
+        "= /xmlrpc.php".extraConfig = "return 404;";
+        "= /wp-trackback.php".extraConfig = "return 404;";
 
-      services.mysql.settings.mysqld."skip-networking" = true;
+        "= /backups".extraConfig = "return 404;";
+        "^~ /backups/".extraConfig = "return 404;";
+        "= /result".extraConfig = "return 404;";
+        "^~ /result/".extraConfig = "return 404;";
+        "= /wordpress".extraConfig = "return 404;";
+        "^~ /wordpress/".extraConfig = "return 404;";
 
-      services.wordpress = {
-        webserver = "nginx";
-
-        sites.${siteName} = {
-          package = blogPackages.wordpress;
-          inherit (blogPackages) plugins themes languages;
-          inherit uploadsDir;
-          # Keep the module's second mutable tree inside the one uploads tree
-          # covered by export manifests, restore, and final synchronization.
-          inherit fontsDir;
-
-          database = {
-            createLocally = true;
-            host = "localhost";
-            socket = "/run/mysqld/mysqld.sock";
-            name = "wordpress";
-            user = "wordpress";
-            tablePrefix = "wp_";
-          };
-
-          settings = {
-            WP_HOME = "https://${siteName}";
-            WP_SITEURL = "https://${siteName}";
-            FORCE_SSL_ADMIN = true;
-            DISABLE_WP_CRON = true;
-            DISALLOW_FILE_MODS = true;
-            WP_HTTP_BLOCK_EXTERNAL = true;
-            WPLANG = "cs_CZ";
-            WP_DEFAULT_THEME = "twentytwentyfive";
-            WP_ENVIRONMENT_TYPE = if isRehearsal then "staging" else "production";
-          }
-          // lib.optionalAttrs cfg.enableAkismetHost {
-            WP_ACCESSIBLE_HOSTS = "rest.akismet.com";
-          };
-
-          extraConfig = ''
-            if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
-                && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-              $_SERVER['HTTPS'] = 'on';
-            }
-          '';
+        # Nginx uses the first matching regex location. Force dotfiles and
+        # every PHP path below writable WordPress trees ahead of the
+        # module's generic PHP/FastCGI regex.
+        "~ /\\.".priority = lib.mkForce 300;
+        "~* ^/wp-content/(?:uploads|fonts|files)/.*\\.php$" = {
+          priority = 400;
+          extraConfig = "deny all;";
         };
+
+        "~* (?:~|\\.(?:bak|backup|old|orig|phpb|rar|save|sql(?:\\.(?:bz2|gz|xz))?|tar(?:\\.(?:bz2|gz|xz))?|tbz2?|tgz|txz|zip|7z))$".extraConfig =
+          "return 404;";
       };
+    };
+  };
 
-      services.nginx = {
-        enableReload = true;
-
-        virtualHosts.${siteName} = {
-          # The public proxy terminates TLS; this backend has one IPv4 HTTP
-          # listener and no ACME, TLS, or IPv6 HTTP listener.
-          listen = [
-            {
-              addr = "0.0.0.0";
-              port = 80;
-            }
-          ];
-          enableACME = false;
-          addSSL = false;
-          forceSSL = false;
-
-          extraConfig = ''
-            # The production proxy overwrites X-Real-IP with its directly
-            # observed client. Trust that single header only on connections
-            # from the metadata-resolved proxy /32; never consume an
-            # arbitrary X-Forwarded-For chain.
-            set_real_ip_from ${proxyPrg.addresses.primary.address}/32;
-            real_ip_header X-Real-IP;
-            real_ip_recursive off;
-          ''
-          + lib.optionalString isRehearsal ''
-            add_header X-Robots-Tag "noindex, nofollow, noarchive" always;
-          '';
-
-          locations = {
-            "= /wp-config.php".extraConfig = "return 404;";
-            "= /wp-cron.php".extraConfig = "return 404;";
-            "= /xmlrpc.php".extraConfig = "return 404;";
-            "= /wp-trackback.php".extraConfig = "return 404;";
-
-            "= /backups".extraConfig = "return 404;";
-            "^~ /backups/".extraConfig = "return 404;";
-            "= /result".extraConfig = "return 404;";
-            "^~ /result/".extraConfig = "return 404;";
-            "= /wordpress".extraConfig = "return 404;";
-            "^~ /wordpress/".extraConfig = "return 404;";
-
-            # Nginx uses the first matching regex location. Force dotfiles and
-            # every PHP path below writable WordPress trees ahead of the
-            # module's generic PHP/FastCGI regex.
-            "~ /\\.".priority = lib.mkForce 300;
-            "~* ^/wp-content/(?:uploads|fonts|files)/.*\\.php$" = {
-              priority = 400;
-              extraConfig = "deny all;";
-            };
-
-            "~* (?:~|\\.(?:bak|backup|old|orig|phpb|rar|save|sql(?:\\.(?:bz2|gz|xz))?|tar(?:\\.(?:bz2|gz|xz))?|tbz2?|tgz|txz|zip|7z))$".extraConfig =
-              "return 404;";
-          };
-        };
-      };
-
-      environment.systemPackages = [
-        wpBlog
-        wpBlogCoreUpdateDb
-        secretHealthCheck
-        localHealthCheck
-      ];
-
-      systemd.services."phpfpm-${poolName}" = {
-        requires = [ "wordpress-blog-secret-health-check.service" ];
-        after = [ "wordpress-blog-secret-health-check.service" ];
-      };
-
-      systemd.services.wordpress-blog-secret-health-check = {
-        description = "Validate persistent WordPress secrets for ${siteName}";
-        requires = [ "wordpress-init-${siteName}.service" ];
-        after = [ "wordpress-init-${siteName}.service" ];
-        before = [
-          "phpfpm-${poolName}.service"
-          "wordpress-cron-${siteName}.service"
-          "wordpress-blog-local-health-check.service"
-        ];
-        serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-          Group = config.services.nginx.group;
-          UMask = "0077";
-          ExecStart = "${secretHealthCheck}/bin/wordpress-blog-secret-health-check";
-          PrivateNetwork = true;
-          RestrictAddressFamilies = [ "AF_UNIX" ];
-          PrivateTmp = true;
-          NoNewPrivileges = true;
-          ProtectSystem = "strict";
-          ProtectHome = true;
-          CapabilityBoundingSet = "";
-        };
-      };
-
-      systemd.services."wordpress-cron-${siteName}" = {
-        description = "Run due WordPress cron events for ${siteName}";
-        requisite = [ "mysql.service" ];
-        requires = [ "wordpress-blog-secret-health-check.service" ];
-        after = [
-          "mysql.service"
-          "wordpress-blog-secret-health-check.service"
-        ];
-        serviceConfig = {
-          Type = "oneshot";
-          User = "wordpress";
-          Group = config.services.nginx.group;
-          UMask = "0077";
-          ExecStart = "${wpBlog}/bin/wp-blog cron event run --due-now";
-          NoNewPrivileges = true;
-          PrivateTmp = true;
-        };
-      };
-
-      systemd.timers."wordpress-cron-${siteName}" = {
-        wantedBy = lib.optionals cfg.enableProductionCron [ "timers.target" ];
-        timerConfig = {
-          Unit = "wordpress-cron-${siteName}.service";
-          OnCalendar = "*-*-* *:0/5:00";
-          Persistent = false;
-          RandomizedDelaySec = "0";
-          AccuracySec = "1s";
-        };
-      };
-
-      systemd.services.wordpress-blog-local-health-check = {
-        description = "Check local WordPress and denial paths for ${siteName}";
-        requires = [ "wordpress-blog-secret-health-check.service" ];
-        requisite = [
-          "mysql.service"
-          "nginx.service"
-          "phpfpm-${poolName}.service"
-        ];
-        after = [
-          "mysql.service"
-          "nginx.service"
-          "phpfpm-${poolName}.service"
-          "wordpress-blog-secret-health-check.service"
-        ];
-        serviceConfig = {
-          Type = "oneshot";
-          User = "wordpress";
-          Group = config.services.nginx.group;
-          ExecStart = "${localHealthCheck}/bin/wordpress-blog-local-health-check";
-          NoNewPrivileges = true;
-          PrivateTmp = true;
-        };
-      };
-    }
-
-    (lib.mkIf isRehearsal {
-      programs.msmtp = {
-        enable = true;
-        setSendmail = true;
-        defaults = {
-          auth = false;
-          tls = false;
-        };
-        accounts.default = {
-          host = "127.0.0.1";
-          port = 1025;
-          from = "wordpress-rehearsal@${siteName}";
-        };
-      };
-
-      services.mailpit.instances.wordpress-blog = {
-        listen = "127.0.0.1:8025";
-        smtp = "127.0.0.1:1025";
-        database = "wordpress-blog-rehearsal.db";
-        max = 500;
-      };
-
-      systemd.services."phpfpm-${poolName}" = {
-        wants = [ "mailpit-wordpress-blog.service" ];
-        after = [ "mailpit-wordpress-blog.service" ];
-      };
-    })
+  environment.systemPackages = [
+    wpBlog
+    wpBlogCoreUpdateDb
+    secretHealthCheck
+    localHealthCheck
   ];
+
+  systemd.services."phpfpm-${poolName}" = {
+    requires = [ "wordpress-blog-secret-health-check.service" ];
+    after = [ "wordpress-blog-secret-health-check.service" ];
+  };
+
+  systemd.services.wordpress-blog-secret-health-check = {
+    description = "Validate persistent WordPress secrets for ${siteName}";
+    requires = [ "wordpress-init-${siteName}.service" ];
+    after = [ "wordpress-init-${siteName}.service" ];
+    before = [
+      "phpfpm-${poolName}.service"
+      "wordpress-cron-${siteName}.service"
+      "wordpress-blog-local-health-check.service"
+    ];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      Group = config.services.nginx.group;
+      UMask = "0077";
+      ExecStart = "${secretHealthCheck}/bin/wordpress-blog-secret-health-check";
+      PrivateNetwork = true;
+      RestrictAddressFamilies = [ "AF_UNIX" ];
+      PrivateTmp = true;
+      NoNewPrivileges = true;
+      ProtectSystem = "strict";
+      ProtectHome = true;
+      CapabilityBoundingSet = "";
+    };
+  };
+
+  systemd.services."wordpress-cron-${siteName}" = {
+    description = "Run due WordPress cron events for ${siteName}";
+    requisite = [ "mysql.service" ];
+    requires = [ "wordpress-blog-secret-health-check.service" ];
+    after = [
+      "mysql.service"
+      "wordpress-blog-secret-health-check.service"
+    ];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "wordpress";
+      Group = config.services.nginx.group;
+      UMask = "0077";
+      ExecStart = "${wpBlog}/bin/wp-blog cron event run --due-now";
+      NoNewPrivileges = true;
+      PrivateTmp = true;
+    };
+  };
+
+  systemd.timers."wordpress-cron-${siteName}" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      Unit = "wordpress-cron-${siteName}.service";
+      OnCalendar = "*-*-* *:0/5:00";
+      Persistent = false;
+      RandomizedDelaySec = "0";
+      AccuracySec = "1s";
+    };
+  };
+
+  systemd.services.wordpress-blog-local-health-check = {
+    description = "Check local WordPress and denial paths for ${siteName}";
+    requires = [ "wordpress-blog-secret-health-check.service" ];
+    requisite = [
+      "mysql.service"
+      "nginx.service"
+      "phpfpm-${poolName}.service"
+    ];
+    after = [
+      "mysql.service"
+      "nginx.service"
+      "phpfpm-${poolName}.service"
+      "wordpress-blog-secret-health-check.service"
+    ];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "wordpress";
+      Group = config.services.nginx.group;
+      ExecStart = "${localHealthCheck}/bin/wordpress-blog-local-health-check";
+      NoNewPrivileges = true;
+      PrivateTmp = true;
+    };
+  };
 }
