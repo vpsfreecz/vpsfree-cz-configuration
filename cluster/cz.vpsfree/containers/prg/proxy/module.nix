@@ -37,6 +37,7 @@
     tags = [
       "monitor"
       "vpsadmin"
+      "manual-update"
     ];
 
     healthChecks = {
