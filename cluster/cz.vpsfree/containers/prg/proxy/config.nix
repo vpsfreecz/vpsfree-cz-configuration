@@ -66,6 +66,11 @@ let
     name = "cz.vpsfree/containers/int.web";
   };
 
+  blog = confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/int.blog";
+  };
+
   expectedProxyAcmeCertNames = [
     "alerts1.prg.vpsfree.cz"
     "alerts2.prg.vpsfree.cz"
@@ -281,7 +286,25 @@ in
       "blog.vpsfree.cz" = {
         enableACME = true;
         forceSSL = true;
-        locations."/".proxyPass = "http://${web.addresses.primary.address}:80";
+        locations."/" = {
+          proxyPass = "http://$vpsfree_blog_backend:80";
+          extraConfig = ''
+            set $vpsfree_blog_backend ${web.addresses.primary.address};
+            set $vpsfree_blog_canary_gate "";
+
+            if ($remote_addr = 172.16.106.5) {
+              set $vpsfree_blog_canary_gate "s";
+            }
+            if ($http_x_vpsfree_blog_canary = blog-canary-20260721-2d7410af-e73e-472b-ab37-1619eb436d94) {
+              set $vpsfree_blog_canary_gate "''${vpsfree_blog_canary_gate}h";
+            }
+            if ($vpsfree_blog_canary_gate = "sh") {
+              set $vpsfree_blog_backend ${blog.addresses.primary.address};
+            }
+
+            proxy_set_header X-Vpsfree-Blog-Canary "";
+          '';
+        };
       };
 
       "foto.vpsfree.cz" = {
