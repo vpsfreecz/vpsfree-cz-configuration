@@ -233,6 +233,9 @@ in
             if ($http_x_vpsfree_blog_canary = blog-canary-20260721-2d7410af-e73e-472b-ab37-1619eb436d94) {
               set $vpsfree_blog_canary_gate "''${vpsfree_blog_canary_gate}h";
             }
+            if ($vpsfree_blog_canary_gate != "sh") {
+              return 503;
+            }
             if ($vpsfree_blog_canary_gate = "sh") {
               set $vpsfree_blog_backend ${blog.addresses.primary.address};
             }
