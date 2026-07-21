@@ -7,13 +7,6 @@
       "os-staging"
       "vpsfree-web"
     ];
-    # Keep this shared-container transition on the exact inputs of its active
-    # generation. Remove these temporary overrides only in a separately
-    # reviewed int.web update after the blog migration.
-    inputs.overrides = {
-      nixpkgs = "intWebNixpkgsBaseline";
-      vpsadminos = "intWebVpsadminosBaseline";
-    };
     container.id = 22523;
     host = {
       name = "web";
