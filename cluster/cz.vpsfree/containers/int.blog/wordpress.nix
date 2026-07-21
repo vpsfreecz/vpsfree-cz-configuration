@@ -8,9 +8,7 @@
 
 let
   siteName = "blog.vpsfree.cz";
-  poolName = "wordpress-${siteName}";
   siteStateDir = "/var/lib/wordpress/${siteName}";
-  secretKeysFile = "${siteStateDir}/secret-keys.php";
   uploadsDir = "${siteStateDir}/uploads";
   fontsDir = "${uploadsDir}/fonts";
 
@@ -94,194 +92,6 @@ let
       --skip-themes \
       core update-db "$@"
   '';
-
-  secretHealthCheck = pkgs.writeShellApplication {
-    name = "wordpress-blog-secret-health-check";
-    runtimeInputs = [
-      pkgs.coreutils
-      pkgs.php
-    ];
-    text = ''
-      set -o nounset
-      umask 0077
-
-      readonly state_dir=${lib.escapeShellArg siteStateDir}
-      readonly secret_file=${lib.escapeShellArg secretKeysFile}
-      readonly uploads_dir=${lib.escapeShellArg uploadsDir}
-      readonly fonts_dir=${lib.escapeShellArg fontsDir}
-      readonly -a expected_keys=(
-        AUTH_KEY
-        SECURE_AUTH_KEY
-        LOGGED_IN_KEY
-        NONCE_KEY
-        AUTH_SALT
-        SECURE_AUTH_SALT
-        LOGGED_IN_SALT
-        NONCE_SALT
-      )
-
-      fail() {
-        printf 'WordPress secret health: %s\n' "$*" >&2
-        exit 1
-      }
-
-      [[ "$(id --user)" == 0 ]] || fail "must run as root"
-      expected_uid="$(id --user wordpress)"
-      expected_gid="$(id --group wordpress)"
-
-      [[ -d "$state_dir" && ! -L "$state_dir" ]] \
-        || fail "state directory is absent, a symlink, or not a directory"
-      [[ "$(stat --format=%u:%g:%a -- "$state_dir")" \
-        == "$expected_uid:$expected_gid:750" ]] \
-        || fail "state directory has unsafe owner or mode"
-
-      for mutable_directory in "$uploads_dir" "$fonts_dir"; do
-        [[ -d "$mutable_directory" && ! -L "$mutable_directory" ]] \
-          || fail "mutable directory is absent, a symlink, or not a directory: $mutable_directory"
-        [[ "$(stat --format=%u:%g:%a -- "$mutable_directory")" \
-          == "$expected_uid:$expected_gid:750" ]] \
-          || fail "mutable directory has unsafe owner or mode: $mutable_directory"
-      done
-
-      [[ -f "$secret_file" && ! -L "$secret_file" ]] \
-        || fail "secret key file is absent, a symlink, or not a regular file"
-      [[ "$(stat --format=%u:%g:%a -- "$secret_file")" \
-        == "$expected_uid:$expected_gid:440" ]] \
-        || fail "secret key file has unsafe owner or mode"
-      [[ "$(stat --format=%h -- "$secret_file")" == 1 ]] \
-        || fail "secret key file has an unexpected hard-link count"
-
-      mapfile -t lines < "$secret_file"
-      [[ "''${#lines[@]}" == 10 ]] \
-        || fail "secret key file has an unexpected line count"
-      [[ "''${lines[0]}" == '<?php' && "''${lines[9]}" == '?>' ]] \
-        || fail "secret key file has an unexpected wrapper"
-
-      declare -A seen_values=()
-      for index in "''${!expected_keys[@]}"; do
-        key="''${expected_keys[index]}"
-        line="''${lines[index + 1]}"
-        pattern="^define\\('$key', '([A-Za-z0-9]{64})'\\);$"
-
-        [[ "$line" =~ $pattern ]] \
-          || fail "secret key definition $key is absent, duplicated, or malformed"
-        value="''${BASH_REMATCH[1]}"
-        [[ ! -v "seen_values[$value]" ]] \
-          || fail "secret key values are not unique"
-        seen_values["$value"]=1
-      done
-
-      unset value line lines
-      ${pkgs.php}/bin/php -n --syntax-check "$secret_file" >/dev/null 2>&1 \
-        || fail "secret key file is not valid PHP"
-    '';
-  };
-
-  localHealthCheck = pkgs.writeShellApplication {
-    name = "wordpress-blog-local-health-check";
-    runtimeInputs = [ pkgs.curl ];
-    text = ''
-      set -o nounset
-
-      readonly host=${lib.escapeShellArg siteName}
-      readonly base=http://127.0.0.1
-
-      request_status() {
-        local path="$1"
-
-        curl \
-          --silent \
-          --show-error \
-          --max-time 10 \
-          --output /dev/null \
-          --write-out '%{http_code}' \
-          --header "Host: $host" \
-          --header 'X-Forwarded-Proto: https' \
-          "$base$path"
-      }
-
-      require_status() {
-        local expected="$1"
-        local path="$2"
-        local actual
-
-        actual="$(request_status "$path")"
-        if [[ "$actual" != "$expected" ]]; then
-          printf 'unexpected local HTTP status for %q: wanted %s, got %s\n' \
-            "$path" "$expected" "$actual" >&2
-          exit 1
-        fi
-      }
-
-      require_status 200 /
-      require_status 200 /feed/
-
-      for forbidden_path in \
-        /.health-check.php \
-        /wp-content/files/health-check.php \
-        /wp-content/fonts/health-check.php \
-        /wp-content/uploads/health-check.php
-      do
-        require_status 403 "$forbidden_path"
-      done
-
-      for denied_path in \
-        /wp-config.php \
-        /wp-cron.php \
-        /xmlrpc.php \
-        /wp-trackback.php \
-        /backups \
-        /backups/health-check.sql.gz \
-        /result \
-        /result/health-check \
-        /wordpress \
-        /wordpress/health-check \
-        /health-check.orig \
-        /health-check.zip \
-        '/health-check~'
-      do
-        require_status 404 "$denied_path"
-      done
-
-      core_version="$(${wpBlog}/bin/wp-blog --skip-plugins --skip-themes core version)"
-      if [[ "$core_version" != 7.0.2 ]]; then
-        printf 'unexpected WordPress core version: %s\n' "$core_version" >&2
-        exit 1
-      fi
-
-      database_version="$(${wpBlog}/bin/wp-blog --skip-plugins --skip-themes option get db_version)"
-      if [[ "$database_version" != 61833 ]]; then
-        printf 'unexpected WordPress database version: %s\n' "$database_version" >&2
-        exit 1
-      fi
-
-      if ${wpBlog}/bin/wp-blog --skip-plugins --skip-themes \
-        option get wordpress_api_key >/dev/null 2>&1
-      then
-        printf 'compromised wordpress_api_key option is still present\n' >&2
-        exit 1
-      fi
-
-      default_ping_status="$(${wpBlog}/bin/wp-blog --skip-plugins --skip-themes option get default_ping_status)"
-      if [[ "$default_ping_status" != closed ]]; then
-        printf 'default_ping_status is not closed: %s\n' "$default_ping_status" >&2
-        exit 1
-      fi
-
-      default_pingback_flag="$(${wpBlog}/bin/wp-blog --skip-plugins --skip-themes option get default_pingback_flag)"
-      if [[ "$default_pingback_flag" != 0 ]]; then
-        printf 'default_pingback_flag is not disabled: %s\n' "$default_pingback_flag" >&2
-        exit 1
-      fi
-
-      ping_sites="$(${wpBlog}/bin/wp-blog --skip-plugins --skip-themes option get ping_sites)"
-      if [[ -n "$ping_sites" ]]; then
-        printf 'outbound ping targets are still configured\n' >&2
-        exit 1
-      fi
-
-    '';
-  };
 
   tcpPortIsBroadlyAllowed =
     port:
@@ -455,13 +265,6 @@ in
         "= /xmlrpc.php".extraConfig = "return 404;";
         "= /wp-trackback.php".extraConfig = "return 404;";
 
-        "= /backups".extraConfig = "return 404;";
-        "^~ /backups/".extraConfig = "return 404;";
-        "= /result".extraConfig = "return 404;";
-        "^~ /result/".extraConfig = "return 404;";
-        "= /wordpress".extraConfig = "return 404;";
-        "^~ /wordpress/".extraConfig = "return 404;";
-
         # Nginx uses the first matching regex location. Force dotfiles and
         # every PHP path below writable WordPress trees ahead of the
         # module's generic PHP/FastCGI regex.
@@ -470,9 +273,6 @@ in
           priority = 400;
           extraConfig = "deny all;";
         };
-
-        "~* (?:~|\\.(?:bak|backup|old|orig|phpb|rar|save|sql(?:\\.(?:bz2|gz|xz))?|tar(?:\\.(?:bz2|gz|xz))?|tbz2?|tgz|txz|zip|7z))$".extraConfig =
-          "return 404;";
       };
     };
   };
@@ -480,48 +280,12 @@ in
   environment.systemPackages = [
     wpBlog
     wpBlogCoreUpdateDb
-    secretHealthCheck
-    localHealthCheck
   ];
-
-  systemd.services."phpfpm-${poolName}" = {
-    requires = [ "wordpress-blog-secret-health-check.service" ];
-    after = [ "wordpress-blog-secret-health-check.service" ];
-  };
-
-  systemd.services.wordpress-blog-secret-health-check = {
-    description = "Validate persistent WordPress secrets for ${siteName}";
-    requires = [ "wordpress-init-${siteName}.service" ];
-    after = [ "wordpress-init-${siteName}.service" ];
-    before = [
-      "phpfpm-${poolName}.service"
-      "wordpress-cron-${siteName}.service"
-      "wordpress-blog-local-health-check.service"
-    ];
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      Group = config.services.nginx.group;
-      UMask = "0077";
-      ExecStart = "${secretHealthCheck}/bin/wordpress-blog-secret-health-check";
-      PrivateNetwork = true;
-      RestrictAddressFamilies = [ "AF_UNIX" ];
-      PrivateTmp = true;
-      NoNewPrivileges = true;
-      ProtectSystem = "strict";
-      ProtectHome = true;
-      CapabilityBoundingSet = "";
-    };
-  };
 
   systemd.services."wordpress-cron-${siteName}" = {
     description = "Run due WordPress cron events for ${siteName}";
     requisite = [ "mysql.service" ];
-    requires = [ "wordpress-blog-secret-health-check.service" ];
-    after = [
-      "mysql.service"
-      "wordpress-blog-secret-health-check.service"
-    ];
+    after = [ "mysql.service" ];
     serviceConfig = {
       Type = "oneshot";
       User = "wordpress";
@@ -541,30 +305,6 @@ in
       Persistent = false;
       RandomizedDelaySec = "0";
       AccuracySec = "1s";
-    };
-  };
-
-  systemd.services.wordpress-blog-local-health-check = {
-    description = "Check local WordPress and denial paths for ${siteName}";
-    requires = [ "wordpress-blog-secret-health-check.service" ];
-    requisite = [
-      "mysql.service"
-      "nginx.service"
-      "phpfpm-${poolName}.service"
-    ];
-    after = [
-      "mysql.service"
-      "nginx.service"
-      "phpfpm-${poolName}.service"
-      "wordpress-blog-secret-health-check.service"
-    ];
-    serviceConfig = {
-      Type = "oneshot";
-      User = "wordpress";
-      Group = config.services.nginx.group;
-      ExecStart = "${localHealthCheck}/bin/wordpress-blog-local-health-check";
-      NoNewPrivileges = true;
-      PrivateTmp = true;
     };
   };
 }

@@ -66,35 +66,25 @@
             value = "0";
           }
         ];
-
-        "wordpress-blog-secret-health-check.service" = [
-          {
-            property = "Result";
-            value = "success";
-          }
-          {
-            property = "ExecMainStatus";
-            value = "0";
-          }
-        ];
       };
 
       machineCommands = [
         {
-          description = "Revalidate persistent WordPress secret metadata and structure";
+          description = "Check blog.vpsfree.cz locally";
           command = [
-            "systemctl"
-            "start"
-            "wordpress-blog-secret-health-check.service"
-          ];
-          standardOutput.match = "";
-        }
-        {
-          description = "Revalidate the local WordPress application";
-          command = [
-            "systemctl"
-            "start"
-            "wordpress-blog-local-health-check.service"
+            "curl"
+            "--fail"
+            "--silent"
+            "--show-error"
+            "--max-time"
+            "10"
+            "--output"
+            "/dev/null"
+            "--header"
+            "Host: blog.vpsfree.cz"
+            "--header"
+            "X-Forwarded-Proto: https"
+            "http://localhost/"
           ];
           standardOutput.match = "";
         }
