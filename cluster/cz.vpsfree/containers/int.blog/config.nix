@@ -7,12 +7,13 @@
     ./recovery-export.nix
   ];
 
-  # Initial deployment is a disposable rehearsal generation. Production cron
-  # and the accepted pre-snapshot export remain separate reviewed transitions.
   vpsfree.blog = {
-    mode = "rehearsal";
+    mode = "production";
     enableProductionCron = false;
-    recovery.enableAcceptedTimer = false;
+    recovery = {
+      enableAcceptedTimer = true;
+      firstExpectedDate = "2026-07-22";
+    };
   };
 
   system.stateVersion = "26.05";

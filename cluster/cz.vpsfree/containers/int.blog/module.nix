@@ -125,6 +125,13 @@ in
             value = "0";
           }
         ];
+
+        "wordpress-recovery-export.timer" = [
+          {
+            property = "ActiveState";
+            value = "active";
+          }
+        ];
       };
 
       machineCommands = [
@@ -137,18 +144,25 @@ in
           ];
           standardOutput.match = "";
         }
+        {
+          description = "Revalidate the local WordPress application";
+          command = [
+            "systemctl"
+            "start"
+            "wordpress-blog-local-health-check.service"
+          ];
+          standardOutput.match = "";
+        }
+        {
+          description = "Revalidate the accepted WordPress recovery export";
+          command = [
+            "systemctl"
+            "start"
+            "wordpress-recovery-export-health-check.service"
+          ];
+          standardOutput.match = "";
+        }
       ];
-
-      # The initial empty-database deployment deliberately omits the full local
-      # WordPress check. In the first reviewed post-import commit, add a start
-      # of wordpress-blog-local-health-check.service here; it checks the local
-      # homepage, feed, denial paths, core/database versions, and policy state.
-      #
-      # The accepted recovery timer and marker check are also absent from this
-      # initial metadata. Add both the timer ActiveState property and a start
-      # of wordpress-recovery-export-health-check.service in the same reviewed
-      # commit that enables the accepted timer after the live 01:00 managed-
-      # snapshot schedule and monitoring path are verified.
     };
   };
 }
