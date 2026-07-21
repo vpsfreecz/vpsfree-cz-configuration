@@ -65,6 +65,47 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.web";
   };
+
+  expectedProxyAcmeCertNames = [
+    "alerts1.prg.vpsfree.cz"
+    "alerts2.prg.vpsfree.cz"
+    "api-admin.vpsfree.cz"
+    "api.vpsfree.cz"
+    "auth-admin.vpsfree.cz"
+    "auth.vpsfree.cz"
+    "blog.vpsfree.cz"
+    "console-admin.vpsfree.cz"
+    "console.vpsfree.cz"
+    "download-admin.vpsfree.cz"
+    "download.vpsfree.cz"
+    "foto.vpsfree.cz"
+    "goresheat.vpsfree.cz"
+    "grafana.prg.vpsfree.cz"
+    "kb.vpsfree.cz"
+    "kb.vpsfree.org"
+    "lists.vpsfree.cz"
+    "matterbridge.vpsfree.cz"
+    "mon1.prg.vpsfree.cz"
+    "mon2.prg.vpsfree.cz"
+    "munin.vpsfree.cz"
+    "paste.vpsfree.cz"
+    "prasiatko.vpsfree.cz"
+    "rt.vpsfree.cz"
+    "rubygems.vpsfree.cz"
+    "utils.vpsfree.cz"
+    "vpsadmin-admin.vpsfree.cz"
+    "vpsadmin-dev.vpsfree.cz"
+    "vpsadmin.vpsfree.cz"
+    "vpsfbot.vpsfree.cz"
+    "vpsfree.cz"
+    "vpsfree.org"
+  ];
+
+  proxyAcmeCertNames = builtins.attrNames config.security.acme.certs;
+  proxyAcmeServices = map (certName: "acme-${certName}.service") proxyAcmeCertNames;
+  proxyAcmeOrderRenewServices = map (
+    certName: "acme-order-renew-${certName}.service"
+  ) proxyAcmeCertNames;
 in
 {
   imports = [
@@ -73,6 +114,17 @@ in
     ../../../../../configs/goresheat-proxy.nix
     ../../../vpsadmin/common/all.nix
     ../../../vpsadmin/common/frontend.nix
+  ];
+
+  assertions = [
+    {
+      assertion = proxyAcmeCertNames == expectedProxyAcmeCertNames;
+      message = ''
+        The temporary proxy reload transition expects the reviewed set of 32
+        ACME certificates. Re-review its machine-local dependency shim before
+        changing that set.
+      '';
+    }
   ];
 
   # vpsAdminOS intentionally masks this unit while the container host keeps
@@ -100,7 +152,7 @@ in
 
   services.nginx = {
     enable = true;
-    enableReload = false;
+    enableReload = true;
 
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
@@ -259,6 +311,35 @@ in
       };
     };
   };
+
+  # Native nginx reload mode moves the ACME dependency graph from nginx to
+  # every certificate unit. Preserve the active graph during this migration
+  # so the one-time transition cannot stop or start ACME services. The
+  # generated nginx configuration and certificate behavior remain unchanged;
+  # only nginx and its existing config-reload helper may act at switch time.
+  systemd.services = {
+    nginx = {
+      wants = lib.mkForce proxyAcmeServices;
+      after = lib.mkForce ([ "network.target" ] ++ proxyAcmeServices);
+      before = lib.mkForce proxyAcmeOrderRenewServices;
+    };
+
+    nginx-config-reload = {
+      wants = lib.mkForce [ "nginx.service" ];
+      after = lib.mkForce [ "nginx.service" ];
+      before = lib.mkForce [ ];
+      wantedBy = lib.mkForce [ "multi-user.target" ];
+    };
+  }
+  // lib.listToAttrs (
+    map (
+      certName:
+      lib.nameValuePair "acme-${certName}" {
+        before = lib.mkForce [ "acme-order-renew-${certName}.service" ];
+        wantedBy = lib.mkForce [ "multi-user.target" ];
+      }
+    ) proxyAcmeCertNames
+  );
 
   system.stateVersion = "22.05";
 }
