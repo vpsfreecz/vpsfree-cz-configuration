@@ -12,7 +12,6 @@ let
 in
 {
   imports = [
-    ./blog.vpsfree.cz.nix
     ./foto.vpsfree.cz.nix
   ];
 
