@@ -7,6 +7,14 @@
       "os-staging"
       "vpsadmin"
     ];
+    # Keep the shared proxy on the exact inputs of its active generation
+    # throughout the guarded blog migration. Remove these temporary overrides
+    # only in a separately reviewed proxy update after the migration.
+    inputs.overrides = {
+      nixpkgs = "proxyNixpkgsBaseline";
+      vpsadminos = "proxyVpsadminosBaseline";
+      vpsadmin = "proxyVpsadminBaseline";
+    };
     container.id = 14096;
     host = {
       name = "proxy";
@@ -29,7 +37,6 @@
     tags = [
       "monitor"
       "vpsadmin"
-      "manual-update"
     ];
 
     healthChecks = {

@@ -75,6 +75,18 @@ in
     ../../../vpsadmin/common/frontend.nix
   ];
 
+  # vpsAdminOS intentionally masks this unit while the container host keeps
+  # the debugfs mount active. The pinned switch tool otherwise treats the
+  # unchanged mask as a removal and unmounts it on every switch. Keep this
+  # proxy-local until nixpkgs carries an equivalent reviewed fix.
+  nixpkgs.overlays = [
+    (_final: previous: {
+      switch-to-configuration-ng = previous.switch-to-configuration-ng.overrideAttrs (old: {
+        patches = (old.patches or [ ]) ++ [ ./switch-to-configuration-preserve-debugfs.patch ];
+      });
+    })
+  ];
+
   networking = {
     firewall.allowedTCPPorts = [
       80
@@ -88,6 +100,7 @@ in
 
   services.nginx = {
     enable = true;
+    enableReload = false;
 
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
