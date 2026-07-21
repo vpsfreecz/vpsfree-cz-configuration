@@ -9,7 +9,7 @@
 
   vpsfree.blog = {
     mode = "production";
-    enableProductionCron = false;
+    enableProductionCron = true;
     recovery = {
       enableAcceptedTimer = true;
       firstExpectedDate = "2026-07-22";
