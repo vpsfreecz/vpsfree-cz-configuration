@@ -390,8 +390,7 @@ in
       package = blogPackages.wordpress;
       inherit (blogPackages) plugins themes languages;
       inherit uploadsDir;
-      # Keep the module's second mutable tree inside the one uploads tree
-      # covered by export manifests, restore, and final synchronization.
+      # Keep the module's second mutable tree inside the site's uploads tree.
       inherit fontsDir;
 
       database = {
