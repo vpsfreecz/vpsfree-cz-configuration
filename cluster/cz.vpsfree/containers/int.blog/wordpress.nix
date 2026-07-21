@@ -219,6 +219,7 @@ in
         DISABLE_WP_CRON = true;
         DISALLOW_FILE_MODS = true;
         WP_HTTP_BLOCK_EXTERNAL = true;
+        WP_ACCESSIBLE_HOSTS = "rest.akismet.com";
         WPLANG = "cs_CZ";
         WP_DEFAULT_THEME = "twentytwentyfive";
         WP_ENVIRONMENT_TYPE = "production";
