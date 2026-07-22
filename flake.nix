@@ -47,6 +47,11 @@
       inputs.nixpkgs.follows = "nixpkgsStable";
     };
 
+    vpsfreeNotificationTemplates = {
+      url = "git+ssh://git@github.com/vpsfreecz/vpsfree-notification-templates.git?ref=2026-06-15-vpsadmin-events";
+      inputs.nixpkgs.follows = "nixpkgsStable";
+    };
+
     nixpkgsStaging.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgsProduction.url = "github:NixOS/nixpkgs/nixos-26.05";
 
@@ -140,6 +145,10 @@
 
         vpsfree-sms-gateway = {
           vpsfree-sms-gateway = "vpsfreeSmsGateway";
+        };
+
+        vpsfree-notification-templates = {
+          vpsfree-notification-templates = "vpsfreeNotificationTemplates";
         };
       };
 
