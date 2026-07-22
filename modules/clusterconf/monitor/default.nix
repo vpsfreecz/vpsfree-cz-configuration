@@ -423,6 +423,24 @@ let
         }) varnishServices;
       };
 
+    smsGateways =
+      let
+        smsGatewayServices = flatten (
+          map (m: filterServices m (sv: sv.monitor == "sms-gateway")) monitoredMachines
+        );
+      in
+      {
+        exporterConfigs = map (sv: {
+          targets = [ "${sv.svConfig.address}:${toString sv.svConfig.port}" ];
+          labels = {
+            fqdn = sv.machine.metaConfig.host.fqdn;
+            domain = sv.machine.metaConfig.host.domain;
+            location = ensureLocation sv.machine.metaConfig.host.location;
+            service = "sms-gateway";
+          };
+        }) smsGatewayServices;
+      };
+
     http =
       let
         sites = import ./http.nix;
@@ -948,6 +966,11 @@ in
           job_name = "varnish";
           scrape_interval = "60s";
           static_configs = scrapeConfigs.varnish.exporterConfigs;
+        })
+        ++ (optional (scrapeConfigs.smsGateways.exporterConfigs != [ ]) {
+          job_name = "sms-gateway";
+          scrape_interval = "30s";
+          static_configs = scrapeConfigs.smsGateways.exporterConfigs;
         })
         ++ scrapeConfigs.http.jobs
         ++ scrapeConfigs.vpsfStatus.jobs
