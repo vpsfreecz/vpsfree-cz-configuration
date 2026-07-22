@@ -1,0 +1,30 @@
+# This file is maintained by rake vpsadmin:events:i18n:update.
+# Event labels are generated from configs/vpsadmin/api/monitoring.rb.
+# Edit translations here, then rerun rake vpsadmin:events:i18n:update.
+---
+en:
+  vpsadmin:
+    events:
+      types:
+        monitoring_unpaid_cpu:
+          label: Unpaid VPS CPU usage
+        monitoring_unpaid_data_flow:
+          label: Unpaid user data flow
+        monitoring_monthly_traffic:
+          label: Monthly traffic
+        monitoring_diskspace_low:
+          label: Dataset free space
+        monitoring_paid_cpu:
+          label: VPS CPU usage
+        monitoring_outgoing_data_flow:
+          label: High outgoing data flow
+        monitoring_zombie_processes:
+          label: Zombie processes
+        monitoring_zombie_processes_restart:
+          label: Zombie processes restart planned
+        monitoring_vps_in_rescue:
+          label: VPS in rescue mode
+        monitoring_dns_secondary_transfer_failed:
+          label: DNS secondary transfer failed
+        monitoring_dataset_over_quota:
+          label: VPS dataset over quota
