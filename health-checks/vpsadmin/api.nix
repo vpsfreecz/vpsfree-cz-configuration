@@ -20,6 +20,13 @@
         value = "active";
       }
     ];
+
+    "vpsadmin-notification-grouper.service" = [
+      {
+        property = "ActiveState";
+        value = "active";
+      }
+    ];
   };
 
   machineCommands = [
