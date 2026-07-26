@@ -811,6 +811,7 @@
         "vpsadminosProduction": "vpsadminosProduction",
         "vpsadminosStaging": "vpsadminosStaging",
         "vpsfStatus": "vpsfStatus",
+        "vpsfreeNotificationTemplates": "vpsfreeNotificationTemplates",
         "vpsfreeSmsGateway": "vpsfreeSmsGateway",
         "vpsfreeWeb": "vpsfreeWeb"
       }
@@ -1193,6 +1194,27 @@
         "owner": "vpsfreecz",
         "repo": "vpsf-status",
         "type": "github"
+      }
+    },
+    "vpsfreeNotificationTemplates": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgsStable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784917922,
+        "narHash": "sha256-Sihwdg/N/X3z/TsrHk01XPUtoovuHXqeSgFl8YefpFw=",
+        "ref": "refs/heads/master",
+        "rev": "c9f4cd82d7f05030cb643960c417a1802e9629fb",
+        "revCount": 248,
+        "type": "git",
+        "url": "ssh://git@github.com/vpsfreecz/vpsfree-notification-templates.git"
+      },
+      "original": {
+        "ref": "2026-06-15-vpsadmin-events",
+        "type": "git",
+        "url": "ssh://git@github.com/vpsfreecz/vpsfree-notification-templates.git"
       }
     },
     "vpsfreeSmsGateway": {
