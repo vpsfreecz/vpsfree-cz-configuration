@@ -1106,11 +1106,11 @@
         "ruby-lxc": "ruby-lxc_4"
       },
       "locked": {
-        "lastModified": 1784540950,
-        "narHash": "sha256-ix7X5o3ETSqynki8dXiOCGQkKF8vseBzVRSTbVnc774=",
+        "lastModified": 1785044711,
+        "narHash": "sha256-nBh3APW81yYcKFPcrrbOxhqJGp55/5b+Atouw9LcdC8=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "702155fb91effd7102a92b568f684c7b0d948b1f",
+        "rev": "4476942c4e33092e20e4faa91f32dfcca9a3ea7d",
         "type": "github"
       },
       "original": {
