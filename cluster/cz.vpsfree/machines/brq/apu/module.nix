@@ -3,7 +3,10 @@
   cluster."cz.vpsfree/machines/brq/apu" = rec {
     spin = "nixos";
 
-    inputs.channels = [ "nixos-stable" ];
+    inputs.channels = [
+      "nixos-stable"
+      "vpsfree-sms-gateway"
+    ];
 
     host = {
       name = "apu";
@@ -27,7 +30,7 @@
 
     services = {
       node-exporter = { };
-      sachet = { };
+      sms-gateway = { };
     };
 
     carrier = {
@@ -76,7 +79,7 @@
           }
         ];
 
-        "sachet.service" = [
+        "vpsfree-sms-gateway.service" = [
           {
             property = "ActiveState";
             value = "active";
