@@ -17,11 +17,6 @@ let
     name = "cz.vpsfree/vpsadmin/int.api2";
   };
 
-  vpsadmin1 = confLib.findMetaConfig {
-    cluster = config.cluster;
-    name = "cz.vpsfree/vpsadmin/int.vpsadmin1";
-  };
-
   nameservers =
     map
       (
@@ -64,7 +59,6 @@ in
         others = [
           "${api1.addresses.primary.address}/32"
           "${api2.addresses.primary.address}/32"
-          "${vpsadmin1.addresses.primary.address}/32"
           "${proxyPrg.addresses.primary.address}/32"
           "${utils.addresses.primary.address}/32"
         ]
