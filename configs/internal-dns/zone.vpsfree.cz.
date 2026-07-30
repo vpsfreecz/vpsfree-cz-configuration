@@ -153,7 +153,6 @@ webui1.int                     IN   A       172.16.9.130
 webui2.int                     IN   A       172.16.9.131
 webui-dev.int                  IN   A       172.16.9.138
 redis1.int                     IN   A       172.16.9.132
-vpsadmin1.int                  IN   A       172.16.9.145
 rabbitmq1.int                  IN   A       172.16.9.175
 rabbitmq2.int                  IN   A       172.16.9.176
 rabbitmq3.int                  IN   A       172.16.9.177
