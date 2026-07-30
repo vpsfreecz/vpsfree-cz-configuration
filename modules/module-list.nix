@@ -17,6 +17,7 @@ let
     ./services/monitoring/prometheus/rules.nix
     ./services/network-graphs
     ./services/sachet.nix
+    ./services/vpsfree-sms-gateway.nix
     ./services/vpsfree-irc-bot.nix
     ./services/vpsfree-web.nix
     ./system/phpfpm-session-cleanup.nix
