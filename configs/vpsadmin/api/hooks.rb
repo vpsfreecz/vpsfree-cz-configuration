@@ -1,3 +1,5 @@
+require_relative 'notification_defaults'
+
 DatasetInPool.connect_hook(:create) do |ret, dataset_in_pool, purpose: nil, preserve_existing_backups: false, **|
   # Create a dataset for backups
   if dataset_in_pool.pool.role == 'hypervisor'
@@ -217,6 +219,8 @@ User.connect_hook(:create) do |ret, user|
                     ))
     end
   end
+
+  ensure_vpsfree_oom_event_route!(user)
 
   ret
 end
