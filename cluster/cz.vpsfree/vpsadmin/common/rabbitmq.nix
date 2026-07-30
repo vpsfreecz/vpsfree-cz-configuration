@@ -67,6 +67,30 @@ in
     };
   };
 
+  systemd.services.vpsadmin-notification-rabbitmq-permissions = {
+    description = "Reconcile vpsAdmin notification RabbitMQ permissions";
+    wantedBy = [ "multi-user.target" ];
+    after = [
+      "rabbitmq.service"
+      "vpsadmin-rabbitmq-setup.service"
+    ];
+    requires = [ "rabbitmq.service" ];
+    path = [ pkgs.rabbitmq-server ];
+    environment.HOME = "/root";
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      rabbitmqctl set_permissions \
+        -p vpsadmin_prod \
+        notification \
+        '^(amq\.gen.*|vpsadmin\.notifications|vpsadmin\.notifications\.(email|telegram|sms|webhook|grouping))$' \
+        '^(amq\.gen.*|vpsadmin\.notifications|vpsadmin\.notifications\.(email|telegram|sms|webhook|grouping))$' \
+        '^(amq\.gen.*|vpsadmin\.notifications|vpsadmin\.notifications\.(email|telegram|sms|webhook|grouping))$'
+    '';
+  };
+
   networking.hosts = {
     "172.16.9.175" = [ "rabbitmq1" ];
     "172.16.9.176" = [ "rabbitmq2" ];
