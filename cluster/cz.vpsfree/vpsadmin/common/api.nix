@@ -4,10 +4,19 @@
   lib,
   confMachine,
   confLib,
+  flakeInputs,
+  inputsInfo,
   ...
 }:
 with lib;
 let
+  notificationTemplatesInfo = inputsInfo."vpsfree-notification-templates";
+  notificationTemplatesInput = notificationTemplatesInfo.input;
+  notificationTemplatesPackage =
+    flakeInputs.${notificationTemplatesInput}.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  notificationTemplatesSourceId =
+    notificationTemplatesInfo.rev or (notificationTemplatesInfo.shortRev or notificationTemplatesInput);
+
   db = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.db";
@@ -78,6 +87,11 @@ in
       enable = true;
       username = "notification";
       passwordFile = "/private/vpsadmin-notification-rabbitmq.pw";
+    };
+
+    managedNotificationTemplates = {
+      paths = [ notificationTemplatesPackage ];
+      sourceId = notificationTemplatesSourceId;
     };
 
     rake.enableDefaultTasks = mkDefault false;
