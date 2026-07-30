@@ -5,15 +5,35 @@
   confLib,
   confMachine,
   confData,
+  flakeInputs,
+  inputsInfo,
   ...
 }:
 with lib;
 let
+  smsGatewayInput = inputsInfo."vpsfree-sms-gateway".input;
 
   alerters = [
     "cz.vpsfree/containers/prg/int.alerts1"
     "cz.vpsfree/containers/prg/int.alerts2"
   ];
+
+  vpsadminApis = [
+    "cz.vpsfree/vpsadmin/int.api1"
+    "cz.vpsfree/vpsadmin/int.api2"
+  ];
+
+  allMachines = confLib.getClusterMachines config.cluster;
+  monitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
+  gatewayClients =
+    map (
+      machine:
+      confLib.findMetaConfig {
+        cluster = config.cluster;
+        name = machine;
+      }
+    ) (alerters ++ vpsadminApis)
+    ++ map (m: m.metaConfig) monitors;
 
   em1 = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -36,7 +56,7 @@ in
 
   services.udev.extraRules = ''
     SUBSYSTEM=="tty", ATTRS{idVendor}=="2c7c", ATTRS{idProduct}=="0125", ENV{ID_USB_INTERFACE_NUM}=="01", SYMLINK+="ttyUSB-EC25-nmea"
-    SUBSYSTEM=="tty", ATTRS{idVendor}=="2c7c", ATTRS{idProduct}=="0125", ENV{ID_USB_INTERFACE_NUM}=="02", SYMLINK+="ttyUSB-EC25-at", OWNER="${config.services.sachet.user}"
+    SUBSYSTEM=="tty", ATTRS{idVendor}=="2c7c", ATTRS{idProduct}=="0125", ENV{ID_USB_INTERFACE_NUM}=="02", SYMLINK+="ttyUSB-EC25-at", OWNER="${config.services.vpsfreeSmsGateway.user}"
     SUBSYSTEM=="tty", ATTRS{idVendor}=="2c7c", ATTRS{idProduct}=="0125", ENV{ID_USB_INTERFACE_NUM}=="03", SYMLINK+="ttyUSB-EC25-modem"
     SUBSYSTEM=="net", ACTION=="add", ENV{ID_VENDOR_ID}=="2c7c", ENV{ID_MODEL_ID}=="0125", TAG+="systemd", ENV{SYSTEMD_WANTS}="modemNet.service", NAME="lte0"
   '';
@@ -58,23 +78,14 @@ in
 
   networking.firewall.extraCommands =
     let
-      alerterRules = concatMapStringsSep "\n" (
-        machine:
-        let
-          alerter = confLib.findMetaConfig {
-            cluster = config.cluster;
-            name = machine;
-          };
-        in
-        ''
-          # Allow access to sachet from ${machine}
-          iptables -A nixos-fw -p tcp --dport ${toString config.services.sachet.port} -s ${alerter.addresses.primary.address} -j nixos-fw-accept
-        ''
-      ) alerters;
+      clientRules = concatMapStringsSep "\n" (client: ''
+        # Allow access to SMS gateway from ${client.host.fqdn}
+        iptables -A nixos-fw -p tcp --dport ${toString config.services.vpsfreeSmsGateway.port} -s ${client.addresses.primary.address} -j nixos-fw-accept
+      '') gatewayClients;
     in
     ''
-      ### Alertmanagers to sachet
-      ${alerterRules}
+      ### Alertmanagers and vpsAdmin API to SMS gateway
+      ${clientRules}
     '';
 
   # VPN to em1.vpsfree.cz
@@ -110,32 +121,43 @@ in
     wireguard-tools
   ];
 
-  services.sachet = {
+  services.vpsfreeSmsGateway = {
     enable = true;
+    package = flakeInputs.${smsGatewayInput}.packages.${pkgs.stdenv.hostPlatform.system}.default;
     listenAddress = confMachine.addresses.primary.address;
-    port = confMachine.services.sachet.port;
+    port = confMachine.services.sms-gateway.port;
+    gatewayName = confMachine.name;
+    alertmanagerTokenFile = "/private/alertmanager/sms_gateway_token.txt";
+    vpsadminTokenFile = "/private/vpsadmin-sms-gateway-token";
+    statusTokenFile = "/private/vpsfree-sms-gateway/status-token";
+    callbackTokenFile = "/private/vpsadmin-sms-callback-token";
     settings = {
-      providers.modem = {
+      modem = {
+        driver = "modem";
         device = "/dev/ttyUSB-EC25-at";
+        attempts = 5;
+        cooldown = "5s";
+        timeout = "30s";
       };
 
-      receivers = [
-        {
-          name = "sms-aither";
-          provider = "modem";
-          to = [ "+420775386453" ];
-        }
+      limits = {
+        alertmanager_max_segments = 6;
+        vpsadmin_max_segments = 3;
+      };
 
-        {
-          name = "sms-snajpa";
-          provider = "modem";
-          to = [ "+420720107791" ];
-        }
-      ];
+      alertmanager.receivers = {
+        "sms-aither".to = [ "+420775386453" ];
+        "sms-snajpa".to = [ "+420720107791" ];
+      };
+
+      inbound = {
+        enabled = false;
+        webhooks = [ ];
+      };
     };
   };
 
-  systemd.services.sachet = {
+  systemd.services.vpsfree-sms-gateway = {
     bindsTo = [ "sys-subsystem-net-devices-lte0.device" ];
     after = [ "sys-subsystem-net-devices-lte0.device" ];
   };
