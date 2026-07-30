@@ -8,6 +8,7 @@ group :development do
 end
 
 group :test do
+  gem 'csv'
   gem 'mail', '~> 2.9'
   gem 'rake', '~> 13.0'
   gem 'require_all', '~> 2.0'

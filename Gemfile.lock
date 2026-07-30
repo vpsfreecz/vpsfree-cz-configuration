@@ -4,6 +4,7 @@ GEM
     ast (2.4.3)
     childprocess (5.1.0)
       logger (~> 1.5)
+    csv (3.3.5)
     date (3.5.1)
     diff-lcs (1.6.2)
     iniparse (1.5.0)
@@ -85,6 +86,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  csv
   mail (~> 2.9)
   overcommit
   rake (~> 13.0)
@@ -98,6 +100,7 @@ DEPENDENCIES
 CHECKSUMS
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   childprocess (5.1.0) sha256=9a8d484be2fd4096a0e90a0cd3e449a05bc3aa33f8ac9e4d6dcef6ac1455b6ec
+  csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   diff-lcs (1.6.2) sha256=9ae0d2cba7d4df3075fe8cd8602a8604993efc0dfa934cff568969efb1909962
   iniparse (1.5.0) sha256=36a165e98d8a250b7631c4a7f9afba32af78f089970cd6446a39771189c761f1
