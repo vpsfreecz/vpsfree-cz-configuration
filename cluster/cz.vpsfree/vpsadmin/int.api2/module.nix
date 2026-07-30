@@ -6,6 +6,7 @@
       "nixos-stable"
       "os-staging"
       "vpsadmin"
+      "vpsfree-notification-templates"
     ];
     container.id = 20274;
     host = {
