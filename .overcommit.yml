@@ -3,6 +3,10 @@ gemfile: Gemfile
 PreCommit:
   Nixfmt:
     enabled: true
+  RakeTarget:
+    enabled: true
+    targets:
+      - vpsadmin:events:i18n:health
   RuboCop:
     enabled: true
 CommitMsg:
