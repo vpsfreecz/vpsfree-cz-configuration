@@ -3,6 +3,7 @@ theme: readthedocs
 extra_css: ['extra.css']
 nav:
 - Operations:
+  - vpsAdmin event infrastructure deployment: 'operations/vpsadmin-event-infrastructure-deployment.md'
   - vpsAdmin event system deployment: 'operations/vpsadmin-event-system-deployment.md'
   - vpsAdmin security evidence deployment: 'operations/vpsadmin-security-evidence-deployment.md'
 - Services:
