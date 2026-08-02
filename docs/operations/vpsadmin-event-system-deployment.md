@@ -24,7 +24,11 @@ They:
 - add events, routes, receivers, targets, delivery attempts, grouping, rate
   limits, and time intervals;
 - preserve disabled user mail delivery in the new delivery-method table;
-- convert advanced template and role recipients to event routes;
+- convert supported, active per-user advanced template and role recipients to
+  event routes, while deliberately skipping several legacy row classes that
+  must be accounted for before deployment;
+- convert global template-recipient address rules to administrator event
+  routes;
 - mark all legacy mailer-role Nodes inactive;
 - convert every OOM rule to an ordered event route and add one grouped OOM
   catch-all route per account; and
@@ -38,11 +42,14 @@ not reactivate mailer Nodes.
 
 The supported rollback before reopening production traffic is therefore:
 
-1. stop all new writers;
-2. restore the pre-migration database snapshot;
-3. switch the API, WebUI, database, and RabbitMQ hosts to their previous
-   generations; and
-4. start the retained legacy mailer container and restore traffic.
+1. keep the prepared proxy maintenance generation active and stop all new
+   writers;
+2. restore the pre-migration database snapshot and the previous database and
+   RabbitMQ generations;
+3. remove the runtime masks, switch the API and WebUI hosts to their previous
+   generations, and verify them through the restricted frontends;
+4. start the retained legacy mailer container; and
+5. switch the proxy to its recorded pre-release generation to restore traffic.
 
 After traffic is reopened, restoring the snapshot loses all writes made after
 the cutover. Prefer a forward fix. Any later snapshot restore needs a separate
@@ -62,6 +69,8 @@ them from whichever worktree happens to be present during deployment.
 
 ```shell
 APPROVED_CONFIGURATION_REVISION=REVISION_APPROVED_FOR_ROLLOUT
+APPROVED_VPSADMIN_CHECKOUT=/PATH/TO/APPROVED/VPSADMIN/SOURCE
+RECIPIENT_AUDIT_DIR=/RESTRICTED/PATH/FOR/DEPLOYMENT/RECORDS
 VPSADMIN_REVISION=REVIEWED_VPSADMIN_REVISION
 NOTIFICATION_TEMPLATES_REVISION=REVIEWED_TEMPLATE_REVISION
 SMS_GATEWAY_REVISION=REVIEWED_SMS_GATEWAY_REVISION
@@ -82,6 +91,12 @@ Verify the approved configuration and all release inputs:
 ```shell
 test "$(git rev-parse HEAD)" = "$APPROVED_CONFIGURATION_REVISION"
 test -z "$(git status --porcelain --untracked-files=no)"
+test "$(git -C "$APPROVED_VPSADMIN_CHECKOUT" rev-parse HEAD)" = \
+  "$VPSADMIN_REVISION"
+test -z "$(
+  git -C "$APPROVED_VPSADMIN_CHECKOUT" status \
+    --porcelain --untracked-files=no
+)"
 
 test "$(jq -r '.nodes.vpsadminServices.locked.rev' flake.lock)" = \
   "$VPSADMIN_REVISION"
@@ -104,6 +119,55 @@ containers. `vpsadminStaging` and `vpsadminProduction` supply the running
 vpsAdminOS Nodes. A partial pin update can leave an old `nodectld` unable to
 complete new transaction chains.
 
+The production proxy is also a vpsAdmin module consumer. It currently
+overrides the `vpsadmin` channel with `proxyVpsadminBaseline`, whose revision
+predates the `telegramWebhook` frontend option used by this release. Before
+building the release, make a separate reviewed proxy change that removes the
+`vpsadmin = "proxyVpsadminBaseline"` override so the proxy consumes the
+approved `vpsadminServices` revision. Keep or remove the proxy's temporary
+Nixpkgs and vpsAdminOS overrides according to the separately owned proxy
+migration; do not change those baselines incidentally in this rollout. Stop if
+the resulting proxy does not evaluate and build with the approved vpsAdmin
+revision.
+
+Verify the stale override is absent from the approved configuration:
+
+```shell
+if rg -q 'vpsadmin = "proxyVpsadminBaseline"' \
+  cluster/cz.vpsfree/containers/prg/proxy/module.nix; then
+  echo "proxy still uses the pre-event vpsAdmin baseline" >&2
+  exit 1
+fi
+```
+
+### Prepare the proxy maintenance generations
+
+The proxy owns the production maintenance switch. Prepare and review two proxy
+generations before the window:
+
+1. a maintenance generation with the reconciled vpsAdmin input and
+   `vpsadmin.frontend.maintenance.enable = true`; and
+2. a release generation with the same configuration except
+   `vpsadmin.frontend.maintenance.enable = false`.
+
+Keep these as two reviewable configuration commits so the final approved
+configuration has maintenance disabled. Build each commit, record its proxy
+generation, and copy both closures to the proxy without activation:
+
+```shell
+confctl build cz.vpsfree/containers/prg/proxy
+confctl generation ls --local
+confctl deploy --generation PROXY_GENERATION --copy-only \
+  cz.vpsfree/containers/prg/proxy
+```
+
+Also record the proxy generation that was active before either preparation
+commit. The three immutable identifiers are
+`PROXY_MAINTENANCE_GENERATION`, `PROXY_RELEASE_GENERATION`, and
+`PROXY_ROLLBACK_GENERATION`. Confirm that the maintenance and release
+generations both contain the exact Telegram webhook route and differ only in
+the intended maintenance response behavior.
+
 Build all affected machines before the maintenance window. Keep the generation
 identifiers printed by `confctl`; deployment commands later in this runbook
 must use those exact reviewed generations.
@@ -114,6 +178,7 @@ confctl build cz.vpsfree/vpsadmin/int.webui1
 confctl build cz.vpsfree/vpsadmin/int.webui2
 confctl build 'cz.vpsfree/vpsadmin/int.rabbitmq*'
 confctl build cz.vpsfree/vpsadmin/int.db
+confctl build cz.vpsfree/containers/prg/proxy
 confctl build cz.vpsfree/machines/brq/apu
 confctl build cz.vpsfree/machines/prg/apu
 confctl build 'cz.vpsfree/containers/ns*'
@@ -140,7 +205,8 @@ confctl deploy --generation GENERATION --copy-only \
 ```
 
 Also copy the selected Node, DNS, and APU generations before their preparatory
-deployments. Confirm normal rollback generations remain available everywhere.
+deployments. The proxy's two prepared closures were copied separately above.
+Confirm normal rollback generations remain available everywhere.
 
 Resolve and record the api1 toplevel from the selected local generation:
 
@@ -149,6 +215,9 @@ API1_GENERATION=REVIEWED_API1_GENERATION
 API2_GENERATION=REVIEWED_API2_GENERATION
 WEBUI1_GENERATION=REVIEWED_WEBUI1_GENERATION
 WEBUI2_GENERATION=REVIEWED_WEBUI2_GENERATION
+PROXY_MAINTENANCE_GENERATION=REVIEWED_MAINTENANCE_PROXY_GENERATION
+PROXY_RELEASE_GENERATION=REVIEWED_RELEASE_PROXY_GENERATION
+PROXY_ROLLBACK_GENERATION=PREVIOUS_PROXY_GENERATION
 API1_NEW_SYSTEM="$(
   readlink -f \
     ".confctl/generations/cz.vpsfree:vpsadmin:int.api1/$API1_GENERATION/toplevel"
@@ -181,7 +250,11 @@ Both `apu.brq` and `apu.prg` require:
 - `/private/vpsadmin-sms-callback-token`.
 
 The API and both APUs must have identical vpsAdmin gateway and callback tokens.
-Check file ownership and mode without displaying file contents.
+Both API hosts must also have identical Telegram bot tokens and webhook
+secrets. The notification RabbitMQ password must be identical on both API
+hosts and for the broker's `notification` user. Compare secrets through the
+approved secret-management tooling or their protected checksums; never print
+their values. Check file ownership and mode without displaying file contents.
 
 ## Run the database preflight
 
@@ -242,6 +315,157 @@ resolved user must have `level >= 90`. Compare every listed template name with
 migration. Stop if a template is unknown, an address is ambiguous or missing,
 or a recipient resolves to a non-administrator; migration `20260722120500`
 rejects all of those cases.
+
+### Reconcile per-user legacy recipients
+
+The two per-user legacy recipient tables need a separate, complete audit.
+Migration `20260722120100` converts only supported rows that satisfy its
+conditions; migration `20260722120500` then drops both source tables. Generate
+the authoritative supported template list and per-role route counts from the
+approved source, not from this runbook. Store them with the restricted
+deployment record:
+
+```shell
+umask 077
+install -d -m 0700 "$RECIPIENT_AUDIT_DIR"
+
+(
+  cd "$APPROVED_VPSADMIN_CHECKOUT"
+  nix develop .#api -c bundle exec ruby \
+    -ractive_record \
+    -r./db/migrate/20260722120100_add_events.rb \
+    -e '
+      values = AddEvents::ADVANCED_NOTIFICATION_EVENT_TEMPLATES.flat_map do |cfg|
+        cfg.fetch(:legacy_template_names, [cfg.fetch(:template_name)])
+      end
+      File.write(ARGV.fetch(0), "#{values.uniq.sort.join("\n")}\n")
+    ' \
+    "$RECIPIENT_AUDIT_DIR/supported-template-names.txt"
+)
+
+(
+  cd "$APPROVED_VPSADMIN_CHECKOUT"
+  nix develop .#api -c bundle exec ruby \
+    -ractive_record \
+    -r./db/migrate/20260722120100_add_events.rb \
+    -e '
+      configs = AddEvents::ADVANCED_NOTIFICATION_EVENT_TEMPLATES
+      roles = configs.flat_map { |cfg| cfg.fetch(:roles) }.uniq.sort
+      rows = roles.map do |role|
+        "#{role}\t#{configs.count { |cfg| cfg.fetch(:roles).include?(role) }}"
+      end
+      File.write(ARGV.fetch(0), "#{rows.join("\n")}\n")
+    ' \
+    "$RECIPIENT_AUDIT_DIR/supported-role-route-counts.tsv"
+)
+```
+
+Record the complete source counts and rows before migration:
+
+```sql
+SELECT COUNT(*) AS user_template_recipient_count
+FROM user_mail_template_recipients;
+SELECT COUNT(*) AS user_role_recipient_count
+FROM user_mail_role_recipients;
+
+SELECT
+  recipients.id,
+  recipients.user_id,
+  users.login,
+  users.mailer_enabled,
+  recipients.mail_template_id,
+  mail_templates.name AS template_name,
+  recipients.enabled,
+  recipients.to
+FROM user_mail_template_recipients AS recipients
+LEFT JOIN users ON users.id = recipients.user_id
+LEFT JOIN mail_templates ON mail_templates.id = recipients.mail_template_id
+ORDER BY recipients.id;
+
+SELECT
+  recipients.id,
+  recipients.user_id,
+  users.login,
+  users.mailer_enabled,
+  recipients.role,
+  recipients.to
+FROM user_mail_role_recipients AS recipients
+LEFT JOIN users ON users.id = recipients.user_id
+ORDER BY recipients.id;
+```
+
+Classify every row against migration `20260722120100`:
+
+- a template-recipient row is migrated only when its user exists, its template
+  exists and is in `supported-template-names.txt`, the user's mailer is
+  enabled, and either the row is disabled or `to` is non-empty;
+- a disabled template-recipient row becomes one muted receiver and one route;
+- an enabled template-recipient row becomes one receiver, one custom target,
+  and one route;
+- a role-recipient row is migrated only when its user exists, its role is in
+  `supported-role-route-counts.tsv`, the user's mailer is enabled, and `to` is
+  non-empty; it becomes one receiver, one custom target, and the number of
+  routes recorded for that role in the second TSV column.
+
+Run and retain explicit exception reports:
+
+```sql
+SELECT recipients.*
+FROM user_mail_template_recipients AS recipients
+LEFT JOIN users ON users.id = recipients.user_id
+LEFT JOIN mail_templates ON mail_templates.id = recipients.mail_template_id
+WHERE users.id IS NULL OR mail_templates.id IS NULL;
+
+SELECT recipients.*
+FROM user_mail_role_recipients AS recipients
+LEFT JOIN users ON users.id = recipients.user_id
+WHERE users.id IS NULL;
+
+SELECT
+  recipients.id,
+  recipients.user_id,
+  users.login,
+  users.mailer_enabled,
+  mail_templates.name AS template_name,
+  recipients.enabled,
+  recipients.to
+FROM user_mail_template_recipients AS recipients
+JOIN users ON users.id = recipients.user_id
+JOIN mail_templates ON mail_templates.id = recipients.mail_template_id
+WHERE users.mailer_enabled = 0
+   OR (recipients.enabled <> 0 AND TRIM(COALESCE(recipients.to, '')) = '')
+ORDER BY recipients.id;
+
+SELECT
+  recipients.id,
+  recipients.user_id,
+  users.login,
+  users.mailer_enabled,
+  recipients.role,
+  recipients.to
+FROM user_mail_role_recipients AS recipients
+JOIN users ON users.id = recipients.user_id
+WHERE users.mailer_enabled = 0
+   OR TRIM(COALESCE(recipients.to, '')) = ''
+ORDER BY recipients.id;
+```
+
+The two orphan reports must be empty. Compare every distinct source template
+name and role with the generated support lists; unsupported values are a
+separate skipped class and must be listed even if the SQL exception reports are
+otherwise empty. Create a reconciliation matrix that assigns every source row
+either its exact expected receiver, target, and route count or one of these
+skipped classes:
+
+- disabled user mailer;
+- enabled template row with an empty target;
+- role row with an empty target; or
+- unsupported template or role.
+
+Obtain an explicit operator/product decision for every non-empty skipped
+class. Stop and revise the migration or prepare a separately reviewed manual
+conversion if any loss is not accepted. The pre-migration snapshot and export
+make loss recoverable; they do not make silent loss acceptable.
 
 Confirm every OOM rule joins an existing VPS and owner:
 
@@ -400,19 +624,32 @@ release.
 
 ## Maintenance cutover
 
-Announce the maintenance window and disable external API/WebUI writes. Keep the
-reviewed generation IDs, database snapshot destination, and rollback operator
-available throughout the cutover.
+Announce the maintenance window. Switch the proxy to its prepared maintenance
+generation before stopping any backend:
+
+```shell
+confctl deploy --generation "$PROXY_MAINTENANCE_GENERATION" \
+  cz.vpsfree/containers/prg/proxy switch
+```
+
+Verify that the production API, authentication, console, download, and WebUI
+frontends return their intended HTTP 503 maintenance responses while the
+restricted `*-admin.vpsfree.cz` operator frontends still reach the old stack.
+The exact Telegram webhook location is deliberately outside the generic API
+maintenance location; the receiver is stopped with the API stack below and
+Telegram will retry failed deliveries. Do not proceed until public API/WebUI
+writes are closed. Keep all reviewed generation IDs, the database snapshot
+destination, and the rollback operator available throughout the cutover.
 
 ### Stop all old writers
 
-On both API hosts, stop timers before their services, wait for running
-oneshots to finish, then stop and runtime-mask the API stack. Include all
-`vpsadmin-api-*.service` units, not only the timers shown by the current
-configuration.
+On api1, stop timers before their services. Production api2 has no rake timers.
+Wait for running oneshots on both API hosts to finish, then stop and
+runtime-mask the API stack. Include all discovered `vpsadmin-api-*.service`
+units, not only the timers shown by the current configuration.
 
 ```shell
-confctl ssh --parallel --yes 'cz.vpsfree/vpsadmin/int.api*' \
+confctl ssh --yes cz.vpsfree/vpsadmin/int.api1 \
   systemctl stop 'vpsadmin-api-*.timer'
 ```
 
@@ -443,13 +680,17 @@ APPLICATION_UNITS=(
   vpsadmin-telegram-receiver.service
 )
 
-systemctl stop "${API_RAKE_UNITS[@]}"
+if (( ${#API_RAKE_UNITS[@]} > 0 )); then
+  systemctl stop "${API_RAKE_UNITS[@]}"
+fi
 for unit in "${APPLICATION_UNITS[@]}"; do
   if systemctl cat "$unit" >/dev/null 2>&1; then
     systemctl stop "$unit"
   fi
 done
-systemctl mask --runtime "${API_RAKE_UNITS[@]}" "${APPLICATION_UNITS[@]}"
+
+MASK_UNITS=("${API_RAKE_UNITS[@]}" "${APPLICATION_UNITS[@]}")
+systemctl mask --runtime "${MASK_UNITS[@]}"
 ```
 
 The runtime-masked set includes:
@@ -584,10 +825,16 @@ runuser --user vpsadmin-database -- env -C "$DB_WORKDIR" \
   RACK_ENV=production \
   SCHEMA=/var/lib/vpsadmin/database/cache/schema.rb \
   "$DB_BUNDLE" exec rake db:migrate:status
+
+runuser --user vpsadmin-database -- env -C "$DB_WORKDIR" \
+  RACK_ENV=production \
+  SCHEMA=/var/lib/vpsadmin/database/cache/schema.rb \
+  "$DB_BUNDLE" exec rake vpsadmin:plugins:status
 ```
 
-All twelve migrations must report `up`. Stop and investigate any error; do not
-run a down migration or hand-mark a migration as complete.
+All twelve core migrations and every plugin migration must report `up`. Stop
+and investigate any error; do not run a down migration or hand-mark a
+migration as complete.
 
 ### Activate the application
 
@@ -638,14 +885,9 @@ confctl deploy --generation "$API2_GENERATION" \
   cz.vpsfree/vpsadmin/int.api2 switch
 ```
 
-Back on api2, enable the rake timers:
-
-```shell
-systemctl start 'vpsadmin-api-*.timer'
-```
-
 Verify the same applicable services on api2. The scheduler is expected only on
-api1.
+api1. Production api2 has no rake timers, so do not run the api1 timer-start
+command there.
 
 Switch both WebUI hosts only after both APIs are healthy:
 
@@ -671,6 +913,10 @@ Keep maintenance mode enabled until all checks below pass.
   `mailer_enabled = 0` count.
 - Reconcile each exported global recipient address with its new administrator
   target, receiver, route, and matchers.
+- Reconcile every row from both per-user recipient source tables with the
+  preflight matrix. Each accepted skipped row must remain explicitly accounted
+  for; every row expected to migrate must have the exact receiver, target, and
+  route count described by migration `20260722120100`.
 - Confirm the number of migrated OOM rule routes equals the exported rule
   count, each has two matchers, and there is one grouped catch-all OOM route
   per user.
@@ -678,6 +924,41 @@ Keep maintenance mode enabled until all checks below pass.
 - Confirm managed notification templates report the approved source revision.
 
 Do not accept unexplained count differences.
+
+Use the migration-specific receiver descriptions to produce the per-user
+reconciliation report:
+
+```sql
+SELECT
+  notification_receivers.user_id,
+  notification_receivers.description,
+  notification_receivers.mute,
+  COUNT(DISTINCT notification_receiver_targets.notification_target_id)
+    AS target_count,
+  COUNT(DISTINCT event_routes.id) AS route_count
+FROM notification_receivers
+LEFT JOIN notification_receiver_targets
+  ON notification_receiver_targets.notification_receiver_id =
+     notification_receivers.id
+LEFT JOIN event_routes
+  ON event_routes.notification_receiver_id = notification_receivers.id
+WHERE notification_receivers.description IN (
+  'Created from an advanced notification template setting',
+  'Created from an advanced notification template recipient',
+  'Created from an advanced e-email role recipient'
+)
+GROUP BY
+  notification_receivers.id,
+  notification_receivers.user_id,
+  notification_receivers.description,
+  notification_receivers.mute
+ORDER BY notification_receivers.user_id, notification_receivers.id;
+```
+
+The `e-email` spelling is the literal migration description. Treat the source
+counts, accepted skipped counts, migrated receiver counts, target counts, and
+role-expanded route counts as one conservation equation; their totals must
+match the preflight matrix exactly.
 
 ### RabbitMQ and services
 
@@ -711,22 +992,44 @@ grouping, and SMS delivery. External messages are real: use approved recipients
 and an approved test phone number. Confirm event, route-match, delivery, and
 delivery-attempt audit rows agree with the observed messages.
 
-Reopen production traffic only after all database, RabbitMQ, service,
-protocol, and end-to-end checks pass.
+Only after all database, RabbitMQ, service, protocol, and end-to-end checks
+pass, switch the proxy to the prepared release generation:
+
+```shell
+confctl deploy --generation "$PROXY_RELEASE_GENERATION" \
+  cz.vpsfree/containers/prg/proxy switch
+```
+
+Verify normal public API, authentication, console, download, and WebUI access,
+plus the exact Telegram webhook route. This switch reopens production traffic.
 
 ## Rollback
 
 If validation fails before traffic reopens:
 
-1. stop and runtime-mask every new API, supervisor, scheduler, notification,
-   Telegram, and WebUI writer;
-2. restore the authoritative pre-migration database snapshot;
-3. switch api2, api1, both WebUIs, the database, and all RabbitMQ brokers to
-   their previous generations;
-4. power on `int.vpsadmin1` and start its old `vpsadmin-nodectld.service`;
-5. verify old mail transactions, API reads/writes, RabbitMQ connections, and
-   WebUI operation; and
-6. restore production traffic.
+1. keep or switch the proxy to `PROXY_MAINTENANCE_GENERATION` and verify that
+   all public frontends remain closed;
+2. stop and runtime-mask every new API, supervisor, scheduler, notification,
+   and Telegram writer on both API hosts, and stop both WebUIs;
+3. restore the authoritative pre-migration database snapshot;
+4. switch the database and all RabbitMQ brokers to their previous generations;
+5. on each API host, recreate the unit arrays from the cutover step and run
+   `systemctl unmask --runtime "${MASK_UNITS[@]}"`; unmasking does not start
+   the services while maintenance remains active;
+6. switch api2 and api1 to their previous generations, with api1 last so the
+   old scheduler and rake timers resume only after the old schema and brokers
+   are ready;
+7. switch both WebUIs to their previous generations and verify the legacy API,
+   scheduler, timers, supervisor, console, and WebUI units;
+8. power on `int.vpsadmin1` and start its old `vpsadmin-nodectld.service`;
+9. verify old mail transactions, API reads/writes through the restricted admin
+   frontend, RabbitMQ connections, and WebUI operation; and
+10. switch the proxy to `PROXY_ROLLBACK_GENERATION`, verify public operation,
+    and only then declare production traffic restored.
+
+Do not attempt to switch a legacy API generation while its unit names remain
+runtime-masked. The mask survives a NixOS switch and prevents both service
+startup and successful health checks.
 
 The snapshot restores the original mailer Node state. Do not rely on migration
 downs to recreate recipient or OOM data. If the old mailer had been inactive
