@@ -85,8 +85,8 @@ in
 
     notifications.rabbitmq = {
       enable = true;
-      username = "notification";
-      passwordFile = "/private/vpsadmin-notification-rabbitmq.pw";
+      username = "api";
+      passwordFile = "/private/vpsadmin-api-rabbitmq.pw";
     };
 
     managedNotificationTemplates = {
