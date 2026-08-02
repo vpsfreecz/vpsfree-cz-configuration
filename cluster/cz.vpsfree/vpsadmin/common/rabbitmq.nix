@@ -67,8 +67,8 @@ in
     };
   };
 
-  systemd.services.vpsadmin-notification-rabbitmq-permissions = {
-    description = "Reconcile vpsAdmin notification RabbitMQ permissions";
+  systemd.services.vpsadmin-event-rabbitmq-permissions = {
+    description = "Reconcile vpsAdmin event RabbitMQ permissions";
     wantedBy = [ "multi-user.target" ];
     after = [
       "rabbitmq.service"
@@ -82,6 +82,13 @@ in
       RemainAfterExit = true;
     };
     script = ''
+      rabbitmqctl set_permissions \
+        -p vpsadmin_prod \
+        api \
+        '^(vpsadmin\.notifications|vpsadmin\.notifications\.(email|telegram|sms|webhook|grouping))$' \
+        '^(vpsadmin\.notifications|vpsadmin\.notifications\.(email|telegram|sms|webhook|grouping))$' \
+        '^vpsadmin\.notifications$'
+
       rabbitmqctl set_permissions \
         -p vpsadmin_prod \
         notification \
