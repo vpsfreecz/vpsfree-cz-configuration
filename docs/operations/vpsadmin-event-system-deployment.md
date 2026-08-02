@@ -2,8 +2,10 @@
 
 This runbook deploys the first production release of the vpsAdmin event system.
 It covers the vpsAdmin API and WebUI, all `nodectld` consumers, RabbitMQ,
-managed notification templates, Telegram, the two physical SMS gateways, and
-retirement of the old mailer container.
+managed notification templates, Telegram and retirement of the old mailer
+container. The physical SMS gateways, Alertmanager and Prometheus are deployed
+first through the separate
+[event infrastructure runbook](vpsadmin-event-infrastructure-deployment.md).
 
 This is a release-specific maintenance deployment. Do not use it for a later
 event-system revision without checking that its migrations, message protocol,
@@ -61,6 +63,19 @@ the new SMS gateways can remain as well. No vpsAdminOS reboot is required, but
 every running Node, storage host, backup host, and DNS `nodectld` must have the
 new transaction handler before the API emits event-delivery release
 transactions with handle `9002`.
+
+## Infrastructure gate
+
+Complete
+[Deploying vpsAdmin event infrastructure](vpsadmin-event-infrastructure-deployment.md)
+before preparing this maintenance cutover. Require its recorded approved
+revisions, six active and rollback generation IDs, healthy Prometheus targets,
+gateway queue checks and the confirmed `sms-aither` proof delivery.
+
+This is a manual gate. Do not infer approval from elapsed time or healthy
+metrics, and do not redeploy the APUs, Alertmanagers or Prometheus containers
+from this runbook. The operator decides when the infrastructure evidence is
+sufficient to continue.
 
 ## Prepare the exact release
 
@@ -179,8 +194,6 @@ confctl build cz.vpsfree/vpsadmin/int.webui2
 confctl build 'cz.vpsfree/vpsadmin/int.rabbitmq*'
 confctl build cz.vpsfree/vpsadmin/int.db
 confctl build cz.vpsfree/containers/prg/proxy
-confctl build cz.vpsfree/machines/brq/apu
-confctl build cz.vpsfree/machines/prg/apu
 confctl build 'cz.vpsfree/containers/ns*'
 confctl build 'cz.vpsfree/nodes/stg/*'
 confctl build 'cz.vpsfree/nodes/brq/*'
@@ -204,7 +217,7 @@ confctl deploy --generation GENERATION --copy-only \
   cz.vpsfree/vpsadmin/int.db
 ```
 
-Also copy the selected Node, DNS, and APU generations before their preparatory
+Also copy the selected Node and DNS generations before their preparatory
 deployments. The proxy's two prepared closures were copied separately above.
 Confirm normal rollback generations remain available everywhere.
 
@@ -236,25 +249,22 @@ configuration repository, shell history, deployment notes, or command output.
 
 Both API hosts require:
 
+- `/private/vpsadmin-api-rabbitmq.pw`;
 - `/private/vpsadmin-notification-rabbitmq.pw`;
 - `/private/vpsadmin-telegram-bot-token`;
 - `/private/vpsadmin-telegram-webhook-secret`;
 - `/private/vpsadmin-sms-callback-token`; and
 - `/private/vpsadmin-sms-gateway-token`.
 
-Both `apu.brq` and `apu.prg` require:
-
-- `/private/alertmanager/sms_gateway_token.txt`;
-- `/private/vpsadmin-sms-gateway-token`;
-- `/private/vpsfree-sms-gateway/status-token`; and
-- `/private/vpsadmin-sms-callback-token`.
-
-The API and both APUs must have identical vpsAdmin gateway and callback tokens.
+The infrastructure runbook has already provisioned the APU copies of the SMS
+gateway and callback tokens. The API and both APUs must have identical values.
 Both API hosts must also have identical Telegram bot tokens and webhook
-secrets. The notification RabbitMQ password must be identical on both API
-hosts and for the broker's `notification` user. Compare secrets through the
-approved secret-management tooling or their protected checksums; never print
-their values. Check file ownership and mode without displaying file contents.
+secrets. The API RabbitMQ password must be identical on both API hosts and for
+the broker's `api` user. The notification RabbitMQ password must be identical
+on both API hosts and for the broker's `notification` user used by the grouper
+and dispatchers. Compare secrets through the approved secret-management
+tooling or their protected checksums; never print their values. Check file
+ownership and mode without displaying file contents.
 
 ## Run the database preflight
 
@@ -512,18 +522,49 @@ The result must be empty and remain empty before the maintenance window starts.
 The production vhost is `vpsadmin_prod`. Do not rely on
 `tools/rabbitmqcfg.rb`'s development-vhost default.
 
-Create the `notification` RabbitMQ user once on a cluster member before
-deploying the RabbitMQ generation. RabbitMQ replicates its internal user
-database across the cluster. Enter its password through the operator-approved
-secret workflow so it matches
-`/private/vpsadmin-notification-rabbitmq.pw`; do not include the password on a
-shared command line.
+Audit the existing identities on a cluster member before reusing or rotating
+them. RabbitMQ replicates its internal user database across the cluster:
+
+```shell
+confctl ssh cz.vpsfree/vpsadmin/int.rabbitmq1 \
+  rabbitmqctl list_users
+confctl ssh cz.vpsfree/vpsadmin/int.rabbitmq1 \
+  rabbitmqctl list_connections user vhost name peer_host peer_port state
+confctl ssh cz.vpsfree/vpsadmin/int.rabbitmq1 \
+  rabbitmqctl list_user_permissions api
+```
+
+If `api` is absent, record that and skip `list_user_permissions` until after it
+is created. If it exists, require no live connection and identify the owner of
+every historical or observed use before changing it. Record all tags and every
+vhost permission row, not only `vpsadmin_prod`.
+
+The dedicated API identity must have no user tags and no permissions on an
+unrelated vhost. Remove unwanted tags with `rabbitmqctl set_user_tags api` and
+remove each reviewed, unused vhost row with
+`rabbitmqctl clear_permissions -p VHOST api`. If any connection, tag or other
+vhost permission belongs to a supported consumer, stop: rotating or narrowing
+this account would break that consumer, and a separately reviewed identity
+name is required.
+
+Create `api` and `notification` only when absent. Set or rotate their passwords
+through the operator-approved secret workflow so they match
+`/private/vpsadmin-api-rabbitmq.pw` and
+`/private/vpsadmin-notification-rabbitmq.pw`, respectively. Do not include a
+password on a shared command line. Repeat the three inventory commands after
+the change and retain their redacted output with the deployment record.
 
 The existing `vpsadmin-rabbitmq-setup` service is state-file gated and does not
 update existing users. Apply the new permissions explicitly from the approved
 vpsAdmin revision:
 
 ```shell
+ruby tools/rabbitmqcfg.rb user \
+  --vhost vpsadmin_prod \
+  --perms --execute \
+  --host rabbitmq1.int.vpsfree.cz \
+  api api
+
 ruby tools/rabbitmqcfg.rb user \
   --vhost vpsadmin_prod \
   --perms --execute \
@@ -537,7 +578,24 @@ ruby tools/rabbitmqcfg.rb user \
   console console-router
 ```
 
-The notification profile grants configure, write, and read only for:
+The API configure and write patterns are:
+
+```text
+^(vpsadmin\.notifications|vpsadmin\.notifications\.(email|telegram|sms|webhook|grouping))$
+```
+
+Its read pattern matches only the source exchange needed when binding queues:
+
+```text
+^vpsadmin\.notifications$
+```
+
+It deliberately does not match any notification queue, so the API cannot
+consume delivery work. The API and workers may both idempotently declare the
+same durable resources; a declaration with incompatible attributes fails and
+must be investigated rather than replaced in place.
+
+The notification worker profile grants configure, write, and read only for:
 
 ```text
 ^(amq\.gen.*|vpsadmin\.notifications|vpsadmin\.notifications\.(email|telegram|sms|webhook|grouping))$
@@ -571,9 +629,9 @@ confctl ssh cz.vpsfree/vpsadmin/int.rabbitmq1 \
 ```
 
 The new RabbitMQ generation contains
-`vpsadmin-notification-rabbitmq-permissions.service`, which reconciles the
-notification profile on every broker. It assumes that the user already exists;
-if it does not, broker activation fails.
+`vpsadmin-event-rabbitmq-permissions.service`, which reconciles the API and
+notification profiles on every broker. It assumes that both users already
+exist; if either does not, broker activation fails.
 
 ## Deploy compatible prerequisites
 
@@ -600,27 +658,6 @@ For every host, verify `nodectld` is healthy, connected to RabbitMQ, and running
 the reviewed vpsAdmin revision. Confirm ordinary transaction processing and
 DNS updates still advance. Do not start the API cutover while any old consumer
 remains capable of receiving handle `9002`.
-
-### Deploy the SMS gateways
-
-Deploy the BRQ and PRG APUs one at a time:
-
-```shell
-confctl deploy --generation GENERATION cz.vpsfree/machines/brq/apu switch
-confctl deploy --generation GENERATION cz.vpsfree/machines/prg/apu switch
-```
-
-The service creates and retains
-`/var/lib/vpsfree-sms-gateway/gateway.db`. A new empty database initializes at
-schema version 1. The service refuses an unversioned or incompatible database;
-there is no sachet database migration. Preserve this file across restarts.
-
-Verify `vpsfree-sms-gateway.service`, its authenticated status endpoint, modem
-access, and queue state on both APUs. Send a test SMS only to an
-operator-approved number. The Alertmanager path prefers the PRG physical
-gateway, then BRQ, then the existing local sachet/Nexmo fallback. The vpsAdmin
-dispatcher prefers BRQ and then PRG. Do not remove sachet as part of this
-release.
 
 ## Maintenance cutover
 
@@ -746,7 +783,7 @@ snapshot remains the only complete rollback artifact.
 
 With the old mailer stopped, switch the database and RabbitMQ hosts to their
 prepared generations. This removes `int.vpsadmin1` from their client allowlists
-and starts the notification permission reconciler:
+and starts the event-system permission reconciler:
 
 ```shell
 confctl deploy --generation GENERATION cz.vpsfree/vpsadmin/int.db switch
@@ -754,9 +791,10 @@ confctl deploy --generation GENERATION \
   'cz.vpsfree/vpsadmin/int.rabbitmq*' switch
 ```
 
-All three brokers must be healthy. Confirm the `notification` permission row
-and the existing console/node permission changes in `vpsadmin_prod` before
-continuing.
+All three brokers must be healthy. Confirm the separate `api` and
+`notification` permission rows and the existing console/node permission
+changes in `vpsadmin_prod` before continuing. The `api` read pattern must not
+match any notification queue.
 
 ### Run migrations once from the copied api1 generation
 
@@ -972,9 +1010,13 @@ rabbitmqctl list_connections user vhost name state channels
 ```
 
 The `vpsadmin.notifications` exchange and the `.email`, `.telegram`, `.sms`,
-`.webhook`, and `.grouping` queues must exist. The notification services must
-have live `notification` connections, and logs must contain no permission,
-schema, template, or retry-loop errors.
+`.webhook`, and `.grouping` queues must exist. Generate a controlled API event
+so its lazy RabbitMQ connection opens. The API connection must use `api`; the
+grouper and dispatchers must use `notification`. Confirm with an authenticated
+negative probe that `api` can redeclare the equivalent durable resources and
+publish, but receives `access_refused` when attempting to consume a
+notification queue. Logs must contain no permission, schema, template, or
+retry-loop errors.
 
 On both API hosts, verify all applicable units listed in the activation step
 are active with no restart loop. Confirm API and WebUI health checks pass on
