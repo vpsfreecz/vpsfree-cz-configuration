@@ -31,7 +31,7 @@
 
     services.node-exporter = { };
 
-    tags = [ "manual-update" ];
+    tags = [ "auto-update" ];
 
     healthChecks = {
       systemd.unitProperties = {
