@@ -2,4 +2,4 @@ source 'https://rubygems.org'
 
 gem 'syslog-exporter',
     git: 'https://github.com/vpsfreecz/syslog-exporter.git',
-    ref: 'f3f7a7aeb31f2ee8c850ebe5f8cda42c3587f052'
+    ref: '7c5a8e74e44a704cceb99cd05716af6800d78efd'

@@ -36,10 +36,10 @@
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "07pajhv7pqz82kcjc6017y4d0hwz5kp746cydpx1npd79r56xddr";
+      sha256 = "1yw6nvkvddriacmva8hm0za0961d6j96dm7zm6748rmyzcfqgvf8";
       type = "gem";
     };
-    version = "6.6.1";
+    version = "8.0.2";
   };
   rack = {
     groups = [ "default" ];
@@ -61,11 +61,11 @@
     platforms = [ ];
     source = {
       fetchSubmodules = false;
-      rev = "f3f7a7aeb31f2ee8c850ebe5f8cda42c3587f052";
-      sha256 = "0m93l3kikn431wl66miggzs6ihb67z7v23805sk2v4c8bix1c9n5";
+      rev = "7c5a8e74e44a704cceb99cd05716af6800d78efd";
+      sha256 = "1vc02bpvwnq6kb1z0bcg4h2vk1kig23q0iqhph755rlsq3cb7fdy";
       type = "git";
       url = "https://github.com/vpsfreecz/syslog-exporter.git";
     };
-    version = "0.13.3";
+    version = "0.13.4";
   };
 }
