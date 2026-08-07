@@ -29,11 +29,6 @@ in
 
   mosh-osc-colors = super.callPackage ../packages/mosh-osc-colors.nix { };
 
-  discourse = super.discourse.override {
-    # nodejs-slim_22.libv8 references ICU 78 symbols; default pkgs.icu is 76.
-    icu = self.icu78;
-  };
-
   discourse-oauth-signup-policy = super.callPackage ../packages/discourse-oauth-signup-policy { };
 
   ruby-bepasty-client = super.callPackage ../packages/ruby-bepasty-client { };
