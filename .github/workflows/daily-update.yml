@@ -91,6 +91,29 @@ jobs:
               rm -f "$message_file"
             }
 
+            # The dev shell starts with the Bundler version recorded in the
+            # lock. Upgrade to the newest release compatible with Ruby 3.4 so
+            # the updater itself does not remain pinned indefinitely.
+            gem install --no-document bundler
+            unset BUNDLER_VERSION
+            hash -r
+
+            bundle update --bundler
+            bundle lock --update
+            bundle install
+
+            bundle exec rake spec
+            bundle exec rubocop
+            bundler-audit check --update
+
+            git add Gemfile.lock
+
+            if ! git diff --cached --quiet ; then
+              commit_update \
+                "gems: update root dependencies" \
+                "Refresh the development and test bundle to current compatible releases."
+            fi
+
             # Bundix unsets BUNDLE_PATH before invoking Bundler. Persist the
             # equivalent setting in a temporary app config so Git gems are not
             # cached in Bundler's read-only Nix store path.
