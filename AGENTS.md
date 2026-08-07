@@ -19,7 +19,8 @@
 ## Coding Style & Naming Conventions
 - `.editorconfig` enforces UTF-8, LF, and 2-space indents for Nix/Ruby/ERB; trim trailing whitespace.
 - Format Nix with `nixfmt` (RFC style); Overcommit hooks run `Nixfmt` and `RuboCop`.
-- Ruby scripts target 3.1; lint via `bundle exec rubocop` when touching Ruby files.
+- Ruby scripts and vpsAdmin hooks target Ruby 3.4, matching vpsAdmin; lint via
+  `bundle exec rubocop` when touching Ruby files.
 - Use hyphenated filenames mirroring services/hosts; mirror attribute names/order seen in neighbors.
 
 ## Testing Guidelines

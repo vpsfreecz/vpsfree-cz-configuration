@@ -86,7 +86,12 @@
     inputs@{ self, confctl, ... }:
     let
       system = "x86_64-linux";
-      devPkgs = import inputs.nixpkgs { inherit system; };
+      devPkgs = import inputs.nixpkgs {
+        inherit system;
+        overlays = [
+          (_final: prev: { ruby = prev.ruby_3_4; })
+        ];
+      };
 
       channels = {
         staging = {

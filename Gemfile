@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '~> 3.4.0'
+
 group :development do
   gem 'overcommit'
   gem 'rubocop', '~> 1.75.0'
@@ -8,6 +10,7 @@ group :development do
 end
 
 group :test do
+  gem 'csv'
   gem 'mail', '~> 2.9'
   gem 'rake', '~> 13.0'
   gem 'require_all', '~> 2.0'
