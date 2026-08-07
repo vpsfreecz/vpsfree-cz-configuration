@@ -156,7 +156,10 @@
         inherit system;
         pkgs = devPkgs;
         mode = "tools";
-        extraPackages = [ devPkgs.bundix ];
+        extraPackages = with devPkgs; [
+          bundix
+          bundler-audit
+        ];
       };
     };
 }
