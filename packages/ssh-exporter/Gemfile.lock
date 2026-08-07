@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/vpsfreecz/ssh-exporter.git
+  revision: c1b481a68e00d90802aeb36730c68a19f3c17711
+  ref: c1b481a68e00d90802aeb36730c68a19f3c17711
+  specs:
+    ssh-exporter (0.3.2)
+      prometheus-client (~> 4.2.5)
+      puma (~> 8.0, >= 8.0.2)
+      rack (~> 3.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -5,17 +15,9 @@ GEM
     nio4r (2.7.5)
     prometheus-client (4.2.5)
       base64
-    puma (6.6.1)
+    puma (8.0.2)
       nio4r (~> 2.0)
     rack (3.2.6)
-
-GEM
-  remote: https://rubygems.vpsfree.cz/
-  specs:
-    ssh-exporter (0.3.1)
-      prometheus-client (~> 4.2.2)
-      puma (~> 6.4)
-      rack (~> 3.1)
 
 PLATFORMS
   ruby

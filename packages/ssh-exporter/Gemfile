@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
 
-source 'https://rubygems.vpsfree.cz' do
-  gem 'ssh-exporter'
-end
+gem 'ssh-exporter',
+    git: 'https://github.com/vpsfreecz/ssh-exporter.git',
+    ref: 'c1b481a68e00d90802aeb36730c68a19f3c17711'

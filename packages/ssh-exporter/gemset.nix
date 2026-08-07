@@ -36,10 +36,10 @@
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "07pajhv7pqz82kcjc6017y4d0hwz5kp746cydpx1npd79r56xddr";
+      sha256 = "1yw6nvkvddriacmva8hm0za0961d6j96dm7zm6748rmyzcfqgvf8";
       type = "gem";
     };
-    version = "6.6.1";
+    version = "8.0.2";
   };
   rack = {
     groups = [ "default" ];
@@ -60,10 +60,12 @@
     groups = [ "default" ];
     platforms = [ ];
     source = {
-      remotes = [ "https://rubygems.vpsfree.cz" ];
-      sha256 = "07bjmgscqlnmfydc2ad5gm3z2fxh045fg5jcs1fznk70x32vayy5";
-      type = "gem";
+      fetchSubmodules = false;
+      rev = "c1b481a68e00d90802aeb36730c68a19f3c17711";
+      sha256 = "1b36a49xrhdqr6xh99kxnlf8mk415kj29n339q3wi65wx1dzgagz";
+      type = "git";
+      url = "https://github.com/vpsfreecz/ssh-exporter.git";
     };
-    version = "0.3.1";
+    version = "0.3.2";
   };
 }
