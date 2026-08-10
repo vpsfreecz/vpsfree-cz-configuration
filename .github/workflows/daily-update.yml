@@ -25,7 +25,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Install git hooks
-        run: nix develop -c bundle exec overcommit --install
+        run: |
+          nix develop -c bundle exec overcommit --install
+          nix develop -c bundle exec overcommit --sign pre-commit
 
       - name: Restore confctl cache
         uses: actions/cache/restore@v6
