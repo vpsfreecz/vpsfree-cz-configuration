@@ -152,7 +152,7 @@ jobs:
 
       - name: Push updates
         run: |
-          git push origin master
+          nix develop -c git push origin master
 
       - name: Save confctl cache
         uses: actions/cache/save@v6
