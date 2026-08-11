@@ -66,7 +66,7 @@
 
       {
         alert = "HypervisorHighCpuLoad";
-        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",location!="stg"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
         labels = {
           alertclass = "cpuload";
@@ -84,12 +84,52 @@
       }
 
       {
+        alert = "HypervisorHighCpuLoadStaging";
+        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",location="stg"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600'';
+        for = "50m";
+        labels = {
+          alertclass = "cpuload";
+          severity = "warning";
+          location = "stg";
+        };
+        annotations = {
+          summary = "High CPU load (instance {{ $labels.instance }})";
+          description = ''
+            CPU load is > 80%
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "HypervisorCritOsCpuLoad";
-        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",os="vpsadminos"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",os="vpsadminos",location!="stg"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
         labels = {
           alertclass = "cpuload";
           severity = "critical";
+        };
+        annotations = {
+          summary = "Critical CPU load (instance {{ $labels.instance }})";
+          description = ''
+            CPU load is > 90%
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "HypervisorCritOsCpuLoadStaging";
+        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",os="vpsadminos",location="stg"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
+        for = "50m";
+        labels = {
+          alertclass = "cpuload";
+          severity = "critical";
+          location = "stg";
         };
         annotations = {
           summary = "Critical CPU load (instance {{ $labels.instance }})";
@@ -491,7 +531,7 @@
 
       {
         alert = "NodeHighLoad";
-        expr = ''node_load5{job="nodes"} > 300 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''node_load5{job="nodes",location!="stg"} > 300 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "5m";
         labels = {
           alertclass = "loadavg";
@@ -509,8 +549,28 @@
       }
 
       {
+        alert = "NodeHighLoadStaging";
+        expr = ''node_load5{job="nodes",location="stg"} > 300 and on(instance) time() - node_boot_time_seconds > 3600'';
+        for = "10m";
+        labels = {
+          alertclass = "loadavg";
+          severity = "warning";
+          location = "stg";
+        };
+        annotations = {
+          summary = "Load average too high (instance {{ $labels.instance }})";
+          description = ''
+            5 minute load average is too high
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NodeCritLoad";
-        expr = ''node_load5{job="nodes"} > 1000'';
+        expr = ''node_load5{job="nodes",location!="stg"} > 1000'';
         for = "5m";
         labels = {
           alertclass = "loadavg";
@@ -529,8 +589,29 @@
       }
 
       {
+        alert = "NodeCritLoadStaging";
+        expr = ''node_load5{job="nodes",location="stg"} > 1000'';
+        for = "10m";
+        labels = {
+          alertclass = "loadavg";
+          severity = "critical";
+          frequency = "hourly";
+          location = "stg";
+        };
+        annotations = {
+          summary = "Load average critical (instance {{ $labels.instance }})";
+          description = ''
+            5 minute load average is too high
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NodeFatalLoad";
-        expr = ''node_load5{job="nodes"} > 2000'';
+        expr = ''node_load5{job="nodes",location!="stg"} > 2000'';
         for = "5m";
         labels = {
           alertclass = "loadavg";
@@ -549,13 +630,55 @@
       }
 
       {
+        alert = "NodeFatalLoadStaging";
+        expr = ''node_load5{job="nodes",location="stg"} > 2000'';
+        for = "10m";
+        labels = {
+          alertclass = "loadavg";
+          severity = "fatal";
+          frequency = "hourly";
+          location = "stg";
+        };
+        annotations = {
+          summary = "Load average critical (instance {{ $labels.instance }})";
+          description = ''
+            5 minute load average is too high
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NodeOverallCritLoad";
-        expr = "node_load1 - on (fqdn) group_left() sum by (fqdn) (topk by (fqdn)(5, osctl_container_load1)) > 400";
+        expr = ''node_load1{location!="stg"} - on (fqdn) group_left() sum by (fqdn) (topk by (fqdn)(5, osctl_container_load1{location!="stg"})) > 400'';
         for = "5m";
         labels = {
           alertclass = "loadavg";
           severity = "critical";
           frequency = "10m";
+        };
+        annotations = {
+          summary = "Overall load average critical (instance {{ $labels.instance }})";
+          description = ''
+            Overall load average (excluding top 5 VPS) is critical
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeOverallCritLoadStaging";
+        expr = ''node_load1{location="stg"} - on (fqdn) group_left() sum by (fqdn) (topk by (fqdn)(5, osctl_container_load1{location="stg"})) > 400'';
+        for = "10m";
+        labels = {
+          alertclass = "loadavg";
+          severity = "critical";
+          frequency = "10m";
+          location = "stg";
         };
         annotations = {
           summary = "Overall load average critical (instance {{ $labels.instance }})";
