@@ -83,8 +83,8 @@ let
       name = "vpsadmindoc";
       owner = "vpsfreecz";
       repo = "dokuwiki-plugin-vpsadmindoc";
-      rev = "8ba88976e3ee0ceb1becd5ef21f007dcb02d9d82";
-      sha256 = "sha256-lIO9q4Mwqezzpr28hEIcsQExgDJZ9TbeOP9IqBT5HoU=";
+      rev = "adaff74e9178e2964129228ace89e9be220d2c24";
+      sha256 = "sha256-ovgKZAS6RRtZ3fO0WNXKhEHgOGUOs6CYmq3H1ZhGS+c=";
     })
     (mkPlugin {
       name = "vshare";
@@ -150,6 +150,7 @@ in
   systemd.tmpfiles.rules = [
     "d /home/aither/.local/state/kb-stage 0700 aither users - -"
     "d /home/aither/.local/state/kb-stage/credentials 0755 aither users - -"
+    "f /home/aither/.local/state/kb-stage/credentials/managed-repository.ref 0644 aither users - master"
   ];
 
   environment.systemPackages = [ kbStagingContainerctl ];
@@ -224,6 +225,11 @@ in
               mlfarm = {
                 master = site.mlfarmMaster;
                 cache-file = "/var/lib/kb-shared/mlfarm/map.dat";
+              };
+              vpsadmindoc = {
+                managed_repository_url = "https://github.com/vpsfreecz/vpsfree-kb-contracts";
+                managed_repository_ref = "master";
+                managed_repository_ref_file = "/private/kb-staging/managed-repository.ref";
               };
             };
           };
