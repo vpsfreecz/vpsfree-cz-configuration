@@ -133,8 +133,8 @@ let
       name = "vpsadmindoc";
       owner = "vpsfreecz";
       repo = "dokuwiki-plugin-vpsadmindoc";
-      rev = "adaff74e9178e2964129228ace89e9be220d2c24";
-      sha256 = "sha256-ovgKZAS6RRtZ3fO0WNXKhEHgOGUOs6CYmq3H1ZhGS+c=";
+      rev = "f198173ed15dfa1fe124311fe45ae3c54914e7d3";
+      sha256 = "sha256-qb5W4tp50CLD1tuczogVzG9NSxumhJvJd7iHWQBZbhk=";
     })
     # vshare
     (mkPlugin {
