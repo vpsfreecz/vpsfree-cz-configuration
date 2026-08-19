@@ -11,7 +11,7 @@ module AbuseNoticeParser
       from.start_with?('fail2ban@')
     end
 
-    def self.match_message?(subject, from, check_sender: true)
+    def self.match_message?(subject, from, message: nil, check_sender: true)
       return false unless match_subject?(subject)
 
       if subject.start_with?('Automatic abuse report for IP address ')

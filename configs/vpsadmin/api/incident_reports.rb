@@ -27,10 +27,16 @@ VpsAdmin::API::IncidentReports.config do
       AbuseNoticeParser::Proki,
       AbuseNoticeParser::SpamCop,
       AbuseNoticeParser::UsGo,
+      AbuseNoticeParser::XArfJson,
       AbuseNoticeParser::XArf
     ].each do |klass|
       matches = if klass.respond_to?(:match_message?)
-                  klass.match_message?(subject, originator, check_sender: check_sender)
+                  klass.match_message?(
+                    subject,
+                    originator,
+                    message: message,
+                    check_sender: check_sender
+                  )
                 else
                   klass.match_subject?(subject) \
                     && (!check_sender || klass.match_sender?(originator))

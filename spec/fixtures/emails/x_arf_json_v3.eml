@@ -1,0 +1,59 @@
+From: "support@abusix.com via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #20001] Abuse Report: Spam
+Date: Mon, 17 Aug 2026 21:00:00 +0000
+Message-ID: <synthetic-xarf-v3@vpsfree.test>
+X-RT-Originator: support@abusix.com
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="xarf-v3-boundary"
+
+--xarf-v3-boundary
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+RT metadata
+Ticket <URL: https://rt.example.test/Ticket/Display.html?id=20001 >
+
+An XARF report is attached.
+
+--xarf-v3-boundary
+Content-Type: message/feedback-report
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
+
+Feedback-Type: xarf
+User-Agent: synthetic-xarf-reporter/1.0
+Version: 3
+
+--xarf-v3-boundary
+Content-Type: application/json; name="xarf.json"
+Content-Disposition: attachment; filename="xarf.json"
+Content-Transfer-Encoding: base64
+
+eyJWZXJzaW9uIjoiMyIsIlJlcG9ydGVySW5mbyI6eyJSZXBvcnRlclR5cGUi
+OiJPcmciLCJSZXBvcnRlck9yZyI6IkFidXNpeCIsIlJlcG9ydGVyT3JnRG9t
+YWluIjoiYWJ1c2l4LmNvbSIsIlJlcG9ydGVyT3JnRW1haWwiOiJyZXBvcnRp
+bmctc3VwcG9ydEBhYnVzaXguY29tIn0sIkRpc2Nsb3N1cmUiOmZhbHNlLCJS
+ZXBvcnQiOnsiRGF0ZSI6IjIwMjYtMDgtMTdUMjA6NTk6NDBaIiwiUmVwb3J0
+Q2xhc3MiOiJBY3Rpdml0eSIsIlJlcG9ydFR5cGUiOiJTcGFtIiwiUmVwb3J0
+U3ViVHlwZSI6IlRyYXAiLCJTb3VyY2VJcCI6IjEwLjQyLjkuNDIiLCJTbXRw
+TWFpbEZyb21BZGRyZXNzIjoic3ludGhldGljLXNlbmRlckBleGFtcGxlLnRl
+c3QiLCJTYW1wbGUiOnsiQ29udGVudFR5cGUiOiJtZXNzYWdlL3JmYzgyMiIs
+IlBheWxvYWQiOiJSbkp2YlRvZ2MzbHVkR2hsZEdsakxYTmxibVJsY2tCbGVH
+RnRjR3hsTG5SbGMzUUtWRzg2SUhOd1lXMTBjbUZ3UUdWNFlXMXdiR1V1ZEdW
+emRBcFRkV0pxWldOME9pQlRlVzUwYUdWMGFXTWdjM0JoYlNCellXMXdiR1VL
+UkdGMFpUb2dUVzl1TENBeE55QkJkV2NnTWpBeU5pQXlNRG8xT1RvME1DQXJN
+REF3TUFwTlpYTnpZV2RsTFVsRU9pQThjM2x1ZEdobGRHbGpMWFl6UUdWNFlX
+MXdiR1V1ZEdWemRENEtVbVZqWldsMlpXUTZJR1p5YjIwZ2MyVnVaR1Z5TG1W
+NFlXMXdiR1V1ZEdWemRDQW9jMlZ1WkdWeUxtVjRZVzF3YkdVdWRHVnpkQ0Ji
+TVRBdU5ESXVPUzQwTWwwcENpQmllU0IwY21Gd0xtVjRZVzF3YkdVdWRHVnpk
+Q0IzYVhSb0lFVlRUVlJRT3lCTmIyNHNJREUzSUVGMVp5QXlNREkySURJd09q
+VTVPalF3SUNzd01EQXdDa052Ym5SbGJuUXRWSGx3WlRvZ2RHVjRkQzl3YkdG
+cGJqc2dZMmhoY25ObGREMVZWRVl0T0FvS1FrOUVXU0JTUlVSQlExUkZSQW89
+IiwiQmFzZTY0RW5jb2RlZCI6dHJ1ZSwiRGVzY3JpcHRpb24iOiJSZWRhY3Rl
+ZCBoZWFkZXJzIn19LCJPbkJlaGFsZk9mIjp7IkNvbXBsYWluYW50T3JnIjoi
+ZGF0YS1jaGFubmVsLmV4YW1wbGUuaW52YWxpZCIsIkNvbXBsYWluYW50T3Jn
+RG9tYWluIjoiZGF0YS1jaGFubmVsLmV4YW1wbGUuaW52YWxpZCIsIkNvbXBs
+YWluYW50T3JnRW1haWwiOiJhbm9ueW1vdXNAZXhhbXBsZS5pbnZhbGlkIn19
+
+--xarf-v3-boundary--

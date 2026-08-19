@@ -39,6 +39,20 @@ RSpec.describe VpsAdmin::API::IncidentReports do
     )
   end
 
+  it 'routes an XARF JSON report by its MIME content' do
+    register_assignment('10.42.9.42')
+
+    result = described_class.handle_message(
+      mailbox,
+      fixture_message('x_arf_json_v3'),
+      dry_run: true
+    )
+
+    expect(result).to be_processed
+    expect(result.incidents.size).to eq(1)
+    expect(result.incidents.first.subject).to eq('Spam report for 10.42.9.42')
+  end
+
   it 'does not route recognized subjects from unexpected senders by default' do
     message = fixture_message('fail2ban')
     message['X-RT-Originator'] = 'attacker@example.test'
