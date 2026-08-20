@@ -38,6 +38,18 @@ let
     name = "cz.vpsfree/vpsadmin/int.webui-dev";
   };
 
+  authProduction = config.vpsadmin.frontend.auth.production;
+
+  authProductionUnderMaintenance =
+    authProduction.maintenance.enable
+    || (
+      config.vpsadmin.frontend.maintenance.enable
+      && (
+        isNull config.vpsadmin.frontend.maintenance.frontends
+        || elem "production" config.vpsadmin.frontend.maintenance.frontends
+      )
+    );
+
   proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
@@ -79,6 +91,13 @@ in
   systemd.tmpfiles.rules = [
     "d /run/varnish 0755 varnish varnish -"
   ];
+
+  # The proxy is temporarily pinned to a vpsAdmin revision predating this
+  # route. mkDefault lets the vpsAdmin module take over after that pin moves.
+  services.nginx.virtualHosts.${authProduction.virtualHost}.locations."/oauth2/password-reset" = {
+    proxyPass = mkIf (!authProductionUnderMaintenance) (mkDefault "http://auth_production");
+    return = mkIf authProductionUnderMaintenance (mkDefault "503");
+  };
 
   vpsadmin.download-mounter = {
     enable = true;
