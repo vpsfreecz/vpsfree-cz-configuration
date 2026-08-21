@@ -1,8 +1,9 @@
-# Deploying vpsAdmin password recovery
+# Deploying vpsAdmin password recovery and password history
 
 This runbook deploys self-service password recovery through the vpsAdmin OAuth
-server. Recovery links are sent only for accounts with TOTP or a passkey. The
-public form gives the same response for every submitted login or email address.
+server and the password change history in the API and WebUI. Recovery links are
+sent only for accounts with TOTP or a passkey. The public form gives the same
+response for every submitted login or email address.
 
 This is a release-specific runbook. Use the reviewed revisions below for this
 rollout only.
@@ -10,7 +11,7 @@ rollout only.
 ## Reviewed revisions
 
 ```shell
-VPSADMIN_REVISION=00674913d112dd6a4ad3ae87a749f8da383e3aab
+VPSADMIN_REVISION=5ce685e75dc0b30be49366b4e559bad3fd1fdfd3
 MAIL_TEMPLATES_REVISION=2f6c657321e43d39fa1d464bff78048bb5279573
 ```
 
@@ -25,7 +26,7 @@ that value and verify the checkout and service pin:
 
 ```shell
 APPROVED_CONFIGURATION_REVISION=REVISION_APPROVED_FOR_ROLLOUT
-VPSADMIN_REVISION=00674913d112dd6a4ad3ae87a749f8da383e3aab
+VPSADMIN_REVISION=5ce685e75dc0b30be49366b4e559bad3fd1fdfd3
 
 test "$(git rev-parse HEAD)" = "$APPROVED_CONFIGURATION_REVISION"
 test -z "$(git status --porcelain --untracked-files=no)"
@@ -35,7 +36,7 @@ test "$(jq -r '.nodes.vpsadminServices.locked.rev' flake.lock)" = \
 
 ## Compatibility and ordering
 
-The release adds three migrations:
+The release adds four migrations:
 
 - `20260818115900 Add authentication generation` adds a defaulted user
   generation used to reject credentials issued concurrently with a password
@@ -46,33 +47,39 @@ The release adds three migrations:
 - `20260821120000 Add password event counters` adds aggregate counters and
   timestamps for recovery admission and password changes. The table contains
   fixed event names and no account identifiers.
+- `20260821210000 Add password change logs` adds the detailed password change
+  history. Each row records the affected user, change source, time, and the
+  exact initiating session when one exists. The migration does not backfill
+  earlier password changes.
 
-All three migrations are additive. Old API processes can read the expanded
+All four migrations are additive. Old API processes can read the expanded
 schema, and a rollback can leave it in place. New and old API processes may
 overlap briefly while the feature remains disabled, but update both API hosts
 before enabling recovery. That keeps password changes and credential issuance
-on the same generation-aware implementation.
+on the same generation-aware implementation. During the rolling API switch, an
+old process can increment the aggregate password-change counter without writing
+a detailed history row. Keep this accepted audit gap as short as possible by
+switching api2 immediately after api1 is healthy.
 
 The feature flag defaults to off. Install the mail templates before starting
 new API code, then keep recovery disabled until the migrations, both API hosts,
-the auth frontend, and OAuth client start URLs are in place. No Node update or
-reboot is required.
+both WebUI hosts, the auth frontend, and OAuth client start URLs are in place.
+No Node update or reboot is required.
 
 ## Build the affected hosts
 
-Build both API hosts, the frontend host, and both Prometheus hosts before the
-rollout:
+Build both API hosts, both WebUI hosts, the frontend host, and both Prometheus
+hosts before the rollout:
 
 ```shell
 confctl build cz.vpsfree/vpsadmin/int.api1
 confctl build cz.vpsfree/vpsadmin/int.api2
+confctl build cz.vpsfree/vpsadmin/int.webui1
+confctl build cz.vpsfree/vpsadmin/int.webui2
 confctl build cz.vpsfree/containers/prg/proxy
 confctl build cz.vpsfree/containers/prg/int.mon1
 confctl build cz.vpsfree/containers/prg/int.mon2
 ```
-
-The WebUI hosts do not need to switch for this release. Their existing
-configuration already trusts `https://auth.vpsfree.cz` for OAuth responses.
 
 ## Install the mail templates
 
@@ -121,7 +128,7 @@ confctl ssh --yes cz.vpsfree/vpsadmin/int.api1 \
 ```
 
 The migration service must report `Result=success`. From
-`vpsadmin-api-shell`, confirm that all three migrations report `up`:
+`vpsadmin-api-shell`, confirm that all four migrations report `up`:
 
 ```shell
 bundle exec rake db:migrate:status
@@ -155,6 +162,13 @@ confctl deploy cz.vpsfree/vpsadmin/int.api2 switch
 confctl ssh --yes cz.vpsfree/vpsadmin/int.api2 \
   systemctl is-active vpsadmin-api.service \
     vpsadmin-password-recovery.service
+```
+
+After both API hosts run the new revision, deploy both WebUI hosts:
+
+```shell
+confctl deploy cz.vpsfree/vpsadmin/int.webui1 switch
+confctl deploy cz.vpsfree/vpsadmin/int.webui2 switch
 ```
 
 Finally, deploy the frontend route on the production proxy:
@@ -249,6 +263,16 @@ Use a controlled account with MFA to verify the complete flow:
    appear without a repeated password-change confirmation.
 6. Confirm receipt of the password-changed security notice and successful
    login with the new password.
+7. Open **Edit profile** -> **Password changes** in WebUI. Confirm that the
+   recovery is the newest row, its type is **Password recovery**, and it has no
+   initiating session.
+
+Change the password once from the signed-in profile. Confirm that the next
+history row is **Signed-in change** and links to the exact initiating session.
+As an administrator, change a controlled member's password and confirm that the
+member sees the administrator change and its numeric session ID, but cannot
+open the protected session details. Confirm that an administrator can open the
+same session link and can list password changes for other users.
 
 Repeat the request with a controlled account without MFA. Its email should
 direct the user to support and must not contain a reset link. The browser must
@@ -296,11 +320,13 @@ Disable `core.password_recovery_enabled` first. Let the workers finish or
 discard already admitted submissions, confirm that the unfinished count is
 zero, and stop `vpsadmin-password-recovery.service` on both API hosts.
 
-Roll the proxy frontend and both API hosts back to the approved preceding
-configuration. The additive columns and tables can remain in place; old
-processes ignore them. Leaving the schema in place is the preferred rollback
-because migrating down deletes recovery records and removes the authentication
-generation used by the new application.
+Roll the proxy frontend, both WebUI hosts, and both API hosts back to the
+approved preceding configuration. The additive columns and tables can remain
+in place; old processes ignore them. Leaving the schema in place is the
+preferred rollback because migrating down deletes recovery records and detailed
+password history, and removes the authentication generation used by the new
+application. Aggregate password event counters remain independent of detailed
+history while the schema stays in place.
 
 If the migrations must be reversed, first verify that every API and worker
 process runs the old release and that no recovery work remains. Treat the down
