@@ -65,6 +65,31 @@ in
       }
 
       {
+        alert = "VpsAdminPasswordRecoveryQueueFull";
+        expr = ''
+          max(vpsadmin_password_recovery_pending_submissions)
+            >= max(vpsadmin_password_recovery_submission_limit)
+          or
+          time() - max(vpsadmin_password_recovery_queue_capacity_last_reached_timestamp_seconds)
+            < 10 * 60
+        '';
+        labels = {
+          severity = "warning";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "vpsAdmin password recovery queue reached its global capacity";
+          description = ''
+            The vpsAdmin password recovery queue is full or reached its global
+            capacity during the last ten minutes. Check
+            vpsadmin-password-recovery.service and the incoming request volume.
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "VpsAdminConsoleRouterNotActive";
         expr = ''node_systemd_unit_state{name="vpsadmin-console-router.service",state="active"} == 0'';
         for = "10m";
