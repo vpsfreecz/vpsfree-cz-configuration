@@ -21,6 +21,58 @@
       }
 
       {
+        alert = "VpsAutostartNotRunning";
+        expr = ''
+          (
+            nodectld_vps_autostart_unsatisfied{role="hypervisor"} == 1
+            and on(fqdn)
+              nodectld_vps_autostart_check_success{role="hypervisor"} == 1
+            and on(fqdn)
+              time() - nodectld_vps_autostart_check_last_success_timestamp_seconds{role="hypervisor"} < 300
+          )
+          and on(fqdn)
+            vpsfree_hypervisor_booting == 0
+        '';
+        for = "10m";
+        labels = {
+          severity = "critical";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "VPS {{ $labels.vps_id }} should be running on {{ $labels.fqdn }} in pool {{ $labels.pool }}";
+          description = ''
+            vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
+            find it in the running state.
+          '';
+        };
+      }
+
+      {
+        alert = "VpsAutostartCheckFailed";
+        expr = ''
+          (
+            nodectld_vps_autostart_check_success{role="hypervisor"} == 0
+            or
+              time() - nodectld_vps_autostart_check_last_success_timestamp_seconds{role="hypervisor"} > 300
+          )
+          and on(fqdn)
+            vpsfree_hypervisor_booting == 0
+        '';
+        for = "10m";
+        labels = {
+          severity = "warning";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "VPS auto-start status check is failing on {{ $labels.fqdn }}";
+          description = ''
+            nodectld has not completed a recent comparison of the vpsAdmin
+            auto-start settings with the containers in osctld.
+          '';
+        };
+      }
+
+      {
         alert = "VpsStartStalled";
         expr = ''nodectld_command_seconds{handler="Vps::Start"} > 60*20'';
         labels = {

@@ -23,8 +23,15 @@
       }
 
       {
+        record = "vpsfree_hypervisor_booting";
+        expr = ''
+          (time() - node_boot_time_seconds{role="hypervisor"}) < bool 1800
+        '';
+      }
+
+      {
         alert = "HypervisorBooting";
-        expr = ''time() - node_boot_time_seconds{role="hypervisor"} < 2400'';
+        expr = "vpsfree_hypervisor_booting == 1";
         labels = {
           severity = "none";
         };

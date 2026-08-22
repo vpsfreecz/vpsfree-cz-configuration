@@ -1,0 +1,200 @@
+rule_files:
+  - @ruleFile@
+
+evaluation_interval: 1m
+
+tests:
+  - name: The shared boot signal lasts for 30 minutes
+    interval: 1m
+    input_series:
+      - series: 'node_boot_time_seconds{alias="node1",fqdn="node1.example",role="hypervisor"}'
+        values: '0+0x31'
+    promql_expr_test:
+      - expr: 'vpsfree_hypervisor_booting{fqdn="node1.example"}'
+        eval_time: 29m40s
+        exp_samples:
+          - labels: 'vpsfree_hypervisor_booting{alias="node1",fqdn="node1.example",role="hypervisor"}'
+            value: 1
+      - expr: 'vpsfree_hypervisor_booting{fqdn="node1.example"}'
+        eval_time: 30m
+        exp_samples:
+          - labels: 'vpsfree_hypervisor_booting{alias="node1",fqdn="node1.example",role="hypervisor"}'
+            value: 0
+      - expr: 'vpsfree_hypervisor_booting{fqdn="old-node.example"}'
+        eval_time: 30m
+        exp_samples: []
+
+  - name: Unsatisfied VPS alerts retain identity and converge independently
+    interval: 1m
+    input_series:
+      - series: 'node_boot_time_seconds{alias="node1",fqdn="node1.example",role="hypervisor"}'
+        values: '0+0x60'
+      - series: 'nodectld_vps_autostart_check_success{alias="node1",fqdn="node1.example",role="hypervisor"}'
+        values: '1+0x60'
+      - series: 'nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="node1",fqdn="node1.example",role="hypervisor"}'
+        values: '0+60x60'
+      - series: 'nodectld_vps_autostart_unsatisfied{alias="node1",fqdn="node1.example",pool="tank",role="hypervisor",vps_id="101"}'
+        values: '1+0x44 stale _x15'
+      - series: 'nodectld_vps_autostart_unsatisfied{alias="node1",fqdn="node1.example",pool="tank",role="hypervisor",vps_id="102"}'
+        values: '_x45 1+0x15'
+      - series: 'nodectld_vps_autostart_unsatisfied{alias="node1",fqdn="node1.example",pool="fast",role="hypervisor",vps_id="103"}'
+        values: '1+0x60'
+      - series: 'nodectld_vps_autostart_unsatisfied_reason{alias="node1",fqdn="node1.example",pool="tank",reason="missing",role="hypervisor",vps_id="101"}'
+        values: '1+0x34 stale _x25'
+      - series: 'nodectld_vps_autostart_unsatisfied_reason{alias="node1",fqdn="node1.example",pool="tank",reason="not_running",role="hypervisor",vps_id="101"}'
+        values: '_x35 1+0x25'
+    alert_rule_test:
+      - eval_time: 39m
+        alertname: VpsAutostartNotRunning
+        exp_alerts: []
+      - eval_time: 41m
+        alertname: VpsAutostartNotRunning
+        exp_alerts:
+          - exp_labels:
+              alias: node1
+              fqdn: node1.example
+              frequency: 10m
+              pool: tank
+              role: hypervisor
+              severity: critical
+              vps_id: 101
+            exp_annotations:
+              summary: VPS 101 should be running on node1.example in pool tank
+              description: |
+                vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
+                find it in the running state.
+          - exp_labels:
+              alias: node1
+              fqdn: node1.example
+              frequency: 10m
+              pool: fast
+              role: hypervisor
+              severity: critical
+              vps_id: 103
+            exp_annotations:
+              summary: VPS 103 should be running on node1.example in pool fast
+              description: |
+                vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
+                find it in the running state.
+      - eval_time: 46m
+        alertname: VpsAutostartNotRunning
+        exp_alerts:
+          - exp_labels:
+              alias: node1
+              fqdn: node1.example
+              frequency: 10m
+              pool: fast
+              role: hypervisor
+              severity: critical
+              vps_id: 103
+            exp_annotations:
+              summary: VPS 103 should be running on node1.example in pool fast
+              description: |
+                vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
+                find it in the running state.
+      - eval_time: 54m
+        alertname: VpsAutostartNotRunning
+        exp_alerts:
+          - exp_labels:
+              alias: node1
+              fqdn: node1.example
+              frequency: 10m
+              pool: fast
+              role: hypervisor
+              severity: critical
+              vps_id: 103
+            exp_annotations:
+              summary: VPS 103 should be running on node1.example in pool fast
+              description: |
+                vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
+                find it in the running state.
+      - eval_time: 55m
+        alertname: VpsAutostartNotRunning
+        exp_alerts:
+          - exp_labels:
+              alias: node1
+              fqdn: node1.example
+              frequency: 10m
+              pool: tank
+              role: hypervisor
+              severity: critical
+              vps_id: 102
+            exp_annotations:
+              summary: VPS 102 should be running on node1.example in pool tank
+              description: |
+                vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
+                find it in the running state.
+          - exp_labels:
+              alias: node1
+              fqdn: node1.example
+              frequency: 10m
+              pool: fast
+              role: hypervisor
+              severity: critical
+              vps_id: 103
+            exp_annotations:
+              summary: VPS 103 should be running on node1.example in pool fast
+              description: |
+                vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
+                find it in the running state.
+
+  - name: Failed and stale checks alert only after boot
+    interval: 1m
+    input_series:
+      - series: 'node_boot_time_seconds{alias="failed",fqdn="failed.example",role="hypervisor"}'
+        values: '0+0x45'
+      - series: 'nodectld_vps_autostart_check_success{alias="failed",fqdn="failed.example",role="hypervisor"}'
+        values: '0+0x45'
+      - series: 'nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="failed",fqdn="failed.example",role="hypervisor"}'
+        values: '0+60x45'
+      - series: 'nodectld_vps_autostart_unsatisfied{alias="failed",fqdn="failed.example",pool="tank",role="hypervisor",vps_id="201"}'
+        values: '1+0x45'
+      - series: 'node_boot_time_seconds{alias="stale",fqdn="stale.example",role="hypervisor"}'
+        values: '0+0x45'
+      - series: 'nodectld_vps_autostart_check_success{alias="stale",fqdn="stale.example",role="hypervisor"}'
+        values: '1+0x45'
+      - series: 'nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="stale",fqdn="stale.example",role="hypervisor"}'
+        values: '0+0x45'
+      - series: 'nodectld_vps_autostart_unsatisfied{alias="stale",fqdn="stale.example",pool="tank",role="hypervisor",vps_id="202"}'
+        values: '1+0x45'
+      - series: 'node_boot_time_seconds{alias="old",fqdn="old.example",role="hypervisor"}'
+        values: '0+0x45'
+      - series: 'nodectld_vps_autostart_check_success{alias="no-boot",fqdn="no-boot.example",role="hypervisor"}'
+        values: '0+0x45'
+      - series: 'nodectld_vps_autostart_unsatisfied{alias="no-boot",fqdn="no-boot.example",pool="tank",role="hypervisor",vps_id="104"}'
+        values: '1+0x45'
+    alert_rule_test:
+      - eval_time: 29m
+        alertname: VpsAutostartCheckFailed
+        exp_alerts: []
+      - eval_time: 39m
+        alertname: VpsAutostartCheckFailed
+        exp_alerts: []
+      - eval_time: 41m
+        alertname: VpsAutostartCheckFailed
+        exp_alerts:
+          - exp_labels:
+              alias: failed
+              fqdn: failed.example
+              frequency: 10m
+              role: hypervisor
+              severity: warning
+            exp_annotations:
+              summary: VPS auto-start status check is failing on failed.example
+              description: |
+                nodectld has not completed a recent comparison of the vpsAdmin
+                auto-start settings with the containers in osctld.
+          - exp_labels:
+              alias: stale
+              fqdn: stale.example
+              frequency: 10m
+              role: hypervisor
+              severity: warning
+            exp_annotations:
+              summary: VPS auto-start status check is failing on stale.example
+              description: |
+                nodectld has not completed a recent comparison of the vpsAdmin
+                auto-start settings with the containers in osctld.
+      - eval_time: 41m
+        alertname: VpsAutostartNotRunning
+        exp_alerts: []
