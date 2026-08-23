@@ -699,6 +699,132 @@
       }
 
       {
+        alert = "NodeWarnProcessCount";
+        expr = ''node_processes_pids{job="nodes"} > 50000'';
+        for = "5m";
+        labels = {
+          alertclass = "processes_total";
+          severity = "warning";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "Node has too many processes (instance {{ $labels.instance }})";
+          description = ''
+            The total host process count is too high. Use osctl_container_processes_pids
+            or osctl ct ls -o nproc to identify containers with high task counts.
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeCritProcessCount";
+        expr = ''node_processes_pids{job="nodes"} > 60000'';
+        for = "2m";
+        labels = {
+          alertclass = "processes_total";
+          severity = "critical";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "Node has too many processes (instance {{ $labels.instance }})";
+          description = ''
+            The total host process count is too high. Use osctl_container_processes_pids
+            or osctl ct ls -o nproc to identify containers with high task counts.
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeFatalProcessCount";
+        expr = ''node_processes_pids{job="nodes"} > 100000'';
+        for = "1m";
+        labels = {
+          alertclass = "processes_total";
+          severity = "fatal";
+          frequency = "5m";
+        };
+        annotations = {
+          summary = "Node has too many processes (instance {{ $labels.instance }})";
+          description = ''
+            The total host process count is too high. Use osctl_container_processes_pids
+            or osctl ct ls -o nproc to identify containers with high task counts.
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeWarnThreadCount";
+        expr = ''node_processes_threads{job="nodes"} > 150000'';
+        for = "5m";
+        labels = {
+          alertclass = "processes_threads";
+          severity = "warning";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "Node has too many threads (instance {{ $labels.instance }})";
+          description = ''
+            The total host thread count is too high. Use osctl_container_processes_pids
+            or osctl ct ls -o nproc to identify containers with high task counts.
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeCritThreadCount";
+        expr = ''node_processes_threads{job="nodes"} > 200000'';
+        for = "2m";
+        labels = {
+          alertclass = "processes_threads";
+          severity = "critical";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "Node has too many threads (instance {{ $labels.instance }})";
+          description = ''
+            The total host thread count is too high. Use osctl_container_processes_pids
+            or osctl ct ls -o nproc to identify containers with high task counts.
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "NodeFatalThreadCount";
+        expr = ''node_processes_threads{job="nodes"} > 300000'';
+        for = "1m";
+        labels = {
+          alertclass = "processes_threads";
+          severity = "fatal";
+          frequency = "5m";
+        };
+        annotations = {
+          summary = "Node has too many threads (instance {{ $labels.instance }})";
+          description = ''
+            The total host thread count is too high. Use osctl_container_processes_pids
+            or osctl ct ls -o nproc to identify containers with high task counts.
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
         alert = "NodeCritUninterruptibleProcesses";
         expr = ''node_processes_state{job="nodes",state="D"} > 1000 and on(instance) time() - node_boot_time_seconds > 1800'';
         for = "1m";

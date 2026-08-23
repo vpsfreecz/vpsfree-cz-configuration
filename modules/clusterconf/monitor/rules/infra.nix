@@ -73,6 +73,46 @@
           '';
         };
       }
+
+      {
+        alert = "InfraWarnProcessCount";
+        expr = ''node_processes_pids{job="infra"} > 2000'';
+        for = "10m";
+        labels = {
+          alertclass = "processes_total";
+          severity = "warning";
+          frequency = "1h";
+        };
+        annotations = {
+          summary = "Infrastructure system has too many processes (instance {{ $labels.instance }})";
+          description = ''
+            The total process count is too high.
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "InfraCritProcessCount";
+        expr = ''node_processes_pids{job="infra"} > 4000'';
+        for = "5m";
+        labels = {
+          alertclass = "processes_total";
+          severity = "critical";
+          frequency = "10m";
+        };
+        annotations = {
+          summary = "Infrastructure system has too many processes (instance {{ $labels.instance }})";
+          description = ''
+            The total process count is too high.
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
     ];
   }
 ]

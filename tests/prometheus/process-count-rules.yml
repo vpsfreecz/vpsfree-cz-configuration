@@ -1,0 +1,327 @@
+rule_files:
+  - @ruleFile@
+
+evaluation_interval: 20s
+
+tests:
+  - name: Node process warning observes its threshold and hold time
+    interval: 20s
+    input_series:
+      - series: 'node_processes_pids{alias="node-warn",fqdn="node-warn.example",instance="node-warn:9100",job="nodes"}'
+        values: '50001+0x15'
+    alert_rule_test:
+      - eval_time: 4m40s
+        alertname: NodeWarnProcessCount
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: NodeWarnProcessCount
+        exp_alerts:
+          - exp_labels:
+              alertclass: processes_total
+              alias: node-warn
+              fqdn: node-warn.example
+              frequency: 15m
+              instance: node-warn:9100
+              job: nodes
+              severity: warning
+            exp_annotations:
+              summary: Node has too many processes (instance node-warn:9100)
+              description: |
+                The total host process count is too high. Use osctl_container_processes_pids
+                or osctl ct ls -o nproc to identify containers with high task counts.
+
+                VALUE = 50001
+                LABELS: map[__name__:node_processes_pids alias:node-warn fqdn:node-warn.example instance:node-warn:9100 job:nodes]
+
+  - name: Node process critical observes its threshold and hold time
+    interval: 20s
+    input_series:
+      - series: 'node_processes_pids{alias="node-crit",fqdn="node-crit.example",instance="node-crit:9100",job="nodes"}'
+        values: '60001+0x6'
+    alert_rule_test:
+      - eval_time: 1m40s
+        alertname: NodeCritProcessCount
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: NodeCritProcessCount
+        exp_alerts:
+          - exp_labels:
+              alertclass: processes_total
+              alias: node-crit
+              fqdn: node-crit.example
+              frequency: 10m
+              instance: node-crit:9100
+              job: nodes
+              severity: critical
+            exp_annotations:
+              summary: Node has too many processes (instance node-crit:9100)
+              description: |
+                The total host process count is too high. Use osctl_container_processes_pids
+                or osctl ct ls -o nproc to identify containers with high task counts.
+
+                VALUE = 60001
+                LABELS: map[__name__:node_processes_pids alias:node-crit fqdn:node-crit.example instance:node-crit:9100 job:nodes]
+
+  - name: Node process fatal observes its threshold and hold time
+    interval: 20s
+    input_series:
+      - series: 'node_processes_pids{alias="node-fatal",fqdn="node-fatal.example",instance="node-fatal:9100",job="nodes"}'
+        values: '100001+0x3'
+    alert_rule_test:
+      - eval_time: 40s
+        alertname: NodeFatalProcessCount
+        exp_alerts: []
+      - eval_time: 1m
+        alertname: NodeFatalProcessCount
+        exp_alerts:
+          - exp_labels:
+              alertclass: processes_total
+              alias: node-fatal
+              fqdn: node-fatal.example
+              frequency: 5m
+              instance: node-fatal:9100
+              job: nodes
+              severity: fatal
+            exp_annotations:
+              summary: Node has too many processes (instance node-fatal:9100)
+              description: |
+                The total host process count is too high. Use osctl_container_processes_pids
+                or osctl ct ls -o nproc to identify containers with high task counts.
+
+                VALUE = 100001
+                LABELS: map[__name__:node_processes_pids alias:node-fatal fqdn:node-fatal.example instance:node-fatal:9100 job:nodes]
+
+  - name: Node thread warning observes its threshold and hold time
+    interval: 20s
+    input_series:
+      - series: 'node_processes_threads{alias="thread-warn",fqdn="thread-warn.example",instance="thread-warn:9100",job="nodes"}'
+        values: '150001+0x15'
+    alert_rule_test:
+      - eval_time: 4m40s
+        alertname: NodeWarnThreadCount
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: NodeWarnThreadCount
+        exp_alerts:
+          - exp_labels:
+              alertclass: processes_threads
+              alias: thread-warn
+              fqdn: thread-warn.example
+              frequency: 15m
+              instance: thread-warn:9100
+              job: nodes
+              severity: warning
+            exp_annotations:
+              summary: Node has too many threads (instance thread-warn:9100)
+              description: |
+                The total host thread count is too high. Use osctl_container_processes_pids
+                or osctl ct ls -o nproc to identify containers with high task counts.
+
+                VALUE = 150001
+                LABELS: map[__name__:node_processes_threads alias:thread-warn fqdn:thread-warn.example instance:thread-warn:9100 job:nodes]
+
+  - name: Node thread critical observes its threshold and hold time
+    interval: 20s
+    input_series:
+      - series: 'node_processes_threads{alias="thread-crit",fqdn="thread-crit.example",instance="thread-crit:9100",job="nodes"}'
+        values: '200001+0x6'
+    alert_rule_test:
+      - eval_time: 1m40s
+        alertname: NodeCritThreadCount
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: NodeCritThreadCount
+        exp_alerts:
+          - exp_labels:
+              alertclass: processes_threads
+              alias: thread-crit
+              fqdn: thread-crit.example
+              frequency: 10m
+              instance: thread-crit:9100
+              job: nodes
+              severity: critical
+            exp_annotations:
+              summary: Node has too many threads (instance thread-crit:9100)
+              description: |
+                The total host thread count is too high. Use osctl_container_processes_pids
+                or osctl ct ls -o nproc to identify containers with high task counts.
+
+                VALUE = 200001
+                LABELS: map[__name__:node_processes_threads alias:thread-crit fqdn:thread-crit.example instance:thread-crit:9100 job:nodes]
+
+  - name: Node thread fatal observes its threshold and hold time
+    interval: 20s
+    input_series:
+      - series: 'node_processes_threads{alias="thread-fatal",fqdn="thread-fatal.example",instance="thread-fatal:9100",job="nodes"}'
+        values: '300001+0x3'
+    alert_rule_test:
+      - eval_time: 40s
+        alertname: NodeFatalThreadCount
+        exp_alerts: []
+      - eval_time: 1m
+        alertname: NodeFatalThreadCount
+        exp_alerts:
+          - exp_labels:
+              alertclass: processes_threads
+              alias: thread-fatal
+              fqdn: thread-fatal.example
+              frequency: 5m
+              instance: thread-fatal:9100
+              job: nodes
+              severity: fatal
+            exp_annotations:
+              summary: Node has too many threads (instance thread-fatal:9100)
+              description: |
+                The total host thread count is too high. Use osctl_container_processes_pids
+                or osctl ct ls -o nproc to identify containers with high task counts.
+
+                VALUE = 300001
+                LABELS: map[__name__:node_processes_threads alias:thread-fatal fqdn:thread-fatal.example instance:thread-fatal:9100 job:nodes]
+
+  - name: Infra process warning observes its threshold and hold time
+    interval: 20s
+    input_series:
+      - series: 'node_processes_pids{alias="infra-warn",fqdn="infra-warn.example",instance="infra-warn:9100",job="infra"}'
+        values: '2001+0x30'
+    alert_rule_test:
+      - eval_time: 9m40s
+        alertname: InfraWarnProcessCount
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: InfraWarnProcessCount
+        exp_alerts:
+          - exp_labels:
+              alertclass: processes_total
+              alias: infra-warn
+              fqdn: infra-warn.example
+              frequency: 1h
+              instance: infra-warn:9100
+              job: infra
+              severity: warning
+            exp_annotations:
+              summary: Infrastructure system has too many processes (instance infra-warn:9100)
+              description: |
+                The total process count is too high.
+
+                VALUE = 2001
+                LABELS: map[__name__:node_processes_pids alias:infra-warn fqdn:infra-warn.example instance:infra-warn:9100 job:infra]
+
+  - name: Infra process critical observes its threshold and hold time
+    interval: 20s
+    input_series:
+      - series: 'node_processes_pids{alias="infra-crit",fqdn="infra-crit.example",instance="infra-crit:9100",job="infra"}'
+        values: '4001+0x15'
+    alert_rule_test:
+      - eval_time: 4m40s
+        alertname: InfraCritProcessCount
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: InfraCritProcessCount
+        exp_alerts:
+          - exp_labels:
+              alertclass: processes_total
+              alias: infra-crit
+              fqdn: infra-crit.example
+              frequency: 10m
+              instance: infra-crit:9100
+              job: infra
+              severity: critical
+            exp_annotations:
+              summary: Infrastructure system has too many processes (instance infra-crit:9100)
+              description: |
+                The total process count is too high.
+
+                VALUE = 4001
+                LABELS: map[__name__:node_processes_pids alias:infra-crit fqdn:infra-crit.example instance:infra-crit:9100 job:infra]
+
+  - name: Exact thresholds and other jobs do not alert
+    interval: 20s
+    input_series:
+      - series: 'node_processes_pids{instance="node-equal:9100",job="nodes"}'
+        values: '50000+0x36'
+      - series: 'node_processes_threads{instance="thread-equal:9100",job="nodes"}'
+        values: '150000+0x36'
+      - series: 'node_processes_pids{instance="infra-equal:9100",job="infra"}'
+        values: '2000+0x36'
+      - series: 'node_processes_pids{instance="monitor:9100",job="mon"}'
+        values: '1000000+0x36'
+      - series: 'node_processes_threads{instance="monitor:9100",job="mon"}'
+        values: '1000000+0x36'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: NodeWarnProcessCount
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: NodeCritProcessCount
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: NodeFatalProcessCount
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: NodeWarnThreadCount
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: NodeCritThreadCount
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: NodeFatalThreadCount
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: InfraWarnProcessCount
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: InfraCritProcessCount
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: InfraFatalProcessCount
+        exp_alerts: []
+
+  - name: Exact node process critical threshold does not alert
+    interval: 20s
+    input_series:
+      - series: 'node_processes_pids{instance="node-crit-equal:9100",job="nodes"}'
+        values: '60000+0x6'
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: NodeCritProcessCount
+        exp_alerts: []
+
+  - name: Exact node process fatal threshold does not alert
+    interval: 20s
+    input_series:
+      - series: 'node_processes_pids{instance="node-fatal-equal:9100",job="nodes"}'
+        values: '100000+0x3'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: NodeFatalProcessCount
+        exp_alerts: []
+
+  - name: Exact node thread critical threshold does not alert
+    interval: 20s
+    input_series:
+      - series: 'node_processes_threads{instance="thread-crit-equal:9100",job="nodes"}'
+        values: '200000+0x6'
+    alert_rule_test:
+      - eval_time: 2m
+        alertname: NodeCritThreadCount
+        exp_alerts: []
+
+  - name: Exact node thread fatal threshold does not alert
+    interval: 20s
+    input_series:
+      - series: 'node_processes_threads{instance="thread-fatal-equal:9100",job="nodes"}'
+        values: '300000+0x3'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: NodeFatalThreadCount
+        exp_alerts: []
+
+  - name: Exact infra process critical threshold does not alert
+    interval: 20s
+    input_series:
+      - series: 'node_processes_pids{instance="infra-crit-equal:9100",job="infra"}'
+        values: '4000+0x15'
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: InfraCritProcessCount
+        exp_alerts: []

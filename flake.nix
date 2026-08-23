@@ -161,10 +161,13 @@
           bundler-audit
         ];
       };
-      checks.${system}.vps-autostart-prometheus-rules =
-        import ./tests/prometheus/vps-autostart-rules.nix
-          {
-            pkgs = devPkgs;
-          };
+      checks.${system} = {
+        vps-autostart-prometheus-rules = import ./tests/prometheus/vps-autostart-rules.nix {
+          pkgs = devPkgs;
+        };
+        process-count-prometheus-rules = import ./tests/prometheus/process-count-rules.nix {
+          pkgs = devPkgs;
+        };
+      };
     };
 }
