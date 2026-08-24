@@ -45,7 +45,12 @@
 
       {
         alert = "HypervisorEmpty";
-        expr = ''osctl_pool_containers_count{role="hypervisor",state="running"} == 0'';
+        expr = ''
+          (
+            osctl_pool_containers_runtime_count{role="hypervisor",state="running"}
+            or osctl_pool_containers_count{role="hypervisor",state="running"}
+          ) == 0
+        '';
         labels = {
           severity = "none";
         };
@@ -59,7 +64,12 @@
 
       {
         alert = "HypervisorNearlyEmpty";
-        expr = ''osctl_pool_containers_count{role="hypervisor",state="running"} <= 10'';
+        expr = ''
+          (
+            osctl_pool_containers_runtime_count{role="hypervisor",state="running"}
+            or osctl_pool_containers_count{role="hypervisor",state="running"}
+          ) <= 10
+        '';
         labels = {
           severity = "none";
         };
@@ -1170,7 +1180,10 @@
 
       {
         alert = "VpsStartingTooLong";
-        expr = ''osctl_container_state_starting{job="nodes"} == 1'';
+        expr = ''
+          osctl_container_runtime_state{job="nodes",state="starting"} == 1
+          or osctl_container_state_starting{job="nodes"} == 1
+        '';
         for = "15m";
         labels = {
           alertclass = "vpsstate";
@@ -1190,7 +1203,10 @@
 
       {
         alert = "VpsAborting";
-        expr = ''osctl_container_state_aborting{job="nodes"} == 1'';
+        expr = ''
+          osctl_container_runtime_state{job="nodes",state="aborting"} == 1
+          or osctl_container_state_aborting{job="nodes"} == 1
+        '';
         for = "15m";
         labels = {
           alertclass = "vpsstate";
@@ -1209,8 +1225,11 @@
       }
 
       {
-        alert = "VpsError";
-        expr = ''osctl_container_state_aborting{job="nodes"} == 1'';
+        alert = "VpsConfigError";
+        expr = ''
+          osctl_container_config_state{job="nodes",state="error"} == 1
+          or osctl_container_state_error{job="nodes"} == 1
+        '';
         for = "5m";
         labels = {
           alertclass = "vpsstate";
@@ -1218,9 +1237,37 @@
           frequency = "15m";
         };
         annotations = {
-          summary = "VPS is in an error state (instance {{ $labels.instance }})";
+          summary = "VPS configuration is invalid (instance {{ $labels.instance }})";
           description = ''
-            VPS is in an error state
+            osctld could not load or apply the VPS configuration
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "VpsRuntimeStateUnknown";
+        expr = ''
+          (
+            osctl_container_runtime_state{job="nodes",state="unknown"} == 1
+          )
+          unless on(instance, pool, id)
+          (
+            osctl_container_config_state{job="nodes",state="staged"} == 1
+          )
+        '';
+        for = "15m";
+        labels = {
+          alertclass = "vpsstate";
+          severity = "critical";
+          frequency = "15m";
+        };
+        annotations = {
+          summary = "VPS runtime state is unknown (instance {{ $labels.instance }})";
+          description = ''
+            osctld could not determine the VPS runtime state
 
             VALUE = {{ $value }}
             LABELS: {{ $labels }}
@@ -1230,7 +1277,11 @@
 
       {
         alert = "VpsFrozen";
-        expr = ''osctl_container_state_freezing{job="nodes"} == 1 or on(instance) osctl_container_state_frozen == 1'';
+        expr = ''
+          osctl_container_runtime_state{job="nodes",state=~"freezing|frozen"} == 1
+          or osctl_container_state_freezing{job="nodes"} == 1
+          or osctl_container_state_frozen{job="nodes"} == 1
+        '';
         for = "10m";
         labels = {
           alertclass = "vpsstate";

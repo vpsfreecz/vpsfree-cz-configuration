@@ -162,6 +162,9 @@
         ];
       };
       checks.${system} = {
+        container-state-prometheus-rules = import ./tests/prometheus/container-state-rules.nix {
+          pkgs = devPkgs;
+        };
         vps-autostart-prometheus-rules = import ./tests/prometheus/vps-autostart-rules.nix {
           pkgs = devPkgs;
         };

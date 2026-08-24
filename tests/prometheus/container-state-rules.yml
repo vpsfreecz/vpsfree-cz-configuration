@@ -1,0 +1,342 @@
+rule_files:
+  - @ruleFile@
+
+evaluation_interval: 20s
+
+tests:
+  - name: New configuration and runtime states stay independent
+    interval: 20s
+    input_series:
+      - series: 'osctl_container_config_state{id="101",instance="node1",job="nodes",pool="tank",state="error"}'
+        values: '1+0x20'
+      - series: 'osctl_container_runtime_state{id="101",instance="node1",job="nodes",pool="tank",state="running"}'
+        values: '1+0x20'
+    alert_rule_test:
+      - eval_time: 4m40s
+        alertname: VpsConfigError
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: VpsConfigError
+        exp_alerts:
+          - exp_labels:
+              alertclass: vpsstate
+              frequency: 15m
+              id: 101
+              instance: node1
+              job: nodes
+              pool: tank
+              severity: critical
+              state: error
+            exp_annotations:
+              summary: VPS configuration is invalid (instance node1)
+              description: |
+                osctld could not load or apply the VPS configuration
+
+                VALUE = 1
+                LABELS: map[__name__:osctl_container_config_state id:101 instance:node1 job:nodes pool:tank state:error]
+      - eval_time: 6m
+        alertname: VpsRuntimeStateUnknown
+        exp_alerts: []
+
+  - name: Runtime unknown waits before alerting
+    interval: 20s
+    input_series:
+      - series: 'osctl_container_runtime_state{id="102",instance="node2",job="nodes",pool="tank",state="unknown"}'
+        values: '1+0x50'
+    alert_rule_test:
+      - eval_time: 14m40s
+        alertname: VpsRuntimeStateUnknown
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: VpsRuntimeStateUnknown
+        exp_alerts:
+          - exp_labels:
+              alertclass: vpsstate
+              frequency: 15m
+              id: 102
+              instance: node2
+              job: nodes
+              pool: tank
+              severity: critical
+              state: unknown
+            exp_annotations:
+              summary: VPS runtime state is unknown (instance node2)
+              description: |
+                osctld could not determine the VPS runtime state
+
+                VALUE = 1
+                LABELS: map[__name__:osctl_container_runtime_state id:102 instance:node2 job:nodes pool:tank state:unknown]
+
+  - name: Staged containers do not have an observable runtime yet
+    interval: 20s
+    input_series:
+      - series: 'osctl_container_config_state{id="103",instance="node3",job="nodes",pool="tank",state="staged"}'
+        values: '1+0x60'
+      - series: 'osctl_container_runtime_state{id="103",instance="node3",job="nodes",pool="tank",state="unknown"}'
+        values: '1+0x60'
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: VpsRuntimeStateUnknown
+        exp_alerts: []
+
+  - name: New and legacy starting metrics both alert
+    interval: 20s
+    input_series:
+      - series: 'osctl_container_runtime_state{id="201",instance="new",job="nodes",pool="tank",state="starting"}'
+        values: '1+0x50'
+      - series: 'osctl_container_state_starting{id="202",instance="legacy",job="nodes",pool="tank"}'
+        values: '1+0x50'
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VpsStartingTooLong
+        exp_alerts:
+          - exp_labels:
+              alertclass: vpsstate
+              frequency: 15m
+              id: 201
+              instance: new
+              job: nodes
+              pool: tank
+              severity: critical
+              state: starting
+            exp_annotations:
+              summary: VPS is taking too long to start (instance new)
+              description: |
+                VPS is taking too long to start
+
+                VALUE = 1
+                LABELS: map[__name__:osctl_container_runtime_state id:201 instance:new job:nodes pool:tank state:starting]
+          - exp_labels:
+              alertclass: vpsstate
+              frequency: 15m
+              id: 202
+              instance: legacy
+              job: nodes
+              pool: tank
+              severity: critical
+            exp_annotations:
+              summary: VPS is taking too long to start (instance legacy)
+              description: |
+                VPS is taking too long to start
+
+                VALUE = 1
+                LABELS: map[__name__:osctl_container_state_starting id:202 instance:legacy job:nodes pool:tank]
+
+  - name: Empty and nearly empty hypervisors use runtime counts
+    interval: 20s
+    input_series:
+      - series: 'osctl_pool_containers_runtime_count{instance="empty",role="hypervisor",state="running"}'
+        values: '0'
+      - series: 'osctl_pool_containers_runtime_count{instance="nearly-empty",role="hypervisor",state="running"}'
+        values: '10'
+      - series: 'osctl_pool_containers_count{instance="legacy-empty",role="hypervisor",state="running"}'
+        values: '0'
+      - series: 'osctl_pool_containers_count{instance="legacy-nearly-empty",role="hypervisor",state="running"}'
+        values: '10'
+    alert_rule_test:
+      - eval_time: 0m
+        alertname: HypervisorEmpty
+        exp_alerts:
+          - exp_labels:
+              instance: empty
+              role: hypervisor
+              severity: none
+              state: running
+            exp_annotations:
+              description: |
+                This alert fires when a node is booting. It can be used to inhibit
+                other alerts. It should be blackholed by Alertmanager.
+          - exp_labels:
+              instance: legacy-empty
+              role: hypervisor
+              severity: none
+              state: running
+            exp_annotations:
+              description: |
+                This alert fires when a node is booting. It can be used to inhibit
+                other alerts. It should be blackholed by Alertmanager.
+      - eval_time: 0m
+        alertname: HypervisorNearlyEmpty
+        exp_alerts:
+          - exp_labels:
+              instance: empty
+              role: hypervisor
+              severity: none
+              state: running
+            exp_annotations:
+              description: |
+                This alert fires when a node is booting. It can be used to inhibit
+                other alerts. It should be blackholed by Alertmanager.
+          - exp_labels:
+              instance: nearly-empty
+              role: hypervisor
+              severity: none
+              state: running
+            exp_annotations:
+              description: |
+                This alert fires when a node is booting. It can be used to inhibit
+                other alerts. It should be blackholed by Alertmanager.
+          - exp_labels:
+              instance: legacy-empty
+              role: hypervisor
+              severity: none
+              state: running
+            exp_annotations:
+              description: |
+                This alert fires when a node is booting. It can be used to inhibit
+                other alerts. It should be blackholed by Alertmanager.
+          - exp_labels:
+              instance: legacy-nearly-empty
+              role: hypervisor
+              severity: none
+              state: running
+            exp_annotations:
+              description: |
+                This alert fires when a node is booting. It can be used to inhibit
+                other alerts. It should be blackholed by Alertmanager.
+
+  - name: New and legacy aborting metrics both alert
+    interval: 20s
+    input_series:
+      - series: 'osctl_container_runtime_state{id="301",instance="new",job="nodes",pool="tank",state="aborting"}'
+        values: '1+0x50'
+      - series: 'osctl_container_state_aborting{id="302",instance="legacy",job="nodes",pool="tank"}'
+        values: '1+0x50'
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VpsAborting
+        exp_alerts:
+          - exp_labels:
+              alertclass: vpsstate
+              frequency: 15m
+              id: 301
+              instance: new
+              job: nodes
+              pool: tank
+              severity: critical
+              state: aborting
+            exp_annotations:
+              summary: VPS is taking too long to abort (instance new)
+              description: |
+                VPS is taking too long to abort
+
+                VALUE = 1
+                LABELS: map[__name__:osctl_container_runtime_state id:301 instance:new job:nodes pool:tank state:aborting]
+          - exp_labels:
+              alertclass: vpsstate
+              frequency: 15m
+              id: 302
+              instance: legacy
+              job: nodes
+              pool: tank
+              severity: critical
+            exp_annotations:
+              summary: VPS is taking too long to abort (instance legacy)
+              description: |
+                VPS is taking too long to abort
+
+                VALUE = 1
+                LABELS: map[__name__:osctl_container_state_aborting id:302 instance:legacy job:nodes pool:tank]
+
+  - name: New and legacy frozen metrics both alert
+    interval: 20s
+    input_series:
+      - series: 'osctl_container_runtime_state{id="401",instance="new",job="nodes",pool="tank",state="frozen"}'
+        values: '1+0x35'
+      - series: 'osctl_container_state_freezing{id="402",instance="legacy",job="nodes",pool="tank"}'
+        values: '1+0x35'
+      - series: 'osctl_container_runtime_state{id="403",instance="new-freezing",job="nodes",pool="tank",state="freezing"}'
+        values: '1+0x35'
+      - series: 'osctl_container_state_frozen{id="404",instance="legacy-frozen",job="nodes",pool="tank"}'
+        values: '1+0x35'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: VpsFrozen
+        exp_alerts:
+          - exp_labels:
+              alertclass: vpsstate
+              frequency: 15m
+              id: 401
+              instance: new
+              job: nodes
+              pool: tank
+              severity: critical
+              state: frozen
+            exp_annotations:
+              summary: VPS is in an error state (instance new)
+              description: |
+                VPS is in an error state
+
+                VALUE = 1
+                LABELS: map[__name__:osctl_container_runtime_state id:401 instance:new job:nodes pool:tank state:frozen]
+          - exp_labels:
+              alertclass: vpsstate
+              frequency: 15m
+              id: 402
+              instance: legacy
+              job: nodes
+              pool: tank
+              severity: critical
+            exp_annotations:
+              summary: VPS is in an error state (instance legacy)
+              description: |
+                VPS is in an error state
+
+                VALUE = 1
+                LABELS: map[__name__:osctl_container_state_freezing id:402 instance:legacy job:nodes pool:tank]
+          - exp_labels:
+              alertclass: vpsstate
+              frequency: 15m
+              id: 403
+              instance: new-freezing
+              job: nodes
+              pool: tank
+              severity: critical
+              state: freezing
+            exp_annotations:
+              summary: VPS is in an error state (instance new-freezing)
+              description: |
+                VPS is in an error state
+
+                VALUE = 1
+                LABELS: map[__name__:osctl_container_runtime_state id:403 instance:new-freezing job:nodes pool:tank state:freezing]
+          - exp_labels:
+              alertclass: vpsstate
+              frequency: 15m
+              id: 404
+              instance: legacy-frozen
+              job: nodes
+              pool: tank
+              severity: critical
+            exp_annotations:
+              summary: VPS is in an error state (instance legacy-frozen)
+              description: |
+                VPS is in an error state
+
+                VALUE = 1
+                LABELS: map[__name__:osctl_container_state_frozen id:404 instance:legacy-frozen job:nodes pool:tank]
+
+  - name: Legacy configuration error metric still alerts
+    interval: 20s
+    input_series:
+      - series: 'osctl_container_state_error{id="501",instance="legacy",job="nodes",pool="tank"}'
+        values: '1+0x20'
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: VpsConfigError
+        exp_alerts:
+          - exp_labels:
+              alertclass: vpsstate
+              frequency: 15m
+              id: 501
+              instance: legacy
+              job: nodes
+              pool: tank
+              severity: critical
+            exp_annotations:
+              summary: VPS configuration is invalid (instance legacy)
+              description: |
+                osctld could not load or apply the VPS configuration
+
+                VALUE = 1
+                LABELS: map[__name__:osctl_container_state_error id:501 instance:legacy job:nodes pool:tank]
