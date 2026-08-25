@@ -373,6 +373,10 @@ in
             makedumpfile --dump-dmesg /proc/vmcore "$target/dmesg"
           ''}
 
+          echo "Syncing initial crashdump files"
+          sync || fail "Unable to sync initial crashdump files"
+          echo "Crashdump checkpoint: initial files synced"
+
           ${optionalString cfg.inspect.enable ''
             echo "Collecting crash inspection data"
             mkdir -p "$target/inspect"
@@ -383,6 +387,10 @@ in
               echo "$rc" > "$target/inspect.exit-status"
               echo "crash-collect failed with $rc"
             fi
+
+            echo "Syncing inspection status"
+            sync || fail "Unable to sync inspection status"
+            echo "Crashdump checkpoint: inspection status synced"
           ''}
 
           ${optionalString cfg.dumpMemory ''
