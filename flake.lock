@@ -1032,11 +1032,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787587708,
-        "narHash": "sha256-Mp1V8GvHs8SAbJBa4isS8v1PRdR+RTjKeLNHKbrYb7g=",
+        "lastModified": 1787661377,
+        "narHash": "sha256-StY9R8mOPn2mc6p01XtUx1j/ufMcLNTFRJ7KWrCQHFU=",
         "owner": "vpsfreecz",
         "repo": "vpsadmin",
-        "rev": "661896d007313dedc91066f55c72410ef893d10f",
+        "rev": "8c80ba2a00ca49185e5a42511421467b05511a9d",
         "type": "github"
       },
       "original": {
