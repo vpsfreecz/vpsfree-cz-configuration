@@ -1197,21 +1197,16 @@
     },
     "vpsfreeNotificationTemplates": {
       "inputs": {
-        "nixpkgs": [
-          "vpsfreeNotificationTemplates",
-          "vpsadmin",
-          "nixpkgs"
-        ],
         "vpsadmin": [
           "vpsadminServices"
         ]
       },
       "locked": {
-        "lastModified": 1784653437,
-        "narHash": "sha256-Y0YnwzhZoocvGDaYZ5AME/mH8TTecUY5lM5O2qX1ZiY=",
+        "lastModified": 1788257077,
+        "narHash": "sha256-oAwdbQPXV8ZZFKahyHsCgczc6JFPiP0yxn6LbgB0ROI=",
         "ref": "refs/heads/master",
-        "rev": "04921d75ab5321962b207bb380deff90906bd662",
-        "revCount": 239,
+        "rev": "c38e56c945d1fb0df41a26b6c9127368eb592373",
+        "revCount": 240,
         "type": "git",
         "url": "ssh://git@github.com/vpsfreecz/vpsfree-notification-templates.git"
       },
