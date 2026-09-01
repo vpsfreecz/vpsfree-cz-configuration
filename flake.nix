@@ -42,6 +42,11 @@
       inputs.nixpkgs.follows = "nixpkgsStable";
     };
 
+    vpsfreeNotificationTemplates = {
+      url = "git+ssh://git@github.com/vpsfreecz/vpsfree-notification-templates.git";
+      inputs.vpsadmin.follows = "vpsadminServices";
+    };
+
     nixpkgsStaging.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgsProduction.url = "github:NixOS/nixpkgs/nixos-26.05";
 
@@ -136,6 +141,10 @@
 
         vpsf-status = {
           vpsf-status = "vpsfStatus";
+        };
+
+        vpsfree-notification-templates = {
+          vpsfree-notification-templates = "vpsfreeNotificationTemplates";
         };
       };
 
