@@ -194,7 +194,7 @@ in
                 "vpsfreecz/oficialni-dokumenty"
                 "vpsfreecz/vpsfree-client"
                 "vpsfreecz/vpsfree-cz-configuration"
-                "vpsfreecz/vpsfree-mail-templates"
+                "vpsfreecz/vpsfree-notification-templates"
                 "vpsfreecz/web"
               ];
               event_types = [
