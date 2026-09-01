@@ -13,14 +13,14 @@ rollout only.
 ## Reviewed revisions
 
 ```shell
-VPSADMIN_REVISION=149cadd9943dadc9732d5acec6ef2e03b0c6d810
-MAIL_TEMPLATES_REVISION=a71b329b91acb38d24e19d8dda9512537253e901
+VPSADMIN_REVISION=2c1675980217c0a4c331543343054ee6bcd9b197
+NOTIFICATION_TEMPLATES_REVISION=f944ba03eba5d0d6b58b7eb856f251d1c96f2c11
 ```
 
-The configuration commit for this release pins `vpsadminServices` to the
-vpsAdmin revision above. The staging and production Node channels are
-unchanged because the feature does not change the vpsAdminOS protocol or Node
-software.
+The configuration commits for this release pin `vpsadminServices` and
+`vpsfreeNotificationTemplates` to the revisions above. The staging and
+production Node channels are unchanged because the feature does not change the
+vpsAdminOS protocol or Node software.
 
 Before building, obtain the exact configuration commit approved for rollout
 through the normal review process. Set `APPROVED_CONFIGURATION_REVISION` to
@@ -28,12 +28,15 @@ that value and verify the checkout and service pin:
 
 ```shell
 APPROVED_CONFIGURATION_REVISION=REVISION_APPROVED_FOR_ROLLOUT
-VPSADMIN_REVISION=149cadd9943dadc9732d5acec6ef2e03b0c6d810
+VPSADMIN_REVISION=2c1675980217c0a4c331543343054ee6bcd9b197
+NOTIFICATION_TEMPLATES_REVISION=f944ba03eba5d0d6b58b7eb856f251d1c96f2c11
 
 test "$(git rev-parse HEAD)" = "$APPROVED_CONFIGURATION_REVISION"
 test -z "$(git status --porcelain --untracked-files=no)"
 test "$(jq -r '.nodes.vpsadminServices.locked.rev' flake.lock)" = \
   "$VPSADMIN_REVISION"
+test "$(jq -r '.nodes.vpsfreeNotificationTemplates.locked.rev' flake.lock)" = \
+  "$NOTIFICATION_TEMPLATES_REVISION"
 ```
 
 ## Compatibility and ordering
@@ -65,24 +68,30 @@ The MFA revocation, bounded passkey challenge, and OAuth client deletion
 hardening uses this schema and does not add a sixth migration.
 
 All five migrations are additive. Old API processes can read the expanded
-schema, and a rollback can leave it in place. New and old API processes may
-overlap briefly while the feature remains disabled, but update both API hosts
-and both recovery workers before enabling recovery. That keeps password
-changes, credential issuance, MFA factor revocation, and recovery processing
-on the same implementation.
+schema, and a rollback can leave it in place. Stop both old API processes
+before starting either upgraded API. An old process can issue a session from
+a password check completed before a new process changes that password and
+revokes sessions. Disabling recovery does not protect ordinary password
+changes from this race. The cutover below includes a brief API maintenance
+window and preserves existing sessions. Pause manual API shells and scripts
+that authenticate users or change passwords until both hosts are upgraded.
 
 An old process cannot populate the new client snapshot fields and, depending on
 its revision, can omit the detailed history row entirely. These details cannot
-be reconstructed. Keep this accepted audit gap as short as possible by
-switching api2 immediately after api1 is healthy. If a new process creates a
-pending required-reset authorization and an old process exchanges its code, the
-authorization retains enough information for the authentication maintenance
-task to attach the exact session later.
+be reconstructed for changes made before the old processes stop. After the
+cutover, both API hosts and recovery workers use the new password, credential,
+MFA revocation, and audit implementation. Do not permit old and new API
+processes to serve requests together.
 
-The feature flag defaults to off. Install the mail templates before starting
-new API code, then keep recovery disabled until the migrations, both API hosts,
-both WebUI hosts, the auth frontend, and OAuth client start URLs are in place.
-No Node update or reboot is required.
+The feature flag defaults to off. `int.api1` treats the reviewed external
+package as the complete notification-template source. The effective package
+does not add bundled core or plugin defaults, and database setup does not
+install those defaults. `vpsadmin-notification-templates.service` reconciles
+the external package into the shared database. The API and supervisor require
+this one-shot service, so neither can start on api1 with missing or invalid
+template content. Keep recovery disabled until the templates, migrations, both
+API hosts, both WebUI hosts, the auth frontend, and OAuth client start URLs are
+in place. No Node update or reboot is required.
 
 ## Build the affected hosts
 
@@ -99,36 +108,18 @@ confctl build cz.vpsfree/containers/prg/int.mon1
 confctl build cz.vpsfree/containers/prg/int.mon2
 ```
 
-## Install the mail templates
+## Reconcile the notification templates
 
-Install the templates before starting either upgraded API. Password-change
-notifications are active independently of the recovery feature flag, so a new
-API process requires `user_password_changed` from the outset.
+The templates are deployed declaratively on api1 in replacement mode. Do not
+upload them through the API. Only the external package supplies templates to a
+new database, although reconciliation preserves existing database rows that
+the package omits. Password-change notifications are active independently of
+the recovery feature flag, so `user_password_changed` must be reconciled before
+either upgraded API starts.
 
-Use a clean checkout of `vpsfree-mail-templates` at the reviewed revision:
-
-```shell
-MAIL_TEMPLATES_REVISION=a71b329b91acb38d24e19d8dda9512537253e901
-
-test "$(git rev-parse HEAD)" = "$MAIL_TEMPLATES_REVISION"
-test -z "$(git status --porcelain --untracked-files=no)"
-nix develop
-bundle exec rake test API=https://api.vpsfree.cz
-bundle exec rake install API=https://api.vpsfree.cz
-```
-
-The installer prompts for an API user and password unless they are supplied by
-the operator's existing environment. Do not put credentials in this repository
-or in a shell history entry.
-
-Confirm that `password_recovery` has Czech and English plain-text and HTML
-variants. Confirm that `user_password_changed` has both plain-text languages.
-The standard automated-mail footer must match other member-facing templates.
-
-## Deploy and migrate the API
-
-Keep api1 out of service while the new migrations run. The runtime masks
-survive the configuration switch:
+Keep api1 out of service while switching its configuration. The notification
+template service is not masked: it starts from the new configuration and
+updates the shared database before the API is allowed to return.
 
 ```shell
 confctl ssh --yes cz.vpsfree/vpsadmin/int.api1 \
@@ -139,6 +130,46 @@ confctl ssh --yes cz.vpsfree/vpsadmin/int.api1 \
     vpsadmin-api-prometheus-export-base.timer \
     vpsadmin-api-prometheus-export-base.service
 confctl deploy cz.vpsfree/vpsadmin/int.api1 switch
+confctl ssh --yes cz.vpsfree/vpsadmin/int.api1 \
+  systemctl show --property Result vpsadmin-notification-templates.service
+```
+
+The service must report `Result=success`. If it fails, leave the API masked and
+inspect `journalctl --unit vpsadmin-notification-templates.service` before
+continuing.
+
+From `vpsadmin-api-shell`, verify the reconciled variants in the shared
+database:
+
+```ruby
+templates = MailTemplate
+  .includes(mail_template_translations: :language)
+  .where(name: %w[password_recovery user_password_changed])
+  .index_by(&:name)
+
+recovery = templates.fetch('password_recovery')
+  .mail_template_translations
+  .index_by { |translation| translation.language.code }
+changed = templates.fetch('user_password_changed')
+  .mail_template_translations
+  .index_by { |translation| translation.language.code }
+
+raise 'incomplete password recovery templates' unless %w[cs en].all? do |lang|
+  recovery.fetch(lang).text_plain.present? && recovery.fetch(lang).text_html.present?
+end
+raise 'incomplete password change templates' unless %w[cs en].all? do |lang|
+  changed.fetch(lang).text_plain.present?
+end
+```
+
+This check must pass before migrations or an upgraded API process are started.
+
+## Deploy and migrate the API
+
+Keep api1 out of service while the new migrations run. The runtime masks from
+the template reconciliation step survive the configuration switch:
+
+```shell
 confctl ssh --yes cz.vpsfree/vpsadmin/int.api1 \
   systemctl start vpsadmin-api-migrate-db.service
 confctl ssh --yes cz.vpsfree/vpsadmin/int.api1 \
@@ -152,7 +183,26 @@ The migration service must report `Result=success`. From
 bundle exec rake db:migrate:status
 ```
 
-Then return api1 to service and confirm that the API, recovery worker,
+Before returning api1 to service, stop and runtime-mask api2's API, recovery
+worker, and authentication cleanup units. Keep api1 masked throughout this
+step:
+
+```shell
+confctl ssh --yes cz.vpsfree/vpsadmin/int.api2 \
+  systemctl mask --runtime --now vpsadmin-api.service \
+    vpsadmin-password-recovery.service \
+    vpsadmin-api-auth-tokens.timer \
+    vpsadmin-api-auth-tokens.service
+confctl ssh --parallel --yes 'cz.vpsfree/vpsadmin/int.api*' \
+  systemctl show --property ActiveState --property MainPID vpsadmin-api.service
+```
+
+Both API services must report `ActiveState=inactive` and `MainPID=0`. Wait for
+the stop operations to finish, and resolve any failure before continuing.
+This is the drain barrier: no old API process or manual password-writing
+script may remain when api1 starts accepting requests.
+
+Now return api1 to service and confirm that the API, recovery worker,
 authentication cleanup timer, and base exporter timer are active:
 
 ```shell
@@ -173,10 +223,20 @@ confctl ssh --yes cz.vpsfree/vpsadmin/int.api1 \
     vpsadmin-api-prometheus-export-base.timer
 ```
 
-Switch api2 only after api1 is healthy, then check both services there as well:
+Switch api2 only after api1 is healthy. Its runtime masks keep the old API
+stopped during the switch. Remove them after the switch succeeds, start the
+upgraded services, and check their status:
 
 ```shell
 confctl deploy cz.vpsfree/vpsadmin/int.api2 switch
+confctl ssh --yes cz.vpsfree/vpsadmin/int.api2 \
+  systemctl unmask --runtime vpsadmin-api.service \
+    vpsadmin-password-recovery.service \
+    vpsadmin-api-auth-tokens.timer \
+    vpsadmin-api-auth-tokens.service
+confctl ssh --yes cz.vpsfree/vpsadmin/int.api2 \
+  systemctl start vpsadmin-api.service vpsadmin-password-recovery.service \
+    vpsadmin-api-auth-tokens.timer
 confctl ssh --yes cz.vpsfree/vpsadmin/int.api2 \
   systemctl is-active vpsadmin-api.service \
     vpsadmin-password-recovery.service \
@@ -184,8 +244,8 @@ confctl ssh --yes cz.vpsfree/vpsadmin/int.api2 \
 ```
 
 After both API hosts run the new revision, run authentication maintenance once
-on api1. This immediately reconciles a password-change session if an old api2
-process exchanged its OAuth code during the rolling switch:
+on api1 to clean up expired authentication state and reconcile any pending
+password-change session links:
 
 ```shell
 confctl ssh --yes cz.vpsfree/vpsadmin/int.api1 \
@@ -390,13 +450,47 @@ Disable `core.password_recovery_enabled` first. Let the workers finish or
 discard already admitted submissions, confirm that the unfinished count is
 zero, and stop `vpsadmin-password-recovery.service` on both API hosts.
 
-Roll the proxy frontend, both WebUI hosts, and both API hosts back to the
-approved preceding configuration. The additive columns and tables can remain
-in place; old processes ignore them. Leaving the schema in place is the
-preferred rollback because migrating down deletes recovery records and detailed
-password history, and removes the authentication generation used by the new
-application. Aggregate password event counters remain independent of detailed
-history while the schema stays in place.
+Pause manual API shells and password-writing scripts again. Stop and
+runtime-mask both API services and authentication cleanup units before
+restoring either old API configuration:
+
+```shell
+confctl ssh --parallel --yes 'cz.vpsfree/vpsadmin/int.api*' \
+  systemctl mask --runtime --now vpsadmin-api.service \
+    vpsadmin-password-recovery.service \
+    vpsadmin-api-auth-tokens.timer vpsadmin-api-auth-tokens.service
+confctl ssh --parallel --yes 'cz.vpsfree/vpsadmin/int.api*' \
+  systemctl show --property ActiveState --property MainPID vpsadmin-api.service
+```
+
+Both API services must report `ActiveState=inactive` and `MainPID=0`. With the
+masks still in place, roll the proxy frontend, both WebUI hosts, and both API
+hosts back to the approved preceding configuration. After both API
+configurations are restored, remove only the API and authentication cleanup
+masks and start those services:
+
+```shell
+confctl ssh --parallel --yes 'cz.vpsfree/vpsadmin/int.api*' \
+  systemctl unmask --runtime vpsadmin-api.service \
+    vpsadmin-api-auth-tokens.timer vpsadmin-api-auth-tokens.service
+confctl ssh --parallel --yes 'cz.vpsfree/vpsadmin/int.api*' \
+  systemctl start vpsadmin-api.service vpsadmin-api-auth-tokens.timer
+confctl ssh --parallel --yes 'cz.vpsfree/vpsadmin/int.api*' \
+  systemctl is-active vpsadmin-api.service vpsadmin-api-auth-tokens.timer
+```
+
+Keep the recovery workers stopped. Rollback restores the preceding release's
+authentication and session-revocation behavior. The additive columns and
+tables can remain in place; old processes ignore them. Reverting the
+configuration also restores the preceding declarative notification-template
+source. Reconciliation does
+not delete templates omitted by that source, so the password recovery and
+password-change rows may remain in the database and are harmless to the old
+application. Leaving the schema in place is the preferred rollback because
+migrating down deletes recovery records and detailed password history, and
+removes the authentication generation used by the new application. Aggregate
+password event counters remain independent of detailed history while the
+schema stays in place.
 
 If the migrations must be reversed, first verify that every API and worker
 process runs the old release and that no recovery work remains. Treat the down
