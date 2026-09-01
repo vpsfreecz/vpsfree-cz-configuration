@@ -1204,15 +1204,15 @@
       "locked": {
         "lastModified": 1788259080,
         "narHash": "sha256-jA1cfa/mX500XdEl7fpTuicVhMntJUpO4PDD1vrhKek=",
-        "ref": "refs/heads/master",
+        "owner": "vpsfreecz",
+        "repo": "vpsfree-notification-templates",
         "rev": "9e1ddbd973703cf48a43f0e5afc2bfb392a8b676",
-        "revCount": 242,
-        "type": "git",
-        "url": "ssh://git@github.com/vpsfreecz/vpsfree-notification-templates.git"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/vpsfreecz/vpsfree-notification-templates.git"
+        "owner": "vpsfreecz",
+        "repo": "vpsfree-notification-templates",
+        "type": "github"
       }
     },
     "vpsfreeWeb": {

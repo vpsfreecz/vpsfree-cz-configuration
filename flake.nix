@@ -43,7 +43,7 @@
     };
 
     vpsfreeNotificationTemplates = {
-      url = "git+ssh://git@github.com/vpsfreecz/vpsfree-notification-templates.git";
+      url = "github:vpsfreecz/vpsfree-notification-templates";
       inputs.vpsadmin.follows = "vpsadminServices";
     };
 
