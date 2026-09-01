@@ -1203,11 +1203,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788259080,
-        "narHash": "sha256-jA1cfa/mX500XdEl7fpTuicVhMntJUpO4PDD1vrhKek=",
+        "lastModified": 1788302758,
+        "narHash": "sha256-Rh0aaLuGyNlUaIIWX9zRHZWSh4RNxehJcgmjFrBcvs0=",
         "owner": "vpsfreecz",
         "repo": "vpsfree-notification-templates",
-        "rev": "9e1ddbd973703cf48a43f0e5afc2bfb392a8b676",
+        "rev": "ac29bf8a00fc98cb15f1d89197e0968ebf3401b8",
         "type": "github"
       },
       "original": {
