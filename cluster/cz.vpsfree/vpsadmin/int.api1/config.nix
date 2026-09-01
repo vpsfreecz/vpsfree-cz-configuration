@@ -21,7 +21,10 @@ in
   vpsadmin.api = {
     scheduler.enable = true;
 
-    notificationTemplates.source = notificationTemplatesPackage;
+    notificationTemplates = {
+      mode = "replace";
+      source = notificationTemplatesPackage;
+    };
 
     rake.enableDefaultTasks = true;
     # rake.tasks.payments-process.timer.enable = lib.mkForce false;
