@@ -811,6 +811,7 @@
         "vpsadminosProduction": "vpsadminosProduction",
         "vpsadminosStaging": "vpsadminosStaging",
         "vpsfStatus": "vpsfStatus",
+        "vpsfreeNotificationTemplates": "vpsfreeNotificationTemplates",
         "vpsfreeWeb": "vpsfreeWeb"
       }
     },
@@ -1009,11 +1010,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788211186,
-        "narHash": "sha256-9iNV0sa7iSEKX4aj/Wp8SruD4pCkOORDIX1H4rtJY1A=",
+        "lastModified": 1788256892,
+        "narHash": "sha256-W9mN0FLJy3jLab6XDhRt+04vfPYmJWhk3sDEtkxMxNc=",
         "owner": "vpsfreecz",
         "repo": "vpsadmin",
-        "rev": "7b455cad1c0c4f5f953ad385ee7e6635852a30b3",
+        "rev": "f2f7c6a9a10437892929fdf99b968e1010aa19b0",
         "type": "github"
       },
       "original": {
@@ -1192,6 +1193,31 @@
         "owner": "vpsfreecz",
         "repo": "vpsf-status",
         "type": "github"
+      }
+    },
+    "vpsfreeNotificationTemplates": {
+      "inputs": {
+        "nixpkgs": [
+          "vpsfreeNotificationTemplates",
+          "vpsadmin",
+          "nixpkgs"
+        ],
+        "vpsadmin": [
+          "vpsadminServices"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784653437,
+        "narHash": "sha256-Y0YnwzhZoocvGDaYZ5AME/mH8TTecUY5lM5O2qX1ZiY=",
+        "ref": "refs/heads/master",
+        "rev": "04921d75ab5321962b207bb380deff90906bd662",
+        "revCount": 239,
+        "type": "git",
+        "url": "ssh://git@github.com/vpsfreecz/vpsfree-notification-templates.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/vpsfreecz/vpsfree-notification-templates.git"
       }
     },
     "vpsfreeWeb": {
