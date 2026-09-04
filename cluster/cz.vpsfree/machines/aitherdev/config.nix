@@ -454,7 +454,9 @@ in
   };
 
   users.users.root.openssh.authorizedKeys.keys =
-    confData.sshKeys.builders ++ confData.sshKeys.aither.all;
+    confData.sshKeys.builders
+    ++ confData.sshKeys.aither.all
+    ++ [ ''restrict,from="127.0.0.1,172.16.106.40,::1" ${confData.sshKeys.aither.aitherdev}'' ];
 
   users.users.aither = {
     isNormalUser = true;

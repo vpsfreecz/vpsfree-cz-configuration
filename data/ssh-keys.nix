@@ -9,6 +9,8 @@ rec {
   ];
 
   aither = rec {
+    aitherdev = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJlvsbOljzxEs7PHmiZHPo4Vcr9QfmWwlqvVZpGVAL6h aither@aitherdev";
+
     yk_5c1 = "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAILLVR1I0LDw7Eu9yXfyBVixBpxjTnQtUlEDPthPm4C7bAAAABHNzaDo= aither@orion";
 
     yk_sk1 = "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIIrVHhH6zkb5W2BXKN9AtKv7ZccwA7RwPrkEv8Pk0JXnAAAABHNzaDo= aither@macker.local";
