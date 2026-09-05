@@ -6,6 +6,7 @@
       "nixos-stable"
       "home-manager"
       "llm-agents"
+      "workspace-tools"
     ];
     host = {
       name = "aitherdev";

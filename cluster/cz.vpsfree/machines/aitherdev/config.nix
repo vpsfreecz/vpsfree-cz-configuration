@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   confLib,
   confData,
@@ -13,6 +14,226 @@ let
   homeManagerInput = inputsInfo."home-manager".input;
   llmAgentsInput = inputsInfo."llm-agents".input;
   llmAgentsPkgs = flakeInputs.${llmAgentsInput}.packages.${pkgs.stdenv.hostPlatform.system};
+  workspaceInput = inputsInfo."aither-vpsfree-workspace".input;
+  workspaceFlake = flakeInputs.${workspaceInput};
+  workspacePortal = workspaceFlake.packages.${pkgs.stdenv.hostPlatform.system}.workspace-portal;
+  workspaceContract = workspaceFlake.lib.workspacePortalRuntimeContract;
+  workspaceCodex = workspacePortal.codexPackage;
+
+  workspaceRoot = "/home/aither/workspace/ai/vpsfree.cz";
+  workspacePortalHost = "vpsfree-cz-workspace.aitherdev.int.vpsfree.cz";
+  workspacePortalUrl = "https://${workspacePortalHost}";
+  workspacePortalPassword = "/home/aither/.local/state/vpsfree-workspace-portal/password";
+  workspacePortalAuth = "/var/lib/vpsfree-workspace-portal-auth/htpasswd";
+  workspacePkiState = "/var/lib/vpsfree-workspace-pki";
+  workspacePortalTls = "/var/lib/vpsfree-workspace-portal-tls";
+  workspacePortalPublicCa = "/var/lib/vpsfree-workspace-portal-public/ca.pem";
+  workspacePortalTlsApplied = "${workspacePortalTls}/.nginx-applied";
+  workspacePkiLock = "/run/lock/vpsfree-workspace-portal-pki.lock";
+  workspacePortalSocket = "/run/vpsfree-workspace-portal/portal.sock";
+  workspacePortalTmuxSocket = "/run/vpsfree-workspace-tmux/tmux.sock";
+  workspaceCodexSocket = "/run/vpsfree-workspace-codex/app-server.sock";
+  workspaceAuthorityDir = "/run/vpsfree-workspace-authority";
+  workspaceDevSessionCommand = "/run/current-system/sw/bin/dev-session";
+  workspacePortalCommand = "/run/current-system/sw/bin/workspace-portal";
+  workspaceRuntime = {
+    workspace = workspaceRoot;
+    portalBaseUrl = workspacePortalUrl;
+    authorityDir = workspaceAuthorityDir;
+    tmuxSocket = workspacePortalTmuxSocket;
+    codexCommand = "${workspaceCodex}/bin/codex";
+    codexSocket = workspaceCodexSocket;
+    codexVersion = workspaceCodex.version;
+    portalCommand = workspacePortalCommand;
+  };
+  workspaceDevSessionArgumentPairs = [
+    [ "--require-runtime" ]
+    [
+      "--workspace"
+      workspaceRuntime.workspace
+    ]
+    [
+      "--authority-dir"
+      workspaceRuntime.authorityDir
+    ]
+    [
+      "--tmux-socket"
+      workspaceRuntime.tmuxSocket
+    ]
+    [
+      "--codex-command"
+      workspaceRuntime.codexCommand
+    ]
+    [
+      "--codex-socket"
+      workspaceRuntime.codexSocket
+    ]
+    [
+      "--codex-version"
+      workspaceRuntime.codexVersion
+    ]
+    [
+      "--portal-command"
+      workspaceRuntime.portalCommand
+    ]
+    [
+      "--portal-base-url"
+      workspaceRuntime.portalBaseUrl
+    ]
+  ];
+  workspaceDevSessionFlags = map builtins.head workspaceDevSessionArgumentPairs;
+  workspaceDevSessionArguments = lib.escapeShellArgs (
+    lib.concatLists workspaceDevSessionArgumentPairs
+  );
+  workspaceDevSession = pkgs.writeShellScriptBin "dev-session" ''
+    exec ${workspacePortal}/libexec/workspace-portal/dev-session \
+      ${workspaceDevSessionArguments} -- "$@"
+  '';
+  workspaceDevSessionContractTest = pkgs.runCommand "dev-session-host-boundary-test" { } ''
+    ${pkgs.coreutils}/bin/env -i \
+      ${workspaceDevSession}/bin/dev-session --help > help.txt
+    ${pkgs.gnugrep}/bin/grep -F 'Usage:' help.txt
+
+    if ${pkgs.coreutils}/bin/env -i \
+      ${workspaceDevSession}/bin/dev-session --workspace /tmp/caller validate \
+      > stdout.txt 2> stderr.txt; then
+      echo 'dev-session accepted a caller-owned workspace' >&2
+      exit 1
+    fi
+    ${pkgs.gnugrep}/bin/grep -F 'unknown command: --workspace' stderr.txt
+
+    if ${pkgs.coreutils}/bin/env -i \
+      ${workspaceDevSession}/bin/dev-session --workspace=/tmp/caller validate \
+      > stdout.txt 2> stderr.txt; then
+      echo 'dev-session accepted a caller-owned workspace' >&2
+      exit 1
+    fi
+    ${pkgs.gnugrep}/bin/grep -F 'unknown command: --workspace=/tmp/caller' stderr.txt
+    mkdir "$out"
+  '';
+  workspaceClusterCommand =
+    name: command:
+    pkgs.writeShellScriptBin name ''
+      export VPSFREE_DEVCLUSTER_WORKSPACE=${lib.escapeShellArg workspaceRoot}
+      exec ${command} "$@"
+    '';
+  workspaceVpsadminDevcluster = workspaceClusterCommand "vpsadmin-devcluster" (
+    "${workspacePortal}/bin/vpsadmin-devcluster"
+  );
+  workspaceVpsadminosDevcluster = workspaceClusterCommand "vpsadminos-devcluster" (
+    "${workspacePortal}/bin/vpsadminos-devcluster"
+  );
+  workspaceClusterProbe = pkgs.writeShellScript "workspace-cluster-probe" ''
+    printf '%s\n' "$VPSFREE_DEVCLUSTER_WORKSPACE"
+    printf '<%s>\n' "$@"
+  '';
+  workspaceClusterProbeWrapper = workspaceClusterCommand "workspace-cluster-probe" (
+    workspaceClusterProbe
+  );
+  workspaceClusterContractTest = pkgs.runCommand "workspace-cluster-host-boundary-test" { } ''
+    ${pkgs.coreutils}/bin/env -i \
+      VPSFREE_DEVCLUSTER_WORKSPACE=/tmp/caller \
+      ${workspaceClusterProbeWrapper}/bin/workspace-cluster-probe first second \
+      > actual.txt
+    ${pkgs.coreutils}/bin/printf '%s\n<%s>\n<%s>\n' \
+      ${lib.escapeShellArg workspaceRoot} first second > expected.txt
+    ${pkgs.diffutils}/bin/cmp expected.txt actual.txt
+    mkdir "$out"
+  '';
+  workspacePortalCli = pkgs.runCommand "workspace-portal-cli" { } ''
+    mkdir -p "$out/bin"
+    for command in workspace-portal workspace-pki workspace-portal-password-hash; do
+      ln -s ${workspacePortal}/bin/"$command" "$out/bin/$command"
+    done
+  '';
+  workspacePortalServeArgumentPairs = [
+    [
+      "--workspace"
+      workspaceRuntime.workspace
+    ]
+    [
+      "--base-url"
+      workspaceRuntime.portalBaseUrl
+    ]
+    [
+      "--unix-socket"
+      workspacePortalSocket
+    ]
+    [
+      "--dev-session"
+      workspaceDevSessionCommand
+    ]
+    [
+      "--authority-dir"
+      workspaceRuntime.authorityDir
+    ]
+    [
+      "--codex-socket"
+      workspaceRuntime.codexSocket
+    ]
+    [
+      "--codex-version"
+      workspaceRuntime.codexVersion
+    ]
+    [
+      "--tmux"
+      "${pkgs.tmux}/bin/tmux"
+    ]
+    [
+      "--vpsadmin-cluster"
+      "${workspaceVpsadminDevcluster}/bin/vpsadmin-devcluster"
+    ]
+    [
+      "--vpsadminos-cluster"
+      "${workspaceVpsadminosDevcluster}/bin/vpsadminos-devcluster"
+    ]
+  ];
+  workspacePortalServeFlags = map builtins.head workspacePortalServeArgumentPairs;
+  workspacePortalServeArguments = lib.escapeShellArgs (
+    [ "serve" ] ++ lib.concatLists workspacePortalServeArgumentPairs
+  );
+  workspacePortalMaxRequestBodyBytes =
+    workspaceContract.maxMessageBytes * workspaceContract.jsonEncodingExpansion
+    + workspaceContract.transportEnvelopeBytes;
+  sorted = builtins.sort builtins.lessThan;
+  workspacePkiReconcileArguments = lib.escapeShellArgs [
+    "reconcile-nginx"
+    "--state-dir"
+    workspacePkiState
+    "--hostname"
+    workspacePortalHost
+    "--server-dir"
+    workspacePortalTls
+    "--public-ca"
+    workspacePortalPublicCa
+    "--applied-marker"
+    workspacePortalTlsApplied
+    "--lock-file"
+    workspacePkiLock
+    "--systemctl"
+    "${pkgs.systemd}/bin/systemctl"
+    "--service"
+    "nginx.service"
+  ];
+  workspacePortalTmuxServer = pkgs.writeShellScript "workspace-portal-tmux-server" ''
+    set -eu
+    keeper=__workspace_portal_keeper
+    socket=${lib.escapeShellArg workspacePortalTmuxSocket}
+    if [ -e "$socket" ]; then
+      echo "refusing pre-existing tmux socket: $socket" >&2
+      exit 1
+    fi
+    ${pkgs.tmux}/bin/tmux -S "$socket" new-session -d -s "$keeper"
+    server_pid="$(${pkgs.tmux}/bin/tmux -S "$socket" display-message -p -t "$keeper" '#{pid}')"
+    cleanup() {
+      ${pkgs.tmux}/bin/tmux -S "$socket" kill-server >/dev/null 2>&1 || true
+    }
+    trap cleanup EXIT INT TERM
+    while kill -0 "$server_pid" 2>/dev/null; do
+      ${pkgs.coreutils}/bin/sleep 5
+    done
+    exit 1
+  '';
 
   ns1IntPrg = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -86,6 +307,17 @@ let
 in
 {
   # NOTE: environments/base.nix is not imported, this is a standalone system
+  assertions = [
+    {
+      assertion = sorted workspaceDevSessionFlags == sorted workspaceContract.devSessionFlags;
+      message = "aitherdev dev-session arguments do not match the workspace package contract";
+    }
+    {
+      assertion = sorted workspacePortalServeFlags == sorted workspaceContract.portalServeFlags;
+      message = "aitherdev portal arguments do not match the workspace package contract";
+    }
+  ];
+
   imports = [
     ./hardware.nix
     ./kb-staging.nix
@@ -231,13 +463,58 @@ in
     openssh.authorizedKeys.keys = confData.sshKeys.aither.all;
   };
 
+  users.groups.workspace-portal-proxy.members = [ "nginx" ];
+
+  system.activationScripts.workspacePortalCredentials = {
+    deps = [ "users" ];
+    text = ''
+      set -eu
+
+      password_file=${lib.escapeShellArg workspacePortalPassword}
+      auth_file=${lib.escapeShellArg workspacePortalAuth}
+      auth_dir="$(${pkgs.coreutils}/bin/dirname "$auth_file")"
+
+      ${pkgs.coreutils}/bin/install -d -o root -g nginx -m 0750 "$auth_dir"
+      auth_tmp="$(${pkgs.coreutils}/bin/mktemp "$auth_dir/.htpasswd.XXXXXX")"
+      cleanup() {
+        ${pkgs.coreutils}/bin/rm -f "$auth_tmp"
+      }
+      trap cleanup EXIT INT TERM
+
+      ${pkgs.util-linux}/bin/runuser -u aither -- \
+        ${workspacePortal}/bin/workspace-portal-password-hash "$password_file" \
+        > "$auth_tmp"
+      ${pkgs.gnugrep}/bin/grep -Eq '^aither:\$2[aby]\$12\$[./A-Za-z0-9]{53}$' "$auth_tmp"
+      [ "$(${pkgs.coreutils}/bin/wc -l < "$auth_tmp")" -eq 1 ]
+      ${pkgs.coreutils}/bin/chown root:nginx "$auth_tmp"
+      ${pkgs.coreutils}/bin/chmod 0640 "$auth_tmp"
+      ${pkgs.coreutils}/bin/mv -f "$auth_tmp" "$auth_file"
+      trap - EXIT INT TERM
+
+      ${workspacePortal}/bin/workspace-pki ${workspacePkiReconcileArguments}
+    '';
+  };
+
   environment.systemPackages =
     (with pkgs; [
       vim
     ])
     ++ [
-      llmAgentsPkgs.codex
+      workspaceCodex
+      workspaceDevSession
+      workspacePortalCli
+      workspaceVpsadminDevcluster
+      workspaceVpsadminosDevcluster
     ];
+
+  system.extraDependencies = [
+    workspaceDevSessionContractTest
+    workspaceClusterContractTest
+  ];
+
+  systemd.tmpfiles.rules = [
+    "d ${workspaceAuthorityDir} 0700 aither users -"
+  ];
 
   services.openssh = {
     enable = true;
@@ -247,6 +524,128 @@ in
   };
 
   services.postfix.enable = true;
+
+  systemd.services.workspace-portal-tmux = {
+    description = "Dedicated tmux server for browser-created workspace sessions";
+    wantedBy = [ "multi-user.target" ];
+    environment = {
+      HOME = "/home/aither";
+      PATH = lib.mkForce "/run/current-system/sw/bin";
+      XDG_CONFIG_HOME = "/home/aither/.config";
+      XDG_STATE_HOME = "/home/aither/.local/state";
+    };
+    serviceConfig = {
+      Type = "simple";
+      User = "aither";
+      Group = "users";
+      ExecStart = workspacePortalTmuxServer;
+      RuntimeDirectory = "vpsfree-workspace-tmux";
+      RuntimeDirectoryMode = "0700";
+      Restart = "on-failure";
+      RestartSec = "2s";
+      KillMode = "control-group";
+    };
+  };
+
+  systemd.services.workspace-codex-app-server = {
+    description = "Codex App Server for shared workspace sessions";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+    environment = {
+      HOME = "/home/aither";
+      XDG_CONFIG_HOME = "/home/aither/.config";
+      XDG_STATE_HOME = "/home/aither/.local/state";
+    };
+    serviceConfig = {
+      Type = "simple";
+      User = "aither";
+      Group = "users";
+      RuntimeDirectory = "vpsfree-workspace-codex";
+      RuntimeDirectoryMode = "0700";
+      UMask = "0077";
+      ExecStart = ''
+        ${workspaceCodex}/bin/codex app-server \
+          --listen unix://${workspaceCodexSocket}
+      '';
+      Restart = "on-failure";
+      RestartSec = "2s";
+    };
+  };
+
+  systemd.services.workspace-portal = {
+    description = "vpsFree.cz development workspace portal";
+    wantedBy = [ "multi-user.target" ];
+    after = [
+      "network-online.target"
+      "workspace-codex-app-server.service"
+      "workspace-portal-tmux.service"
+    ];
+    wants = [
+      "network-online.target"
+      "workspace-codex-app-server.service"
+    ];
+    requires = [ "workspace-portal-tmux.service" ];
+    path = [
+      pkgs.gh
+      pkgs.git
+      pkgs.ruby
+      pkgs.tmux
+      workspaceCodex
+      workspacePortal
+    ];
+    environment = {
+      HOME = "/home/aither";
+      XDG_CONFIG_HOME = "/home/aither/.config";
+      XDG_STATE_HOME = "/home/aither/.local/state";
+    };
+    serviceConfig = {
+      Type = "simple";
+      User = "aither";
+      Group = "workspace-portal-proxy";
+      RuntimeDirectory = "vpsfree-workspace-portal";
+      RuntimeDirectoryMode = "0750";
+      WorkingDirectory = workspaceRoot;
+      ExecStart = "${workspacePortal}/bin/workspace-portal ${workspacePortalServeArguments}";
+      Restart = "on-failure";
+      RestartSec = "2s";
+      # Signal the Go server first so it can drain creation handlers. Systemd
+      # kills any residual child only after TimeoutStopSec expires.
+      KillMode = "mixed";
+      TimeoutStopSec = "150s";
+    };
+  };
+
+  systemd.services.workspace-portal-certificate-renewal = {
+    description = "Renew the workspace portal TLS certificate";
+    after = [ "nginx.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      UMask = "0077";
+    };
+    script = ''
+      set -eu
+      ${workspacePortal}/bin/workspace-pki ${workspacePkiReconcileArguments}
+    '';
+  };
+
+  systemd.timers.workspace-portal-certificate-renewal = {
+    description = "Periodically check the workspace portal TLS certificate";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "weekly";
+      Persistent = true;
+      RandomizedDelaySec = "6h";
+    };
+  };
+
+  # Supplementary credentials are fixed when nginx starts. This stable trigger
+  # forces the one transition that adds the portal proxy group; later nginx
+  # configuration changes retain the module's normal graceful reload behavior.
+  systemd.services.nginx = {
+    restartTriggers = [ (pkgs.writeText "workspace-portal-nginx-group-v1" "workspace-portal-proxy\n") ];
+    serviceConfig.SupplementaryGroups = [ "workspace-portal-proxy" ];
+  };
 
   services.samba = {
     enable = true;
@@ -300,6 +699,38 @@ in
   services.nginx = {
     enable = true;
     recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+    upstreams.workspace-portal.servers."unix:${workspacePortalSocket}" = { };
+    virtualHosts.${workspacePortalHost} = {
+      forceSSL = true;
+      listen = [
+        {
+          addr = "172.16.106.40";
+          port = 80;
+        }
+        {
+          addr = "172.16.106.40";
+          port = 443;
+          ssl = true;
+        }
+      ];
+      sslCertificate = "${workspacePortalTls}/current/server.pem";
+      sslCertificateKey = "${workspacePortalTls}/current/server-key.pem";
+      basicAuthFile = workspacePortalAuth;
+      extraConfig = ''
+        add_header Strict-Transport-Security "max-age=31536000" always;
+      '';
+      locations."/" = {
+        proxyPass = "http://workspace-portal";
+        extraConfig = ''
+          proxy_buffering off;
+          proxy_read_timeout 1h;
+          client_max_body_size ${toString workspacePortalMaxRequestBodyBytes};
+          proxy_set_header Authorization "";
+          proxy_hide_header Strict-Transport-Security;
+        '';
+      };
+    };
     virtualHosts."codex-lb.aitherdev.int.vpsfree.cz" = {
       listen = [
         {
@@ -354,8 +785,11 @@ in
     iptables -A nixos-fw -p tcp -m tcp --dport 8080 -s 172.16.106.0/24 -j ACCEPT
     iptables -A nixos-fw -p tcp -m tcp --dport 8080 -s 172.16.107.0/24 -j ACCEPT
 
-    # codex-lb dashboard over WireGuard
+    # Shared nginx HTTP redirects over WireGuard
     iptables -A nixos-fw -p tcp -m tcp --dport 80 -s 172.16.107.0/24 -j ACCEPT
+
+    # development workspace portal
+    iptables -A nixos-fw -p tcp -m tcp --dport 443 -s 172.16.107.0/24 -j ACCEPT
 
     # Samba workspace share
     iptables -A nixos-fw -p tcp -m tcp --dport 445 -s 172.16.107.34/32 -j ACCEPT
