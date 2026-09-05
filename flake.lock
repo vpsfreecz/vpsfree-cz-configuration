@@ -10,11 +10,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788615674,
-        "narHash": "sha256-ZUtS/5lddFFixN6iLfCOLAEaXmOcaohRZnHZ8wMS5RM=",
+        "lastModified": 1788616698,
+        "narHash": "sha256-kZMvpE2JPE4YINxQpzmhDqF6FGbf2YWsFdNqphZlnPI=",
         "owner": "aither64",
         "repo": "vpsfree-cz-workspace",
-        "rev": "bccdd3fa53d7fafe41a8e0c281ea8d1639398a8c",
+        "rev": "b950359dd918d48a080e862c01ca9ae1eb72688f",
         "type": "github"
       },
       "original": {
