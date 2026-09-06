@@ -16,6 +16,11 @@
 - Pin an exact feature revision with
   `confctl inputs channel set --commit <channels> <role> <rev>`.
 
+## Development Deployments
+- Building or deploying a feature branch does not authorize integrating it
+  into `master`. Keep development changes on the feature branch until
+  integration is explicitly requested.
+
 ## Coding Style & Naming Conventions
 - `.editorconfig` enforces UTF-8, LF, and 2-space indents for Nix/Ruby/ERB; trim trailing whitespace.
 - Format Nix with `nixfmt` (RFC style); Overcommit hooks run `Nixfmt` and `RuboCop`.
