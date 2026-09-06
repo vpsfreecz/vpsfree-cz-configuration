@@ -1,28 +1,5 @@
 {
   "nodes": {
-    "aitherVpsfreeWorkspace": {
-      "inputs": {
-        "llm-agents": [
-          "llm-agents"
-        ],
-        "nixpkgs": [
-          "nixpkgsStable"
-        ]
-      },
-      "locked": {
-        "lastModified": 1788616698,
-        "narHash": "sha256-kZMvpE2JPE4YINxQpzmhDqF6FGbf2YWsFdNqphZlnPI=",
-        "owner": "aither64",
-        "repo": "vpsfree-cz-workspace",
-        "rev": "b950359dd918d48a080e862c01ca9ae1eb72688f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "aither64",
-        "repo": "vpsfree-cz-workspace",
-        "type": "github"
-      }
-    },
     "bun2nix": {
       "inputs": {
         "flake-parts": [
@@ -814,7 +791,6 @@
     },
     "root": {
       "inputs": {
-        "aitherVpsfreeWorkspace": "aitherVpsfreeWorkspace",
         "confctl": "confctl",
         "home-manager": "home-manager_2",
         "llm-agents": "llm-agents",

@@ -32,12 +32,6 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
-    aitherVpsfreeWorkspace = {
-      url = "github:aither64/vpsfree-cz-workspace";
-      inputs.nixpkgs.follows = "nixpkgsStable";
-      inputs.llm-agents.follows = "llm-agents";
-    };
-
     vpsfreeWeb = {
       url = "github:vpsfreecz/web";
       flake = false;
@@ -139,10 +133,6 @@
 
         llm-agents = {
           llm-agents = "llm-agents";
-        };
-
-        workspace-tools = {
-          aither-vpsfree-workspace = "aitherVpsfreeWorkspace";
         };
 
         vpsfree-web = {
