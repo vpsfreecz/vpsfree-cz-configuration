@@ -69,6 +69,10 @@ in
         allow_user_locale = true;
       };
 
+      chat = {
+        chat_enabled = false;
+      };
+
       email = {
         email_in = true;
       };
