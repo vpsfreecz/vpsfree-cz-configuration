@@ -1,0 +1,167 @@
+rule_files:
+  - @ruleFile@
+
+evaluation_interval: 1m
+
+tests:
+  - name: Healthy renders can appear older than five minutes between scrapes
+    interval: 1s
+    input_series:
+      # Scrapes occur one second after minute evaluations. The render at
+      # about 241 seconds completes just after that scrape, so the next
+      # evaluation still sees the previous render from timestamp -1.
+      - series: 'vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status",instance="status.vpsf.cz:443",alias="status.vpsf.cz",type="vpsf-status"}'
+        values: '_ -1 _x59 -1 _x59 -1 _x59 -1 _x59 -1 _x59 241 _x59 241'
+    promql_expr_test:
+      - expr: 'time() - max_over_time(vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status"}[5m])'
+        eval_time: 5m
+        exp_samples:
+          - labels: '{job="vpsf-status",instance="status.vpsf.cz:443",alias="status.vpsf.cz",type="vpsf-status"}'
+            value: 301
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+
+  - name: A missed scrape during a healthy render cycle does not page
+    interval: 1s
+    input_series:
+      - series: 'vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status",instance="status.vpsf.cz:443",alias="status.vpsf.cz",type="vpsf-status"}'
+        values: '_ -1 _x59 -1 _x59 -1 _x59 -1 _x59 -1 _x59 stale _x59 241 _x59 241'
+    promql_expr_test:
+      - expr: 'time() - max_over_time(vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status"}[5m])'
+        eval_time: 6m
+        exp_samples:
+          - labels: '{job="vpsf-status",instance="status.vpsf.cz:443",alias="status.vpsf.cz",type="vpsf-status"}'
+            value: 361
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+      - eval_time: 7m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+
+  - name: A stalled renderer pages after confirmation and clears on recovery
+    interval: 1m
+    input_series:
+      - series: 'vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status",instance="status.vpsf.cz:443",alias="status.vpsf.cz",type="vpsf-status"}'
+        values: '0+0x13 840+60x2'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+      - eval_time: 13m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts:
+          - exp_labels:
+              alias: status.vpsf.cz
+              instance: status.vpsf.cz:443
+              job: vpsf-status
+              type: vpsf-status
+              severity: critical
+              frequency: 1h
+            exp_annotations:
+              summary: status.vpsf.cz index page rendering is stale
+              description: |
+                No index page render has been observed for status.vpsf.cz in more
+                than ten minutes, or the render timestamp metric has been missing
+                for five minutes. This condition has persisted for at least two
+                minutes.
+
+                VALUE: 780
+                LABELS: map[alias:status.vpsf.cz instance:status.vpsf.cz:443 job:vpsf-status type:vpsf-status]
+      - eval_time: 14m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+
+  - name: A render that recovers during confirmation does not page
+    interval: 1m
+    input_series:
+      - series: 'vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status",instance="status.vpsf.cz:443"}'
+        values: '0+0x11 720+60x2'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+      - eval_time: 13m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+
+  - name: Missing metrics page after five minutes plus confirmation
+    interval: 1m
+    input_series:
+      - series: 'vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status",instance="status.vpsf.cz:443"}'
+        values: '0 stale _x6 480+60x2'
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+      - eval_time: 7m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts:
+          - exp_labels:
+              alias: status.vpsf.cz
+              instance: status.vpsf.cz:443
+              job: vpsf-status
+              type: vpsf-status
+              severity: critical
+              frequency: 1h
+            exp_annotations:
+              summary: status.vpsf.cz index page rendering is stale
+              description: |
+                No index page render has been observed for status.vpsf.cz in more
+                than ten minutes, or the render timestamp metric has been missing
+                for five minutes. This condition has persisted for at least two
+                minutes.
+
+                VALUE: 1
+                LABELS: map[job:vpsf-status]
+      - eval_time: 8m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+
+  - name: Metrics returning during confirmation do not page
+    interval: 1m
+    input_series:
+      - series: 'vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status",instance="status.vpsf.cz:443"}'
+        values: '0 stale _x4 360+60x2'
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+      - eval_time: 7m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []
+
+  - name: An ongoing failure stays firing when stale metrics disappear and return
+    interval: 1m
+    input_series:
+      - series: 'vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status",instance="status.vpsf.cz:443",alias="status.vpsf.cz",type="vpsf-status"}'
+        values: '0+0x13 stale _x6 0 1320+60x1'
+    promql_expr_test:
+      # The last sample leaves the lookback at 18m. A stale sample returns
+      # at 21m; neither transition should restart the confirmation period.
+      - expr: 'ALERTS{alertname="VpsfStatusIndexRenderStale",alertstate="firing"}'
+        eval_time: 18m
+        exp_samples:
+          - labels: 'ALERTS{alertname="VpsfStatusIndexRenderStale",alertstate="firing",alias="status.vpsf.cz",instance="status.vpsf.cz:443",job="vpsf-status",type="vpsf-status",severity="critical",frequency="1h"}'
+            value: 1
+      - expr: 'ALERTS{alertname="VpsfStatusIndexRenderStale",alertstate="firing"}'
+        eval_time: 21m
+        exp_samples:
+          - labels: 'ALERTS{alertname="VpsfStatusIndexRenderStale",alertstate="firing",alias="status.vpsf.cz",instance="status.vpsf.cz:443",job="vpsf-status",type="vpsf-status",severity="critical",frequency="1h"}'
+            value: 1
+    alert_rule_test:
+      - eval_time: 22m
+        alertname: VpsfStatusIndexRenderStale
+        exp_alerts: []

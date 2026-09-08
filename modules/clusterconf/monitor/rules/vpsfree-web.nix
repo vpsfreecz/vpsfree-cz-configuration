@@ -114,23 +114,38 @@ in
           '';
         };
       }
+    ];
+  }
 
+  {
+    name = "vpsf-status";
+    interval = "60s";
+    rules = [
       {
         alert = "VpsfStatusIndexRenderStale";
+        # Unchanged bodies render about every four minutes. Allow for the
+        # 60-second scrape interval and transient delays before paging.
         expr = ''
           absent_over_time(vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status"}[5m])
-            or time() - max_over_time(vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status"}[5m]) > 300
+            or time() - max_over_time(vpsfstatus_index_last_render_timestamp_seconds{job="vpsf-status"}[5m]) > 600
         '';
+        for = "2m";
         labels = {
+          # The absent branch has only the job label. Keep this service's
+          # alert identity stable when metrics disappear or return stale.
+          alias = "status.vpsf.cz";
+          instance = "status.vpsf.cz:443";
+          type = "vpsf-status";
           severity = "critical";
           frequency = "1h";
         };
         annotations = {
           summary = "status.vpsf.cz index page rendering is stale";
           description = ''
-            status.vpsf.cz has not completed an index page render in more than
-            five minutes, or the render timestamp metric has been missing for
-            five minutes.
+            No index page render has been observed for status.vpsf.cz in more
+            than ten minutes, or the render timestamp metric has been missing
+            for five minutes. This condition has persisted for at least two
+            minutes.
 
             VALUE: {{ $value }}
             LABELS: {{ $labels }}
