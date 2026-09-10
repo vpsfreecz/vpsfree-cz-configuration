@@ -1,0 +1,50 @@
+From: "Netcraft Takedown Service via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #20003] Issue 12345678: Server involved in fraud at 10.42.9.43
+Date: Tue, 08 Sep 2026 15:44:43 +0000
+Message-ID: <synthetic-xarf-v1-netcraft@vpsfree.test>
+X-RT-Originator: takedown-response+12345678@netcraft.com
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="xarf-v1-netcraft-boundary"
+
+--xarf-v1-netcraft-boundary
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+RT metadata
+Ticket <URL: https://rt.example.test/Ticket/Display.html?id=20003 >
+
+A synthetic Netcraft report is attached.
+
+--xarf-v1-netcraft-boundary
+Content-Type: message/feedback-report
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
+
+Feedback-Type: xarf
+User-Agent: Netcraft
+Version: 1
+
+--xarf-v1-netcraft-boundary
+Content-Type: application/json; name="xarf.json"
+Content-Disposition: attachment; filename="xarf.json"
+Content-Transfer-Encoding: base64
+
+eyJWZXJzaW9uIjoiMSIsIlJlcG9ydGVySW5mbyI6eyJSZXBvcnRlck9yZyI6
+Ik5ldGNyYWZ0IiwiUmVwb3J0ZXJPcmdEb21haW4iOiJuZXRjcmFmdC5jb20i
+LCJSZXBvcnRlck9yZ0VtYWlsIjoidGFrZWRvd24tcmVzcG9uc2UrMTIzNDU2
+NzhAbmV0Y3JhZnQuY29tIn0sIkRpc2Nsb3N1cmUiOnRydWUsIlJlcG9ydCI6
+eyJSZXBvcnRlckNhc2VJRCI6IjEyMzQ1Njc4IiwiU291cmNlSXAiOiIxMC40
+Mi45LjQzIiwiRGF0ZSI6IjIwMjYtMDktMDhUMTU6NDI6MTRaIiwiUmVwb3J0
+U3ViVHlwZSI6IkV4dG9ydGlvbiBNYWlsIFNlcnZlciIsIlJlcG9ydGVyTm90
+ZXMiOiJTZWUgaHR0cHM6Ly9pbmNpZGVudC5leGFtcGxlLnRlc3QvcmVwb3J0
+cy9zeW50aGV0aWMgZm9yIG1vcmUgaW5mb3JtYXRpb24iLCJSZXBvcnRDbGFz
+cyI6IkFjdGl2aXR5IiwiUmVwb3J0VHlwZSI6IlNwYW0iLCJTYW1wbGVzIjpb
+eyJQYXlsb2FkIjoiUm5KdmJUb2djMlZ1WkdWeVFHVjRZVzF3YkdVdWRHVnpk
+QXBVYnpvZ2NtVmphWEJwWlc1MFFHVjRZVzF3YkdVdWRHVnpkQXBUZFdKcVpX
+TjBPaUJUZVc1MGFHVjBhV01nWlhoMGIzSjBhVzl1SUhOaGJYQnNaUXBFWVhS
+bE9pQlVkV1VzSURBNElGTmxjQ0F5TURJMklERTFPalF3T2pBd0lDc3dNREF3
+Q2dwVFdVNVVTRVZVU1VNZ1JWWkpSRVZPUTBVSyIsIkJhc2U2NEVuY29kZWQi
+OnRydWUsIkNvbnRlbnRUeXBlIjoibWVzc2FnZS9yZmM4MjIifV19fQ==
+
+--xarf-v1-netcraft-boundary--

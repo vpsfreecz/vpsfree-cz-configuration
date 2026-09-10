@@ -11,9 +11,9 @@ RSpec.describe AbuseNoticeParser::XArfJson do
     message
   end
 
-  def parse_message(message, assignments: [])
+  def parse_message(message, assignments: [], dry_run: true)
     assignments.each { |ip| register_assignment(ip) }
-    described_class.new(mailbox, message, dry_run: true).parse
+    described_class.new(mailbox, message, dry_run: dry_run).parse
   end
 
   it 'creates an incident from an Abusix XARF v3 spam report' do
@@ -35,6 +35,34 @@ RSpec.describe AbuseNoticeParser::XArfJson do
     expect(incident.text).not_to include('data-channel.example.invalid')
     expect(AbuseNoticeParserSpec::AssignmentRegistry.lookups).to eq(
       [{ addr_str: '10.42.9.42', time: Time.utc(2026, 8, 17, 20, 59, 40) }]
+    )
+  end
+
+  it 'creates an incident from a Netcraft XARF v1 extortion report' do
+    incidents = parse_fixture(
+      described_class,
+      'x_arf_json_v1_netcraft',
+      assignments: ['10.42.9.43']
+    )
+
+    expect(incidents.size).to eq(1)
+    incident = incidents.first
+    expect(incident.subject).to eq(
+      'Netcraft issue 12345678: Extortion Mail Server at 10.42.9.43'
+    )
+    expect(incident.detected_at).to eq(Time.utc(2026, 9, 8, 15, 42, 14))
+    expect(incident.text).to include(
+      'Netcraft reported this IP address as an email server sending extortion messages.'
+    )
+    expect(incident.text).to include('Netcraft issue: 12345678')
+    expect(incident.text).to include(
+      'Details: See https://incident.example.test/reports/synthetic for more information'
+    )
+    expect(incident.text).to include('Subject: Synthetic extortion sample')
+    expect(incident.text).to include('SYNTHETIC EVIDENCE')
+    expect(incident.text).not_to include('takedown-response+12345678@netcraft.com')
+    expect(AbuseNoticeParserSpec::AssignmentRegistry.lookups).to eq(
+      [{ addr_str: '10.42.9.43', time: Time.utc(2026, 9, 8, 15, 42, 14) }]
     )
   end
 
@@ -62,6 +90,12 @@ RSpec.describe AbuseNoticeParser::XArfJson do
     expect(incidents).to be_empty
   end
 
+  it 'does not create a Netcraft incident without a historical IP assignment' do
+    incidents = parse_message(fixture_message('x_arf_json_v1_netcraft'))
+
+    expect(incidents).to be_empty
+  end
+
   it 'does not match reports from untrusted RT originators' do
     message = fixture_message('x_arf_json_v3')
 
@@ -79,6 +113,19 @@ RSpec.describe AbuseNoticeParser::XArfJson do
         'attacker@example.test',
         message: message,
         check_sender: false
+      )
+    ).to be(true)
+  end
+
+  it 'matches Netcraft dynamic RT originators' do
+    message = fixture_message('x_arf_json_v1_netcraft')
+
+    expect(
+      described_class.match_message?(
+        'Issue 12345678: Server involved in fraud at 10.42.9.43',
+        'takedown-response+12345678@netcraft.com',
+        message: message,
+        check_sender: true
       )
     ).to be(true)
   end
@@ -110,6 +157,122 @@ RSpec.describe AbuseNoticeParser::XArfJson do
     expect(parse_message(message, assignments: ['10.42.9.42'])).to be_empty
   end
 
+  it 'rejects Netcraft reports with inconsistent sender identity' do
+    mutations = [
+      proc do |data|
+        data.fetch('ReporterInfo')['ReporterOrgDomain'] = 'example.test'
+      end,
+      proc do |data|
+        data.fetch('ReporterInfo')['ReporterOrgEmail'] = 'other@netcraft.com'
+      end,
+      proc do |data|
+        data.fetch('Report')['ReporterCaseID'] = '87654321'
+      end
+    ]
+
+    mutations.each do |mutation|
+      message = fixture_with_json('x_arf_json_v1_netcraft', &mutation)
+
+      expect(parse_message(message, assignments: ['10.42.9.43'])).to be_empty
+    end
+  end
+
+  it 'rejects a non-legacy report from the Netcraft originator' do
+    message = fixture_message('x_arf_json_v4')
+    message['X-RT-Originator'].value =
+      'takedown-response+12345678@netcraft.com'
+
+    expect(parse_message(message, assignments: ['2001:db8::42'])).to be_empty
+  end
+
+  it 'rejects a Netcraft v1 report from the Abusix originator' do
+    message = fixture_with_json('x_arf_json_v1_netcraft') do |data|
+      data.fetch('ReporterInfo')['ReporterOrgDomain'] = 'abusix.com'
+    end
+    message['X-RT-Originator'].value = 'support@abusix.com'
+
+    expect(parse_message(message, assignments: ['10.42.9.43'])).to be_empty
+  end
+
+  it 'rejects an Abusix v3 report from a Netcraft originator' do
+    message = fixture_message('x_arf_json_v3')
+    message['X-RT-Originator'].value =
+      'takedown-response+12345678@netcraft.com'
+
+    expect(parse_message(message, assignments: ['10.42.9.42'])).to be_empty
+  end
+
+  it 'supports disabling Netcraft sender identity checks' do
+    message = fixture_with_json('x_arf_json_v1_netcraft') do |data|
+      data.fetch('ReporterInfo')['ReporterOrgDomain'] = 'example.test'
+      data.fetch('ReporterInfo')['ReporterOrgEmail'] = 'other@example.test'
+      data.fetch('Report')['ReporterCaseID'] = '87654321'
+    end
+    original_check_sender = ENV.fetch('CHECK_SENDER', nil)
+    ENV['CHECK_SENDER'] = '0'
+
+    incidents = parse_message(message, assignments: ['10.42.9.43'])
+
+    expect(incidents.size).to eq(1)
+  ensure
+    ENV['CHECK_SENDER'] = original_check_sender
+  end
+
+  it 'rejects Netcraft reports outside the forwarding policy' do
+    mutations = [
+      proc { |data| data.fetch('Report')['ReportSubType'] = 'Trap' },
+      proc { |data| data['Disclosure'] = false }
+    ]
+
+    mutations.each do |mutation|
+      message = fixture_with_json('x_arf_json_v1_netcraft', &mutation)
+
+      expect(parse_message(message, assignments: ['10.42.9.43'])).to be_empty
+    end
+  end
+
+  it 'rejects Netcraft case IDs longer than the provider limit' do
+    case_id = '1' * 33
+    message = fixture_with_json('x_arf_json_v1_netcraft') do |data|
+      data.fetch('ReporterInfo')['ReporterOrgEmail'] =
+        "takedown-response+#{case_id}@netcraft.com"
+      data.fetch('Report')['ReporterCaseID'] = case_id
+    end
+    message['X-RT-Originator'].value =
+      "takedown-response+#{case_id}@netcraft.com"
+
+    expect(parse_message(message, assignments: ['10.42.9.43'])).to be_empty
+  end
+
+  it 'does not create a duplicate incident for a Netcraft reminder' do
+    assignment = register_assignment('10.42.9.43')
+    subject = 'Netcraft issue 12345678: Extortion Mail Server at 10.42.9.43'
+    detected_at = Time.utc(2026, 9, 8, 15, 42, 14)
+    existing = IncidentReport.new(
+      id: 4001,
+      user_id: assignment.user_id,
+      vps_id: assignment.vps_id,
+      ip_address_assignment: assignment,
+      subject: subject,
+      text: 'Previously persisted incident',
+      detected_at: detected_at
+    )
+    IncidentReport.existing_report = existing
+
+    reminder = fixture_message('x_arf_json_v1_netcraft')
+    reminder.subject = '[rt.vpsfree.cz #20004] Re: Issue 12345678: Server involved in fraud at 10.42.9.43'
+    incidents = described_class.new(mailbox, reminder, dry_run: true).parse
+
+    expect(incidents).to be_empty
+    expect(IncidentReport.where_calls.last).to eq(
+      user_id: existing.user_id,
+      vps_id: existing.vps_id,
+      ip_address_assignment_id: existing.ip_address_assignment_id,
+      subject: subject,
+      detected_at: detected_at
+    )
+  end
+
   it 'rejects XARF report types outside the forwarding policy' do
     message = fixture_with_json('x_arf_json_v3') do |data|
       data.fetch('Report')['ReportType'] = 'LoginAttack'
@@ -135,6 +298,65 @@ RSpec.describe AbuseNoticeParser::XArfJson do
     end
 
     expect(parse_message(message, assignments: ['10.42.9.42'])).to be_empty
+  end
+
+  it 'rejects Netcraft reports without supported textual evidence' do
+    message = fixture_with_json('x_arf_json_v1_netcraft') do |data|
+      data.dig('Report', 'Samples').first['ContentType'] = 'image/png'
+    end
+
+    expect(parse_message(message, assignments: ['10.42.9.43'])).to be_empty
+  end
+
+  it 'rejects Netcraft reports containing mixed textual and binary evidence' do
+    message = fixture_with_json('x_arf_json_v1_netcraft') do |data|
+      data.dig('Report', 'Samples') << {
+        'ContentType' => 'image/png',
+        'Payload' => ['synthetic binary evidence'].pack('m0'),
+        'Base64Encoded' => true
+      }
+    end
+
+    expect(parse_message(message, assignments: ['10.42.9.43'])).to be_empty
+  end
+
+  it 'rejects Netcraft reports containing empty textual evidence' do
+    message = fixture_with_json('x_arf_json_v1_netcraft') do |data|
+      data.dig('Report', 'Samples').first['Payload'] = ['   '].pack('m0')
+    end
+
+    expect(parse_message(message, assignments: ['10.42.9.43'])).to be_empty
+  end
+
+  it 'rejects Netcraft incident text that exceeds database capacity' do
+    message = fixture_with_json('x_arf_json_v1_netcraft') do |data|
+      data.fetch('Report')['ReporterNotes'] =
+        'x' * described_class::MAX_TEXT_BYTES
+    end
+
+    incidents = parse_message(
+      message,
+      assignments: ['10.42.9.43'],
+      dry_run: false
+    )
+
+    expect(incidents).to be_empty
+    expect(IncidentReport.records).to be_empty
+  end
+
+  it 'rejects characters unsupported by the incident table encoding' do
+    message = fixture_with_json('x_arf_json_v1_netcraft') do |data|
+      data.fetch('Report')['ReporterNotes'] = 'Unsupported character: 💥'
+    end
+
+    incidents = parse_message(
+      message,
+      assignments: ['10.42.9.43'],
+      dry_run: false
+    )
+
+    expect(incidents).to be_empty
+    expect(IncidentReport.records).to be_empty
   end
 
   it 'rejects malformed JSON attachments' do

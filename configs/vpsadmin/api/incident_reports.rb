@@ -48,6 +48,7 @@ VpsAdmin::API::IncidentReports.config do
 
       parser = klass.new(mailbox, message, dry_run: dry_run)
       incidents = parser.parse
+      processed = parser.processed? if parser.respond_to?(:processed?)
 
       break
     end

@@ -21,6 +21,8 @@ module AbuseNoticeParser
       :report_id,
       :disclosure,
       :sender_domain,
+      :reporter_email,
+      :report_notes,
       :evidence
     )
 
@@ -33,24 +35,40 @@ module AbuseNoticeParser
         raise Error, 'top-level JSON value is not an object'
       end
 
-      has_v3 = data.has_key?('Version')
+      has_legacy = data.has_key?('Version')
       has_v4 = data.has_key?('xarf_version')
 
-      if has_v3 == has_v4
+      if has_legacy == has_v4
         raise Error, 'expected exactly one XARF version field'
       end
 
-      has_v3 ? decode_v3(data) : decode_v4(data)
+      return decode_v4(data) if has_v4
+
+      version = required_string(data, 'Version')
+
+      case version
+      when '1'
+        decode_v1(data)
+      when '3'
+        decode_v3(data)
+      else
+        raise Error, "unsupported XARF version #{version.inspect}"
+      end
     rescue JSON::ParserError => e
       raise Error, "invalid JSON: #{e.message}"
     end
 
     protected
 
-    def decode_v3(data)
-      version = required_string(data, 'Version')
-      raise Error, "unsupported XARF version #{version.inspect}" unless version == '3'
+    def decode_v1(data)
+      decode_legacy(data, version: '1', allow_singular_sample: false)
+    end
 
+    def decode_v3(data)
+      decode_legacy(data, version: '3', allow_singular_sample: true)
+    end
+
+    def decode_legacy(data, version:, allow_singular_sample:)
       disclosure = data['Disclosure']
       unless [true, false].include?(disclosure)
         raise Error, 'Disclosure is not a boolean'
@@ -59,7 +77,13 @@ module AbuseNoticeParser
       reporter = required_hash(data, 'ReporterInfo')
       sender_domain = required_string(reporter, 'ReporterOrgDomain')
       report = required_hash(data, 'Report')
-      evidence = decode_v3_evidence(report)
+      evidence = decode_legacy_evidence(
+        report,
+        allow_singular_sample: allow_singular_sample
+      )
+      reporter_email = if version == '1'
+                         required_email(reporter, 'ReporterOrgEmail')
+                       end
 
       Report.new(
         version: version,
@@ -72,35 +96,41 @@ module AbuseNoticeParser
         source_port: nil,
         evidence_source: nil,
         smtp_mail_from: optional_email(report, 'SmtpMailFromAddress'),
-        report_id: nil,
+        report_id: version == '1' ? optional_string(report, 'ReporterCaseID') : nil,
         disclosure: disclosure,
         sender_domain: sender_domain.downcase,
+        reporter_email: reporter_email,
+        report_notes: version == '1' ? optional_string(report, 'ReporterNotes') : nil,
         evidence: evidence
       )
     end
 
-    def decode_v3_evidence(report)
+    def decode_legacy_evidence(report, allow_singular_sample:)
       sample = report['Sample']
       samples = report['Samples']
 
       if sample && samples
         raise Error, 'Report contains both Sample and Samples'
       elsif sample
-        [decode_v3_sample(required_hash(report, 'Sample'))]
+        unless allow_singular_sample
+          raise Error, 'Report.Sample is not supported in XARF version 1'
+        end
+
+        [decode_legacy_sample(required_hash(report, 'Sample'))]
       elsif samples
         unless samples.is_a?(Array)
           raise Error, 'Report.Samples is not an array'
         end
 
         samples.map.with_index do |item, index|
-          decode_v3_sample(hash_value(item, "Report.Samples[#{index}]"))
+          decode_legacy_sample(hash_value(item, "Report.Samples[#{index}]"))
         end
       else
         []
       end.then { |evidence| check_evidence_size(evidence) }
     end
 
-    def decode_v3_sample(sample)
+    def decode_legacy_sample(sample)
       base64_encoded = sample.fetch('Base64Encoded', false)
       unless [true, false].include?(base64_encoded)
         raise Error, 'evidence Base64Encoded is not a boolean'
@@ -144,6 +174,8 @@ module AbuseNoticeParser
         report_id: report_id,
         disclosure: nil,
         sender_domain: required_string(sender, 'domain').downcase,
+        reporter_email: nil,
+        report_notes: nil,
         evidence: evidence
       )
     end
@@ -207,6 +239,14 @@ module AbuseNoticeParser
       value = optional_string(data, key)
       return nil if value.nil?
 
+      validate_email(value, key)
+    end
+
+    def required_email(data, key)
+      validate_email(required_string(data, key), key)
+    end
+
+    def validate_email(value, key)
       if value.bytesize > 320 || value.match?(/[\r\n]/)
         raise Error, "#{key} is not a valid email address"
       end

@@ -7,6 +7,34 @@ RSpec.describe AbuseNoticeParser::XArfDecoder do
     [text].pack('m0')
   end
 
+  def v1_report
+    {
+      'Version' => '1',
+      'ReporterInfo' => {
+        'ReporterOrg' => 'Netcraft',
+        'ReporterOrgDomain' => 'netcraft.com',
+        'ReporterOrgEmail' => 'takedown-response+12345678@netcraft.com'
+      },
+      'Disclosure' => true,
+      'Report' => {
+        'ReporterCaseID' => '12345678',
+        'Date' => '2026-09-08T15:42:14Z',
+        'ReportClass' => 'Activity',
+        'ReportType' => 'Spam',
+        'ReportSubType' => 'Extortion Mail Server',
+        'ReporterNotes' => 'See the synthetic report for more information',
+        'SourceIp' => '10.42.9.43',
+        'Samples' => [
+          {
+            'ContentType' => 'message/rfc822',
+            'Payload' => encoded_evidence,
+            'Base64Encoded' => true
+          }
+        ]
+      }
+    }
+  end
+
   def v3_report
     {
       'Version' => '3',
@@ -70,6 +98,23 @@ RSpec.describe AbuseNoticeParser::XArfDecoder do
     decoder.decode(JSON.generate(data))
   end
 
+  it 'normalizes a Netcraft XARF v1 report' do
+    report = decode(v1_report)
+
+    expect(report.version).to eq('1')
+    expect(report.source_ip).to eq('10.42.9.43')
+    expect(report.detected_at).to eq(Time.utc(2026, 9, 8, 15, 42, 14))
+    expect(report.report_class).to eq('Activity')
+    expect(report.report_type).to eq('Spam')
+    expect(report.report_subtype).to eq('Extortion Mail Server')
+    expect(report.report_id).to eq('12345678')
+    expect(report.sender_domain).to eq('netcraft.com')
+    expect(report.reporter_email).to eq('takedown-response+12345678@netcraft.com')
+    expect(report.report_notes).to eq('See the synthetic report for more information')
+    expect(report.disclosure).to be(true)
+    expect(report.evidence.first.payload).to eq('synthetic evidence')
+  end
+
   it 'normalizes an Abusix XARF v3 report with a singular Sample' do
     report = decode(v3_report)
 
@@ -95,6 +140,19 @@ RSpec.describe AbuseNoticeParser::XArfDecoder do
     expect(report.evidence.first.content_type).to eq('message/rfc822')
   end
 
+  it 'preserves ignored reporter metadata in XARF v3 reports' do
+    data = v3_report
+    data.fetch('ReporterInfo').delete('ReporterOrgEmail')
+    data.fetch('Report')['ReporterCaseID'] = 'legacy-case-id'
+    data.fetch('Report')['ReporterNotes'] = 'Legacy reporter notes'
+
+    report = decode(data)
+
+    expect(report.reporter_email).to be_nil
+    expect(report.report_id).to be_nil
+    expect(report.report_notes).to be_nil
+  end
+
   it 'normalizes an IP-based XARF v4 report' do
     report = decode(v4_report)
 
@@ -117,6 +175,26 @@ RSpec.describe AbuseNoticeParser::XArfDecoder do
     expect { decode(data) }.to raise_error(
       described_class::Error,
       'Report contains both Sample and Samples'
+    )
+  end
+
+  it 'rejects singular evidence in XARF v1 reports' do
+    data = v1_report
+    data.fetch('Report')['Sample'] = data.fetch('Report').delete('Samples').first
+
+    expect { decode(data) }.to raise_error(
+      described_class::Error,
+      'Report.Sample is not supported in XARF version 1'
+    )
+  end
+
+  it 'rejects a Netcraft v1 report without the reporter email' do
+    data = v1_report
+    data.fetch('ReporterInfo').delete('ReporterOrgEmail')
+
+    expect { decode(data) }.to raise_error(
+      described_class::Error,
+      'ReporterOrgEmail is not a valid string'
     )
   end
 
