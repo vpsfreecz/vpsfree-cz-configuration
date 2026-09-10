@@ -14,6 +14,7 @@ let
   homeManagerInput = inputsInfo."home-manager".input;
   llmAgentsInput = inputsInfo."llm-agents".input;
   devWorkspaceInput = inputsInfo.devWorkspace.input;
+  devWorkspaceSite = import ./dev-workspace-site.nix;
   llmAgentsPkgs = flakeInputs.${llmAgentsInput}.packages.${pkgs.stdenv.hostPlatform.system};
 
   ns1IntPrg = confLib.findMetaConfig {
@@ -100,21 +101,12 @@ in
     owner = "aither";
     ownerGroup = "workspace-portal-owner";
     proxyGroup = "workspace-portal-proxy";
-    hostName = "vpsfree-cz.workspace.aitherdev.int.vpsfree.cz";
-    wildcardHost = "*.workspace.aitherdev.int.vpsfree.cz";
-    aliases = [ "vpsfree-cz-workspace.aitherdev.int.vpsfree.cz" ];
+    inherit (devWorkspaceSite) hostName wildcardHost aliases;
     listenAddress = "172.16.106.40";
-    routerSocket = "/run/vpsfree-workspace-router/router.sock";
-    lockFile = "/run/lock/vpsfree-workspace-portal-substrate.lock";
     auth = {
       user = "aither";
-      passwordFile = "/var/lib/vpsfree-workspace-portal-password/password";
-      htpasswdFile = "/var/lib/vpsfree-workspace-portal-auth/htpasswd";
     };
     tls = {
-      caStateDirectory = "/var/lib/vpsfree-workspace-pki";
-      certificateDirectory = "/var/lib/vpsfree-workspace-portal-tls";
-      publicCaFile = "/var/lib/vpsfree-workspace-portal-public/ca.pem";
       caCommonName = "vpsFree.cz Workspace Development CA";
     };
     firewall = {
