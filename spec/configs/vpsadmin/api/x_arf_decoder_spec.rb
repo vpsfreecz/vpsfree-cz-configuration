@@ -62,6 +62,18 @@ RSpec.describe AbuseNoticeParser::XArfDecoder do
     }
   end
 
+  def v1_content_report
+    data = v1_report
+    report = data.fetch('Report')
+    report.delete('ReportSubType')
+    report.delete('Samples')
+    report['ReportClass'] = 'Content'
+    report['ReportType'] = 'Phishing'
+    report['SourceUrl'] = 'https://login.example.test/account/verify'
+    report['FirstSeen'] = '2026-09-10T12:00:00Z'
+    data
+  end
+
   def v4_report
     {
       'xarf_version' => '4.0.0',
@@ -111,8 +123,68 @@ RSpec.describe AbuseNoticeParser::XArfDecoder do
     expect(report.sender_domain).to eq('netcraft.com')
     expect(report.reporter_email).to eq('takedown-response+12345678@netcraft.com')
     expect(report.report_notes).to eq('See the synthetic report for more information')
+    expect(report.source_url).to be_nil
     expect(report.disclosure).to be(true)
     expect(report.evidence.first.payload).to eq('synthetic evidence')
+  end
+
+  it 'normalizes a Netcraft XARF v1 content report without evidence' do
+    report = decode(v1_content_report)
+
+    expect(report.detected_at).to eq(Time.utc(2026, 9, 8, 15, 42, 14))
+    expect(report.report_class).to eq('Content')
+    expect(report.report_type).to eq('Phishing')
+    expect(report.source_url).to eq(
+      'https://login.example.test/account/verify'
+    )
+    expect(report.evidence).to be_empty
+  end
+
+  it 'rejects a malformed Samples value instead of treating it as absent' do
+    data = v1_content_report
+    data.fetch('Report')['Samples'] = false
+
+    expect { decode(data) }.to raise_error(
+      described_class::Error,
+      'Report.Samples is not an array'
+    )
+  end
+
+  it 'rejects invalid Unicode in a decoded string' do
+    json = JSON.generate(v1_content_report).sub('Phishing', '\\udfff')
+
+    expect { decoder.decode(json) }.to raise_error(
+      described_class::Error,
+      'ReportType is not a valid string'
+    )
+  end
+
+  it 'tags decoder errors with an identified XARF version' do
+    malformed_reports = [
+      [v1_report, '1', 'SourceIp'],
+      [v3_report, '3', 'SourceIp'],
+      [v4_report, '4.0.0', 'source_identifier']
+    ]
+
+    malformed_reports.each do |data, version, source_key|
+      report = data.fetch('Report', data)
+      report[source_key] = ''
+
+      expect { decode(data) }.to raise_error(described_class::Error) do |error|
+        expect(error.version).to eq(version)
+      end
+    end
+  end
+
+  it 'leaves the version unset when it cannot be identified' do
+    ambiguous = v1_report.merge('xarf_version' => '4.0.0')
+    malformed_version = v1_report.merge('Version' => 1)
+
+    ['{', JSON.generate(ambiguous), JSON.generate(malformed_version)].each do |json|
+      expect { decoder.decode(json) }.to raise_error(described_class::Error) do |error|
+        expect(error.version).to be_nil
+      end
+    end
   end
 
   it 'normalizes an Abusix XARF v3 report with a singular Sample' do
@@ -151,6 +223,7 @@ RSpec.describe AbuseNoticeParser::XArfDecoder do
     expect(report.reporter_email).to be_nil
     expect(report.report_id).to be_nil
     expect(report.report_notes).to be_nil
+    expect(report.source_url).to be_nil
   end
 
   it 'normalizes an IP-based XARF v4 report' do
@@ -166,6 +239,7 @@ RSpec.describe AbuseNoticeParser::XArfDecoder do
     expect(report.source_port).to eq(46_253)
     expect(report.evidence_source).to eq('spamtrap')
     expect(report.sender_domain).to eq('abusix.com')
+    expect(report.source_url).to be_nil
   end
 
   it 'rejects ambiguous v3 evidence fields' do

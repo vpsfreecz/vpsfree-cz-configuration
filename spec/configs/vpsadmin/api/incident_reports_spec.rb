@@ -69,6 +69,22 @@ RSpec.describe VpsAdmin::API::IncidentReports do
     )
   end
 
+  it 'routes a Netcraft XARF v1 content report by its MIME content' do
+    register_assignment('10.42.9.44')
+
+    result = described_class.handle_message(
+      mailbox,
+      fixture_message('x_arf_json_v1_netcraft_content'),
+      dry_run: true
+    )
+
+    expect(result).to be_processed
+    expect(result.incidents.size).to eq(1)
+    expect(result.incidents.first.subject).to eq(
+      'Netcraft issue 23456789: Phishing at 10.42.9.44'
+    )
+  end
+
   it 'processes a duplicate Netcraft reminder without another incident' do
     register_assignment('10.42.9.43')
     first = AbuseNoticeParser::XArfJson.new(
@@ -128,10 +144,77 @@ RSpec.describe VpsAdmin::API::IncidentReports do
     expect(result.incidents).to be_empty
   end
 
+  it 'leaves a Netcraft content report with an unsafe URL unidentified' do
+    message = fixture_message('x_arf_json_v1_netcraft_content')
+    attachment = message.attachments.find { |part| part.filename == 'xarf.json' }
+    data = JSON.parse(attachment.decoded)
+    data.fetch('Report')['SourceUrl'] = 'https://./phishing'
+    attachment.body = JSON.generate(data)
+    attachment.content_transfer_encoding = '8bit'
+
+    result = described_class.handle_message(mailbox, message, dry_run: true)
+
+    expect(result).not_to be_processed
+    expect(result.incidents).to be_empty
+  end
+
+  it 'leaves malformed Netcraft content evidence unidentified' do
+    message = fixture_message('x_arf_json_v1_netcraft_content')
+    attachment = message.attachments.find { |part| part.filename == 'xarf.json' }
+    data = JSON.parse(attachment.decoded)
+    data.fetch('Report')['Samples'] = false
+    attachment.body = JSON.generate(data)
+    attachment.content_transfer_encoding = '8bit'
+
+    result = described_class.handle_message(mailbox, message, dry_run: true)
+
+    expect(result).not_to be_processed
+    expect(result.incidents).to be_empty
+  end
+
+  it 'leaves invalid Unicode in Netcraft content metadata unidentified' do
+    message = fixture_message('x_arf_json_v1_netcraft_content')
+    attachment = message.attachments.find { |part| part.filename == 'xarf.json' }
+    attachment.body = attachment.decoded.sub('Phishing', '\\udfff')
+    attachment.content_transfer_encoding = '8bit'
+
+    result = described_class.handle_message(mailbox, message, dry_run: true)
+
+    expect(result).not_to be_processed
+    expect(result.incidents).to be_empty
+  end
+
+  it 'leaves a malformed v1 report from the Abusix originator unidentified' do
+    message = fixture_message('x_arf_json_v1_netcraft_content')
+    message['X-RT-Originator'].value = 'support@abusix.com'
+    attachment = message.attachments.find { |part| part.filename == 'xarf.json' }
+    data = JSON.parse(attachment.decoded)
+    data.fetch('Report')['SourceUrl'] = ''
+    attachment.body = JSON.generate(data)
+    attachment.content_transfer_encoding = '8bit'
+
+    result = described_class.handle_message(mailbox, message, dry_run: true)
+
+    expect(result).not_to be_processed
+    expect(result.incidents).to be_empty
+  end
+
   it 'preserves handling of malformed Abusix reports' do
     message = fixture_message('x_arf_json_v3')
     attachment = message.attachments.find { |part| part.filename == 'xarf.json' }
     attachment.body = '{'
+    attachment.content_transfer_encoding = '8bit'
+
+    result = described_class.handle_message(mailbox, message, dry_run: true)
+
+    expect(result).to be_processed
+    expect(result.incidents).to be_empty
+  end
+
+  it 'preserves handling of oversized Abusix reports' do
+    message = fixture_message('x_arf_json_v3')
+    attachment = message.attachments.find { |part| part.filename == 'xarf.json' }
+    attachment.body = 'x' * (AbuseNoticeParser::XArfJson::MAX_JSON_BYTES + 1)
     attachment.content_transfer_encoding = '8bit'
 
     result = described_class.handle_message(mailbox, message, dry_run: true)

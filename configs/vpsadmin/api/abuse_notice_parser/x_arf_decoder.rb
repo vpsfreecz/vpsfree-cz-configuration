@@ -23,12 +23,21 @@ module AbuseNoticeParser
       :sender_domain,
       :reporter_email,
       :report_notes,
+      :source_url,
       :evidence
     )
 
-    class Error < StandardError; end
+    class Error < StandardError
+      attr_reader :version
+
+      def initialize(message, version: nil)
+        @version = version
+        super(message)
+      end
+    end
 
     def decode(json)
+      version = nil
       data = JSON.parse(json)
 
       unless data.is_a?(Hash)
@@ -42,7 +51,10 @@ module AbuseNoticeParser
         raise Error, 'expected exactly one XARF version field'
       end
 
-      return decode_v4(data) if has_v4
+      if has_v4
+        version = required_string(data, 'xarf_version')
+        return decode_v4(data)
+      end
 
       version = required_string(data, 'Version')
 
@@ -56,6 +68,10 @@ module AbuseNoticeParser
       end
     rescue JSON::ParserError => e
       raise Error, "invalid JSON: #{e.message}"
+    rescue Error => e
+      raise e if version.nil? || !e.version.nil?
+
+      raise Error.new(e.message, version: version)
     end
 
     protected
@@ -101,23 +117,25 @@ module AbuseNoticeParser
         sender_domain: sender_domain.downcase,
         reporter_email: reporter_email,
         report_notes: version == '1' ? optional_string(report, 'ReporterNotes') : nil,
+        source_url: version == '1' ? optional_string(report, 'SourceUrl') : nil,
         evidence: evidence
       )
     end
 
     def decode_legacy_evidence(report, allow_singular_sample:)
-      sample = report['Sample']
-      samples = report['Samples']
+      has_sample = report.has_key?('Sample')
+      has_samples = report.has_key?('Samples')
 
-      if sample && samples
+      if has_sample && has_samples
         raise Error, 'Report contains both Sample and Samples'
-      elsif sample
+      elsif has_sample
         unless allow_singular_sample
           raise Error, 'Report.Sample is not supported in XARF version 1'
         end
 
         [decode_legacy_sample(required_hash(report, 'Sample'))]
-      elsif samples
+      elsif has_samples
+        samples = report['Samples']
         unless samples.is_a?(Array)
           raise Error, 'Report.Samples is not an array'
         end
@@ -176,6 +194,7 @@ module AbuseNoticeParser
         sender_domain: required_string(sender, 'domain').downcase,
         reporter_email: nil,
         report_notes: nil,
+        source_url: nil,
         evidence: evidence
       )
     end
@@ -220,7 +239,9 @@ module AbuseNoticeParser
 
     def required_string(data, key, allow_empty: false)
       value = data[key]
-      unless value.is_a?(String) && (allow_empty || !value.empty?)
+      unless value.is_a?(String) \
+             && value.valid_encoding? \
+             && (allow_empty || !value.empty?)
         raise Error, "#{key} is not a valid string"
       end
 
@@ -230,7 +251,9 @@ module AbuseNoticeParser
     def optional_string(data, key)
       value = data[key]
       return nil if value.nil?
-      raise Error, "#{key} is not a valid string" unless value.is_a?(String) && !value.empty?
+      unless value.is_a?(String) && value.valid_encoding? && !value.empty?
+        raise Error, "#{key} is not a valid string"
+      end
 
       value
     end

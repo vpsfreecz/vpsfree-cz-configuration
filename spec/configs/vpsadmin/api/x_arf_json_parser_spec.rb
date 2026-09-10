@@ -66,6 +66,68 @@ RSpec.describe AbuseNoticeParser::XArfJson do
     )
   end
 
+  it 'creates an incident from a Netcraft XARF v1 content report' do
+    incidents = parse_fixture(
+      described_class,
+      'x_arf_json_v1_netcraft_content',
+      assignments: ['10.42.9.44']
+    )
+
+    expect(incidents.size).to eq(1)
+    incident = incidents.first
+    expect(incident.subject).to eq(
+      'Netcraft issue 23456789: Phishing at 10.42.9.44'
+    )
+    expect(incident.detected_at).to eq(Time.utc(2026, 9, 9, 10, 15, 0))
+    expect(incident.text).to include(
+      'Netcraft reported harmful content hosted at this IP address.'
+    )
+    expect(incident.text).to include('Netcraft issue: 23456789')
+    expect(incident.text).to include('Report type: Phishing')
+    expect(incident.text).to include(
+      'Reported URL: https://login.example.test/account/verify?case=23456789'
+    )
+    expect(incident.text).to include(
+      'Details: See the reported URL for more information'
+    )
+    expect(incident.text).not_to include('Reported evidence:')
+    expect(incident.text).not_to include(
+      'takedown-response+23456789@netcraft.com'
+    )
+    expect(AbuseNoticeParserSpec::AssignmentRegistry.lookups).to eq(
+      [{ addr_str: '10.42.9.44', time: Time.utc(2026, 9, 9, 10, 15, 0) }]
+    )
+  end
+
+  it 'accepts other safe Netcraft content report types' do
+    ['Malware', 'New Content Category'].each do |report_type|
+      message = fixture_with_json('x_arf_json_v1_netcraft_content') do |data|
+        data.fetch('Report')['ReportType'] = report_type
+      end
+
+      incidents = parse_message(message, assignments: ['10.42.9.44'])
+
+      expect(incidents.size).to eq(1)
+      expect(incidents.first.subject).to eq(
+        "Netcraft issue 23456789: #{report_type} at 10.42.9.44"
+      )
+    end
+  end
+
+  it 'accepts an HTTP Netcraft content source URL' do
+    message = fixture_with_json('x_arf_json_v1_netcraft_content') do |data|
+      data.fetch('Report')['SourceUrl'] =
+        'http://login.example.test/account/verify'
+    end
+
+    incidents = parse_message(message, assignments: ['10.42.9.44'])
+
+    expect(incidents.size).to eq(1)
+    expect(incidents.first.text).to include(
+      'Reported URL: http://login.example.test/account/verify'
+    )
+  end
+
   it 'creates an incident from an IP-based XARF v4 spam report' do
     incidents = parse_fixture(
       described_class,
@@ -92,6 +154,14 @@ RSpec.describe AbuseNoticeParser::XArfJson do
 
   it 'does not create a Netcraft incident without a historical IP assignment' do
     incidents = parse_message(fixture_message('x_arf_json_v1_netcraft'))
+
+    expect(incidents).to be_empty
+  end
+
+  it 'does not create a Netcraft content incident without an IP assignment' do
+    incidents = parse_message(
+      fixture_message('x_arf_json_v1_netcraft_content')
+    )
 
     expect(incidents).to be_empty
   end
@@ -231,6 +301,69 @@ RSpec.describe AbuseNoticeParser::XArfJson do
     end
   end
 
+  it 'rejects undisclosed Netcraft content reports' do
+    message = fixture_with_json('x_arf_json_v1_netcraft_content') do |data|
+      data['Disclosure'] = false
+    end
+
+    expect(parse_message(message, assignments: ['10.42.9.44'])).to be_empty
+  end
+
+  it 'rejects Netcraft content reports with an inconsistent sender identity' do
+    message = fixture_with_json('x_arf_json_v1_netcraft_content') do |data|
+      data.fetch('ReporterInfo')['ReporterOrgEmail'] =
+        'takedown-response+87654321@netcraft.com'
+    end
+
+    expect(parse_message(message, assignments: ['10.42.9.44'])).to be_empty
+  end
+
+  it 'rejects Netcraft content reports without a safe absolute HTTP URL' do
+    invalid_urls = [
+      nil,
+      '/relative/path',
+      'ftp://files.example.test/payload',
+      'https://user@example.test/phishing',
+      'https://:/phishing',
+      'https://./phishing',
+      'https://example.test../phishing',
+      'https://example.test:0/phishing',
+      'https://example.test:99999/phishing',
+      "https://example.test/phishing\nforged",
+      "https://example.test/#{'x' * described_class::NETCRAFT_SOURCE_URL_MAX_BYTES}"
+    ]
+
+    invalid_urls.each do |source_url|
+      message = fixture_with_json('x_arf_json_v1_netcraft_content') do |data|
+        if source_url.nil?
+          data.fetch('Report').delete('SourceUrl')
+        else
+          data.fetch('Report')['SourceUrl'] = source_url
+        end
+      end
+
+      expect(parse_message(message, assignments: ['10.42.9.44'])).to be_empty
+    end
+  end
+
+  it 'rejects unsafe or oversized Netcraft content report types' do
+    invalid_types = [
+      'x' * (described_class::NETCRAFT_CONTENT_TYPE_MAX_CHARACTERS + 1),
+      "Phishing\nForged field",
+      ' Phishing',
+      "\u00a0",
+      "Phishing\u00a0"
+    ]
+
+    invalid_types.each do |report_type|
+      message = fixture_with_json('x_arf_json_v1_netcraft_content') do |data|
+        data.fetch('Report')['ReportType'] = report_type
+      end
+
+      expect(parse_message(message, assignments: ['10.42.9.44'])).to be_empty
+    end
+  end
+
   it 'rejects Netcraft case IDs longer than the provider limit' do
     case_id = '1' * 33
     message = fixture_with_json('x_arf_json_v1_netcraft') do |data|
@@ -261,6 +394,35 @@ RSpec.describe AbuseNoticeParser::XArfJson do
 
     reminder = fixture_message('x_arf_json_v1_netcraft')
     reminder.subject = '[rt.vpsfree.cz #20004] Re: Issue 12345678: Server involved in fraud at 10.42.9.43'
+    incidents = described_class.new(mailbox, reminder, dry_run: true).parse
+
+    expect(incidents).to be_empty
+    expect(IncidentReport.where_calls.last).to eq(
+      user_id: existing.user_id,
+      vps_id: existing.vps_id,
+      ip_address_assignment_id: existing.ip_address_assignment_id,
+      subject: subject,
+      detected_at: detected_at
+    )
+  end
+
+  it 'does not create a duplicate incident for a Netcraft content reminder' do
+    assignment = register_assignment('10.42.9.44')
+    subject = 'Netcraft issue 23456789: Phishing at 10.42.9.44'
+    detected_at = Time.utc(2026, 9, 9, 10, 15, 0)
+    existing = IncidentReport.new(
+      id: 4002,
+      user_id: assignment.user_id,
+      vps_id: assignment.vps_id,
+      ip_address_assignment: assignment,
+      subject: subject,
+      text: 'Previously persisted content incident',
+      detected_at: detected_at
+    )
+    IncidentReport.existing_report = existing
+
+    reminder = fixture_message('x_arf_json_v1_netcraft_content')
+    reminder.subject = '[rt.vpsfree.cz #20006] Re: Issue 23456789: Phishing attack'
     incidents = described_class.new(mailbox, reminder, dry_run: true).parse
 
     expect(incidents).to be_empty
@@ -326,6 +488,39 @@ RSpec.describe AbuseNoticeParser::XArfJson do
     end
 
     expect(parse_message(message, assignments: ['10.42.9.43'])).to be_empty
+  end
+
+  it 'includes optional textual evidence from Netcraft content reports' do
+    message = fixture_with_json('x_arf_json_v1_netcraft_content') do |data|
+      data.fetch('Report')['Samples'] = [
+        {
+          'ContentType' => 'text/plain',
+          'Payload' => ['Synthetic content evidence'].pack('m0'),
+          'Base64Encoded' => true
+        }
+      ]
+    end
+
+    incidents = parse_message(message, assignments: ['10.42.9.44'])
+
+    expect(incidents.size).to eq(1)
+    expect(incidents.first.text).to include(
+      "Reported evidence:\n\nSynthetic content evidence"
+    )
+  end
+
+  it 'rejects binary evidence from Netcraft content reports' do
+    message = fixture_with_json('x_arf_json_v1_netcraft_content') do |data|
+      data.fetch('Report')['Samples'] = [
+        {
+          'ContentType' => 'image/png',
+          'Payload' => ['Synthetic binary evidence'].pack('m0'),
+          'Base64Encoded' => true
+        }
+      ]
+    end
+
+    expect(parse_message(message, assignments: ['10.42.9.44'])).to be_empty
   end
 
   it 'rejects Netcraft incident text that exceeds database capacity' do

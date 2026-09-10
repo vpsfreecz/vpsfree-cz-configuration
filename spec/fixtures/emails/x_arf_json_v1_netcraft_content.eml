@@ -1,0 +1,35 @@
+From: "Netcraft Takedown Service via RT" <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #20005] Issue 23456789: Phishing attack at https://login.example.test/
+Date: Wed, 09 Sep 2026 10:20:00 +0000
+Message-ID: <synthetic-xarf-v1-netcraft-content@vpsfree.test>
+X-RT-Originator: takedown-response+23456789@netcraft.com
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="xarf-v1-netcraft-content-boundary"
+
+--xarf-v1-netcraft-content-boundary
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+RT metadata
+Ticket <URL: https://rt.example.test/Ticket/Display.html?id=20005 >
+
+A synthetic Netcraft content report is attached.
+
+--xarf-v1-netcraft-content-boundary
+Content-Type: message/feedback-report
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
+
+Feedback-Type: xarf
+User-Agent: Netcraft
+Version: 1
+
+--xarf-v1-netcraft-content-boundary
+Content-Type: application/json; name="xarf.json"
+Content-Disposition: attachment; filename="xarf.json"
+Content-Transfer-Encoding: 8bit
+
+{"Version":"1","ReporterInfo":{"ReporterOrg":"Netcraft","ReporterOrgDomain":"netcraft.com","ReporterOrgEmail":"takedown-response+23456789@netcraft.com"},"Disclosure":true,"Report":{"ReporterCaseID":"23456789","SourceIp":"10.42.9.44","Date":"2026-09-09T10:15:00Z","FirstSeen":"2026-09-10T12:00:00Z","ReporterNotes":"See the reported URL for more information","ReportClass":"Content","ReportType":"Phishing","SourceUrl":"https://login.example.test/account/verify?case=23456789"}}
+
+--xarf-v1-netcraft-content-boundary--
