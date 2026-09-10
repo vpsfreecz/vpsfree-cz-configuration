@@ -13,174 +13,8 @@
 let
   homeManagerInput = inputsInfo."home-manager".input;
   llmAgentsInput = inputsInfo."llm-agents".input;
+  devWorkspaceInput = inputsInfo.devWorkspace.input;
   llmAgentsPkgs = flakeInputs.${llmAgentsInput}.packages.${pkgs.stdenv.hostPlatform.system};
-  workspacePortalHost = "vpsfree-cz.workspace.aitherdev.int.vpsfree.cz";
-  workspacePortalLegacyHost = "vpsfree-cz-workspace.aitherdev.int.vpsfree.cz";
-  workspacePortalWildcard = "*.workspace.aitherdev.int.vpsfree.cz";
-  workspacePortalPassword = "/var/lib/vpsfree-workspace-portal-password/password";
-  workspacePortalAuth = "/var/lib/vpsfree-workspace-portal-auth/htpasswd";
-  workspacePkiState = "/var/lib/vpsfree-workspace-pki";
-  workspacePortalTls = "/var/lib/vpsfree-workspace-portal-tls";
-  workspacePortalPublicCa = "/var/lib/vpsfree-workspace-portal-public/ca.pem";
-  workspacePortalRouterSocket = "/run/vpsfree-workspace-router/router.sock";
-  workspacePortalRouterDir = builtins.dirOf workspacePortalRouterSocket;
-  workspacePortalReconcile = pkgs.writeShellApplication {
-    name = "workspace-portal-substrate-reconcile";
-    runtimeInputs = with pkgs; [
-      apacheHttpd
-      coreutils
-      gnugrep
-      openssl
-      util-linux
-    ];
-    text = ''
-      set -euo pipefail
-      umask 077
-      exec 9>/run/lock/vpsfree-workspace-portal-substrate.lock
-      flock 9
-
-      password_file=${lib.escapeShellArg workspacePortalPassword}
-      auth_file=${lib.escapeShellArg workspacePortalAuth}
-      pki_state=${lib.escapeShellArg workspacePkiState}
-      tls_dir=${lib.escapeShellArg workspacePortalTls}
-      public_ca=${lib.escapeShellArg workspacePortalPublicCa}
-      canonical=${lib.escapeShellArg workspacePortalHost}
-      wildcard=${lib.escapeShellArg workspacePortalWildcard}
-      legacy=${lib.escapeShellArg workspacePortalLegacyHost}
-      authority="$pki_state/authority"
-      ca_key="$authority/ca-key.pem"
-      ca_cert="$authority/ca.pem"
-
-      install -d -o root -g workspace-portal-owner -m 0750 "$(dirname "$password_file")"
-      if [ ! -e "$password_file" ]; then
-        password_tmp=$(mktemp "$(dirname "$password_file")/.password.XXXXXX")
-        openssl rand -hex 32 > "$password_tmp"
-        chown root:workspace-portal-owner "$password_tmp"
-        chmod 0640 "$password_tmp"
-        mv -T "$password_tmp" "$password_file"
-      fi
-      if [ -L "$password_file" ] || [ ! -f "$password_file" ] ||
-         [ "$(stat -c '%U:%G:%a' "$password_file")" != "root:workspace-portal-owner:640" ] ||
-         [ "$(wc -c < "$password_file")" -ne 65 ] ||
-         ! grep -Eq '^[0-9a-f]{64}$' "$password_file"; then
-        echo "invalid workspace portal password file: $password_file" >&2
-        exit 1
-      fi
-
-      install -d -o root -g nginx -m 0750 "$(dirname "$auth_file")"
-      auth_tmp=$(mktemp "$(dirname "$auth_file")/.htpasswd.XXXXXX")
-      htpasswd -niBC 12 aither < "$password_file" > "$auth_tmp"
-      # shellcheck disable=SC2016
-      grep -Eq '^aither:\$2[aby]\$12\$[./A-Za-z0-9]{53}$' "$auth_tmp"
-      chown root:nginx "$auth_tmp"
-      chmod 0640 "$auth_tmp"
-      mv -T "$auth_tmp" "$auth_file"
-
-      install -d -o root -g root -m 0700 "$pki_state"
-      if [ ! -e "$authority" ]; then
-        authority_tmp=$(mktemp -d "$pki_state/.authority.XXXXXX")
-        trap 'rm -rf -- "$authority_tmp"' EXIT INT TERM
-        openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:P-256 \
-          -out "$authority_tmp/ca-key.pem"
-        openssl req -x509 -new -sha256 -days 3650 \
-          -key "$authority_tmp/ca-key.pem" \
-          -subj '/CN=vpsFree.cz Workspace Development CA' \
-          -addext 'basicConstraints=critical,CA:TRUE,pathlen:0' \
-          -addext 'keyUsage=critical,keyCertSign,cRLSign' \
-          -addext 'subjectKeyIdentifier=hash' \
-          -out "$authority_tmp/ca.pem"
-        chown root:root "$authority_tmp" "$authority_tmp/ca-key.pem" "$authority_tmp/ca.pem"
-        chmod 0700 "$authority_tmp"
-        chmod 0600 "$authority_tmp/ca-key.pem"
-        chmod 0644 "$authority_tmp/ca.pem"
-        openssl verify -CAfile "$authority_tmp/ca.pem" "$authority_tmp/ca.pem" >/dev/null
-        mv -T "$authority_tmp" "$authority"
-        trap - EXIT INT TERM
-      fi
-      if [ -L "$authority" ] || [ ! -d "$authority" ] ||
-         [ -L "$ca_key" ] || [ -L "$ca_cert" ] ||
-         [ ! -f "$ca_key" ] || [ ! -f "$ca_cert" ]; then
-        echo "incomplete or unsafe workspace CA state" >&2
-        exit 1
-      fi
-      chown root:root "$ca_key" "$ca_cert"
-      chmod 0600 "$ca_key"
-      chmod 0644 "$ca_cert"
-      openssl verify -CAfile "$ca_cert" "$ca_cert" >/dev/null
-      ca_key_public=$(openssl pkey -in "$ca_key" -pubout -outform DER | openssl dgst -sha256)
-      ca_cert_public=$(openssl x509 -in "$ca_cert" -pubkey -noout | \
-        openssl pkey -pubin -outform DER | openssl dgst -sha256)
-      if [ "$ca_key_public" != "$ca_cert_public" ]; then
-        echo "workspace CA certificate and key do not match" >&2
-        exit 1
-      fi
-
-      install -d -o root -g nginx -m 0750 "$tls_dir" "$tls_dir/pairs"
-      current="$tls_dir/current"
-      renew=0
-      if [ ! -L "$current" ]; then
-        renew=1
-      else
-        if resolved=$(realpath "$current"); then
-          case "$resolved" in
-            "$tls_dir/pairs/"*) ;;
-            *) renew=1 ;;
-          esac
-        else
-          renew=1
-        fi
-        if [ "$renew" -eq 0 ] && {
-          ! openssl x509 -checkend 2592000 -noout -in "$current/server.pem" >/dev/null 2>&1 ||
-          ! openssl verify -CAfile "$ca_cert" "$current/server.pem" >/dev/null 2>&1 ||
-          ! openssl x509 -noout -ext subjectAltName -in "$current/server.pem" | grep -Fq "DNS:$wildcard" ||
-          ! openssl x509 -noout -ext subjectAltName -in "$current/server.pem" | grep -Fq "DNS:$legacy"
-        }; then
-          renew=1
-        fi
-      fi
-      if [ "$renew" -eq 0 ]; then
-        leaf_key_public=$(openssl pkey -in "$current/server-key.pem" -pubout -outform DER | openssl dgst -sha256)
-        leaf_cert_public=$(openssl x509 -in "$current/server.pem" -pubkey -noout | \
-          openssl pkey -pubin -outform DER | openssl dgst -sha256)
-        [ "$leaf_key_public" = "$leaf_cert_public" ] || renew=1
-      fi
-
-      if [ "$renew" -eq 1 ]; then
-        build=$(mktemp -d "$tls_dir/.pair.XXXXXX")
-        openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:P-256 \
-          -out "$build/server-key.pem"
-        openssl req -new -key "$build/server-key.pem" -subj "/CN=$canonical" \
-          -out "$build/server.csr"
-        {
-          echo 'basicConstraints=critical,CA:FALSE'
-          echo 'keyUsage=critical,digitalSignature'
-          echo 'extendedKeyUsage=serverAuth'
-          echo "subjectAltName=DNS:$wildcard,DNS:$legacy"
-          echo 'subjectKeyIdentifier=hash'
-          echo 'authorityKeyIdentifier=keyid,issuer'
-        } > "$build/extensions.cnf"
-        serial=$(openssl rand -hex 16)
-        openssl x509 -req -sha256 -days 397 -in "$build/server.csr" \
-          -CA "$ca_cert" -CAkey "$ca_key" -set_serial "0x$serial" \
-          -extfile "$build/extensions.cnf" -out "$build/server.pem"
-        rm "$build/server.csr" "$build/extensions.cnf"
-        chown root:nginx "$build" "$build/server.pem" "$build/server-key.pem"
-        chmod 0750 "$build"
-        chmod 0644 "$build/server.pem"
-        chmod 0640 "$build/server-key.pem"
-        openssl verify -CAfile "$ca_cert" "$build/server.pem" >/dev/null
-        pair="$tls_dir/pairs/pair-$(date +%s)-$$"
-        mv -T "$build" "$pair"
-        ln -s "pairs/$(basename "$pair")" "$tls_dir/.current.$$"
-        mv -Tf "$tls_dir/.current.$$" "$current"
-      fi
-
-      install -d -o root -g root -m 0755 "$(dirname "$public_ca")"
-      ca_tmp=$(mktemp "$(dirname "$public_ca")/.ca.XXXXXX")
-      install -o root -g root -m 0644 "$ca_cert" "$ca_tmp"
-      mv -T "$ca_tmp" "$public_ca"
-    '';
-  };
 
   ns1IntPrg = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -258,7 +92,36 @@ in
     ./hardware.nix
     ./kb-staging.nix
     flakeInputs.${homeManagerInput}.nixosModules.home-manager
+    flakeInputs.${devWorkspaceInput}.nixosModules.host
   ];
+
+  services.dev-workspaces = {
+    enable = true;
+    owner = "aither";
+    ownerGroup = "workspace-portal-owner";
+    proxyGroup = "workspace-portal-proxy";
+    hostName = "vpsfree-cz.workspace.aitherdev.int.vpsfree.cz";
+    wildcardHost = "*.workspace.aitherdev.int.vpsfree.cz";
+    aliases = [ "vpsfree-cz-workspace.aitherdev.int.vpsfree.cz" ];
+    listenAddress = "172.16.106.40";
+    routerSocket = "/run/vpsfree-workspace-router/router.sock";
+    lockFile = "/run/lock/vpsfree-workspace-portal-substrate.lock";
+    auth = {
+      user = "aither";
+      passwordFile = "/var/lib/vpsfree-workspace-portal-password/password";
+      htpasswdFile = "/var/lib/vpsfree-workspace-portal-auth/htpasswd";
+    };
+    tls = {
+      caStateDirectory = "/var/lib/vpsfree-workspace-pki";
+      certificateDirectory = "/var/lib/vpsfree-workspace-portal-tls";
+      publicCaFile = "/var/lib/vpsfree-workspace-portal-public/ca.pem";
+      caCommonName = "vpsFree.cz Workspace Development CA";
+    };
+    firewall = {
+      sourceRanges = [ "172.16.107.0/24" ];
+      ports = [ 443 ];
+    };
+  };
 
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/vda";
@@ -402,28 +265,9 @@ in
     openssh.authorizedKeys.keys = confData.sshKeys.aither.all;
   };
 
-  users.groups.workspace-portal-proxy.members = [ "nginx" ];
-  users.groups.workspace-portal-owner.members = [ "aither" ];
-
-  systemd.tmpfiles.rules = [
-    "d ${workspacePortalRouterDir} 2770 aither workspace-portal-proxy -"
-  ];
-
-  system.activationScripts.workspacePortalCredentials = {
-    deps = [ "users" ];
-    text = ''
-      ${workspacePortalReconcile}/bin/workspace-portal-substrate-reconcile
-    '';
-  };
-
-  environment.systemPackages =
-    (with pkgs; [
-      vim
-    ])
-    ++ [
-      llmAgentsPkgs.codex
-      workspacePortalReconcile
-    ];
+  # Keep the system Codex package through the first workspace profile rollout.
+  # The preceding profile generation still uses it when testing rollback.
+  environment.systemPackages = (with pkgs; [ vim ]) ++ [ llmAgentsPkgs.codex ];
 
   services.openssh = {
     enable = true;
@@ -433,38 +277,6 @@ in
   };
 
   services.postfix.enable = true;
-
-  systemd.services.workspace-portal-certificate-renewal = {
-    description = "Renew the workspace portal TLS certificate";
-    after = [ "nginx.service" ];
-    serviceConfig = {
-      Type = "oneshot";
-      UMask = "0077";
-    };
-    script = ''
-      ${workspacePortalReconcile}/bin/workspace-portal-substrate-reconcile
-      ${pkgs.systemd}/bin/systemctl reload nginx.service
-    '';
-  };
-
-  systemd.timers.workspace-portal-certificate-renewal = {
-    description = "Periodically check the workspace portal TLS certificate";
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "weekly";
-      Persistent = true;
-      RandomizedDelaySec = "6h";
-    };
-  };
-
-  # Supplementary credentials are fixed when nginx starts. Keep the original
-  # trigger stable because this group is unchanged by the substrate split.
-  systemd.services.nginx = {
-    restartTriggers = [
-      (pkgs.writeText "workspace-portal-nginx-group-v1" "workspace-portal-proxy\n")
-    ];
-    serviceConfig.SupplementaryGroups = [ "workspace-portal-proxy" ];
-  };
 
   services.samba = {
     enable = true;
@@ -519,41 +331,6 @@ in
     enable = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    upstreams.workspace-portal.servers."unix:${workspacePortalRouterSocket}" = { };
-    virtualHosts.${workspacePortalWildcard} = {
-      serverAliases = [ workspacePortalLegacyHost ];
-      forceSSL = true;
-      listen = [
-        {
-          addr = "172.16.106.40";
-          port = 80;
-        }
-        {
-          addr = "172.16.106.40";
-          port = 443;
-          ssl = true;
-        }
-      ];
-      sslCertificate = "${workspacePortalTls}/current/server.pem";
-      sslCertificateKey = "${workspacePortalTls}/current/server-key.pem";
-      basicAuthFile = workspacePortalAuth;
-      extraConfig = ''
-        add_header Strict-Transport-Security "max-age=31536000" always;
-      '';
-      locations."/" = {
-        proxyPass = "http://workspace-portal";
-        extraConfig = ''
-          proxy_buffering off;
-          proxy_read_timeout 1h;
-          # Authentication and the application enforce their own tighter
-          # limits. Keep this stable substrate ceiling comfortably above them
-          # so user-profile updates do not require a NixOS deployment.
-          client_max_body_size 16m;
-          proxy_set_header Authorization "";
-          proxy_hide_header Strict-Transport-Security;
-        '';
-      };
-    };
     virtualHosts."codex-lb.aitherdev.int.vpsfree.cz" = {
       listen = [
         {
@@ -610,9 +387,6 @@ in
 
     # Shared nginx HTTP redirects over WireGuard
     iptables -A nixos-fw -p tcp -m tcp --dport 80 -s 172.16.107.0/24 -j ACCEPT
-
-    # development workspace portal
-    iptables -A nixos-fw -p tcp -m tcp --dport 443 -s 172.16.107.0/24 -j ACCEPT
 
     # Samba workspace share
     iptables -A nixos-fw -p tcp -m tcp --dport 445 -s 172.16.107.34/32 -j ACCEPT
