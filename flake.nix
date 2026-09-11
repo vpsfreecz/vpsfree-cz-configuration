@@ -32,6 +32,8 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
+    devWorkspace.url = "github:aither64/dev-workspace";
+
     vpsfreeWeb = {
       url = "github:vpsfreecz/web";
       flake = false;
@@ -133,6 +135,10 @@
 
         llm-agents = {
           llm-agents = "llm-agents";
+        };
+
+        dev-workspace = {
+          devWorkspace = "devWorkspace";
         };
 
         vpsfree-web = {
