@@ -104,6 +104,10 @@ jobs:
             bundle lock --update
             bundle install
 
+            # Overcommit signs the merged configuration, including defaults
+            # shipped by the gem. Refresh it after upgrading Overcommit.
+            bundle exec overcommit --sign
+
             bundle exec rake spec
             bundle exec rubocop
             bundler-audit check --update
