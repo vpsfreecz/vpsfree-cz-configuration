@@ -222,7 +222,7 @@
     "home-manager_3": {
       "inputs": {
         "nixpkgs": [
-          "proxyVpsadminosBaseline",
+          "vpsadminosOsStaging",
           "impermanence",
           "nixpkgs"
         ]
@@ -244,7 +244,7 @@
     "home-manager_4": {
       "inputs": {
         "nixpkgs": [
-          "vpsadminosOsStaging",
+          "vpsadminosProduction",
           "impermanence",
           "nixpkgs"
         ]
@@ -266,28 +266,6 @@
     "home-manager_5": {
       "inputs": {
         "nixpkgs": [
-          "vpsadminosProduction",
-          "impermanence",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1768598210,
-        "narHash": "sha256-kkgA32s/f4jaa4UG+2f8C225Qvclxnqs76mf8zvTVPg=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "c47b2cc64a629f8e075de52e4742de688f930dc6",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "home-manager_6": {
-      "inputs": {
-        "nixpkgs": [
           "vpsadminosStaging",
           "impermanence",
           "nixpkgs"
@@ -307,7 +285,7 @@
         "type": "github"
       }
     },
-    "home-manager_7": {
+    "home-manager_6": {
       "inputs": {
         "nixpkgs": [
           "vpsfStatus",
@@ -411,25 +389,6 @@
       "inputs": {
         "home-manager": "home-manager_6",
         "nixpkgs": "nixpkgs_9"
-      },
-      "locked": {
-        "lastModified": 1769548169,
-        "narHash": "sha256-03+JxvzmfwRu+5JafM0DLbxgHttOQZkUtDWBmeUkN8Y=",
-        "owner": "nix-community",
-        "repo": "impermanence",
-        "rev": "7b1d382faf603b6d264f58627330f9faa5cba149",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "impermanence",
-        "type": "github"
-      }
-    },
-    "impermanence_6": {
-      "inputs": {
-        "home-manager": "home-manager_7",
-        "nixpkgs": "nixpkgs_10"
       },
       "locked": {
         "lastModified": 1769548169,
@@ -570,22 +529,6 @@
         "type": "github"
       }
     },
-    "netlinkrb_6": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1562850306,
-        "narHash": "sha256-0bXTWUdUDr2XP+bEIfIbxXap8Niva/IoPXTxFeXXImg=",
-        "owner": "vpsfreecz",
-        "repo": "netlinkrb",
-        "rev": "d9de53d843d2586ffa5b7b404887fa801c697ddf",
-        "type": "github"
-      },
-      "original": {
-        "owner": "vpsfreecz",
-        "repo": "netlinkrb",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1768564909,
@@ -699,22 +642,6 @@
       }
     },
     "nixpkgs_10": {
-      "locked": {
-        "lastModified": 1768564909,
-        "narHash": "sha256-Kell/SpJYVkHWMvnhqJz/8DqQg2b6PguxVWOuadbHCc=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "e4bae1bd10c9c57b2cf517953ab70060a828ee6f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_11": {
       "locked": {
         "lastModified": 1786089803,
         "narHash": "sha256-ZuvZfVW2tB5tXYEcpcfhVXB3N4OhdZLOqOviy4OD4b4=",
@@ -858,89 +785,6 @@
         "type": "github"
       }
     },
-    "proxyNixpkgsBaseline": {
-      "locked": {
-        "lastModified": 1782847225,
-        "narHash": "sha256-JC9PjqKYG9ve5U8aDOLQipp3+KLANBHUvGdLZlxzdKI=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "95ca1e203c0750115fd4a6f17d5a245dfe6b1edd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "95ca1e203c0750115fd4a6f17d5a245dfe6b1edd",
-        "type": "github"
-      }
-    },
-    "proxyNixpkgsUnstableBaseline": {
-      "locked": {
-        "lastModified": 1782959384,
-        "narHash": "sha256-xnJJk+ct+D2+wdRxj1wk36w5zV9RVESwRqcklPdt3fM=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "65179426c83bb3f6bc14898b42ea1c6f01d374b0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "65179426c83bb3f6bc14898b42ea1c6f01d374b0",
-        "type": "github"
-      }
-    },
-    "proxyVpsadminBaseline": {
-      "inputs": {
-        "nixpkgs": [
-          "proxyNixpkgsBaseline"
-        ],
-        "vpsadminos": [
-          "proxyVpsadminosBaseline"
-        ]
-      },
-      "locked": {
-        "lastModified": 1783155061,
-        "narHash": "sha256-PI3JTyvI77eA7bfMAjdFPLwpZGZHU+nsrRGtRsrYv/o=",
-        "owner": "vpsfreecz",
-        "repo": "vpsadmin",
-        "rev": "850c7574307f3f09c32061442ec4bb0b18a7d0f0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "vpsfreecz",
-        "repo": "vpsadmin",
-        "rev": "850c7574307f3f09c32061442ec4bb0b18a7d0f0",
-        "type": "github"
-      }
-    },
-    "proxyVpsadminosBaseline": {
-      "inputs": {
-        "impermanence": "impermanence_2",
-        "netlinkrb": "netlinkrb_2",
-        "nixpkgs": [
-          "proxyNixpkgsBaseline"
-        ],
-        "nixpkgsUnstable": [
-          "proxyNixpkgsUnstableBaseline"
-        ],
-        "ruby-lxc": "ruby-lxc_2"
-      },
-      "locked": {
-        "lastModified": 1783144727,
-        "narHash": "sha256-4LzP1e5+6mWtdLhsznZGFiRLhT1Z93ULYKRZsQhroZ4=",
-        "owner": "vpsfreecz",
-        "repo": "vpsadminos",
-        "rev": "495957f5ce89b1504a8959bb4dcb3ab85e951bbf",
-        "type": "github"
-      },
-      "original": {
-        "owner": "vpsfreecz",
-        "repo": "vpsadminos",
-        "rev": "495957f5ce89b1504a8959bb4dcb3ab85e951bbf",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "confctl": "confctl",
@@ -954,10 +798,6 @@
         "nixpkgsStable": "nixpkgsStable",
         "nixpkgsStaging": "nixpkgsStaging",
         "nixpkgsUnstable": "nixpkgsUnstable_2",
-        "proxyNixpkgsBaseline": "proxyNixpkgsBaseline",
-        "proxyNixpkgsUnstableBaseline": "proxyNixpkgsUnstableBaseline",
-        "proxyVpsadminBaseline": "proxyVpsadminBaseline",
-        "proxyVpsadminosBaseline": "proxyVpsadminosBaseline",
         "vpsadminProduction": "vpsadminProduction",
         "vpsadminServices": "vpsadminServices",
         "vpsadminStaging": "vpsadminStaging",
@@ -1038,23 +878,6 @@
       }
     },
     "ruby-lxc_5": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1780499941,
-        "narHash": "sha256-guAdOSP9MyCL3BQ1LGXAhcCoXgEU1fUE69d2ATMqUGE=",
-        "owner": "vpsfreecz",
-        "repo": "ruby-lxc",
-        "rev": "004bf35eb90d41ba60b347b5b1e73d868a4f95d9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "vpsfreecz",
-        "ref": "2026-06-03-nixos-26-05-port",
-        "repo": "ruby-lxc",
-        "type": "github"
-      }
-    },
-    "ruby-lxc_6": {
       "flake": false,
       "locked": {
         "lastModified": 1780499941,
@@ -1261,15 +1084,15 @@
     },
     "vpsadminosOsStaging": {
       "inputs": {
-        "impermanence": "impermanence_3",
-        "netlinkrb": "netlinkrb_3",
+        "impermanence": "impermanence_2",
+        "netlinkrb": "netlinkrb_2",
         "nixpkgs": [
           "nixpkgsStable"
         ],
         "nixpkgsUnstable": [
           "nixpkgsUnstable"
         ],
-        "ruby-lxc": "ruby-lxc_3"
+        "ruby-lxc": "ruby-lxc_2"
       },
       "locked": {
         "lastModified": 1789284941,
@@ -1287,15 +1110,15 @@
     },
     "vpsadminosProduction": {
       "inputs": {
-        "impermanence": "impermanence_4",
-        "netlinkrb": "netlinkrb_4",
+        "impermanence": "impermanence_3",
+        "netlinkrb": "netlinkrb_3",
         "nixpkgs": [
           "nixpkgsProduction"
         ],
         "nixpkgsUnstable": [
           "nixpkgsUnstable"
         ],
-        "ruby-lxc": "ruby-lxc_4"
+        "ruby-lxc": "ruby-lxc_3"
       },
       "locked": {
         "lastModified": 1788796238,
@@ -1313,15 +1136,15 @@
     },
     "vpsadminosStaging": {
       "inputs": {
-        "impermanence": "impermanence_5",
-        "netlinkrb": "netlinkrb_5",
+        "impermanence": "impermanence_4",
+        "netlinkrb": "netlinkrb_4",
         "nixpkgs": [
           "nixpkgsStaging"
         ],
         "nixpkgsUnstable": [
           "nixpkgsUnstable"
         ],
-        "ruby-lxc": "ruby-lxc_5"
+        "ruby-lxc": "ruby-lxc_4"
       },
       "locked": {
         "lastModified": 1789284941,
@@ -1339,11 +1162,11 @@
     },
     "vpsadminos_2": {
       "inputs": {
-        "impermanence": "impermanence_6",
-        "netlinkrb": "netlinkrb_6",
-        "nixpkgs": "nixpkgs_11",
+        "impermanence": "impermanence_5",
+        "netlinkrb": "netlinkrb_5",
+        "nixpkgs": "nixpkgs_10",
         "nixpkgsUnstable": "nixpkgsUnstable_3",
-        "ruby-lxc": "ruby-lxc_6"
+        "ruby-lxc": "ruby-lxc_5"
       },
       "locked": {
         "lastModified": 1786260915,

@@ -22,6 +22,13 @@ The configuration commits for this release pin `vpsadminServices` and
 production Node channels are unchanged because the feature does not change the
 vpsAdminOS protocol or Node software.
 
+The shared production proxy uses the normal `nixos-stable`, `os-staging` and
+`vpsadmin` channels. This rollout removes its temporary July dependency
+baselines, so deploying it also updates dependencies used by its other proxy
+workloads. Review the proxy's system-generation diff before deployment and
+retain its previous generation for rollback. The vpsAdmin frontend module
+provides the password-recovery route and maintenance response.
+
 Before building, obtain the exact configuration commit approved for rollout
 through the normal review process. Set `APPROVED_CONFIGURATION_REVISION` to
 that value and verify the checkout and service pin:
@@ -276,7 +283,7 @@ confctl deploy cz.vpsfree/vpsadmin/int.webui1 switch
 confctl deploy cz.vpsfree/vpsadmin/int.webui2 switch
 ```
 
-Finally, deploy the frontend route on the production proxy:
+Finally, deploy the production proxy with its reviewed channel dependencies:
 
 ```shell
 confctl deploy cz.vpsfree/containers/prg/proxy switch
@@ -476,10 +483,15 @@ confctl ssh --parallel --yes 'cz.vpsfree/vpsadmin/int.api*' \
 ```
 
 Both API services must report `ActiveState=inactive` and `MainPID=0`. With the
-masks still in place, roll the proxy frontend, both WebUI hosts, and both API
-hosts back to the approved preceding configuration. After both API
-configurations are restored, remove only the API and authentication cleanup
-masks and start those services:
+masks still in place, restore the proxy's retained pre-rollout system generation
+through the normal confctl deployment workflow. This restores the previous
+dependencies for all services on that proxy and may remove the password-recovery
+route. Verify the other proxied sites after restoring the generation.
+
+Then restore both WebUI hosts and both API hosts to the approved preceding
+configuration, keeping the API masks in place. After both API configurations
+are restored, remove only the API and authentication cleanup masks and start
+those services:
 
 ```shell
 confctl ssh --parallel --yes 'cz.vpsfree/vpsadmin/int.api*' \
