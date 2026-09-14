@@ -1216,11 +1216,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788289447,
-        "narHash": "sha256-4/wPtoQnt7+u9NV1B8fwffcuYTOaMUx81QLndUq0/nk=",
+        "lastModified": 1789391520,
+        "narHash": "sha256-yGO7PKzsPG9l1qbSRXu8KgfqlSVu5IJeyc42WY4WXuM=",
         "owner": "vpsfreecz",
         "repo": "vpsfree-notification-templates",
-        "rev": "f944ba03eba5d0d6b58b7eb856f251d1c96f2c11",
+        "rev": "6ebfb6f11c1ba00ae9dc7868ac0b3c42d30e5333",
         "type": "github"
       },
       "original": {
