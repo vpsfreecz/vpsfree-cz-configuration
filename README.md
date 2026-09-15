@@ -70,3 +70,7 @@ confctl deploy
 # Try to deploy configuration of selected hosts
 confctl deploy "cz.vpsfree/nodes/stg/*" dry-activate
 ```
+
+## vpsAdmin configuration
+
+See [API configuration and abuse notice processing](configs/vpsadmin/api/README.md).

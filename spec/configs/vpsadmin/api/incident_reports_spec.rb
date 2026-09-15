@@ -39,6 +39,46 @@ RSpec.describe VpsAdmin::API::IncidentReports do
     )
   end
 
+  it 'returns separate UCEPROTECT incidents for different users through the configured handler' do
+    register_assignment('192.0.2.10', user_id: 1001, vps_id: 2001)
+    register_assignment('192.0.2.20', user_id: 1002, vps_id: 2002)
+
+    result = described_class.handle_message(mailbox, fixture_message('masterdc_uceprotect_multiple'), dry_run: false)
+
+    expect(result).to be_processed
+    expect(result.incidents.map { |inc| [inc.user_id, inc.vps_id] }).to eq([[1001, 2001], [1002, 2002]])
+    expect(IncidentReport.records).to eq(result.incidents)
+  end
+
+  it 'keeps partial UCEPROTECT success handled and reports the missing assignment' do
+    register_assignment('192.0.2.10')
+    result = nil
+
+    expect do
+      result = described_class.handle_message(mailbox, fixture_message('masterdc_uceprotect_multiple'), dry_run: true)
+    end.to output(/192.0.2.20 has no assignment.*created=1.*rejected=1/m).to_stderr
+    expect(result).to be_processed
+    expect(result.incidents.size).to eq(1)
+    expect(result.incidents.first.text).not_to include('192.0.2.20')
+  end
+
+  it 'retains the matched-parser handled contract when all UCEPROTECT assignments are missing' do
+    result = described_class.handle_message(mailbox, fixture_message('masterdc_uceprotect_multiple'), dry_run: true)
+
+    expect(result).to be_processed
+    expect(result.incidents).to be_empty
+  end
+
+  it 'still checks the RT originator for multi-entry UCEPROTECT notices' do
+    mail = fixture_message('masterdc_uceprotect_multiple')
+    mail['X-RT-Originator'].value = 'untrusted@example.test'
+
+    result = described_class.handle_message(mailbox, mail, dry_run: true)
+
+    expect(result).not_to be_processed
+    expect(result.incidents).to be_empty
+  end
+
   it 'routes an XARF JSON report by its MIME content' do
     register_assignment('10.42.9.42')
 
