@@ -75,17 +75,17 @@
     "codex-web": {
       "flake": false,
       "locked": {
-        "lastModified": 1789333957,
-        "narHash": "sha256-+MrfntRyssniO7cfXUyuzgonOSZAPKHVqVGao9yVRzQ=",
+        "lastModified": 1789541022,
+        "narHash": "sha256-xd8YemfxAe3RQYLyafIWPVd8EVuf0TBLbmMAJzuRi1o=",
         "owner": "aither64",
         "repo": "codex-web",
-        "rev": "6335da93acdcc82cc26200d2fbc7f479655aa7c3",
+        "rev": "7429ff29d3ae35c43b155a99b1bd34c6a33ae187",
         "type": "github"
       },
       "original": {
         "owner": "aither64",
         "repo": "codex-web",
-        "rev": "6335da93acdcc82cc26200d2fbc7f479655aa7c3",
+        "rev": "7429ff29d3ae35c43b155a99b1bd34c6a33ae187",
         "type": "github"
       }
     },
@@ -119,11 +119,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1789353532,
-        "narHash": "sha256-nqJjmsrjY5fCpgZBze90UTHBEf486mhRtBY/fbmkYPY=",
+        "lastModified": 1789541163,
+        "narHash": "sha256-onczbS5VCT6BWxFolc+0pldBORvB8FV+X15MRt3gzSc=",
         "owner": "aither64",
         "repo": "dev-workspace",
-        "rev": "e9ed544bf66ba8be07b4fca27aede6e6fd1bfe0a",
+        "rev": "eb658d49e6b8182d5fc07ab98bc897c58490baa9",
         "type": "github"
       },
       "original": {
