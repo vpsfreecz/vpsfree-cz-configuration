@@ -4,6 +4,10 @@
 /attic
 *.nixops-*
 .gems
+# Local Bundler tools and RuboCop cache created by the confctl development shell
+/.bin/
+/.bundle/
+/.rubocop_cache/
 .mkdocs.*
 .confctl
 .*.swp
