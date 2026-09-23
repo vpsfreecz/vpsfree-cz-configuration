@@ -1,12 +1,12 @@
 { pkgs }:
 
 let
-  wordpress_7_0_2 = pkgs.wordpress.override {
-    version = "7.0.2";
-    hash = "sha256-1KTSGd6mTGxo5i8v/D8zHFR1UQJG1sRPYftS83fSlbk=";
+  wordpress_7_1_2 = pkgs.wordpress.override {
+    version = "7.1.2";
+    hash = "sha256-wMZmaJ1muHDYglUAu45ALtBN5SYCxhpvUWxiNrjJrGc=";
   };
 
-  wordpress = wordpress_7_0_2.overrideAttrs (old: {
+  wordpress = wordpress_7_1_2.overrideAttrs (old: {
     postInstall = (old.postInstall or "") + ''
       install -Dm0444 ${./vpsfree-policy.php} \
         "$out/share/wordpress/wp-content/mu-plugins/vpsfree-policy.php"
@@ -31,8 +31,8 @@ let
   };
 
   coreCsCz = pkgs.fetchzip {
-    url = "https://downloads.wordpress.org/translation/core/7.0.2/cs_CZ.zip";
-    hash = "sha256-eMlk19T2KxuMxptSrMAFVzmZuUFxs30upOv4Wz5gHiw=";
+    url = "https://downloads.wordpress.org/translation/core/7.1.2/cs_CZ.zip";
+    hash = "sha256-Q/yCvr7sXibmzhOT8k66aE8NsesLKe+k5jk6jDMEUPQ=";
     stripRoot = false;
   };
 
@@ -47,7 +47,7 @@ let
     hash = "sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=";
   };
 
-  csCz = pkgs.runCommand "wordpress-languages-cs-CZ-7.0.2" { } ''
+  csCz = pkgs.runCommand "wordpress-languages-cs-CZ-7.1.2" { } ''
     mkdir -p "$out"
     cp -a ${coreCsCz}/. "$out/"
 
