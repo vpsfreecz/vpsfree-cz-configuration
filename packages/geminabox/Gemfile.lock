@@ -3,6 +3,7 @@ GEM
   specs:
     base64 (0.3.0)
     builder (3.3.0)
+    compact_index (0.15.0)
     daemons (1.4.1)
     eventmachine (1.2.7)
     faraday (2.14.4)
@@ -11,12 +12,14 @@ GEM
       logger
     faraday-net_http (3.4.4)
       net-http (~> 0.5)
-    geminabox (3.1.0)
+    geminabox (4.0.0)
       builder
+      compact_index (~> 0.15)
       faraday (> 1.0, < 3.0)
       httpclient (>= 2.2.7)
       nesty
       reentrant_flock
+      rss (~> 0.3)
       rubygems-generate_index (~> 1.1)
       sinatra (~> 4.0)
     httpclient (2.9.0)
@@ -37,6 +40,9 @@ GEM
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
     reentrant_flock (0.1.1)
+    rexml (3.4.4)
+    rss (0.3.3)
+      rexml
     rubygems-generate_index (1.2.0)
     sinatra (4.2.1)
       logger (>= 1.6.0)

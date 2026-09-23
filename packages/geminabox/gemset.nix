@@ -19,6 +19,16 @@
     };
     version = "3.3.0";
   };
+  compact_index = {
+    groups = [ "default" ];
+    platforms = [ ];
+    source = {
+      remotes = [ "https://rubygems.org" ];
+      sha256 = "12sam0njinsm62030lv7gsqhsqg1yqj9bpjdkxyqm4m8zi540v2w";
+      type = "gem";
+    };
+    version = "0.15.0";
+  };
   daemons = {
     groups = [ "default" ];
     platforms = [ ];
@@ -68,10 +78,12 @@
   geminabox = {
     dependencies = [
       "builder"
+      "compact_index"
       "faraday"
       "httpclient"
       "nesty"
       "reentrant_flock"
+      "rss"
       "rubygems-generate_index"
       "sinatra"
     ];
@@ -79,10 +91,10 @@
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "06avwimfh3avnak3lxm155m8p34a3fi5dlgmq7qmqndk4vlqz4jc";
+      sha256 = "1qk1fgymihc47i5gzbqvf43w97fz6fm5w0vzkj3sv997j6mq94z5";
       type = "gem";
     };
-    version = "3.1.0";
+    version = "4.0.0";
   };
   httpclient = {
     dependencies = [ "mutex_m" ];
@@ -204,6 +216,27 @@
       type = "gem";
     };
     version = "0.1.1";
+  };
+  rexml = {
+    groups = [ "default" ];
+    platforms = [ ];
+    source = {
+      remotes = [ "https://rubygems.org" ];
+      sha256 = "0hninnbvqd2pn40h863lbrn9p11gvdxp928izkag5ysx8b1s5q0r";
+      type = "gem";
+    };
+    version = "3.4.4";
+  };
+  rss = {
+    dependencies = [ "rexml" ];
+    groups = [ "default" ];
+    platforms = [ ];
+    source = {
+      remotes = [ "https://rubygems.org" ];
+      sha256 = "1ayi296p6gdf15h28ckbd9g9d8499sd0fn91x7dpxmlisv21xvrp";
+      type = "gem";
+    };
+    version = "0.3.3";
   };
   rubygems-generate_index = {
     groups = [ "default" ];
