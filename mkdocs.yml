@@ -7,5 +7,6 @@ nav:
   - vpsAdmin livepatch history deployment: 'operations/vpsadmin-livepatch-history-deployment.md'
   - vpsAdmin password recovery deployment: 'operations/vpsadmin-password-recovery-deployment.md'
   - vpsAdmin security evidence deployment: 'operations/vpsadmin-security-evidence-deployment.md'
+  - vpsAdmin storage integrity rollout: 'operations/vpsadmin-storage-integrity-deployment.md'
 - Services:
   - Grafana: 'services/grafana.md'
