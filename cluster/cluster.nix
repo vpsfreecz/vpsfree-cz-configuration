@@ -55,6 +55,7 @@
   ./cz.vpsfree/vpsadmin/int.rabbitmq2/module.nix
   ./cz.vpsfree/vpsadmin/int.rabbitmq3/module.nix
   ./cz.vpsfree/vpsadmin/int.redis1/module.nix
+  ./cz.vpsfree/vpsadmin/int.vpsadmin-webui1/module.nix
   ./cz.vpsfree/vpsadmin/int.vpsadmin1/module.nix
   ./cz.vpsfree/vpsadmin/int.webui-dev/module.nix
   ./cz.vpsfree/vpsadmin/int.webui1/module.nix

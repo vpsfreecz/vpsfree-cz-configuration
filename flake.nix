@@ -71,6 +71,12 @@
       inputs.nixpkgs.follows = "nixpkgsStable";
       inputs.vpsadminos.follows = "vpsadminosStaging";
     };
+
+    vpsadminWebui = {
+      url = "github:vpsfreecz/vpsadmin-webui/2026-09-27-newadmin-integration";
+      inputs.nixpkgs.follows = "nixpkgsStable";
+      inputs.vpsadmin.follows = "vpsadminServices";
+    };
   };
 
   outputs =
@@ -99,6 +105,10 @@
 
         vpsadmin = {
           vpsadmin = "vpsadminServices";
+        };
+
+        vpsadmin-webui = {
+          vpsadmin-webui = "vpsadminWebui";
         };
 
         os-staging = {
