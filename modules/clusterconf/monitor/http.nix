@@ -49,6 +49,29 @@
     };
   };
 
+  "newadmin_vpsfree_cz" = {
+    targets = [ "https://newadmin.vpsfree.cz/build-info.json" ];
+    host = "newadmin.vpsfree.cz";
+    bodyMatches = [
+      ''"schemaVersion":1''
+      ''"commit":"[0-9a-f]{40}"''
+    ];
+    labels = {
+      alias = "newadmin.vpsfree.cz";
+      type = "vpsadmin-webui";
+    };
+  };
+
+  "newadmin_bff_vpsfree_cz" = {
+    targets = [ "https://newadmin.vpsfree.cz/healthz" ];
+    host = "newadmin.vpsfree.cz";
+    bodyMatches = [ "^ok$" ];
+    labels = {
+      alias = "newadmin.vpsfree.cz";
+      type = "vpsadmin-webui-bff";
+    };
+  };
+
   "status_vpsf_cz" = {
     targets = [ "https://status.vpsf.cz/" ];
     host = "status.vpsf.cz";

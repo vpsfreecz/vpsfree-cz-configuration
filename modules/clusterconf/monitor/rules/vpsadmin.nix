@@ -22,6 +22,8 @@ let
     "api_vpsfree_cz" = "ApiVpsfreeCz";
     "console_vpsfree_cz" = "ConsoleVpsfreeCz";
     "vpsadmin_vpsfree_cz" = "VpsadminVpsfreeCz";
+    "newadmin_vpsfree_cz" = "NewadminVpsfreeCz";
+    "newadmin_bff_vpsfree_cz" = "NewadminBffVpsfreeCz";
   };
 in
 [
@@ -62,6 +64,48 @@ in
             LABELS: {{ $labels }}
           '';
         };
+      }
+
+      {
+        alert = "NewadminBffNotActive";
+        expr = ''
+          up{job="infra",fqdn="vpsadmin-webui1.int.vpsfree.cz"} == 1
+          unless on(instance)
+          node_systemd_unit_state{job="infra",fqdn="vpsadmin-webui1.int.vpsfree.cz",name="vpsadmin-webui-bff.service",state="active"} == 1
+        '';
+        for = "10m";
+        labels = {
+          severity = "warning";
+          frequency = "15m";
+        };
+        annotations.summary = "newadmin BFF unit is inactive or missing on {{ $labels.fqdn }}";
+      }
+
+      {
+        alert = "NewadminInfraScrapeMissing";
+        expr = ''
+          absent(up{job="infra",fqdn="vpsadmin-webui1.int.vpsfree.cz"})
+          or up{job="infra",fqdn="vpsadmin-webui1.int.vpsfree.cz"} == 0
+        '';
+        for = "10m";
+        labels = {
+          severity = "critical";
+          frequency = "15m";
+        };
+        annotations.summary = "newadmin host metrics are missing for {{ $labels.fqdn }}";
+      }
+
+      {
+        alert = "NewadminCertificateExpiring";
+        expr = ''
+          probe_ssl_earliest_cert_expiry{job="http_newadmin_vpsfree_cz"} - time() < 14 * 24 * 60 * 60
+        '';
+        for = "10m";
+        labels = {
+          severity = "warning";
+          frequency = "15m";
+        };
+        annotations.summary = "newadmin.vpsfree.cz TLS certificate expires within 14 days";
       }
 
       {

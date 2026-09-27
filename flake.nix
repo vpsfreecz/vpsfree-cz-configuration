@@ -180,6 +180,9 @@
         process-count-prometheus-rules = import ./tests/prometheus/process-count-rules.nix {
           pkgs = devPkgs;
         };
+        newadmin-prometheus-rules = import ./tests/prometheus/newadmin-rules.nix {
+          pkgs = devPkgs;
+        };
       };
     };
 }

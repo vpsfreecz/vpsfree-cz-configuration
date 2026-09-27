@@ -1,0 +1,156 @@
+rule_files:
+  - @ruleFile@
+
+evaluation_interval: 1m
+
+tests:
+  - name: An active BFF unit does not alert
+    interval: 1m
+    input_series:
+      - series: 'up{job="infra",fqdn="vpsadmin-webui1.int.vpsfree.cz",instance="vpsadmin-webui1.int.vpsfree.cz:9100"}'
+        values: '1+0x12'
+      - series: 'node_systemd_unit_state{job="infra",fqdn="vpsadmin-webui1.int.vpsfree.cz",instance="vpsadmin-webui1.int.vpsfree.cz:9100",name="vpsadmin-webui-bff.service",state="active"}'
+        values: '1+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminBffNotActive
+        exp_alerts: []
+
+  - name: An inactive BFF unit alerts with a healthy scrape
+    interval: 1m
+    input_series:
+      - series: 'up{job="infra",fqdn="vpsadmin-webui1.int.vpsfree.cz",instance="vpsadmin-webui1.int.vpsfree.cz:9100"}'
+        values: '1+0x12'
+      - series: 'node_systemd_unit_state{job="infra",fqdn="vpsadmin-webui1.int.vpsfree.cz",instance="vpsadmin-webui1.int.vpsfree.cz:9100",name="vpsadmin-webui-bff.service",state="active"}'
+        values: '0+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminBffNotActive
+        exp_alerts:
+          - exp_labels:
+              job: infra
+              fqdn: vpsadmin-webui1.int.vpsfree.cz
+              instance: vpsadmin-webui1.int.vpsfree.cz:9100
+              severity: warning
+              frequency: 15m
+            exp_annotations:
+              summary: newadmin BFF unit is inactive or missing on vpsadmin-webui1.int.vpsfree.cz
+
+  - name: A missing BFF unit series also alerts
+    interval: 1m
+    input_series:
+      - series: 'up{job="infra",fqdn="vpsadmin-webui1.int.vpsfree.cz",instance="vpsadmin-webui1.int.vpsfree.cz:9100"}'
+        values: '1+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminBffNotActive
+        exp_alerts:
+          - exp_labels:
+              job: infra
+              fqdn: vpsadmin-webui1.int.vpsfree.cz
+              instance: vpsadmin-webui1.int.vpsfree.cz:9100
+              severity: warning
+              frequency: 15m
+            exp_annotations:
+              summary: newadmin BFF unit is inactive or missing on vpsadmin-webui1.int.vpsfree.cz
+
+  - name: A failed infra scrape alerts
+    interval: 1m
+    input_series:
+      - series: 'up{job="infra",fqdn="vpsadmin-webui1.int.vpsfree.cz",instance="vpsadmin-webui1.int.vpsfree.cz:9100"}'
+        values: '0+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminInfraScrapeMissing
+        exp_alerts:
+          - exp_labels:
+              job: infra
+              fqdn: vpsadmin-webui1.int.vpsfree.cz
+              instance: vpsadmin-webui1.int.vpsfree.cz:9100
+              severity: critical
+              frequency: 15m
+            exp_annotations:
+              summary: newadmin host metrics are missing for vpsadmin-webui1.int.vpsfree.cz
+
+  - name: An absent infra target alerts
+    interval: 1m
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminInfraScrapeMissing
+        exp_alerts:
+          - exp_labels:
+              job: infra
+              fqdn: vpsadmin-webui1.int.vpsfree.cz
+              severity: critical
+              frequency: 15m
+            exp_annotations:
+              summary: newadmin host metrics are missing for vpsadmin-webui1.int.vpsfree.cz
+
+  - name: A certificate inside the fourteen-day window alerts
+    interval: 1m
+    input_series:
+      - series: 'probe_ssl_earliest_cert_expiry{job="http_newadmin_vpsfree_cz",instance="https://newadmin.vpsfree.cz/build-info.json"}'
+        values: '1200000+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminCertificateExpiring
+        exp_alerts:
+          - exp_labels:
+              job: http_newadmin_vpsfree_cz
+              instance: https://newadmin.vpsfree.cz/build-info.json
+              severity: warning
+              frequency: 15m
+            exp_annotations:
+              summary: newadmin.vpsfree.cz TLS certificate expires within 14 days
+
+  - name: A certificate outside the warning window stays quiet
+    interval: 1m
+    input_series:
+      - series: 'probe_ssl_earliest_cert_expiry{job="http_newadmin_vpsfree_cz",instance="https://newadmin.vpsfree.cz/build-info.json"}'
+        values: '2000000+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminCertificateExpiring
+        exp_alerts: []
+
+  - name: A failed frontend probe alerts
+    interval: 1m
+    input_series:
+      - series: 'probe_success{job="http_newadmin_vpsfree_cz",instance="https://newadmin.vpsfree.cz/build-info.json"}'
+        values: '0+0x4'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: NewadminVpsfreeCzWebDown
+        exp_alerts:
+          - exp_labels:
+              job: http_newadmin_vpsfree_cz
+              instance: https://newadmin.vpsfree.cz/build-info.json
+              severity: critical
+              frequency: 5m
+            exp_annotations:
+              summary: https://newadmin.vpsfree.cz/build-info.json web probe failed
+              description: |
+                https://newadmin.vpsfree.cz/build-info.json does not return the expected HTTP response
+
+                LABELS: map[__name__:probe_success instance:https://newadmin.vpsfree.cz/build-info.json job:http_newadmin_vpsfree_cz]
+
+  - name: A failed BFF probe alerts separately
+    interval: 1m
+    input_series:
+      - series: 'probe_success{job="http_newadmin_bff_vpsfree_cz",instance="https://newadmin.vpsfree.cz/healthz"}'
+        values: '0+0x4'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: NewadminBffVpsfreeCzWebDown
+        exp_alerts:
+          - exp_labels:
+              job: http_newadmin_bff_vpsfree_cz
+              instance: https://newadmin.vpsfree.cz/healthz
+              severity: critical
+              frequency: 5m
+            exp_annotations:
+              summary: https://newadmin.vpsfree.cz/healthz web probe failed
+              description: |
+                https://newadmin.vpsfree.cz/healthz does not return the expected HTTP response
+
+                LABELS: map[__name__:probe_success instance:https://newadmin.vpsfree.cz/healthz job:http_newadmin_bff_vpsfree_cz]
