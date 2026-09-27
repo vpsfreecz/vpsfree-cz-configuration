@@ -79,6 +79,26 @@
             "Znalostní báze"
           ];
         }
+        {
+          description = "Check newadmin frontend over local HTTPS";
+          command = [
+            "bash"
+            "-euo"
+            "pipefail"
+            "-c"
+            ''curl --fail --silent --show-error --max-time 10 --resolve newadmin.vpsfree.cz:443:127.0.0.1 https://newadmin.vpsfree.cz/build-info.json | jq -e '.schemaVersion == 1 and (.commit | type == "string" and length == 40 and test("^[0-9a-f]+$")) and (.dirty | type == "boolean")' >/dev/null''
+          ];
+        }
+        {
+          description = "Check newadmin BFF over local HTTPS";
+          command = [
+            "bash"
+            "-euo"
+            "pipefail"
+            "-c"
+            ''test "$(curl --fail --silent --show-error --max-time 10 --resolve newadmin.vpsfree.cz:443:127.0.0.1 https://newadmin.vpsfree.cz/healthz)" = ok''
+          ];
+        }
       ];
     };
   };

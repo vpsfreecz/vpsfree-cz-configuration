@@ -69,6 +69,41 @@ let
     cluster = config.cluster;
     name = "cz.vpsfree/containers/int.blog";
   };
+
+  newadmin = confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/vpsadmin/int.vpsadmin-webui1";
+  };
+
+  newadminAcmeRoot = "/var/lib/acme/acme-challenge";
+  newadminProxy = {
+    proxyPass = "http://${newadmin.addresses.primary.address}:80";
+    recommendedProxySettings = false;
+    extraConfig = ''
+      proxy_redirect off;
+      proxy_http_version 1.1;
+      proxy_set_header Connection "";
+      proxy_set_header Host newadmin.vpsfree.cz;
+      proxy_set_header X-Forwarded-Host newadmin.vpsfree.cz;
+      proxy_set_header X-Forwarded-Proto https;
+      proxy_set_header X-Forwarded-For $remote_addr;
+      proxy_set_header X-Real-IP "";
+      proxy_set_header Forwarded "";
+      proxy_set_header X-Forwarded-Server "";
+      proxy_set_header X-Original-Forwarded-For "";
+      proxy_set_header X-Original-Proto "";
+      proxy_set_header X-Forwarded-Port "";
+      proxy_set_header X-Client-IP "";
+      proxy_set_header True-Client-IP "";
+      proxy_set_header CF-Connecting-IP "";
+    '';
+  };
+  newadminOauthProxy = newadminProxy // {
+    extraConfig = newadminProxy.extraConfig + ''
+      access_log off;
+      error_log /dev/null;
+    '';
+  };
 in
 {
   imports = [
@@ -88,6 +123,7 @@ in
 
   environment.systemPackages = with pkgs; [
     apacheHttpd # for htpasswd
+    jq
   ];
 
   services.nginx = {
@@ -99,7 +135,37 @@ in
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
 
+    commonHttpConfig = "access_log /var/log/nginx/access.log combined;";
+
     virtualHosts = {
+      "newadmin.vpsfree.cz" = {
+        enableACME = true;
+        onlySSL = true;
+        acmeRoot = newadminAcmeRoot;
+        extraConfig = ''
+          access_log off;
+          add_header Strict-Transport-Security "max-age=31536000" always;
+        '';
+        locations = {
+          "/" = newadminProxy;
+          "= /oauth" = newadminOauthProxy;
+          "^~ /oauth/" = newadminOauthProxy;
+        };
+      };
+
+      "newadmin.vpsfree.cz-redirect" = {
+        serverName = "newadmin.vpsfree.cz";
+        useACMEHost = "newadmin.vpsfree.cz";
+        acmeRoot = newadminAcmeRoot;
+        extraConfig = ''
+          access_log off;
+          error_log /dev/null;
+        '';
+        locations."/".extraConfig = ''
+          return 301 https://newadmin.vpsfree.cz$request_uri;
+        '';
+      };
+
       "vpsfree.cz" = {
         enableACME = true;
         forceSSL = true;
