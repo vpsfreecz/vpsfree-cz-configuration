@@ -12,7 +12,7 @@ GEM
       logger
     faraday-net_http (3.4.4)
       net-http (~> 0.5)
-    geminabox (4.0.0)
+    geminabox (4.0.1)
       builder
       compact_index (~> 0.15)
       faraday (> 1.0, < 3.0)
