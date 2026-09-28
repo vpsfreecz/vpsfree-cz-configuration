@@ -800,6 +800,7 @@
         "vpsadminProduction": "vpsadminProduction",
         "vpsadminServices": "vpsadminServices",
         "vpsadminStaging": "vpsadminStaging",
+        "vpsadminWebui": "vpsadminWebui",
         "vpsadminosOsStaging": "vpsadminosOsStaging",
         "vpsadminosProduction": "vpsadminosProduction",
         "vpsadminosStaging": "vpsadminosStaging",
@@ -1056,6 +1057,30 @@
       "original": {
         "owner": "vpsfreecz",
         "repo": "vpsadmin",
+        "type": "github"
+      }
+    },
+    "vpsadminWebui": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgsStable"
+        ],
+        "vpsadmin": [
+          "vpsadminServices"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790631867,
+        "narHash": "sha256-v7wxk8VG4tGAi4n0a5uTatpjUuX2Kj1r/imPyg9OW7c=",
+        "owner": "vpsfreecz",
+        "repo": "vpsadmin-webui",
+        "rev": "aff1e4b0afa61de8474da2b5c8d9fcd2986f0cc2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vpsfreecz",
+        "ref": "2026-09-27-newadmin-integration",
+        "repo": "vpsadmin-webui",
         "type": "github"
       }
     },
