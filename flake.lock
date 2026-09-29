@@ -1079,7 +1079,6 @@
       },
       "original": {
         "owner": "vpsfreecz",
-        "ref": "2026-09-27-newadmin-integration",
         "repo": "vpsadmin-webui",
         "type": "github"
       }

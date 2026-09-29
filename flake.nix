@@ -73,7 +73,7 @@
     };
 
     vpsadminWebui = {
-      url = "github:vpsfreecz/vpsadmin-webui/2026-09-27-newadmin-integration";
+      url = "github:vpsfreecz/vpsadmin-webui";
       inputs.nixpkgs.follows = "nixpkgsStable";
       inputs.vpsadmin.follows = "vpsadminServices";
     };
