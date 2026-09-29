@@ -55,7 +55,11 @@ in
       authHeader = "X-HaveAPI-OAuth2-Token";
       metaNamespace = "_meta";
     };
-    environmentFile = "/private/vpsadmin-webui.env";
+    credentialFiles = {
+      oauthClientId = "/private/vpsadmin-webui/oauth-client-id";
+      oauthClientSecret = "/private/vpsadmin-webui/oauth-client-secret";
+      sessionSecret = "/private/vpsadmin-webui/session-secret";
+    };
     cookieName = "vpsadmin_webui_session";
     bffPort = 3001;
     nginx = {
