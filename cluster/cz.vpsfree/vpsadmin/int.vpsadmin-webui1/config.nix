@@ -69,8 +69,12 @@ in
         "127.0.0.1/32"
       ];
     };
-    # Fill these with exact API-returned origins after a read-only API check.
+    # The console router and public heatmap setting are iframe targets; the
+    # parent UI does not connect directly to the console origin.
     security.consoleOrigins = [ ];
-    security.frameOrigins = [ ];
+    security.frameOrigins = [
+      "https://console.vpsfree.cz"
+      "https://goresheat.vpsfree.cz"
+    ];
   };
 }

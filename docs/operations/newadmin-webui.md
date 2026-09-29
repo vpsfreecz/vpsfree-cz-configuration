@@ -25,9 +25,11 @@ NixOS channel or `nixos-version` alone does not establish the first-installed
 value. If it differs from `26.05`, stop, correct the host configuration and
 rebuild before activation. Inspect ownership of the reserved
 `/var/lib/vpsadmin-webui` state path.
-Confirm the API-returned console and heatmap origins, then add only those exact
-HTTPS/WSS origins to the module's `security.consoleOrigins` and
-`security.frameOrigins`. The map origins remain in the reusable module.
+The console router uses `https://console.vpsfree.cz`; the public WebUI
+`goresheat_url` setting returned `https://goresheat.vpsfree.cz`. Both are iframe
+targets, so these two exact HTTPS origins belong in `security.frameOrigins`.
+Keep `security.consoleOrigins` empty: the parent UI does not connect directly
+to the console origin. The map origins remain in the reusable module.
 
 ## Private runtime settings
 
@@ -65,6 +67,13 @@ alerts cover an inactive or missing BFF unit series and failed or absent host
 scrapes. These checks do not certify interactive login. Confirm OAuth,
 recovery, console, locale, and important read-only API paths in a controlled
 operator acceptance session after activation.
+
+After activation, inspect the top-level document's Content-Security-Policy
+response header. `frame-src` must include the exact console and heatmap origins
+above alongside the existing map origin; `connect-src` must not add the console
+origin. Open both frames in a controlled authenticated session and confirm that
+neither triggers a `frame-src` violation. Record only the blocked origin and
+directive when diagnosing a failure, never a session token, frame path or query.
 
 For a bad software generation, restore the recorded paired frontend/BFF and
 host generation while retaining compatible live sessions and the signing
