@@ -2,6 +2,7 @@
   config,
   pkgs,
   confLib,
+  confData,
   confMachine,
   flakeInputs,
   inputsInfo,
@@ -23,6 +24,8 @@ in
     ../../../../profiles/ct.nix
     webuiInput.nixosModules.default
   ];
+
+  vpsfconf.admins.kerrycze.publicKeys = [ confData.sshKeys.kerryczeNewadminDeploy ];
 
   system.stateVersion = "26.05";
 
