@@ -113,6 +113,111 @@ tests:
         alertname: NewadminCertificateExpiring
         exp_alerts: []
 
+  - name: A missing frontend HTTP target alerts while host and BFF probes are healthy
+    interval: 1m
+    input_series:
+      - series: 'up{job="infra",fqdn="vpsadmin-webui1.int.vpsfree.cz"}'
+        values: '1+0x12'
+      - series: 'up{job="http_newadmin_bff_vpsfree_cz",instance="https://newadmin.vpsfree.cz/healthz"}'
+        values: '1+0x12'
+      - series: 'probe_success{job="http_newadmin_bff_vpsfree_cz",instance="https://newadmin.vpsfree.cz/healthz"}'
+        values: '1+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminFrontendProbeMissing
+        exp_alerts:
+          - exp_labels:
+              job: http_newadmin_vpsfree_cz
+              severity: critical
+              frequency: 15m
+            exp_annotations:
+              summary: newadmin frontend HTTP probe metrics are missing
+      - eval_time: 11m
+        alertname: NewadminBffProbeMissing
+        exp_alerts: []
+
+  - name: A missing frontend result alerts even when its scrape is up
+    interval: 1m
+    input_series:
+      - series: 'up{job="http_newadmin_vpsfree_cz",instance="https://newadmin.vpsfree.cz/build-info.json"}'
+        values: '1+0x12'
+      - series: 'up{job="http_newadmin_bff_vpsfree_cz",instance="https://newadmin.vpsfree.cz/healthz"}'
+        values: '1+0x12'
+      - series: 'probe_success{job="http_newadmin_bff_vpsfree_cz",instance="https://newadmin.vpsfree.cz/healthz"}'
+        values: '1+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminFrontendProbeMissing
+        exp_alerts:
+          - exp_labels:
+              job: http_newadmin_vpsfree_cz
+              severity: critical
+              frequency: 15m
+            exp_annotations:
+              summary: newadmin frontend HTTP probe metrics are missing
+
+  - name: A missing BFF HTTP target alerts while host and frontend probes are healthy
+    interval: 1m
+    input_series:
+      - series: 'up{job="infra",fqdn="vpsadmin-webui1.int.vpsfree.cz"}'
+        values: '1+0x12'
+      - series: 'up{job="http_newadmin_vpsfree_cz",instance="https://newadmin.vpsfree.cz/build-info.json"}'
+        values: '1+0x12'
+      - series: 'probe_success{job="http_newadmin_vpsfree_cz",instance="https://newadmin.vpsfree.cz/build-info.json"}'
+        values: '1+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminBffProbeMissing
+        exp_alerts:
+          - exp_labels:
+              job: http_newadmin_bff_vpsfree_cz
+              severity: critical
+              frequency: 15m
+            exp_annotations:
+              summary: newadmin BFF HTTP probe metrics are missing
+      - eval_time: 11m
+        alertname: NewadminFrontendProbeMissing
+        exp_alerts: []
+
+  - name: A missing BFF scrape alerts even when its result is present
+    interval: 1m
+    input_series:
+      - series: 'up{job="http_newadmin_vpsfree_cz",instance="https://newadmin.vpsfree.cz/build-info.json"}'
+        values: '1+0x12'
+      - series: 'probe_success{job="http_newadmin_vpsfree_cz",instance="https://newadmin.vpsfree.cz/build-info.json"}'
+        values: '1+0x12'
+      - series: 'probe_success{job="http_newadmin_bff_vpsfree_cz",instance="https://newadmin.vpsfree.cz/healthz"}'
+        values: '1+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminBffProbeMissing
+        exp_alerts:
+          - exp_labels:
+              job: http_newadmin_bff_vpsfree_cz
+              severity: critical
+              frequency: 15m
+            exp_annotations:
+              summary: newadmin BFF HTTP probe metrics are missing
+
+  - name: Both healthy public HTTP jobs have no missing-series alert
+    interval: 1m
+    input_series:
+      - series: 'up{job="http_newadmin_vpsfree_cz",instance="https://newadmin.vpsfree.cz/build-info.json"}'
+        values: '1+0x12'
+      - series: 'probe_success{job="http_newadmin_vpsfree_cz",instance="https://newadmin.vpsfree.cz/build-info.json"}'
+        values: '1+0x12'
+      - series: 'up{job="http_newadmin_bff_vpsfree_cz",instance="https://newadmin.vpsfree.cz/healthz"}'
+        values: '1+0x12'
+      - series: 'probe_success{job="http_newadmin_bff_vpsfree_cz",instance="https://newadmin.vpsfree.cz/healthz"}'
+        values: '1+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminFrontendProbeMissing
+        exp_alerts: []
+      - eval_time: 11m
+        alertname: NewadminBffProbeMissing
+        exp_alerts: []
+
   - name: A failed frontend probe alerts
     interval: 1m
     input_series:

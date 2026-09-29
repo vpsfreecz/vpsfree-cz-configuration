@@ -109,6 +109,34 @@ in
       }
 
       {
+        alert = "NewadminFrontendProbeMissing";
+        expr = ''
+          absent(up{job="http_newadmin_vpsfree_cz"})
+          or absent(probe_success{job="http_newadmin_vpsfree_cz"})
+        '';
+        for = "10m";
+        labels = {
+          severity = "critical";
+          frequency = "15m";
+        };
+        annotations.summary = "newadmin frontend HTTP probe metrics are missing";
+      }
+
+      {
+        alert = "NewadminBffProbeMissing";
+        expr = ''
+          absent(up{job="http_newadmin_bff_vpsfree_cz"})
+          or absent(probe_success{job="http_newadmin_bff_vpsfree_cz"})
+        '';
+        for = "10m";
+        labels = {
+          severity = "critical";
+          frequency = "15m";
+        };
+        annotations.summary = "newadmin BFF HTTP probe metrics are missing";
+      }
+
+      {
         alert = "VpsAdminPasswordRecoveryQueueFull";
         expr = ''
           max(vpsadmin_password_recovery_pending_submissions)

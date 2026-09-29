@@ -8,6 +8,8 @@ let
     "NewadminBffNotActive"
     "NewadminInfraScrapeMissing"
     "NewadminCertificateExpiring"
+    "NewadminFrontendProbeMissing"
+    "NewadminBffProbeMissing"
     "NewadminVpsfreeCzWebDown"
     "NewadminBffVpsfreeCzWebDown"
   ];

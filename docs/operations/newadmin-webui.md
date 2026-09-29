@@ -81,9 +81,11 @@ Public probes check `/build-info.json` for schema and a full source SHA and
 Host checks cover nginx, BFF unit state, private static content, liveness and
 anonymous `/session.json` fields without printing response bodies. Infra
 alerts cover an inactive or missing BFF unit series and failed or absent host
-scrapes. These checks do not certify interactive login. Confirm OAuth,
-recovery, console, locale, and important read-only API paths in a controlled
-operator acceptance session after activation.
+scrapes. Separate alerts detect missing metrics from either exact public
+frontend/BFF HTTP probe job after ten minutes. Existing HTTP failure alerts
+retain their thresholds. These checks do not certify interactive login.
+Confirm OAuth, recovery, console, locale, and important read-only API paths
+in a controlled operator acceptance session after activation.
 
 After activation, inspect the top-level document's Content-Security-Policy
 response header. `frame-src` must include the exact console and heatmap origins
