@@ -113,6 +113,7 @@ in
     listenAddress = "172.16.106.40";
     auth = {
       user = "aither";
+      bcryptCost = 5;
     };
     tls = {
       caCommonName = "vpsFree.cz Workspace Development CA";
