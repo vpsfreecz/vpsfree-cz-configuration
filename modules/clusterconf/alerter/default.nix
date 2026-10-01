@@ -289,12 +289,8 @@ in
               {
                 times = [
                   {
-                    start_time = "14:00";
-                    end_time = "24:00";
-                  }
-                  {
-                    start_time = "00:00";
-                    end_time = "01:00";
+                    start_time = "09:00";
+                    end_time = "23:00";
                   }
                 ];
 
