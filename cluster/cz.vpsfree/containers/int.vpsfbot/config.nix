@@ -203,6 +203,7 @@ in
                 "pull_request"
               ];
               default_branch_only = true;
+              ignored_users = [ "github-actions[bot]" ];
             };
             "#vpsadminos" = [
               "vpsfreecz/confctl"
@@ -212,12 +213,18 @@ in
               "vpsfreecz/lxc"
               "vpsfreecz/lxcfs"
               "vpsfreecz/nixos-modules"
+              "vpsfreecz/ruby-lxc"
+              "vpsfreecz/ssh-exporter"
+              "vpsfreecz/syslog-exporter"
               "vpsfreecz/terraform-provider-vpsadmin"
               "vpsfreecz/vpsadmin"
               "vpsfreecz/vpsadmin-go-client"
+              "vpsfreecz/vpsadmin-webui"
               "vpsfreecz/vpsadminos"
               "vpsfreecz/vpsadminos-image-build-scripts"
               "vpsfreecz/vpsadminos-org-configuration"
+              "vpsfreecz/vpsf-status"
+              "vpsfreecz/vpsfree-kb-contracts"
               "vpsfreecz/zfs"
             ];
           };
