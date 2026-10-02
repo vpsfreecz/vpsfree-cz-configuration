@@ -1,0 +1,32 @@
+From: Abuse Bot via RT <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject:
+ [rt.vpsfree.cz #21001] [X-ARF] Abuse report: 192.0.2.10 (Abuse/Policy)
+Date: Mon, 28 Sep 2026 10:45:44 +0200
+X-RT-Originator: noreply@provider.tools
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Ticket <URL: https://rt.example.test/Ticket/21001 >
+
+This is an automated abuse notification from provider.tools.
+
+X-XARF: PLAIN
+Abuse-Category: abuse
+Source: 192.0.2.10
+Source-Type: ip-address
+Report-Type: Abuse/Policy
+Date: 2026-09-28T08:45:05.611Z
+Reported-From: reports.provider.tools
+Source-URI: https://reports.example.test/synthetic
+
+Summary (anonymized):
+  IP: 192.0.2.10
+  Category: Abuse/Policy
+  State: hard-listed
+  Services: ssh
+  First seen: 2026-09-28T08:41:10.661Z
+  Last seen: 2026-09-28T08:44:40.114Z
+
+For privacy reasons raw logs are not included.

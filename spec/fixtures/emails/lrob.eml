@@ -1,0 +1,44 @@
+From: Abuse Bot via RT <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #21001] Abuse report for IP 192.0.2.10 - AS65500 -
+ Mon, 28 Sep 2026 09:29:26 +0000 [SL-synthetic]
+Date: Mon, 28 Sep 2026 11:29:54 +0200
+X-RT-Originator: abusereport@lrob.net
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8546178328560661474=="
+
+--===============8546178328560661474==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Ticket <URL: https://rt.example.test/Ticket/21001 >
+
+Date (UTC): 2026-09-28 09:29:00
+Detected attacking IP: 192.0.2.10 | From AS65500
+Victim: 198.51.100.20
+
+--===============8546178328560661474==
+Content-Type: application/json
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="xarf.json"
+MIME-Version: 1.0
+
+ewogICJ4YXJmX3ZlcnNpb24iOiAiNC4yLjAiLAogICJyZXBvcnRfaWQiOiAiMTExMTExMTEtMTEx
+MS00MTExLTgxMTEtMTExMTExMTExMTExIiwKICAiY2F0ZWdvcnkiOiAiY29ubmVjdGlvbiIsCiAg
+InR5cGUiOiAibG9naW5fYXR0YWNrIiwKICAic291cmNlX2lkZW50aWZpZXIiOiAiMTkyLjAuMi4x
+MCIsCiAgInRpbWVzdGFtcCI6ICIyMDI2LTA5LTI4VDA5OjI5OjAwWiIsCiAgInNlbmRlciI6IHsK
+ICAgICJkb21haW4iOiAibHJvYi5uZXQiLAogICAgImNvbnRhY3QiOiAiYWJ1c2VyZXBvcnRAbHJv
+Yi5uZXQiLAogICAgIm9yZyI6ICJMUm9iIFNBUkwiCiAgfSwKICAicmVwb3J0ZXIiOiB7CiAgICAi
+ZG9tYWluIjogImxyb2IubmV0IiwKICAgICJjb250YWN0IjogImFidXNlcmVwb3J0QGxyb2IubmV0
+IiwKICAgICJvcmciOiAiTFJvYiBTQVJMIgogIH0sCiAgImZpcnN0X3NlZW4iOiAiMjAyNi0wOS0y
+OFQwOToyOTowMFoiLAogICJsYXN0X3NlZW4iOiAiMjAyNi0wOS0yOFQwOToyOTowMFoiLAogICJh
+dHRlbXB0X2NvdW50IjogMSwKICAiZGVzdGluYXRpb25faXAiOiAiMTk4LjUxLjEwMC4yMCIsCiAg
+InByb3RvY29sIjogInRjcCIsCiAgImRlc3RpbmF0aW9uX3BvcnQiOiAyMiwKICAiZXZpZGVuY2Ui
+OiBbCiAgICB7CiAgICAgICJjb250ZW50X3R5cGUiOiAidGV4dC9wbGFpbiIsCiAgICAgICJwYXls
+b2FkIjogIk1qQXlOaTB3T1MweU9GUXhNVG95T1Rvd01DNDJNalk0T1RRck1ESTZNREFnZG1samRH
+bHRMbVY0WVcxd2JHVXVkR1Z6ZENCemMyaGtXekV5TTEwNklFTnZibTVsWTNScGIyNGdZMnh2YzJW
+a0lHSjVJR2x1ZG1Gc2FXUWdkWE5sY2lCemVXNTBhR1YwYVdNZ01Ua3lMakF1TWk0eE1DQndiM0ow
+SURReE1EQXhJRnR3Y21WaGRYUm9YUW89IiwKICAgICAgImRlc2NyaXB0aW9uIjogIlN5bnRoZXRp
+YyBTU0ggcmVjb3JkIgogICAgfQogIF0KfQ==
+
+--===============8546178328560661474==--

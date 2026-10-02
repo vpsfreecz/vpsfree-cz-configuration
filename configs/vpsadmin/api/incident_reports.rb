@@ -27,6 +27,9 @@ VpsAdmin::API::IncidentReports.config do
       AbuseNoticeParser::Proki,
       AbuseNoticeParser::SpamCop,
       AbuseNoticeParser::UsGo,
+      AbuseNoticeParser::Lrob,
+      AbuseNoticeParser::Cisilino,
+      AbuseNoticeParser::CustomVisuals,
       AbuseNoticeParser::XArfJson,
       AbuseNoticeParser::XArf
     ].each do |klass|

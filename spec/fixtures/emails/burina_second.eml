@@ -1,0 +1,21 @@
+From: Abuse Bot via RT <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #21001] Abuse from 192.0.2.10
+Date: Mon, 28 Sep 2026 12:33:05 +0200
+X-RT-Originator: abuse-complainant@burina.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Ticket <URL: https://rt.example.test/Ticket/21001 >
+
+We have detected abuse from the IP address 192.0.2.10, which is on your network.
+
+Note: Local timezone is +0200 (CEST)
+
+Lines containing failures of 192.0.2.10 (max 1000)
+Sep 28 10:38:31 victim.example.test sshd[123]: Invalid user synthetic from 192.0.2.10 port 41001
+Sep 28 11:17:43 victim.example.test sshd[123]: Connection closed by invalid user synthetic 192.0.2.10 port 41001 [preauth]
+Sep 28 11:18:00 victim.example.test sshd[123]: drop connection #10 from [192.0.2.10]:41001 on [198.51.100.20]:22 past MaxStartups
+Sep 28 12:32:52 victim.example.test sshd[123]: Invalid user finalsynthetic from 192.0.2.10 port 41002
+Sep 28 10:39:36 victim.example.test sshd[123]: Failed password for unrelatedsynthetic from 192.0.2.20 port 41003 ssh2

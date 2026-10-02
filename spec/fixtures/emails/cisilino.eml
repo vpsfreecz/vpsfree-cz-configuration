@@ -1,0 +1,35 @@
+From: Abuse Bot via RT <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #21001] Abuse report - IP 192.0.2.10 / Segnalazione
+ abuso - IP 192.0.2.10
+Date: Mon, 28 Sep 2026 12:39:45 +0200
+X-RT-Originator: notifiche@cisilino.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Ticket <URL: https://rt.example.test/Ticket/21001 >
+
+The IP address 192.0.2.10, under your AS/network responsibility, has generate=
+d unauthorized SSH/FTP access attempts.
+
+Attempts observed: 24 (of which failed: 24)
+First seen: 2026-09-28 08:40:20 UTC
+Last seen: 2026-09-28 10:38:19 UTC
+Distinct servers impacted: 3
+
+---
+
+L&#039;indirizzo IP 192.0.2.10, di competenza del vostro AS/rete, ha generato=
+ tentativi di accesso SSH/FTP.
+
+Tentativi osservati: 24 (di cui falliti: 24)
+Primo avvistamento: 2026-09-28 08:40:20 UTC
+Ultimo avvistamento: 2026-09-28 10:38:19 UTC
+Server distinti impattati: 3
+
+Last 10 attempts recorded from this IP / Ultimi 10 tentativi registrati da questo IP:
+- 2026-09-28 10:38:19 UTC =E2=80=94 target server: IPv4 198.51.100.xxx =E2=80=
+=94 user: synthetic =E2=80=94 result: failed
+- 2026-09-28 10:12:42 UTC =E2=80=94 target server: IPv4 203.0.113.xxx =E2=80=
+=94 user: synthetic =E2=80=94 result: failed

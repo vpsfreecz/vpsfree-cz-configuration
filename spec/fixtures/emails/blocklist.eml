@@ -1,0 +1,45 @@
+From: Abuse Bot via RT <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #21001] [noreply] abuse report about 192.0.2.10 - Mon,
+ 28 Sep 2026 10:41:50 +0200 -- service: ssh (First x 1) RID: synthetic
+Date: Mon, 28 Sep 2026 10:42:09 +0200
+X-RT-Originator: abuse-team@blocklist.de
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0425556937918477562=="
+
+--===============0425556937918477562==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Ticket <URL: https://rt.example.test/Ticket/21001 >
+
+Your Server/Customer with the IP: *192.0.2.10* (source.example.test) was reported for SSH login attempts.
+
+--===============0425556937918477562==
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="report.txt"
+MIME-Version: 1.0
+
+Reported-From: abuse-team@blocklist.de
+Category: abuse
+Report-Type: login-attack
+Service: ssh
+Version: 0.2
+Date: Mon, 28 Sep 2026 10:41:50 +0200
+Source-Type: ip-address
+Source: 192.0.2.10
+Port: ssh
+Report-ID: synthetic-report@example.test
+Attachment: text/plain
+
+--===============0425556937918477562==
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="logfile.log"
+MIME-Version: 1.0
+
+Lines containing failures of 192.0.2.10 (max 1000)
+
+
+--===============0425556937918477562==--

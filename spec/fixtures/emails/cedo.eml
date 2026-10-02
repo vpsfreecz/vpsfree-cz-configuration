@@ -1,0 +1,49 @@
+From: Abuse Bot via RT <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #21001] abuse report about 192.0.2.10 - Mon, 28 Sep
+ 2026 11:36:08 +0200
+Date: Mon, 28 Sep 2026 11:36:36 +0200
+X-RT-Originator: www-root@cedo.com
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============4435973745482669081=="
+
+--===============4435973745482669081==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Ticket <URL: https://rt.example.test/Ticket/21001 >
+
+We have detected abuse from the IP address 192.0.2.10, which is on your network.
+
+--===============4435973745482669081==
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="report.txt"
+MIME-Version: 1.0
+
+---
+Reported-From: www-root@cedo.com
+Category: abuse
+Report-Type: login-attack
+Service: sshd
+Version: 0.2
+Date: Mon, 28 Sep 2026 11:36:08 +0200
+Source-Type: ip-address
+Source: 192.0.2.10
+Port: ssh
+Report-ID: synthetic-report@example.test
+Attachment: text/plain
+
+--===============4435973745482669081==
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="logfile.log"
+MIME-Version: 1.0
+
+Note: Local timezone is +0200 (CEST)
+
+Sep 28 11:32:00 victim.example.test sshd[123]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.0.2.10 user=synthetic
+Sep 28 11:32:02 victim.example.test sshd[123]: Failed password for synthetic from 192.0.2.10 port 41001 ssh2
+Sep 28 11:36:08 victim.example.test sshd[123]: Invalid user finalsynthetic from 192.0.2.10 port 41002
+
+--===============4435973745482669081==--

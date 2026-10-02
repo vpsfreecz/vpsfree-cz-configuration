@@ -67,7 +67,7 @@ end
 module AbuseNoticeParserSpec
   FIXTURE_ROOT = File.expand_path('fixtures/emails', __dir__)
 
-  Assignment = Struct.new(:id, :user_id, :vps_id, :ip_addr, keyword_init: true)
+  Assignment = Struct.new(:id, :user_id, :vps_id, :ip_addr, :from_date, :to_date, keyword_init: true)
 
   module AssignmentRegistry
     class << self
@@ -79,19 +79,26 @@ module AbuseNoticeParserSpec
         @next_id = 3000
       end
 
-      def register(ip, user_id: 1001, vps_id: 2002)
+      def register(ip, user_id: 1001, vps_id: 2002, from_date: Time.utc(1970), to_date: nil)
         @next_id += 1
-        @assignments[ip] = Assignment.new(
+        assignment = Assignment.new(
           id: @next_id,
           user_id: user_id,
           vps_id: vps_id,
-          ip_addr: ip
+          ip_addr: ip,
+          from_date: from_date,
+          to_date: to_date
         )
+        (@assignments[ip] ||= []) << assignment
+        assignment
       end
 
       def find(addr_str, time: nil)
         @lookups << { addr_str: addr_str, time: time }
-        @assignments[addr_str]
+        candidates = @assignments.fetch(addr_str, [])
+        candidates.select do |assignment|
+          time.nil? || (assignment.from_date <= time && (assignment.to_date.nil? || assignment.to_date >= time))
+        end.max_by(&:id)
       end
     end
   end
@@ -121,8 +128,8 @@ module AbuseNoticeParserSpec
     @mailbox ||= Struct.new(:label).new('abuse')
   end
 
-  def register_assignment(ip, user_id: 1001, vps_id: 2002)
-    AssignmentRegistry.register(ip, user_id: user_id, vps_id: vps_id)
+  def register_assignment(ip, **)
+    AssignmentRegistry.register(ip, **)
   end
 
   def parse_fixture(parser_class, name, assignments:, dry_run: true)

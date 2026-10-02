@@ -1,0 +1,24 @@
+From: Abuse Bot via RT <abuse@vpsfree.cz>
+To: abuse@vpsfree.cz
+Subject: [rt.vpsfree.cz #21001] Abuse detected from IP 192.0.2.10
+Date: Mon, 28 Sep 2026 14:01:52 +0200
+X-RT-Originator: abuse@customvisuals.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Ticket <URL: https://rt.example.test/Ticket/21001 >
+
+According to the whois server, this is the abuse contact for the
+IP address 192.0.2.10.
+
+Our server at 198.51.100.20 has recorded 7 unauthorized access attempts from
+192.0.2.10 since 2026-09-28 03:38:24 AM (all times are US Central Time zone,
+also called America/Chicago, CDT, or UTC offset: -05:00). The last attempt was
+a failed SSH user/password or failed VNC access at 2026-09-28 06:57:11 AM.
+
+The log line for the last record is:
+2026-09-28 06:57:11.439254-0500 victim.example.test sshd-session[123]: Failed password
+for synthetic from 192.0.2.10 port 41001 ssh2
+
+Access from 192.0.2.10 to our server has been temporarily banned.
