@@ -16,6 +16,10 @@ let
   devWorkspaceInput = inputsInfo.devWorkspace.input;
   devWorkspaceSite = import ./dev-workspace-site.nix;
   llmAgentsPkgs = flakeInputs.${llmAgentsInput}.packages.${pkgs.stdenv.hostPlatform.system};
+  codexPackage = flakeInputs.${devWorkspaceInput}.lib.mkCodexPackage {
+    inherit pkgs;
+    codex = llmAgentsPkgs.codex;
+  };
 
   ns1IntPrg = confLib.findMetaConfig {
     cluster = config.cluster;
@@ -75,7 +79,7 @@ let
     fi
     export DEEPSEEK_API_KEY
 
-    exec ${llmAgentsPkgs.codex}/bin/codex -p ds "$@"
+    exec ${codexPackage}/bin/codex -p ds "$@"
   '';
 
   codexDsConfig = pkgs.writeText "codex-ds.config.toml" ''
@@ -244,7 +248,7 @@ in
 
   # Keep the system Codex package through the first workspace profile rollout.
   # The preceding profile generation still uses it when testing rollback.
-  environment.systemPackages = (with pkgs; [ vim ]) ++ [ llmAgentsPkgs.codex ];
+  environment.systemPackages = (with pkgs; [ vim ]) ++ [ codexPackage ];
 
   services.openssh = {
     enable = true;
