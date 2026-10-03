@@ -53,8 +53,8 @@
     targets = [ "https://newadmin.vpsfree.cz/build-info.json" ];
     host = "newadmin.vpsfree.cz";
     bodyMatches = [
-      ''"schemaVersion":1''
-      ''"commit":"[0-9a-f]{40}"''
+      ''"schemaVersion"[[:space:]]*:[[:space:]]*1[[:space:]]*[,}]''
+      ''"commit"[[:space:]]*:[[:space:]]*"[0-9a-f]{40}"''
     ];
     labels = {
       alias = "newadmin.vpsfree.cz";
