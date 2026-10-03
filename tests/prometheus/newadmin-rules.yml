@@ -67,7 +67,7 @@ tests:
               job: infra
               fqdn: vpsadmin-webui1.int.vpsfree.cz
               instance: vpsadmin-webui1.int.vpsfree.cz:9100
-              severity: critical
+              severity: warning
               frequency: 15m
             exp_annotations:
               summary: newadmin host metrics are missing for vpsadmin-webui1.int.vpsfree.cz
@@ -81,7 +81,7 @@ tests:
           - exp_labels:
               job: infra
               fqdn: vpsadmin-webui1.int.vpsfree.cz
-              severity: critical
+              severity: warning
               frequency: 15m
             exp_annotations:
               summary: newadmin host metrics are missing for vpsadmin-webui1.int.vpsfree.cz
@@ -128,7 +128,7 @@ tests:
         exp_alerts:
           - exp_labels:
               job: http_newadmin_vpsfree_cz
-              severity: critical
+              severity: warning
               frequency: 15m
             exp_annotations:
               summary: newadmin frontend HTTP probe metrics are missing
@@ -151,7 +151,7 @@ tests:
         exp_alerts:
           - exp_labels:
               job: http_newadmin_vpsfree_cz
-              severity: critical
+              severity: warning
               frequency: 15m
             exp_annotations:
               summary: newadmin frontend HTTP probe metrics are missing
@@ -171,7 +171,7 @@ tests:
         exp_alerts:
           - exp_labels:
               job: http_newadmin_bff_vpsfree_cz
-              severity: critical
+              severity: warning
               frequency: 15m
             exp_annotations:
               summary: newadmin BFF HTTP probe metrics are missing
@@ -194,7 +194,7 @@ tests:
         exp_alerts:
           - exp_labels:
               job: http_newadmin_bff_vpsfree_cz
-              severity: critical
+              severity: warning
               frequency: 15m
             exp_annotations:
               summary: newadmin BFF HTTP probe metrics are missing
@@ -230,7 +230,7 @@ tests:
           - exp_labels:
               job: http_newadmin_vpsfree_cz
               instance: https://newadmin.vpsfree.cz/build-info.json
-              severity: critical
+              severity: warning
               frequency: 5m
             exp_annotations:
               summary: https://newadmin.vpsfree.cz/build-info.json web probe failed
@@ -251,7 +251,7 @@ tests:
           - exp_labels:
               job: http_newadmin_bff_vpsfree_cz
               instance: https://newadmin.vpsfree.cz/healthz
-              severity: critical
+              severity: warning
               frequency: 5m
             exp_annotations:
               summary: https://newadmin.vpsfree.cz/healthz web probe failed
@@ -259,3 +259,146 @@ tests:
                 https://newadmin.vpsfree.cz/healthz does not return the expected HTTP response
 
                 LABELS: map[__name__:probe_success instance:https://newadmin.vpsfree.cz/healthz job:http_newadmin_bff_vpsfree_cz]
+
+  - name: A failed frontend exporter alerts as warning
+    interval: 1m
+    input_series:
+      - series: 'up{job="http_newadmin_vpsfree_cz",instance="https://newadmin.vpsfree.cz/build-info.json"}'
+        values: '0+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminVpsfreeCzExporterDown
+        exp_alerts:
+          - exp_labels:
+              job: http_newadmin_vpsfree_cz
+              instance: https://newadmin.vpsfree.cz/build-info.json
+              severity: warning
+              frequency: hourly
+            exp_annotations:
+              summary: Web exporter is down (instance https://newadmin.vpsfree.cz/build-info.json)
+              description: |
+                Unable to check web availability
+
+                LABELS: map[__name__:up instance:https://newadmin.vpsfree.cz/build-info.json job:http_newadmin_vpsfree_cz]
+
+  - name: A failed BFF exporter alerts as warning
+    interval: 1m
+    input_series:
+      - series: 'up{job="http_newadmin_bff_vpsfree_cz",instance="https://newadmin.vpsfree.cz/healthz"}'
+        values: '0+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: NewadminBffVpsfreeCzExporterDown
+        exp_alerts:
+          - exp_labels:
+              job: http_newadmin_bff_vpsfree_cz
+              instance: https://newadmin.vpsfree.cz/healthz
+              severity: warning
+              frequency: hourly
+            exp_annotations:
+              summary: Web exporter is down (instance https://newadmin.vpsfree.cz/healthz)
+              description: |
+                Unable to check web availability
+
+                LABELS: map[__name__:up instance:https://newadmin.vpsfree.cz/healthz job:http_newadmin_bff_vpsfree_cz]
+
+  - name: API console and legacy UI exporter and probe failures remain critical
+    interval: 1m
+    input_series:
+      - series: 'up{job="http_api_vpsfree_cz",instance="https://api.vpsfree.cz/"}'
+        values: '0+0x12'
+      - series: 'probe_success{job="http_api_vpsfree_cz",instance="https://api.vpsfree.cz/"}'
+        values: '0+0x12'
+      - series: 'up{job="http_console_vpsfree_cz",instance="https://console.vpsfree.cz/vzconsole.js"}'
+        values: '0+0x12'
+      - series: 'probe_success{job="http_console_vpsfree_cz",instance="https://console.vpsfree.cz/vzconsole.js"}'
+        values: '0+0x12'
+      - series: 'up{job="http_vpsadmin_vpsfree_cz",instance="https://vpsadmin.vpsfree.cz/"}'
+        values: '0+0x12'
+      - series: 'probe_success{job="http_vpsadmin_vpsfree_cz",instance="https://vpsadmin.vpsfree.cz/"}'
+        values: '0+0x12'
+    alert_rule_test:
+      - eval_time: 11m
+        alertname: ApiVpsfreeCzExporterDown
+        exp_alerts:
+          - exp_labels:
+              job: http_api_vpsfree_cz
+              instance: https://api.vpsfree.cz/
+              severity: critical
+              frequency: hourly
+            exp_annotations:
+              summary: Web exporter is down (instance https://api.vpsfree.cz/)
+              description: |
+                Unable to check web availability
+
+                LABELS: map[__name__:up instance:https://api.vpsfree.cz/ job:http_api_vpsfree_cz]
+      - eval_time: 11m
+        alertname: ApiVpsfreeCzWebDown
+        exp_alerts:
+          - exp_labels:
+              job: http_api_vpsfree_cz
+              instance: https://api.vpsfree.cz/
+              severity: critical
+              frequency: 5m
+            exp_annotations:
+              summary: https://api.vpsfree.cz/ web probe failed
+              description: |
+                https://api.vpsfree.cz/ does not return the expected HTTP response
+
+                LABELS: map[__name__:probe_success instance:https://api.vpsfree.cz/ job:http_api_vpsfree_cz]
+      - eval_time: 11m
+        alertname: ConsoleVpsfreeCzExporterDown
+        exp_alerts:
+          - exp_labels:
+              job: http_console_vpsfree_cz
+              instance: https://console.vpsfree.cz/vzconsole.js
+              severity: critical
+              frequency: hourly
+            exp_annotations:
+              summary: Web exporter is down (instance https://console.vpsfree.cz/vzconsole.js)
+              description: |
+                Unable to check web availability
+
+                LABELS: map[__name__:up instance:https://console.vpsfree.cz/vzconsole.js job:http_console_vpsfree_cz]
+      - eval_time: 11m
+        alertname: ConsoleVpsfreeCzWebDown
+        exp_alerts:
+          - exp_labels:
+              job: http_console_vpsfree_cz
+              instance: https://console.vpsfree.cz/vzconsole.js
+              severity: critical
+              frequency: 5m
+            exp_annotations:
+              summary: https://console.vpsfree.cz/vzconsole.js web probe failed
+              description: |
+                https://console.vpsfree.cz/vzconsole.js does not return the expected HTTP response
+
+                LABELS: map[__name__:probe_success instance:https://console.vpsfree.cz/vzconsole.js job:http_console_vpsfree_cz]
+      - eval_time: 11m
+        alertname: VpsadminVpsfreeCzExporterDown
+        exp_alerts:
+          - exp_labels:
+              job: http_vpsadmin_vpsfree_cz
+              instance: https://vpsadmin.vpsfree.cz/
+              severity: critical
+              frequency: hourly
+            exp_annotations:
+              summary: Web exporter is down (instance https://vpsadmin.vpsfree.cz/)
+              description: |
+                Unable to check web availability
+
+                LABELS: map[__name__:up instance:https://vpsadmin.vpsfree.cz/ job:http_vpsadmin_vpsfree_cz]
+      - eval_time: 11m
+        alertname: VpsadminVpsfreeCzWebDown
+        exp_alerts:
+          - exp_labels:
+              job: http_vpsadmin_vpsfree_cz
+              instance: https://vpsadmin.vpsfree.cz/
+              severity: critical
+              frequency: 5m
+            exp_annotations:
+              summary: https://vpsadmin.vpsfree.cz/ web probe failed
+              description: |
+                https://vpsadmin.vpsfree.cz/ does not return the expected HTTP response
+
+                LABELS: map[__name__:probe_success instance:https://vpsadmin.vpsfree.cz/ job:http_vpsadmin_vpsfree_cz]

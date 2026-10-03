@@ -87,6 +87,12 @@ retain their thresholds. These checks do not certify interactive login.
 Confirm OAuth, recovery, console, locale, and important read-only API paths
 in a controlled operator acceptance session after activation.
 
+All nine dedicated Newadmin alerts use `warning` severity, including HTTP and
+exporter failures and missing host or probe metrics. Shared VPS infrastructure
+alerts and API, console and legacy UI HTTP alerts retain their existing
+severities. Promoting a dedicated Newadmin alert to `critical` requires an
+explicit policy decision.
+
 After activation, inspect the top-level document's Content-Security-Policy
 response header. `frame-src` must include the exact console and heatmap origins
 above alongside the existing map origin; `connect-src` must not add the console

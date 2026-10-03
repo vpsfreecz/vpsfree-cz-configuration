@@ -89,7 +89,7 @@ in
         '';
         for = "10m";
         labels = {
-          severity = "critical";
+          severity = "warning";
           frequency = "15m";
         };
         annotations.summary = "newadmin host metrics are missing for {{ $labels.fqdn }}";
@@ -116,7 +116,7 @@ in
         '';
         for = "10m";
         labels = {
-          severity = "critical";
+          severity = "warning";
           frequency = "15m";
         };
         annotations.summary = "newadmin frontend HTTP probe metrics are missing";
@@ -130,7 +130,7 @@ in
         '';
         for = "10m";
         labels = {
-          severity = "critical";
+          severity = "warning";
           frequency = "15m";
         };
         annotations.summary = "newadmin BFF HTTP probe metrics are missing";
@@ -499,43 +499,58 @@ in
     name = "vpsadmin-front";
     interval = "300s";
     rules = lib.flatten (
-      lib.mapAttrsToList (name: camel: [
-        {
-          alert = "${camel}ExporterDown";
-          expr = ''up{job="http_${name}"} == 0'';
-          for = "10m";
-          labels = {
-            severity = "critical";
-            frequency = "hourly";
-          };
-          annotations = {
-            summary = "Web exporter is down (instance {{ $labels.instance }})";
-            description = ''
-              Unable to check web availability
+      lib.mapAttrsToList (
+        name: camel:
+        let
+          severity =
+            if
+              builtins.elem name [
+                "newadmin_vpsfree_cz"
+                "newadmin_bff_vpsfree_cz"
+              ]
+            then
+              "warning"
+            else
+              "critical";
+        in
+        [
+          {
+            alert = "${camel}ExporterDown";
+            expr = ''up{job="http_${name}"} == 0'';
+            for = "10m";
+            labels = {
+              inherit severity;
+              frequency = "hourly";
+            };
+            annotations = {
+              summary = "Web exporter is down (instance {{ $labels.instance }})";
+              description = ''
+                Unable to check web availability
 
-              LABELS: {{ $labels }}
-            '';
-          };
-        }
+                LABELS: {{ $labels }}
+              '';
+            };
+          }
 
-        {
-          alert = "${camel}WebDown";
-          expr = ''probe_success{job="http_${name}"} == 0'';
-          for = "120s";
-          labels = {
-            severity = "critical";
-            frequency = "5m";
-          };
-          annotations = {
-            summary = "{{ $labels.instance }} web probe failed";
-            description = ''
-              {{ $labels.instance }} does not return the expected HTTP response
+          {
+            alert = "${camel}WebDown";
+            expr = ''probe_success{job="http_${name}"} == 0'';
+            for = "120s";
+            labels = {
+              inherit severity;
+              frequency = "5m";
+            };
+            annotations = {
+              summary = "{{ $labels.instance }} web probe failed";
+              description = ''
+                {{ $labels.instance }} does not return the expected HTTP response
 
-              LABELS: {{ $labels }}
-            '';
-          };
-        }
-      ]) httpSites
+                LABELS: {{ $labels }}
+              '';
+            };
+          }
+        ]
+      ) httpSites
     );
   }
 ]
