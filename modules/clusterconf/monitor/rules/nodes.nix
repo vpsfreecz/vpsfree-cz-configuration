@@ -73,7 +73,7 @@
 
       {
         alert = "HypervisorHighCpuLoad";
-        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",location!="stg"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",location!~"stg|pgnd"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
         labels = {
           alertclass = "cpuload";
@@ -92,12 +92,11 @@
 
       {
         alert = "HypervisorHighCpuLoadStaging";
-        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",location="stg"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''100 - (avg by(instance, alias, fqdn, location) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",location=~"stg|pgnd"}[5m])) * 100) > 80 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "50m";
         labels = {
           alertclass = "cpuload";
           severity = "warning";
-          location = "stg";
         };
         annotations = {
           summary = "High CPU load (instance {{ $labels.instance }})";
@@ -112,7 +111,7 @@
 
       {
         alert = "HypervisorCritOsCpuLoad";
-        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",os="vpsadminos",location!="stg"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",os="vpsadminos",location!~"stg|pgnd"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "10m";
         labels = {
           alertclass = "cpuload";
@@ -131,12 +130,11 @@
 
       {
         alert = "HypervisorCritOsCpuLoadStaging";
-        expr = ''100 - (avg by(instance, alias, fqdn) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",os="vpsadminos",location="stg"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
+        expr = ''100 - (avg by(instance, alias, fqdn, location) (irate(node_cpu_seconds_total{mode="idle",role="hypervisor",os="vpsadminos",location=~"stg|pgnd"}[5m])) * 100) > 90 and on(instance) time() - node_boot_time_seconds > 3600'';
         for = "50m";
         labels = {
           alertclass = "cpuload";
           severity = "critical";
-          location = "stg";
         };
         annotations = {
           summary = "Critical CPU load (instance {{ $labels.instance }})";

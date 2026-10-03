@@ -1,0 +1,235 @@
+rule_files:
+  - @ruleFile@
+evaluation_interval: 20s
+
+tests:
+  - name: Staging and playground CPU usage keep their real location and wait fifty minutes
+    interval: 20s
+    input_series:
+      - series: 'node_cpu_seconds_total{alias="stg-85",fqdn="stg-85.example",instance="stg-85:9100",job="nodes",role="hypervisor",os="vpsadminos",location="stg",cpu="0",mode="idle"}'
+        values: '0+4x151'
+      - series: 'node_cpu_seconds_total{alias="stg-85",fqdn="stg-85.example",instance="stg-85:9100",job="nodes",role="hypervisor",os="vpsadminos",location="stg",cpu="1",mode="idle"}'
+        values: '0+2x151'
+      - series: 'node_boot_time_seconds{alias="stg-85",fqdn="stg-85.example",instance="stg-85:9100",job="nodes",role="hypervisor",os="vpsadminos",location="stg"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="stg-95",fqdn="stg-95.example",instance="stg-95:9100",job="nodes",role="hypervisor",os="vpsadminos",location="stg",cpu="0",mode="idle"}'
+        values: '0+1x151'
+      - series: 'node_boot_time_seconds{alias="stg-95",fqdn="stg-95.example",instance="stg-95:9100",job="nodes",role="hypervisor",os="vpsadminos",location="stg"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="stg-other",fqdn="stg-other.example",instance="stg-other:9100",job="nodes",role="hypervisor",os="nixos",location="stg",cpu="0",mode="idle"}'
+        values: '0+1x151'
+      - series: 'node_boot_time_seconds{alias="stg-other",fqdn="stg-other.example",instance="stg-other:9100",job="nodes",role="hypervisor",os="nixos",location="stg"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="pgnd-85",fqdn="pgnd-85.example",instance="pgnd-85:9100",job="nodes",role="hypervisor",os="vpsadminos",location="pgnd",cpu="0",mode="idle"}'
+        values: '0+4x151'
+      - series: 'node_cpu_seconds_total{alias="pgnd-85",fqdn="pgnd-85.example",instance="pgnd-85:9100",job="nodes",role="hypervisor",os="vpsadminos",location="pgnd",cpu="1",mode="idle"}'
+        values: '0+2x151'
+      - series: 'node_boot_time_seconds{alias="pgnd-85",fqdn="pgnd-85.example",instance="pgnd-85:9100",job="nodes",role="hypervisor",os="vpsadminos",location="pgnd"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="pgnd-95",fqdn="pgnd-95.example",instance="pgnd-95:9100",job="nodes",role="hypervisor",os="vpsadminos",location="pgnd",cpu="0",mode="idle"}'
+        values: '0+1x151'
+      - series: 'node_boot_time_seconds{alias="pgnd-95",fqdn="pgnd-95.example",instance="pgnd-95:9100",job="nodes",role="hypervisor",os="vpsadminos",location="pgnd"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="pgnd-other",fqdn="pgnd-other.example",instance="pgnd-other:9100",job="nodes",role="hypervisor",os="nixos",location="pgnd",cpu="0",mode="idle"}'
+        values: '0+1x151'
+      - series: 'node_boot_time_seconds{alias="pgnd-other",fqdn="pgnd-other.example",instance="pgnd-other:9100",job="nodes",role="hypervisor",os="nixos",location="pgnd"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="prg-95",fqdn="prg-95.example",instance="prg-95:9100",job="nodes",role="hypervisor",os="vpsadminos",location="prg",cpu="0",mode="idle"}'
+        values: '0+1x151'
+      - series: 'node_boot_time_seconds{alias="prg-95",fqdn="prg-95.example",instance="prg-95:9100",job="nodes",role="hypervisor",os="vpsadminos",location="prg"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="missing-95",fqdn="missing-95.example",instance="missing-95:9100",job="nodes",role="hypervisor",os="vpsadminos",cpu="0",mode="idle"}'
+        values: '0+1x151'
+      - series: 'node_boot_time_seconds{alias="missing-95",fqdn="missing-95.example",instance="missing-95:9100",job="nodes",role="hypervisor",os="vpsadminos"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="prg-85",fqdn="prg-85.example",instance="prg-85:9100",job="nodes",role="hypervisor",os="vpsadminos",location="prg",cpu="0",mode="idle"}'
+        values: '0+3x151'
+      - series: 'node_boot_time_seconds{alias="prg-85",fqdn="prg-85.example",instance="prg-85:9100",job="nodes",role="hypervisor",os="vpsadminos",location="prg"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="missing-85",fqdn="missing-85.example",instance="missing-85:9100",job="nodes",role="hypervisor",os="vpsadminos",cpu="0",mode="idle"}'
+        values: '0+3x151'
+      - series: 'node_boot_time_seconds{alias="missing-85",fqdn="missing-85.example",instance="missing-85:9100",job="nodes",role="hypervisor",os="vpsadminos"}'
+        values: '-7200+0x151'
+    promql_expr_test:
+      - expr: 'ALERTS{alertstate="firing"}'
+        eval_time: 10m
+        exp_samples: []
+      - expr: 'ALERTS{alertstate="firing"}'
+        eval_time: 10m20s
+        exp_samples:
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-95",fqdn="prg-95.example",instance="prg-95:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-95",fqdn="prg-95.example",instance="prg-95:9100",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="missing-95",fqdn="missing-95.example",instance="missing-95:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoad",alertstate="firing",alertclass="cpuload",alias="missing-95",fqdn="missing-95.example",instance="missing-95:9100",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-85",fqdn="prg-85.example",instance="prg-85:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="missing-85",fqdn="missing-85.example",instance="missing-85:9100",severity="warning"}'
+            value: 1
+      - expr: 'ALERTS{alertstate="firing"}'
+        eval_time: 50m
+        exp_samples:
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-95",fqdn="prg-95.example",instance="prg-95:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-95",fqdn="prg-95.example",instance="prg-95:9100",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="missing-95",fqdn="missing-95.example",instance="missing-95:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoad",alertstate="firing",alertclass="cpuload",alias="missing-95",fqdn="missing-95.example",instance="missing-95:9100",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-85",fqdn="prg-85.example",instance="prg-85:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="missing-85",fqdn="missing-85.example",instance="missing-85:9100",severity="warning"}'
+            value: 1
+      - expr: 'ALERTS{alertstate="firing"}'
+        eval_time: 50m20s
+        exp_samples:
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-95",fqdn="prg-95.example",instance="prg-95:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-95",fqdn="prg-95.example",instance="prg-95:9100",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="missing-95",fqdn="missing-95.example",instance="missing-95:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoad",alertstate="firing",alertclass="cpuload",alias="missing-95",fqdn="missing-95.example",instance="missing-95:9100",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-85",fqdn="prg-85.example",instance="prg-85:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="missing-85",fqdn="missing-85.example",instance="missing-85:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="stg-85",fqdn="stg-85.example",instance="stg-85:9100",severity="warning",location="stg"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="pgnd-85",fqdn="pgnd-85.example",instance="pgnd-85:9100",severity="warning",location="pgnd"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="stg-95",fqdn="stg-95.example",instance="stg-95:9100",severity="warning",location="stg"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="stg-95",fqdn="stg-95.example",instance="stg-95:9100",severity="critical",location="stg"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="pgnd-95",fqdn="pgnd-95.example",instance="pgnd-95:9100",severity="warning",location="pgnd"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="pgnd-95",fqdn="pgnd-95.example",instance="pgnd-95:9100",severity="critical",location="pgnd"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="stg-other",fqdn="stg-other.example",instance="stg-other:9100",severity="warning",location="stg"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="pgnd-other",fqdn="pgnd-other.example",instance="pgnd-other:9100",severity="warning",location="pgnd"}'
+            value: 1
+
+  - name: Exactly eighty percent does not warn and exactly ninety percent does not become critical
+    interval: 20s
+    input_series:
+      - series: 'node_cpu_seconds_total{alias="stg-80",fqdn="stg-80.example",instance="stg-80:9100",job="nodes",role="hypervisor",os="vpsadminos",location="stg",cpu="0",mode="idle"}'
+        values: '0+4x151'
+      - series: 'node_boot_time_seconds{alias="stg-80",fqdn="stg-80.example",instance="stg-80:9100",job="nodes",role="hypervisor",os="vpsadminos",location="stg"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="stg-90",fqdn="stg-90.example",instance="stg-90:9100",job="nodes",role="hypervisor",os="vpsadminos",location="stg",cpu="0",mode="idle"}'
+        values: '0+2x151'
+      - series: 'node_boot_time_seconds{alias="stg-90",fqdn="stg-90.example",instance="stg-90:9100",job="nodes",role="hypervisor",os="vpsadminos",location="stg"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="pgnd-80",fqdn="pgnd-80.example",instance="pgnd-80:9100",job="nodes",role="hypervisor",os="vpsadminos",location="pgnd",cpu="0",mode="idle"}'
+        values: '0+4x151'
+      - series: 'node_boot_time_seconds{alias="pgnd-80",fqdn="pgnd-80.example",instance="pgnd-80:9100",job="nodes",role="hypervisor",os="vpsadminos",location="pgnd"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="pgnd-90",fqdn="pgnd-90.example",instance="pgnd-90:9100",job="nodes",role="hypervisor",os="vpsadminos",location="pgnd",cpu="0",mode="idle"}'
+        values: '0+2x151'
+      - series: 'node_boot_time_seconds{alias="pgnd-90",fqdn="pgnd-90.example",instance="pgnd-90:9100",job="nodes",role="hypervisor",os="vpsadminos",location="pgnd"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="prg-80",fqdn="prg-80.example",instance="prg-80:9100",job="nodes",role="hypervisor",os="vpsadminos",location="prg",cpu="0",mode="idle"}'
+        values: '0+4x151'
+      - series: 'node_boot_time_seconds{alias="prg-80",fqdn="prg-80.example",instance="prg-80:9100",job="nodes",role="hypervisor",os="vpsadminos",location="prg"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="prg-90",fqdn="prg-90.example",instance="prg-90:9100",job="nodes",role="hypervisor",os="vpsadminos",location="prg",cpu="0",mode="idle"}'
+        values: '0+2x151'
+      - series: 'node_boot_time_seconds{alias="prg-90",fqdn="prg-90.example",instance="prg-90:9100",job="nodes",role="hypervisor",os="vpsadminos",location="prg"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="missing-80",fqdn="missing-80.example",instance="missing-80:9100",job="nodes",role="hypervisor",os="vpsadminos",cpu="0",mode="idle"}'
+        values: '0+4x151'
+      - series: 'node_boot_time_seconds{alias="missing-80",fqdn="missing-80.example",instance="missing-80:9100",job="nodes",role="hypervisor",os="vpsadminos"}'
+        values: '-7200+0x151'
+      - series: 'node_cpu_seconds_total{alias="missing-90",fqdn="missing-90.example",instance="missing-90:9100",job="nodes",role="hypervisor",os="vpsadminos",cpu="0",mode="idle"}'
+        values: '0+2x151'
+      - series: 'node_boot_time_seconds{alias="missing-90",fqdn="missing-90.example",instance="missing-90:9100",job="nodes",role="hypervisor",os="vpsadminos"}'
+        values: '-7200+0x151'
+    promql_expr_test:
+      - expr: 'ALERTS{alertstate="firing"}'
+        eval_time: 50m20s
+        exp_samples:
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="stg-90",fqdn="stg-90.example",instance="stg-90:9100",severity="warning",location="stg"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="pgnd-90",fqdn="pgnd-90.example",instance="pgnd-90:9100",severity="warning",location="pgnd"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-90",fqdn="prg-90.example",instance="prg-90:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="missing-90",fqdn="missing-90.example",instance="missing-90:9100",severity="warning"}'
+            value: 1
+
+  - name: Boot age must exceed one hour before either policy starts its hold
+    interval: 20s
+    input_series:
+      - series: 'node_cpu_seconds_total{alias="stg-boot",fqdn="stg-boot.example",instance="stg-boot:9100",job="nodes",role="hypervisor",os="vpsadminos",location="stg",cpu="0",mode="idle"}'
+        values: '0+1x331'
+      - series: 'node_boot_time_seconds{alias="stg-boot",fqdn="stg-boot.example",instance="stg-boot:9100",job="nodes",role="hypervisor",os="vpsadminos",location="stg"}'
+        values: '0+0x331'
+      - series: 'node_cpu_seconds_total{alias="pgnd-boot",fqdn="pgnd-boot.example",instance="pgnd-boot:9100",job="nodes",role="hypervisor",os="vpsadminos",location="pgnd",cpu="0",mode="idle"}'
+        values: '0+1x331'
+      - series: 'node_boot_time_seconds{alias="pgnd-boot",fqdn="pgnd-boot.example",instance="pgnd-boot:9100",job="nodes",role="hypervisor",os="vpsadminos",location="pgnd"}'
+        values: '0+0x331'
+      - series: 'node_cpu_seconds_total{alias="prg-boot",fqdn="prg-boot.example",instance="prg-boot:9100",job="nodes",role="hypervisor",os="vpsadminos",location="prg",cpu="0",mode="idle"}'
+        values: '0+1x331'
+      - series: 'node_boot_time_seconds{alias="prg-boot",fqdn="prg-boot.example",instance="prg-boot:9100",job="nodes",role="hypervisor",os="vpsadminos",location="prg"}'
+        values: '0+0x331'
+    promql_expr_test:
+      - expr: 'ALERTS{alertstate="pending"}'
+        eval_time: 60m
+        exp_samples: []
+      - expr: 'ALERTS{alertstate="firing"}'
+        eval_time: 60m
+        exp_samples: []
+      - expr: 'ALERTS{alertstate="pending"}'
+        eval_time: 60m20s
+        exp_samples:
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoadStaging",alertstate="pending",alertclass="cpuload",alias="stg-boot",fqdn="stg-boot.example",instance="stg-boot:9100",severity="warning",location="stg"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoadStaging",alertstate="pending",alertclass="cpuload",alias="stg-boot",fqdn="stg-boot.example",instance="stg-boot:9100",severity="critical",location="stg"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoadStaging",alertstate="pending",alertclass="cpuload",alias="pgnd-boot",fqdn="pgnd-boot.example",instance="pgnd-boot:9100",severity="warning",location="pgnd"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoadStaging",alertstate="pending",alertclass="cpuload",alias="pgnd-boot",fqdn="pgnd-boot.example",instance="pgnd-boot:9100",severity="critical",location="pgnd"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="pending",alertclass="cpuload",alias="prg-boot",fqdn="prg-boot.example",instance="prg-boot:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoad",alertstate="pending",alertclass="cpuload",alias="prg-boot",fqdn="prg-boot.example",instance="prg-boot:9100",severity="critical"}'
+            value: 1
+      - expr: 'ALERTS{alertstate="firing"}'
+        eval_time: 70m
+        exp_samples: []
+      - expr: 'ALERTS{alertstate="firing"}'
+        eval_time: 70m20s
+        exp_samples:
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-boot",fqdn="prg-boot.example",instance="prg-boot:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-boot",fqdn="prg-boot.example",instance="prg-boot:9100",severity="critical"}'
+            value: 1
+      - expr: 'ALERTS{alertstate="firing"}'
+        eval_time: 110m
+        exp_samples:
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-boot",fqdn="prg-boot.example",instance="prg-boot:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-boot",fqdn="prg-boot.example",instance="prg-boot:9100",severity="critical"}'
+            value: 1
+      - expr: 'ALERTS{alertstate="firing"}'
+        eval_time: 110m20s
+        exp_samples:
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="stg-boot",fqdn="stg-boot.example",instance="stg-boot:9100",severity="warning",location="stg"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="stg-boot",fqdn="stg-boot.example",instance="stg-boot:9100",severity="critical",location="stg"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="pgnd-boot",fqdn="pgnd-boot.example",instance="pgnd-boot:9100",severity="warning",location="pgnd"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoadStaging",alertstate="firing",alertclass="cpuload",alias="pgnd-boot",fqdn="pgnd-boot.example",instance="pgnd-boot:9100",severity="critical",location="pgnd"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorHighCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-boot",fqdn="prg-boot.example",instance="prg-boot:9100",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertname="HypervisorCritOsCpuLoad",alertstate="firing",alertclass="cpuload",alias="prg-boot",fqdn="prg-boot.example",instance="prg-boot:9100",severity="critical"}'
+            value: 1

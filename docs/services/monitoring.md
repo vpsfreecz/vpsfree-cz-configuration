@@ -43,6 +43,18 @@ receivers, including normal routing for independently supplied critical alerts.
 The `/run` selection remains. `/run` is normally tmpfs; expanding a VPS disk
 does not expand it.
 
+## CPU usage alerts
+
+Staging (`stg`) and playground (`pgnd`) hypervisors share the relaxed CPU
+usage policy: warning above 80% and vpsAdminOS critical above 90%, both held
+for 50 minutes. Other locations, including a missing location label, keep the
+10 minute holds. Both policies require a boot age strictly above one hour.
+
+The relaxed alerts retain their actual location. Their names keep the
+`Staging` suffix for compatibility. CPU usage still averages the idle rate
+across CPU cores. Raw load-average, I/O-wait, storage CPU, filesystem and ZFS
+rules keep their existing policies.
+
 ## Configuration changes
 
 Update both monitors with the labels and critical rule together. No exporter,
@@ -53,9 +65,10 @@ may still emit VPS critical alerts. Complete both monitor updates before
 checking the policy; HA deduplication does not cover different label sets.
 
 Restoring the previous deployed monitor configuration restores its filesystem
-eligibility and host/bridge label shape. Reverting only the critical selector
-restores filesystem eligibility while preserving labels. Restoring Alertmanager
-alone cannot recreate an alert that Prometheus does not emit. Existing Prometheus and Alertmanager state remains
+eligibility, host/bridge label shape and playground CPU policy. Reverting only
+the critical selector restores filesystem eligibility while preserving labels
+and CPU changes. Restoring Alertmanager alone cannot recreate an alert that
+Prometheus does not emit. Existing Prometheus and Alertmanager state remains
 readable; no data migration or deletion is needed. Verify effective labels,
 rules and configuration reload health on both monitor replicas.
 
@@ -64,11 +77,14 @@ rules and configuration reload health on both monitor replicas.
 From the repository's pinned development shell:
 
 ```sh
-nix build --no-write-lock-file --no-link .#checks.x86_64-linux.infra-monitoring-config
+nix build --no-write-lock-file --no-link \
+  .#checks.x86_64-linux.infra-monitoring-config \
+  .#checks.x86_64-linux.infra-monitoring-rules
 ```
 
 The config check evaluates real machine metadata, generated host and video
 bridge labels, global filesystem eligibility, thresholds, values and timing.
-It also checks offline Alertmanager routing with inert receivers. Offline
+It also checks offline Alertmanager routing with inert receivers. The CPU
+check covers thresholds, hold times, locations and boot suppression. Offline
 routing verifies receiver selection; it does not send notifications or exercise
 delivery, daytime activation, repeat timers or inhibition.
