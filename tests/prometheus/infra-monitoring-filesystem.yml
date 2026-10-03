@@ -1,0 +1,483 @@
+rule_files:
+  - @ruleFile@
+evaluation_interval: 20s
+
+tests:
+  - name: Critical filesystems select exact VM and physical types globally and retain five minute timing and values
+    interval: 20s
+    input_series:
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="vm-infra:9100",job="infra",machine_type="vm",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="vm-infra:9100",job="infra",machine_type="vm",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="physical-infra:9100",job="infra",machine_type="physical",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="physical-infra:9100",job="infra",machine_type="physical",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="vm-nodes:9100",job="nodes",machine_type="vm",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="vm-nodes:9100",job="nodes",machine_type="vm",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="physical-nodes:9100",job="nodes",machine_type="physical",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="physical-nodes:9100",job="nodes",machine_type="physical",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="vm-mon:9100",job="mon",machine_type="vm",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="vm-mon:9100",job="mon",machine_type="vm",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="physical-mon:9100",job="mon",machine_type="physical",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="physical-mon:9100",job="mon",machine_type="physical",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="vm-meet-jvbs:9100",job="meet-jvbs",machine_type="vm",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="vm-meet-jvbs:9100",job="meet-jvbs",machine_type="vm",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="physical-meet-jvbs:9100",job="meet-jvbs",machine_type="physical",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="physical-meet-jvbs:9100",job="meet-jvbs",machine_type="physical",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="vps-infra:9100",job="infra",machine_type="vps",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="vps-infra:9100",job="infra",machine_type="vps",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="missing-infra:9100",job="infra",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="missing-infra:9100",job="infra",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="-infra:9100",job="infra",machine_type="",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="-infra:9100",job="infra",machine_type="",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="unknown-infra:9100",job="infra",machine_type="unknown",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="unknown-infra:9100",job="infra",machine_type="unknown",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="vmx-infra:9100",job="infra",machine_type="vmx",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="vmx-infra:9100",job="infra",machine_type="vmx",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="vps-nodes:9100",job="nodes",machine_type="vps",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="vps-nodes:9100",job="nodes",machine_type="vps",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="missing-nodes:9100",job="nodes",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="missing-nodes:9100",job="nodes",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="-nodes:9100",job="nodes",machine_type="",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="-nodes:9100",job="nodes",machine_type="",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="unknown-nodes:9100",job="nodes",machine_type="unknown",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="unknown-nodes:9100",job="nodes",machine_type="unknown",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="vmx-nodes:9100",job="nodes",machine_type="vmx",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="vmx-nodes:9100",job="nodes",machine_type="vmx",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="vps-mon:9100",job="mon",machine_type="vps",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="vps-mon:9100",job="mon",machine_type="vps",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="missing-mon:9100",job="mon",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="missing-mon:9100",job="mon",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="-mon:9100",job="mon",machine_type="",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="-mon:9100",job="mon",machine_type="",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="unknown-mon:9100",job="mon",machine_type="unknown",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="unknown-mon:9100",job="mon",machine_type="unknown",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="vmx-mon:9100",job="mon",machine_type="vmx",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="vmx-mon:9100",job="mon",machine_type="vmx",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="vps-meet-jvbs:9100",job="meet-jvbs",machine_type="vps",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="vps-meet-jvbs:9100",job="meet-jvbs",machine_type="vps",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="missing-meet-jvbs:9100",job="meet-jvbs",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="missing-meet-jvbs:9100",job="meet-jvbs",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="-meet-jvbs:9100",job="meet-jvbs",machine_type="",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="-meet-jvbs:9100",job="meet-jvbs",machine_type="",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="unknown-meet-jvbs:9100",job="meet-jvbs",machine_type="unknown",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="unknown-meet-jvbs:9100",job="meet-jvbs",machine_type="unknown",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="vmx-meet-jvbs:9100",job="meet-jvbs",machine_type="vmx",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="vmx-meet-jvbs:9100",job="meet-jvbs",machine_type="vmx",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="missing-job:9100",machine_type="vm",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="missing-job:9100",machine_type="vm",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="other-job:9100",job="unrecognized",machine_type="physical",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="other-job:9100",job="unrecognized",machine_type="physical",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="shared:9100",job="infra",machine_type="vm",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="shared:9100",job="infra",machine_type="vm",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="tmpfs",fstype="tmpfs",instance="shared:9100",job="infra",machine_type="physical",mountpoint="/run"}'
+        values: '9+0x15'
+      - series: 'node_filesystem_size_bytes{device="tmpfs",fstype="tmpfs",instance="shared:9100",job="infra",machine_type="physical",mountpoint="/run"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vdb1",fstype="ext4",instance="shared:9100",job="infra",machine_type="physical",mountpoint="/nix/store"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vdb1",fstype="ext4",instance="shared:9100",job="infra",machine_type="physical",mountpoint="/nix/store"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="above-10:9100",job="nodes",machine_type="vm",mountpoint="/"}'
+        values: '10.01+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="above-10:9100",job="nodes",machine_type="vm",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="excluded-mount:9100",job="mon",machine_type="physical",mountpoint="/var"}'
+        values: '1+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="excluded-mount:9100",job="mon",machine_type="physical",mountpoint="/var"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="unmatched-size:9100",job="infra",machine_type="vm",mountpoint="/"}'
+        values: '10+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="unmatched-size:9100",job="infra",machine_type="physical",mountpoint="/"}'
+        values: '100+0x15'
+    alert_rule_test:
+      - eval_time: 4m40s
+        alertname: FilesystemCritFreeSpace
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: FilesystemCritFreeSpace
+        exp_alerts:
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "/dev/vda1"
+              frequency: "hourly"
+              fstype: "ext4"
+              instance: "vm-infra:9100"
+              job: "infra"
+              machine_type: "vm"
+              mountpoint: "/"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance vm-infra:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 10
+                LABELS: map[device:/dev/vda1 fstype:ext4 instance:vm-infra:9100 job:infra machine_type:vm mountpoint:/]
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "/dev/vda1"
+              frequency: "hourly"
+              fstype: "ext4"
+              instance: "physical-infra:9100"
+              job: "infra"
+              machine_type: "physical"
+              mountpoint: "/"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance physical-infra:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 10
+                LABELS: map[device:/dev/vda1 fstype:ext4 instance:physical-infra:9100 job:infra machine_type:physical mountpoint:/]
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "/dev/vda1"
+              frequency: "hourly"
+              fstype: "ext4"
+              instance: "vm-nodes:9100"
+              job: "nodes"
+              machine_type: "vm"
+              mountpoint: "/"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance vm-nodes:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 10
+                LABELS: map[device:/dev/vda1 fstype:ext4 instance:vm-nodes:9100 job:nodes machine_type:vm mountpoint:/]
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "/dev/vda1"
+              frequency: "hourly"
+              fstype: "ext4"
+              instance: "physical-nodes:9100"
+              job: "nodes"
+              machine_type: "physical"
+              mountpoint: "/"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance physical-nodes:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 10
+                LABELS: map[device:/dev/vda1 fstype:ext4 instance:physical-nodes:9100 job:nodes machine_type:physical mountpoint:/]
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "/dev/vda1"
+              frequency: "hourly"
+              fstype: "ext4"
+              instance: "vm-mon:9100"
+              job: "mon"
+              machine_type: "vm"
+              mountpoint: "/"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance vm-mon:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 10
+                LABELS: map[device:/dev/vda1 fstype:ext4 instance:vm-mon:9100 job:mon machine_type:vm mountpoint:/]
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "/dev/vda1"
+              frequency: "hourly"
+              fstype: "ext4"
+              instance: "physical-mon:9100"
+              job: "mon"
+              machine_type: "physical"
+              mountpoint: "/"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance physical-mon:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 10
+                LABELS: map[device:/dev/vda1 fstype:ext4 instance:physical-mon:9100 job:mon machine_type:physical mountpoint:/]
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "/dev/vda1"
+              frequency: "hourly"
+              fstype: "ext4"
+              instance: "vm-meet-jvbs:9100"
+              job: "meet-jvbs"
+              machine_type: "vm"
+              mountpoint: "/"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance vm-meet-jvbs:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 10
+                LABELS: map[device:/dev/vda1 fstype:ext4 instance:vm-meet-jvbs:9100 job:meet-jvbs machine_type:vm mountpoint:/]
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "/dev/vda1"
+              frequency: "hourly"
+              fstype: "ext4"
+              instance: "physical-meet-jvbs:9100"
+              job: "meet-jvbs"
+              machine_type: "physical"
+              mountpoint: "/"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance physical-meet-jvbs:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 10
+                LABELS: map[device:/dev/vda1 fstype:ext4 instance:physical-meet-jvbs:9100 job:meet-jvbs machine_type:physical mountpoint:/]
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "/dev/vda1"
+              frequency: "hourly"
+              fstype: "ext4"
+              instance: "missing-job:9100"
+              machine_type: "vm"
+              mountpoint: "/"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance missing-job:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 10
+                LABELS: map[device:/dev/vda1 fstype:ext4 instance:missing-job:9100 machine_type:vm mountpoint:/]
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "/dev/vda1"
+              frequency: "hourly"
+              fstype: "ext4"
+              instance: "other-job:9100"
+              job: "unrecognized"
+              machine_type: "physical"
+              mountpoint: "/"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance other-job:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 10
+                LABELS: map[device:/dev/vda1 fstype:ext4 instance:other-job:9100 job:unrecognized machine_type:physical mountpoint:/]
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "/dev/vda1"
+              frequency: "hourly"
+              fstype: "ext4"
+              instance: "shared:9100"
+              job: "infra"
+              machine_type: "vm"
+              mountpoint: "/"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance shared:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 10
+                LABELS: map[device:/dev/vda1 fstype:ext4 instance:shared:9100 job:infra machine_type:vm mountpoint:/]
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "tmpfs"
+              frequency: "hourly"
+              fstype: "tmpfs"
+              instance: "shared:9100"
+              job: "infra"
+              machine_type: "physical"
+              mountpoint: "/run"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance shared:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 9
+                LABELS: map[device:tmpfs fstype:tmpfs instance:shared:9100 job:infra machine_type:physical mountpoint:/run]
+          - exp_labels:
+              alertclass: "fsavail"
+              device: "/dev/vdb1"
+              frequency: "hourly"
+              fstype: "ext4"
+              instance: "shared:9100"
+              job: "infra"
+              machine_type: "physical"
+              mountpoint: "/nix/store"
+              severity: "critical"
+            exp_annotations:
+              summary: Not enough free space (instance shared:9100)
+              description: |
+                Filesystem uses more than 90% of available space
+
+                VALUE = 10
+                LABELS: map[device:/dev/vdb1 fstype:ext4 instance:shared:9100 job:infra machine_type:physical mountpoint:/nix/store]
+    promql_expr_test:
+      - expr: 'ALERTS{alertname="FilesystemCritFreeSpace",alertstate="pending"}'
+        eval_time: 4m40s
+        exp_samples:
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="vm-infra:9100",job="infra",machine_type="vm",mountpoint="/",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="physical-infra:9100",job="infra",machine_type="physical",mountpoint="/",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="vm-nodes:9100",job="nodes",machine_type="vm",mountpoint="/",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="physical-nodes:9100",job="nodes",machine_type="physical",mountpoint="/",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="vm-mon:9100",job="mon",machine_type="vm",mountpoint="/",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="physical-mon:9100",job="mon",machine_type="physical",mountpoint="/",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="vm-meet-jvbs:9100",job="meet-jvbs",machine_type="vm",mountpoint="/",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="physical-meet-jvbs:9100",job="meet-jvbs",machine_type="physical",mountpoint="/",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="missing-job:9100",machine_type="vm",mountpoint="/",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="other-job:9100",job="unrecognized",machine_type="physical",mountpoint="/",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="shared:9100",job="infra",machine_type="vm",mountpoint="/",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="tmpfs",frequency="hourly",fstype="tmpfs",instance="shared:9100",job="infra",machine_type="physical",mountpoint="/run",severity="critical"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemCritFreeSpace",alertstate="pending",device="/dev/vdb1",frequency="hourly",fstype="ext4",instance="shared:9100",job="infra",machine_type="physical",mountpoint="/nix/store",severity="critical"}'
+            value: 1
+      - expr: 'ALERTS{alertname="FilesystemCritFreeSpace",machine_type!~"vm|physical"}'
+        eval_time: 0s
+        exp_samples: []
+      - expr: 'ALERTS{alertname="FilesystemCritFreeSpace",machine_type!~"vm|physical"}'
+        eval_time: 4m40s
+        exp_samples: []
+      - expr: 'ALERTS{alertname="FilesystemCritFreeSpace",machine_type!~"vm|physical"}'
+        eval_time: 5m
+        exp_samples: []
+      - expr: 'ALERTS{alertname="FilesystemLowFreeSpace",alertstate="pending",instance=~"(vps|missing)-(infra|nodes|mon|meet-jvbs):9100"}'
+        eval_time: 4m40s
+        exp_samples:
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="vps-infra:9100",job="infra",machine_type="vps",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="missing-infra:9100",job="infra",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="vps-nodes:9100",job="nodes",machine_type="vps",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="missing-nodes:9100",job="nodes",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="vps-mon:9100",job="mon",machine_type="vps",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="missing-mon:9100",job="mon",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="vps-meet-jvbs:9100",job="meet-jvbs",machine_type="vps",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="pending",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="missing-meet-jvbs:9100",job="meet-jvbs",mountpoint="/",severity="warning"}'
+            value: 1
+      - expr: 'ALERTS{alertname="FilesystemLowFreeSpace",alertstate="firing",instance=~"(vps|missing)-.*"}'
+        eval_time: 4m40s
+        exp_samples: []
+      - expr: 'ALERTS{alertname="FilesystemLowFreeSpace",alertstate="firing",instance=~"(vps|missing)-(infra|nodes|mon|meet-jvbs):9100"}'
+        eval_time: 5m
+        exp_samples:
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="firing",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="vps-infra:9100",job="infra",machine_type="vps",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="firing",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="missing-infra:9100",job="infra",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="firing",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="vps-nodes:9100",job="nodes",machine_type="vps",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="firing",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="missing-nodes:9100",job="nodes",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="firing",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="vps-mon:9100",job="mon",machine_type="vps",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="firing",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="missing-mon:9100",job="mon",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="firing",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="vps-meet-jvbs:9100",job="meet-jvbs",machine_type="vps",mountpoint="/",severity="warning"}'
+            value: 1
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="firing",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="missing-meet-jvbs:9100",job="meet-jvbs",mountpoint="/",severity="warning"}'
+            value: 1
+
+  - name: Selected VPS warning filesystems exclude exactly twenty percent but warn at nineteen
+    interval: 20s
+    input_series:
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="boundary-20:9100",job="infra",machine_type="vps",mountpoint="/"}'
+        values: '20+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="boundary-20:9100",job="infra",machine_type="vps",mountpoint="/"}'
+        values: '100+0x15'
+      - series: 'node_filesystem_avail_bytes{device="/dev/vda1",fstype="ext4",instance="boundary-19:9100",job="infra",machine_type="vps",mountpoint="/"}'
+        values: '19+0x15'
+      - series: 'node_filesystem_size_bytes{device="/dev/vda1",fstype="ext4",instance="boundary-19:9100",job="infra",machine_type="vps",mountpoint="/"}'
+        values: '100+0x15'
+    promql_expr_test:
+      - expr: 'ALERTS{alertname="FilesystemLowFreeSpace",instance="boundary-20:9100"}'
+        eval_time: 5m
+        exp_samples: []
+      - expr: 'ALERTS{alertname="FilesystemLowFreeSpace",alertstate="firing",instance="boundary-19:9100"}'
+        eval_time: 4m40s
+        exp_samples: []
+      - expr: 'ALERTS{alertname="FilesystemLowFreeSpace",alertstate="firing",instance="boundary-19:9100"}'
+        eval_time: 5m
+        exp_samples:
+          - labels: 'ALERTS{alertclass="fsavail",alertname="FilesystemLowFreeSpace",alertstate="firing",device="/dev/vda1",frequency="hourly",fstype="ext4",instance="boundary-19:9100",job="infra",machine_type="vps",mountpoint="/",severity="warning"}'
+            value: 1

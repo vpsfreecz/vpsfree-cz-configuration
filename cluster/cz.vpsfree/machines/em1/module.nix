@@ -2,6 +2,7 @@
 {
   cluster."cz.vpsfree/machines/em1" = rec {
     spin = "nixos";
+    machineType = "vm";
 
     inputs.channels = [ "nixos-stable" ];
 

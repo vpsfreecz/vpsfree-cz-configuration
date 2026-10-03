@@ -171,6 +171,10 @@
         ];
       };
       checks.${system} = {
+        infra-monitoring-config = import ./tests/prometheus/infra-monitoring-config.nix {
+          pkgs = devPkgs;
+          machines = confctlOutputs.machines;
+        };
         vpsf-status-prometheus-rules = import ./tests/prometheus/vpsf-status-rules.nix {
           pkgs = devPkgs;
         };

@@ -90,7 +90,10 @@ let
               alias = getAlias confMachine.host;
               fqdn = confMachine.host.fqdn;
             }
-            // confMachine.monitoring.labels;
+            // confMachine.monitoring.labels
+            // {
+              machine_type = confMachine.machineType;
+            };
           }
         ]
         ++ (flatten (
@@ -102,7 +105,10 @@ let
               alias = getAlias m.metaConfig.host;
               fqdn = m.metaConfig.host.fqdn;
             }
-            // m.metaConfig.monitoring.labels;
+            // m.metaConfig.monitoring.labels
+            // {
+              machine_type = m.metaConfig.machineType;
+            };
           }) machines
         ));
 
@@ -158,7 +164,10 @@ let
             location = ensureLocation m.metaConfig.host.location;
             os = m.metaConfig.spin;
           }
-          // m.metaConfig.monitoring.labels;
+          // m.metaConfig.monitoring.labels
+          // {
+            machine_type = m.metaConfig.machineType;
+          };
         }) exporterMachines;
 
         pingConfigs = map (m: {
@@ -189,7 +198,10 @@ let
             role = m.metaConfig.node.role;
             storage_type = m.metaConfig.node.storageType;
           }
-          // m.metaConfig.monitoring.labels;
+          // m.metaConfig.monitoring.labels
+          // {
+            machine_type = m.metaConfig.machineType;
+          };
 
         mkNodeZfsConfig = m: {
           targets = [
@@ -573,6 +585,7 @@ let
               alias = "meet-${name}";
               type = "meet-jvb";
               project = project;
+              machine_type = "vps";
             };
           }) conf.videoBridges
         ) confData.meet

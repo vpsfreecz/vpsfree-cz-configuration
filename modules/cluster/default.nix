@@ -17,6 +17,16 @@ let
           default = null;
         };
 
+        machineType = mkOption {
+          type = types.enum [
+            "vps"
+            "vm"
+            "physical"
+          ];
+          default = if config.container != null then "vps" else "physical";
+          description = "Machine classification used by monitoring target labels";
+        };
+
         node = mkOption {
           type = types.nullOr (types.submodule node);
           default = null;

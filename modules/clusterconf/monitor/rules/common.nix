@@ -225,7 +225,7 @@
       }
       {
         alert = "FilesystemCritFreeSpace";
-        expr = ''(node_filesystem_avail_bytes{mountpoint=~"^(/)|(/run)|(/nix/store)"} / node_filesystem_size_bytes) * 100 <= 10'';
+        expr = ''(node_filesystem_avail_bytes{mountpoint=~"^(/)|(/run)|(/nix/store)",machine_type=~"vm|physical"} / node_filesystem_size_bytes) * 100 <= 10'';
         for = "5m";
         labels = {
           alertclass = "fsavail";

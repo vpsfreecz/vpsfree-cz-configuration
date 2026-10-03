@@ -9,4 +9,5 @@ nav:
   - vpsAdmin password recovery deployment: 'operations/vpsadmin-password-recovery-deployment.md'
   - vpsAdmin security evidence deployment: 'operations/vpsadmin-security-evidence-deployment.md'
 - Services:
+  - Monitoring: 'services/monitoring.md'
   - Grafana: 'services/grafana.md'

@@ -2,6 +2,7 @@
 {
   cluster."cz.vpsfree/machines/build" = rec {
     spin = "nixos";
+    machineType = "vm";
     inputs.channels = [
       "nixos-stable"
       "os-staging"
