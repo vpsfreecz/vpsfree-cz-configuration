@@ -118,3 +118,22 @@ unsaved work and reload deliberately. A first-install rollback disables the
 new service/vhost while leaving legacy UI, API and auth routes intact. Revert
 DNS content only with a new serial higher than the last published serial, and
 verify both DNS views and secondary propagation.
+
+## Payment QR images
+
+The production payment-instructions template references PNG images at
+`https://vpsfree.cz/nastroje/qr.php` with country, amount and variable-symbol
+query parameters. `security.imageSources` permits that exact path in the
+frontend CSP. The generator's whole origin, arbitrary HTTPS images, and API
+connect permissions are not added. There is no API or database change.
+
+This option requires the WebUI module's image-source support. Before deploying
+this configuration, update the WebUI input to the approved release containing
+that support using `confctl inputs`; do not apply it with the older module.
+After activation, inspect the HTML response's `img-src` and verify that both
+CZK/EUR images decode in the browser. A 200 response from the generator alone
+is insufficient: CSP can block an otherwise valid image. Use synthetic payment
+parameters for diagnostics and never record members' payment URLs or screenshots.
+
+The [2026-10-04 QR release receipt](releases/2026-10-04-newadmin-payment-qr.md)
+records the deployed source, generation, checks and rollback target.

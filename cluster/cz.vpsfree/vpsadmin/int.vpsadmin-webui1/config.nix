@@ -76,6 +76,9 @@ in
         "127.0.0.1/32"
       ];
     };
+    # Payment instructions embed this external PNG generator. Limit CSP to
+    # its endpoint; the API supplies country, amount and reference queries.
+    security.imageSources = [ "https://vpsfree.cz/nastroje/qr.php" ];
     # The console router and public heatmap setting are iframe targets; the
     # parent UI does not connect directly to the console origin.
     security.consoleOrigins = [ ];
