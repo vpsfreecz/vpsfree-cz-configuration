@@ -29,8 +29,11 @@ GEM
     mustermann (3.1.1)
     mutex_m (0.3.0)
     nesty (1.0.2)
-    net-http (0.9.1)
+    net-http (0.10.0)
+      net-protocol (>= 0.3.0)
       uri (>= 0.11.1)
+    net-protocol (0.4.0)
+      timeout
     rack (3.2.7)
     rack-protection (4.2.1)
       base64 (>= 0.1.0)
@@ -57,7 +60,8 @@ GEM
       logger
       rack (>= 1, < 4)
     tilt (2.9.0)
-    uri (1.1.1)
+    timeout (0.6.1)
+    uri (1.1.2)
 
 PLATFORMS
   ruby
