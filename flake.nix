@@ -4,6 +4,11 @@
   inputs = {
     confctl.url = "github:vpsfreecz/confctl";
 
+    confctlGo = {
+      url = "github:vpsfreecz/confctl/4cc0d9592d49857da17028e2b55462c96b3f4060";
+      flake = false;
+    };
+
     nixpkgs.follows = "nixpkgsStable";
 
     nixpkgsStable.url = "github:NixOS/nixpkgs/nixos-26.05";

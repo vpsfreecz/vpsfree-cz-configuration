@@ -112,6 +112,23 @@
         "type": "github"
       }
     },
+    "confctlGo": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791665645,
+        "narHash": "sha256-rGpIngntaWicrbl+W5aTO9isdLiI1LyWcJTinZXhues=",
+        "owner": "vpsfreecz",
+        "repo": "confctl",
+        "rev": "4cc0d9592d49857da17028e2b55462c96b3f4060",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vpsfreecz",
+        "repo": "confctl",
+        "rev": "4cc0d9592d49857da17028e2b55462c96b3f4060",
+        "type": "github"
+      }
+    },
     "devWorkspace": {
       "inputs": {
         "codex-web": "codex-web",
@@ -787,6 +804,7 @@
     "root": {
       "inputs": {
         "confctl": "confctl",
+        "confctlGo": "confctlGo",
         "devWorkspace": "devWorkspace",
         "home-manager": "home-manager_2",
         "llm-agents": "llm-agents_2",
