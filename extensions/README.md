@@ -21,6 +21,32 @@ help or execution. The private fixture template has empty bindings and an
 candidate preparation binds it to an individual fixture; it is not operational
 configuration authority.
 
+From the repository root, enter the opt-in shell and inspect its commands:
+
+```sh
+nix develop --no-write-lock-file .#confctl-go
+confctl-go-prototype --help
+```
+
+The separate shell supplies the pinned CLI, site executable, Go, Nix, Git,
+OpenSSH and nixfmt. It exports the immutable registry as `CONFCTL_EXTENSION_REGISTRY`
+and sets `CONFCTL_EXTENSION_ROOT` to the shell-entry `pwd -P`. Run the CLI from
+that root; changing directories does not rebind the registry. Changing any of
+the ten bound files, including the flake or lock, requires a deliberate rebuild
+and shell re-entry. The shell does not inherit the Ruby bootstrap or alias the
+prototype to `confctl`.
+
+The three opt-in flake packages use the existing development nixpkgs:
+
+```sh
+nix build --no-write-lock-file .#confctl-go-prototype .#vpsfree-confctl-ext .#confctl-extension-registry
+```
+
+The CLI package imports only `package.nix` from the raw `confctlGo` input; it
+does not evaluate a second confctl flake. The extension package and registry use
+this module's finite source/declaration owner. The fixture template remains a
+private test input and is not exported as an operational flake package.
+
 `netboot.rediscover` writes inventory-ordered non-carried netboot nodes to
 `cluster/netbootable.nix`. `runtime.update` retains manual selection, confirmation,
 carried machines at their own targets, and zero matches. `runtime.prepare`

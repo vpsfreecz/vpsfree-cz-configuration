@@ -95,6 +95,14 @@
         ];
       };
 
+      confctlGoPackage = import (inputs.confctlGo + "/experiments/confctl-go/package.nix") {
+        pkgs = devPkgs;
+      };
+      siteExtensions = import ./extensions/default.nix {
+        pkgs = devPkgs;
+        configSrc = ./.;
+      };
+
       channels = {
         staging = {
           nixpkgs = "nixpkgsStaging";
@@ -166,14 +174,36 @@
           };
         };
       };
-      devShells.${system}.default = inputs.confctl.lib.mkConfigDevShell {
-        inherit system;
-        pkgs = devPkgs;
-        mode = "tools";
-        extraPackages = with devPkgs; [
-          bundix
-          bundler-audit
-        ];
+      packages.${system} = {
+        confctl-go-prototype = confctlGoPackage;
+        vpsfree-confctl-ext = siteExtensions.package;
+        confctl-extension-registry = siteExtensions.registry;
+      };
+      devShells.${system} = {
+        confctl-go = devPkgs.mkShell {
+          packages = [
+            confctlGoPackage
+            siteExtensions.package
+            devPkgs.go
+            devPkgs.nix
+            devPkgs.git
+            devPkgs.openssh
+            devPkgs.nixfmt
+          ];
+          CONFCTL_EXTENSION_REGISTRY = siteExtensions.registry;
+          shellHook = ''
+            export CONFCTL_EXTENSION_ROOT="$(pwd -P)"
+          '';
+        };
+        default = inputs.confctl.lib.mkConfigDevShell {
+          inherit system;
+          pkgs = devPkgs;
+          mode = "tools";
+          extraPackages = with devPkgs; [
+            bundix
+            bundler-audit
+          ];
+        };
       };
       checks.${system} = {
         infra-monitoring-rules = import ./tests/prometheus/infra-monitoring-rules.nix {
