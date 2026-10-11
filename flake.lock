@@ -1255,11 +1255,11 @@
     "vpsfreeWeb": {
       "flake": false,
       "locked": {
-        "lastModified": 1784117358,
-        "narHash": "sha256-bvpxumwtUnumExIS+Xd29kZTcl/w0cBjUKoKKMxtGq4=",
+        "lastModified": 1791740386,
+        "narHash": "sha256-/3QHdhSzFlEc7YqWZDjnVxIeS4n1OdImicvgUZjBGew=",
         "owner": "vpsfreecz",
         "repo": "web",
-        "rev": "26e8584794357a9cfcc08d63ec08483b6123affd",
+        "rev": "307635a96bc3532af51ff5d08206d920704eee00",
         "type": "github"
       },
       "original": {
