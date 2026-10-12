@@ -10,6 +10,7 @@
 with lib;
 let
   cfg = config.clusterconf.monitor;
+  monitoringLib = import ../../../lib/monitoring.nix { inherit lib; };
 
   promPort = confMachine.services.prometheus.port;
   exporterPort = confMachine.services.node-exporter.port;
@@ -279,14 +280,7 @@ let
         mgmtPingConfigs = map (
           m:
           let
-            makeMgmt =
-              hostname:
-              let
-                parts = splitString "." hostname;
-              in
-              concatStringsSep "." ([ "${elemAt parts 0}-mgmt" ] ++ (tail parts));
-
-            fqdn = makeMgmt m.metaConfig.host.fqdn;
+            fqdn = monitoringLib.managementFqdn m.metaConfig.host.fqdn;
           in
           {
             targets = [ fqdn ];

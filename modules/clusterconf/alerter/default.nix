@@ -24,6 +24,9 @@ let
   alertmanagerPort = confMachine.services.alertmanager.port;
 
   allMachines = confLib.getClusterMachines config.cluster;
+  contacts = confData.monitoring.users;
+  hasSms = user: (contacts.${user}.sms or null) != null;
+  smsUsers = filter hasSms (attrNames contacts);
 
   allMonitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
 
@@ -140,10 +143,68 @@ let
     }
   ];
 
-  intervalRoutesForSms = {
-    aither = map (v: v // { active_time_intervals = [ "daytime-aither" ]; }) intervalRoutes;
+  mkMailRoute = receiver: {
+    match_re.severity = "warning|critical|fatal";
+    inherit receiver;
+    group_wait = "30s";
+    group_interval = "2m";
+    repeat_interval = "4h";
+    continue = true;
+    routes = intervalRoutes;
+  };
 
-    snajpa = map (v: v // { active_time_intervals = [ "daytime-snajpa" ]; }) intervalRoutes;
+  mkSmsRoute = user: {
+    match_re.severity = "critical|fatal";
+    continue = true;
+    routes = [
+      {
+        match.severity = "critical";
+        receiver = "sms-${user}";
+        group_wait = "10s";
+        repeat_interval = "10m";
+        continue = false;
+        active_time_intervals = [ "daytime-${user}" ];
+        routes = map (v: v // { active_time_intervals = [ "daytime-${user}" ]; }) intervalRoutes;
+      }
+      {
+        match.severity = "fatal";
+        receiver = "sms-${user}";
+        group_wait = "10s";
+        repeat_interval = "10m";
+        continue = false;
+        routes = intervalRoutes;
+      }
+    ];
+  };
+
+  blackholeRoute = {
+    match.severity = "none";
+    receiver = "blackhole";
+    continue = false;
+  };
+
+  teamRoutes = [
+    (mkMailRoute "team-mail")
+    {
+      match_re.severity = "critical|fatal";
+      receiver = "team-telegram";
+      group_wait = "10s";
+      repeat_interval = "10m";
+      continue = true;
+      routes = intervalRoutes;
+    }
+  ]
+  ++ map mkSmsRoute (filter hasSms confData.monitoring.teamRecipients)
+  ++ [ blackholeRoute ];
+
+  mkMailReceiver = name: users: {
+    inherit name;
+    email_configs = [
+      {
+        to = concatStringsSep "," (map (user: contacts.${user}.email) users);
+        send_resolved = true;
+      }
+    ];
   };
 
   telegramTemplate = pkgs.writeText "telegram.tmpl" ''
@@ -266,39 +327,20 @@ in
           telegramTemplate
         ];
 
-        time_intervals = [
-          {
-            name = "daytime-aither";
-            time_intervals = [
-              {
-                times = [
-                  {
-                    start_time = "07:00";
-                    end_time = "22:00";
-                  }
-                ];
-
-                location = "Europe/Prague";
-              }
-            ];
-          }
-
-          {
-            name = "daytime-snajpa";
-            time_intervals = [
-              {
-                times = [
-                  {
-                    start_time = "09:00";
-                    end_time = "23:00";
-                  }
-                ];
-
-                location = "Europe/Prague";
-              }
-            ];
-          }
-        ];
+        time_intervals = map (user: {
+          name = "daytime-${user}";
+          time_intervals = [
+            {
+              times = [
+                {
+                  start_time = contacts.${user}.sms.startTime;
+                  end_time = contacts.${user}.sms.endTime;
+                }
+              ];
+              location = "Europe/Prague";
+            }
+          ];
+        }) smsUsers;
 
         route = {
           group_by = [
@@ -310,119 +352,11 @@ in
           repeat_interval = "4h";
           receiver = "team-mail";
 
-          routes = [
-            # Mail alerts
-            {
-              match_re = {
-                severity = "warning|critical|fatal";
-              };
-              group_wait = "30s";
-              group_interval = "2m";
-              repeat_interval = "4h";
-              receiver = "team-mail";
-              continue = true;
-
-              routes = intervalRoutes;
-            }
-
-            # Telegram alerts
-            {
-              match_re = {
-                severity = "critical|fatal";
-              };
-              receiver = "team-telegram";
-              group_wait = "10s";
-              repeat_interval = "10m";
-              continue = true;
-
-              routes = intervalRoutes;
-            }
-
-            # SMS alerts - aither
-            {
-              match_re = {
-                severity = "critical|fatal";
-              };
-              continue = true;
-              routes = [
-                {
-                  match = {
-                    severity = "critical";
-                  };
-                  receiver = "sms-aither";
-                  group_wait = "10s";
-                  repeat_interval = "10m";
-                  continue = false;
-                  active_time_intervals = [ "daytime-aither" ];
-                  routes = intervalRoutesForSms.aither;
-                }
-
-                {
-                  match = {
-                    severity = "fatal";
-                  };
-                  receiver = "sms-aither";
-                  group_wait = "10s";
-                  repeat_interval = "10m";
-                  continue = false;
-                  routes = intervalRoutes;
-                }
-              ];
-            }
-
-            # SMS alerts - snajpa
-            {
-              match_re = {
-                severity = "critical|fatal";
-              };
-              continue = true;
-              routes = [
-                {
-                  match = {
-                    severity = "critical";
-                  };
-                  receiver = "sms-snajpa";
-                  group_wait = "10s";
-                  repeat_interval = "10m";
-                  continue = false;
-                  active_time_intervals = [ "daytime-snajpa" ];
-                  routes = intervalRoutesForSms.snajpa;
-                }
-
-                {
-                  match = {
-                    severity = "fatal";
-                  };
-                  receiver = "sms-snajpa";
-                  group_wait = "10s";
-                  repeat_interval = "10m";
-                  continue = false;
-                  routes = intervalRoutes;
-                }
-              ];
-            }
-
-            # Blackhole
-            {
-              match = {
-                severity = "none";
-              };
-              receiver = "blackhole";
-              continue = false;
-            }
-          ];
+          routes = teamRoutes;
         };
 
         receivers = [
-          {
-            name = "team-mail";
-            email_configs = [
-              {
-                to = "aither@havefun.cz,snajpa@snajpa.net,monitoring@kerrycze.net";
-                send_resolved = true;
-              }
-            ];
-          }
+          (mkMailReceiver "team-mail" confData.monitoring.teamRecipients)
           {
             name = "team-telegram";
             telegram_configs = [
@@ -434,24 +368,17 @@ in
               }
             ];
           }
-          {
-            name = "sms-aither";
-            webhook_configs = [
-              {
-                url = "http://127.0.0.1:5000/alert";
-                send_resolved = true;
-              }
-            ];
-          }
-          {
-            name = "sms-snajpa";
-            webhook_configs = [
-              {
-                url = "http://127.0.0.1:5000/alert";
-                send_resolved = true;
-              }
-            ];
-          }
+        ]
+        ++ map (user: {
+          name = "sms-${user}";
+          webhook_configs = [
+            {
+              url = "http://127.0.0.1:5000/alert";
+              send_resolved = true;
+            }
+          ];
+        }) smsUsers
+        ++ [
           {
             name = "blackhole";
           }

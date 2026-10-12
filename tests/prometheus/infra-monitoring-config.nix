@@ -168,6 +168,11 @@ let
       infra = getJob jobs "infra";
       nodes = getJob jobs "nodes";
       nodeMetas = lib.filter (meta: meta.node != null) (builtins.attrValues cluster);
+      managementPing = getJob jobs "nodes-mgmt-ping";
+      managementFqdn =
+        meta:
+        builtins.replaceStrings [ "node19." "backuper2." ] [ "node19-mgmt." "backuper2-mgmt." ]
+          meta.host.fqdn;
       infraMetas = lib.filter (meta: meta.node == null && !meta.monitoring.isMonitor) (
         builtins.attrValues cluster
       );
@@ -228,6 +233,20 @@ let
     && checkNodeJob "nodes-zfs-hypervisor" "hypervisor" 9134
     && checkNodeJob "nodes-zfs-storage" "storage" 9134
     && checkNodeJob "nodes-ipmi" null 9290
+    && builtins.all (
+      meta:
+      builtins.elem {
+        targets = [ (managementFqdn meta) ];
+        labels = {
+          alias = alias meta;
+          fqdn = managementFqdn meta;
+          domain = meta.host.domain;
+          location = meta.host.location;
+          role = meta.node.role;
+          os = meta.spin;
+        };
+      } managementPing.static_configs
+    ) nodeMetas
     && checkMeetJob jobs;
 
   metadataFixture =
@@ -256,11 +275,16 @@ let
   alerter =
     (import ../../modules/clusterconf/alerter {
       inherit pkgs lib confLib;
-      confData = { };
+      confData.monitoring = import ../../data/monitoring.nix;
       confMachine.services.alertmanager.port = 9093;
-      config.clusterconf.alerter.enable = true;
+      config = {
+        inherit cluster;
+        clusterconf.alerter.enable = true;
+      };
     }).config.content.services.prometheus.alertmanager.configuration;
-  routes = alerter.route.routes;
+  routes = lib.filter (
+    route: !((route.match or { }) ? fqdn) && !((route.match or { }) ? node_fqdn)
+  ) alerter.route.routes;
   mail = builtins.elemAt routes 0;
   telegram = builtins.elemAt routes 1;
   smsAither = builtins.elemAt routes 2;
