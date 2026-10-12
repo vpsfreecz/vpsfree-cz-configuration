@@ -17,6 +17,52 @@ bridge's paired node-exporter (9100) and Jitsi exporter (9700) targets with
 `machine_type="vps"`, preserving alias, type and project labels. Reconsider this
 classification when the bridge inventory changes.
 
+## Alert recipients
+
+Set `monitoring.alertRecipients` in a system's cluster metadata to send its
+alerts only to selected users:
+
+```nix
+cluster."cz.vpsfree/machines/aitherdev".monitoring.alertRecipients = [ "aither" ];
+```
+
+The default `null` uses normal team routing. A nonempty list replaces team
+recipients; `[ "aither" "snajpa" ]` selects both users. Empty lists and unknown
+users fail configuration evaluation. Ordering and duplicate entries do not
+change the selection. This setting does not disable monitoring or alert rules.
+
+`data/monitoring.nix` defines the registered users, their email addresses,
+optional SMS daytime windows, and the normal team recipients. To add SMS for
+a user, also configure the matching `sms-<user>` receiver in the private sachet
+configuration on both APU gateways and the Alertmanager fallback service.
+Email-only contacts need no SMS setup. The contact registry contains no secrets.
+
+Selected recipients receive warning, critical and fatal alerts by email, with
+the normal repeat frequencies and resolved notifications. Critical and fatal
+alerts also use each selected user's configured SMS receiver. Critical SMS
+respects that user's daytime window in Europe/Prague; fatal SMS is active at
+all times. Shared Telegram is excluded. `severity=none` remains silent, while
+an unknown or missing severity falls back to selected-user email.
+
+Alertmanager generates exclusive routes from the existing identity labels.
+These routes match the system's primary FQDN and, for nodes, its management
+FQDN. A nonempty `node_fqdn` identifies the subject and takes precedence over
+the scrape host's `fqdn`. This covers node checks supplied by another system,
+such as download-pool healthchecks. A selected system cannot override its
+custom `monitoring.labels.fqdn` with a different identity.
+
+Public service and global alerts without machine identity keep team routing.
+Selecting one machine does not select its dependent systems or public services.
+Recipient metadata does not add Prometheus labels or change alert identities.
+
+Recipient changes require updating both Alertmanager replicas. Exporters,
+monitors and the selected machine need no runtime update. During a rolling
+update, an old replica can still send team notifications; the exclusive policy
+is effective only after both replicas load it. Check reload health and loaded
+routes on both replicas. New route groups can send fresh notifications.
+Restoring both previous configurations restores previous routing and can read
+the existing Alertmanager state; no migration or state deletion is needed.
+
 ## Filesystem alerts
 
 `FilesystemCritFreeSpace` applies only to exact `machine_type="vm"` or
@@ -37,8 +83,8 @@ monitor configuration changes and send their normal resolved notifications.
 frequency, for every type, including VPS and missing types. A VPS critical
 filesystem alert cannot inhibit its warning because that critical is absent;
 other inhibition still applies. The separate node fatal-rootfs alert remains
-at or below 5% after five minutes. Alertmanager keeps its normal routes and
-receivers, including normal routing for independently supplied critical alerts.
+at or below 5% after five minutes. Independently supplied critical alerts keep
+normal routing, subject to the machine's recipient policy.
 
 The `/run` selection remains. `/run` is normally tmpfs; expanding a VPS disk
 does not expand it.
@@ -58,7 +104,8 @@ rules keep their existing policies.
 ## Configuration changes
 
 Update both monitors with the labels and critical rule together. No exporter,
-node, VM or video bridge update is required. Alertmanager routing is unchanged.
+node, VM or video bridge update is required. These label and rule changes do
+not require an Alertmanager update.
 Changing target labels creates new series and alert identities and can reset
 pending alerts and rate windows. During mixed monitor versions, an older monitor
 may still emit VPS critical alerts. Complete both monitor updates before
@@ -78,6 +125,7 @@ From the repository's pinned development shell:
 
 ```sh
 nix build --no-write-lock-file --no-link \
+  .#checks.x86_64-linux.alert-recipients \
   .#checks.x86_64-linux.infra-monitoring-config \
   .#checks.x86_64-linux.infra-monitoring-rules
 ```
@@ -85,6 +133,8 @@ nix build --no-write-lock-file --no-link \
 The config check evaluates real machine metadata, generated host and video
 bridge labels, global filesystem eligibility, thresholds, values and timing.
 It also checks offline Alertmanager routing with inert receivers. The CPU
-check covers thresholds, hold times, locations and boot suppression. Offline
+check covers thresholds, hold times, locations and boot suppression. The
+recipient check covers metadata validation, email destinations, SMS policies,
+exclusive routing and subject identity precedence. Offline
 routing verifies receiver selection; it does not send notifications or exercise
 delivery, daytime activation, repeat timers or inhibition.

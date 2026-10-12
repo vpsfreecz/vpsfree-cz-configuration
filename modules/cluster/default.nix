@@ -7,6 +7,7 @@
 with lib;
 let
   topLevelConfig = config;
+  monitoringUsers = (import ../../data/monitoring.nix).users;
 
   machine =
     { config, ... }:
@@ -70,6 +71,27 @@ let
             default = { };
             description = ''
               Custom labels added to the Prometheus target
+            '';
+          };
+
+          alertRecipients = mkOption {
+            type = types.nullOr (types.listOf (types.enum (attrNames monitoringUsers)));
+            default = null;
+            apply =
+              recipients:
+              if recipients == null then
+                null
+              else if recipients == [ ] then
+                throw "monitoring.alertRecipients must be null or a nonempty list of registered users"
+              else if config.monitoring.labels ? fqdn && config.monitoring.labels.fqdn != config.host.fqdn then
+                throw "monitoring.alertRecipients requires monitoring.labels.fqdn to match host.fqdn"
+              else
+                sort lessThan (unique recipients);
+            description = ''
+              Users from data/monitoring.nix who exclusively receive this
+              machine's alerts. Null keeps normal team routing. Empty lists
+              are invalid. Critical and fatal alerts also use these users'
+              configured SMS policies; shared Telegram is excluded.
             '';
           };
         };

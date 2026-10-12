@@ -24,9 +24,14 @@ let
   alertmanagerPort = confMachine.services.alertmanager.port;
 
   allMachines = confLib.getClusterMachines config.cluster;
+  monitoringLib = import ../../../lib/monitoring.nix { inherit lib; };
   contacts = confData.monitoring.users;
   hasSms = user: (contacts.${user}.sms or null) != null;
   smsUsers = filter hasSms (attrNames contacts);
+  # Carried netboot copies share the node's metadata; route the ordinary system once.
+  selectedMachines = filter (
+    m: m.carrier == null && m.metaConfig.monitoring.alertRecipients != null
+  ) allMachines;
 
   allMonitors = filter (m: m.metaConfig.monitoring.isMonitor) allMachines;
 
@@ -197,6 +202,44 @@ let
   ++ map mkSmsRoute (filter hasSms confData.monitoring.teamRecipients)
   ++ [ blackholeRoute ];
 
+  machineMailReceiver = machine: "machine-mail-${machine.metaConfig.host.fqdn}";
+  mkMachineRoute = machine: match: {
+    inherit match;
+    receiver = machineMailReceiver machine;
+    continue = false;
+    routes = [
+      blackholeRoute
+      (mkMailRoute (machineMailReceiver machine))
+    ]
+    ++ map mkSmsRoute (filter hasSms machine.metaConfig.monitoring.alertRecipients);
+  };
+
+  # A node_fqdn identifies the subject, which can differ from the scrape host.
+  selectedSubjectRoutes = map (
+    machine:
+    mkMachineRoute machine {
+      node_fqdn = machine.metaConfig.host.fqdn;
+    }
+  ) selectedMachines;
+
+  selectedHostRoutes = flatten (
+    map (
+      machine:
+      [
+        (mkMachineRoute machine {
+          fqdn = machine.metaConfig.host.fqdn;
+          node_fqdn = "";
+        })
+      ]
+      ++ optional (machine.metaConfig.node != null) (
+        mkMachineRoute machine {
+          fqdn = monitoringLib.managementFqdn machine.metaConfig.host.fqdn;
+          node_fqdn = "";
+        }
+      )
+    ) selectedMachines
+  );
+
   mkMailReceiver = name: users: {
     inherit name;
     email_configs = [
@@ -352,7 +395,7 @@ in
           repeat_interval = "4h";
           receiver = "team-mail";
 
-          routes = teamRoutes;
+          routes = selectedSubjectRoutes ++ selectedHostRoutes ++ teamRoutes;
         };
 
         receivers = [
@@ -382,7 +425,10 @@ in
           {
             name = "blackhole";
           }
-        ];
+        ]
+        ++ map (
+          machine: mkMailReceiver (machineMailReceiver machine) machine.metaConfig.monitoring.alertRecipients
+        ) selectedMachines;
 
         inhibit_rules = [
           # Ignore unreachable exporters when nodes are down

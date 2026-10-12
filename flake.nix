@@ -171,6 +171,11 @@
         ];
       };
       checks.${system} = {
+        alert-recipients = import ./tests/prometheus/alert-recipients.nix {
+          inherit confctl;
+          pkgs = devPkgs;
+          machines = confctlOutputs.machines;
+        };
         infra-monitoring-rules = import ./tests/prometheus/infra-monitoring-rules.nix {
           pkgs = devPkgs;
         };

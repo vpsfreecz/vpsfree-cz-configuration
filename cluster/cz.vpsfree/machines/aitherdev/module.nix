@@ -3,6 +3,7 @@
   cluster."cz.vpsfree/machines/aitherdev" = rec {
     spin = "nixos";
     machineType = "vm";
+    monitoring.alertRecipients = [ "aither" ];
     inputs.channels = [
       "nixos-stable"
       "home-manager"
