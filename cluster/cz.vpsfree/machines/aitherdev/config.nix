@@ -110,6 +110,15 @@ in
 
   services.dev-workspaces = {
     enable = true;
+    codexInitialProvider = "codex-lb";
+    codexProviders = [
+      {
+        id = "codex-lb";
+        label = "Snajpa codex-lb";
+        baseURL = "http://172.16.106.12:2455/v1";
+        tokenFile = "/home/aither/.codex/aither-on-snajpa-codex-lb.token";
+      }
+    ];
     owner = "aither";
     ownerGroup = "workspace-portal-owner";
     proxyGroup = "workspace-portal-proxy";

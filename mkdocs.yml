@@ -5,6 +5,7 @@ nav:
 - Operations:
   - New vpsAdmin WebUI service: 'operations/newadmin-webui.md'
   - DeepSeek Codex on aitherdev: 'operations/codex-deepseek-aitherdev.md'
+  - Codex providers on aitherdev: 'operations/codex-providers-aitherdev.md'
   - vpsAdmin livepatch history deployment: 'operations/vpsadmin-livepatch-history-deployment.md'
   - vpsAdmin password recovery deployment: 'operations/vpsadmin-password-recovery-deployment.md'
   - vpsAdmin security evidence deployment: 'operations/vpsadmin-security-evidence-deployment.md'
