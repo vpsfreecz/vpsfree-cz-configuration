@@ -70,3 +70,18 @@ or a reviewed compatible successor through the runtime's supported recovery
 path. Preserve private journals and roots. A threadless owner uses explicit
 `--bootstrap-owner UUID` maintenance of the same active incarnation. There is no
 general force release, implicit reboot, session closure or merge authorization.
+
+## Integration driver
+
+After the matching runtime is selected, the workspace integration driver can
+prepare dependent merges and system/profile activation from their separate
+approvals. The workspace recipe maps channel `dev-workspace`, role `devWorkspace`,
+to input `devWorkspace`; it uses `confctl inputs channel set --commit` for exact
+feature revisions. Builds and copies stay outside execution claims.
+
+A mechanically refreshed configuration can reuse unchanged runtime checks, but
+confctl embeds `self.rev`. Prepare and inspect the artifact from the exact final
+configuration commit, even when its Git tree matches an earlier tested tree.
+Keep system switch before profile activation and preserve the same reservation.
+Use existing reconciliation for uncertain effects; a driver resume does not
+authorize replay, rollback, reboot or forced release.
