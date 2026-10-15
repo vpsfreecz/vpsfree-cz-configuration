@@ -171,6 +171,17 @@
         ];
       };
       checks.${system} = {
+        nix-store-cleanup =
+          devPkgs.runCommand "aitherdev-nix-store-cleanup-tests"
+            {
+              nativeBuildInputs = [ devPkgs.python3 ];
+              CLEANUP_TEST_SOURCE = ./cluster/cz.vpsfree/machines/aitherdev/nix-store-cleanup.py;
+            }
+            ''
+              python3 ${./tests/nix-store-cleanup.py}
+              touch "$out"
+            '';
+
         alert-recipients = import ./tests/prometheus/alert-recipients.nix {
           inherit confctl;
           pkgs = devPkgs;

@@ -74,3 +74,8 @@ confctl deploy "cz.vpsfree/nodes/stg/*" dry-activate
 ## vpsAdmin configuration
 
 See [API configuration and abuse notice processing](configs/vpsadmin/api/README.md).
+
+## Aitherdev operations
+
+See [disk cleanup and retention](docs/operations/aitherdev-disk-retention.md) for
+Nix profile/test retention, coordination collection, and rollout/recovery.
