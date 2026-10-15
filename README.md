@@ -52,6 +52,9 @@ Hosts can be built and deployed using `confctl`, see
 [confctl](https://github.com/vpsfreecz/confctl) or `man confctl` for more
 information.
 
+The separate [executable extension module](extensions/README.md) contains the
+opt-in Go site handlers, package inputs, and their public SDK contract.
+
 ## Examples
 
 ```bash
