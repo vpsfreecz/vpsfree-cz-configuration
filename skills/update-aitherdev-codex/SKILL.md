@@ -19,7 +19,10 @@ before updating this configuration. Do not repeat completed lower-level work.
 
 ## Update through channels
 
-Enter nix develop and inspect the current channel-to-input mapping. The
+Leave the Go development shell first, then enter `nix develop .#service-ruby` from
+an ordinary shell. Install the locked root bundle as described in
+[Ruby tasks and existing Git hooks](../../README.md#ruby-tasks-and-existing-git-hooks),
+then inspect the current channel-to-input mapping. The
 dev-workspace channel's devWorkspace role owns the runtime input; the llm-agents
 channel's llm-agents role owns the system Codex input. For a normal published
 upstream update use confctl inputs channel update --commit. For exact feature or

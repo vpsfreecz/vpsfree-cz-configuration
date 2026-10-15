@@ -28,8 +28,10 @@ confctl inputs channel set --commit dev-workspace devWorkspace REVISION
 confctl build cz.vpsfree/machines/aitherdev
 ```
 
-Run these commands in the configuration development shell. Preserve the
-configuration feature branch until integration is explicitly approved.
+Run these commands in `nix develop .#service-ruby`, with the
+[root bundle installed](../../README.md#ruby-tasks-and-existing-git-hooks) for
+the retained Overcommit hooks. Preserve the configuration feature branch until
+integration is explicitly approved.
 Use [coordinated deployment](workspace-coordination-aitherdev.md) for dry
 activation and switch under the owning machine reservation.
 

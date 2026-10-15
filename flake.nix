@@ -90,6 +90,32 @@
         ];
       };
 
+      siteExtensions = import ./extensions/default.nix {
+        pkgs = devPkgs;
+        configSrc = ./.;
+      };
+      confctlPackage = confctl.packages.${system}.confctl;
+      configDevShell =
+        (confctl.lib.mkConfigDevShell {
+          inherit system;
+          pkgs = devPkgs;
+          mode = "tools";
+          extraPackages = [ siteExtensions.package ];
+          hookGoModules = [
+            {
+              directory = "extensions";
+              source = siteExtensions.moduleSource;
+              proxy = siteExtensions.goModuleProxy;
+            }
+          ];
+        }).overrideAttrs
+          (previous: {
+            CONFCTL_EXTENSION_REGISTRY = siteExtensions.registry;
+            shellHook = (previous.shellHook or "") + ''
+              export CONFCTL_EXTENSION_ROOT="$(pwd -P)"
+            '';
+          });
+
       channels = {
         staging = {
           nixpkgs = "nixpkgsStaging";
@@ -161,14 +187,33 @@
           };
         };
       };
-      devShells.${system}.default = inputs.confctl.lib.mkConfigDevShell {
-        inherit system;
-        pkgs = devPkgs;
-        mode = "tools";
-        extraPackages = with devPkgs; [
-          bundix
-          bundler-audit
-        ];
+      packages.${system} = {
+        confctl = confctlPackage;
+        vpsfree-confctl-ext = siteExtensions.package;
+        confctl-extension-registry = siteExtensions.registry;
+      };
+      devShells.${system} = {
+        default = configDevShell;
+        confctl-go = configDevShell;
+        service-ruby = devPkgs.mkShell {
+          packages = [
+            confctlPackage
+          ]
+          ++ (with devPkgs; [
+            ruby_3_4
+            bundler
+            bundix
+            bundler-audit
+            git
+            nix
+            openssh
+            nixfmt
+          ]);
+          shellHook = ''
+            export BUNDLE_PATH="$PWD/.gems"
+            export BUNDLE_APP_CONFIG="$PWD/.bundle"
+          '';
+        };
       };
       checks.${system} = {
         nix-store-cleanup =
