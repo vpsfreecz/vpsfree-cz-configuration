@@ -13,8 +13,10 @@ owns request formats and first-installation bootstrap. Read both before activati
 
 ## Preparation
 
-Use an initiative configuration feature worktree and its Nix development shell.
-Select the exact reviewed published runtime through the existing channel:
+Use an initiative configuration feature worktree and `nix develop .#service-ruby`,
+with the [root bundle installed](../../README.md#ruby-tasks-and-existing-git-hooks)
+for retained Overcommit hooks. Select the exact reviewed published runtime
+through the existing channel:
 
 ```sh
 confctl inputs channel set --commit dev-workspace devWorkspace REVISION

@@ -12,9 +12,12 @@ The `vpsadmin-webui` channel maps to the `vpsadminWebui` flake input. Its
 `vpsadmin` input follows the site's `vpsadminServices` pin; the NixOS module and
 the matching frontend/BFF packages come from one WebUI revision. Pin a
 published, reviewed revision with `confctl inputs channel set --commit
-vpsadmin-webui vpsadmin-webui FULL_COMMIT` inside `nix develop`, then inspect
-the generated lock diff. A local `--override-input vpsadminWebui path:...`
-supports development evaluation only and is not a deployable lock pin.
+vpsadmin-webui vpsadmin-webui FULL_COMMIT` inside `nix develop .#service-ruby`,
+then inspect the generated lock diff. Follow the
+[root bundle setup](../../README.md#ruby-tasks-and-existing-git-hooks) before
+using the retained Overcommit hooks. A local
+`--override-input vpsadminWebui path:...` supports development evaluation only
+and is not a deployable lock pin.
 
 The host configuration sets `system.stateVersion = "26.05"` for this newly
 provisioned container, allowing development builds. Before first activation,

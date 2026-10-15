@@ -53,7 +53,26 @@ FD3/4, with finite fake services. Core-owned executable conformance and
 compatibility fixtures separately check the real supervisor and SSH boundary.
 The site module imports no private core packages.
 
-This package is opt-in. The repository's default shell and production confctl
-pin retain their existing Ruby behavior and `scripts/*.rb`. The Go executable
-loads only its compiled handlers. Selecting an executable registry does not
-load those Ruby scripts or authorize deployment or a default-tool switch.
+The default configuration shell and its `confctl-go` alias load the operational
+registry alongside the normal packaged Go CLI. They retain the caller's Go and
+hook toolchain. The `service-ruby` shell provides Ruby tools for the existing
+service Gemfiles and scripts. The Go CLI loads compiled handlers; it does not
+evaluate those Ruby scripts.
+
+Build the matching CLI, site executable and registry with:
+
+```sh
+nix build .#confctl .#vpsfree-confctl-ext .#confctl-extension-registry
+```
+
+After changing a bound file, rebuild and re-enter `nix develop` to select the
+matching registry. When SDK manifests change, also rebuild and review the hook
+configuration before explicitly trusting it again. Use the
+[core hook procedure](https://github.com/vpsfreecz/confctl/blob/b8a8f4bc8c0e156f284e0009c460270cd5247ceb/docs/development-hooks.md)
+for installation and restore; shared or linked-worktree hooks require their own
+coordinated transition.
+
+For software recovery, select a retained CLI, site source, package and registry
+as one matching set. Keep unrelated fleet channel pins unchanged. Reverting
+software does not undo completed writes to `kernels.json` or
+`cluster/netbootable.nix`.

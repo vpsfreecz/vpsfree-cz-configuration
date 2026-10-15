@@ -7,7 +7,10 @@
 - `health-checks/`, `network-config/`, `support/`, `tools/`, and `scripts/` host ops tooling and network plans; `docs/` and `mkdocs.yml` drive user docs.
 
 ## Build, Test, and Development Commands
-- Enter the dev shell with `nix develop` from the repo root.
+- Enter the Go development shell with `nix develop` from the repo root.
+- Use `nix develop .#service-ruby` for Ruby checks and commits or pushes that
+  invoke retained Overcommit hooks. Install the locked root bundle first; see
+  [Ruby tasks and existing Git hooks](README.md#ruby-tasks-and-existing-git-hooks).
 - Inventory: `confctl ls`.
 - Evaluate without deploy: `confctl build "cz.vpsfree/nodes/stg/*"` (scope as needed).
 - Dry-run deploy: `confctl deploy "cz.vpsfree/nodes/stg/*" dry-activate`.

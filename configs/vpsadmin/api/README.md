@@ -140,10 +140,11 @@ if some or all entries are rejected. This flag is not a completeness guarantee.
 
 ### Verification and recovery
 
-Run the parser suite in the configuration development shell:
+Run the parser suite with the explicit Ruby profile after the
+[root bundle setup](../../../README.md#ruby-tasks-and-existing-git-hooks):
 
 ```bash
-nix develop -c bundle exec rake spec
+nix develop .#service-ruby -c bundle exec rake spec
 ```
 
 The vpsAdmin mail task deletes fetched messages independently of parser success
