@@ -26,8 +26,9 @@ jobs:
 
       - name: Install git hooks
         run: |
-          nix develop -c bundle exec overcommit --install
-          nix develop -c bundle exec overcommit --sign pre-commit
+          nix develop .#service-ruby -c env BUNDLE_FROZEN=true bundle install
+          nix develop .#service-ruby -c bundle exec overcommit --install
+          nix develop .#service-ruby -c bundle exec overcommit --sign pre-commit
 
       - name: Restore confctl cache
         uses: actions/cache/restore@v6
@@ -42,10 +43,10 @@ jobs:
           sudo mkdir "/nix/var/nix/gcroots/per-user/$USER"
           sudo chown "$USER" "/nix/var/nix/gcroots/per-user/$USER"
 
-          nix develop -c confctl inputs channel update --commit --no-changelog \
+          nix develop .#service-ruby -c confctl inputs channel update --commit --no-changelog \
                               '{nixos-stable,production,staging}' nixpkgs
-          nix develop -c confctl inputs channel update --commit --no-changelog nixos-unstable
-          nix develop -c confctl inputs channel update --commit '{staging,os-staging}' vpsadminos
+          nix develop .#service-ruby -c confctl inputs channel update --commit --no-changelog nixos-unstable
+          nix develop .#service-ruby -c confctl inputs channel update --commit '{staging,os-staging}' vpsadminos
 
       - name: Update llm-agents when Codex changes
         run: |
@@ -64,7 +65,7 @@ jobs:
           fi
 
           echo "Updating llm-agents for Codex $current_codex_version -> $upstream_codex_version"
-          nix develop --accept-flake-config -c confctl inputs channel update \
+          nix develop .#service-ruby --accept-flake-config -c confctl inputs channel update \
               --commit --no-changelog llm-agents
 
           updated_codex_version=$(nix eval --accept-flake-config --impure --raw \
@@ -79,7 +80,7 @@ jobs:
         run: |
           set -e
 
-          nix develop -c bash <<'EOF'
+          nix develop .#service-ruby -c bash <<'EOF'
             set -euo pipefail
 
             commit_update() {
@@ -158,7 +159,7 @@ jobs:
 
       - name: Push updates
         run: |
-          nix develop -c git push origin master
+          nix develop .#service-ruby -c git push origin master
 
       - name: Save confctl cache
         uses: actions/cache/save@v6
