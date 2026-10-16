@@ -17,6 +17,10 @@
   `confctl inputs channel set --commit <channels> <role> <rev>`.
 
 ## Development Deployments
+- For aitherdev Codex updates, read
+  [the update skill](skills/update-aitherdev-codex/SKILL.md), which links the
+  runtime and protocol-library procedures.
+
 - Building or deploying a feature branch does not authorize integrating it
   into `master`. Keep development changes on the feature branch until
   integration is explicitly requested.

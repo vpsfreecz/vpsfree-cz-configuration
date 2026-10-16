@@ -1,0 +1,3 @@
+interface:
+  display_name: "Update aitherdev Codex"
+  short_description: "Update aitherdev Codex through its confctl channels"

@@ -1,5 +1,9 @@
 # DeepSeek Codex on aitherdev
 
+Use the [aitherdev update skill](../../skills/update-aitherdev-codex/SKILL.md)
+for Codex upgrades. It links the runtime and protocol-library update processes;
+the coordination workspace owns the combined system/application rollout.
+
 The `codex-ds` command uses DeepSeek's native Responses API through the `ds`
 Codex profile. The wrapper reads the API key from:
 
@@ -32,11 +36,13 @@ assembled package. The wrapper uses the DeepSeek key and profile described
 above. The workspace application has a separate user-profile installation.
 
 The [generic Codex package contract](https://github.com/aither64/dev-workspace/blob/master/docs/codex-package.md)
-owns the runtime layout and dependency rules. Native daemon copies under
-`CODEX_HOME` keep Nix store dependencies and are not GC roots. Retained system
+owns the runtime layout and dependency rules. The selected llm-agents package
+patches fresh daemon installation to execute its immutable Nix-store runtime and
+attempts a native GC root. Retained older daemon copies under `CODEX_HOME` still
+depend on Nix-store closures and are not themselves GC roots. Retained system
 generations protect the system package closure; retained workspace Codex roots
-protect the workspace package closure. Keep both while their daemon copies may
-still be in use. Equal version strings do not establish equal closures.
+protect the workspace package closure. Keep both while a daemon may need them.
+Equal version strings do not establish equal closures.
 
 Before pruning a system generation or workspace Codex root, establish that no
 remaining daemon copy needs its dependencies, or retain the exact assembled
@@ -51,9 +57,10 @@ workspace-host status
 codex-ds --strict-config --help
 ```
 
-Also check the native daemon's selected release separately. Its updater can
-select a release independently of the Nix package pin; the public command's
-version alone does not identify a daemon already installed in `CODEX_HOME`.
+Also check the native daemon's selected executable separately. Retained native
+state and running daemons can still use a previous selection; the public
+command's version alone does not identify what is running. The current patched
+store selection does not use upstream release updates.
 Use a private disposable `CODEX_HOME` for package-copy and startup probes,
 without production authentication or model requests.
 
