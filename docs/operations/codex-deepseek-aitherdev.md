@@ -19,14 +19,20 @@ The profile and model catalog are installed by the `aitherdev` configuration.
 The former localhost Responses proxy and its state directory are removed during
 activation.
 
-To validate a deployed configuration without spending a model request:
+After deployment, run one small request from a private temporary directory to
+validate profile loading and the provider end to end:
 
 ```bash
-codex-ds --strict-config --help
+codex-ds --strict-config --ask-for-approval never exec --ephemeral \
+  --sandbox read-only --skip-git-repo-check \
+  "Reply only CODEX_UPDATE_OK. Do not call tools."
 ```
 
-Use one small `codex-ds exec --ephemeral` request for an end-to-end check after
-deployment.
+`--help` exits before configuration loading and cannot establish profile
+compatibility. The request above consumes provider usage.
+Authentication uses `forced_login_method = "api"`; reasoning capabilities come
+from the model catalog. The removed `preferred_auth_method` and
+`model_supports_reasoning_summaries` settings are invalid in Codex 0.163.0.
 
 ## Runtime package and retention
 
@@ -54,8 +60,9 @@ After an update, check the system command and workspace runtime:
 ```bash
 /run/current-system/sw/bin/codex --version
 workspace-host status
-codex-ds --strict-config --help
 ```
+
+Then run the single provider check above.
 
 Also check the native daemon's selected executable separately. Retained native
 state and running daemons can still use a previous selection; the public

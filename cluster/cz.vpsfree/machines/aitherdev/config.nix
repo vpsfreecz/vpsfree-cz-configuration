@@ -85,10 +85,8 @@ let
   codexDsConfig = pkgs.writeText "codex-ds.config.toml" ''
     model_provider = "deepseek"
     model = "deepseek-v4-pro"
-    preferred_auth_method = "apikey"
     forced_login_method = "api"
     model_reasoning_effort = "high"
-    model_supports_reasoning_summaries = true
     web_search = "disabled"
     model_catalog_json = "/etc/codex/deepseek-models.json"
 

@@ -55,6 +55,11 @@ another owner's reservation, reboot implicitly or integrate master to deploy.
 
 After activation verify /run/current-system, the system profile, the system Codex
 version, actual native daemon selection and codex-ds strict-config startup.
+Validate the complete managed DeepSeek profile against the selected config schema
+before building. After activation use the operations guide's one small ephemeral
+provider request with --strict-config; --help exits before loading configuration.
+Resolve the Home Manager-installed codex-ds wrapper
+and verify that it selects the intended assembled package.
 Follow the operations guides for provider and application acceptance. Preserve
 system generations and native roots. Reconcile uncertain effects on the original
 job; establish old/new state compatibility before relying on system downgrade.
