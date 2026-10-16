@@ -58,6 +58,10 @@ version, actual native daemon selection and codex-ds strict-config startup.
 Validate the complete managed DeepSeek profile against the selected config schema
 before building. After activation use the operations guide's one small ephemeral
 provider request with --strict-config; --help exits before loading configuration.
+Keep custom-provider authentication in its provider env_key. Do not force the
+shared OpenAI login method for DeepSeek; Codex may log out a conflicting ChatGPT
+credential before it selects provider authentication. For source/provider probes,
+use an isolated Codex home without copying production login credentials.
 Resolve the Home Manager-installed codex-ds wrapper
 and verify that it selects the intended assembled package.
 Follow the operations guides for provider and application acceptance. Preserve

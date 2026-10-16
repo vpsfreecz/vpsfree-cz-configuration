@@ -30,8 +30,11 @@ codex-ds --strict-config --ask-for-approval never exec --ephemeral \
 
 `--help` exits before configuration loading and cannot establish profile
 compatibility. The request above consumes provider usage.
-Authentication uses `forced_login_method = "api"`; reasoning capabilities come
-from the model catalog. The removed `preferred_auth_method` and
+Authentication uses the provider's `DEEPSEEK_API_KEY` environment variable.
+Do not set `forced_login_method` in this profile: it restricts the shared OpenAI
+login and can remove an existing ChatGPT credential before provider startup.
+Reasoning capabilities use Codex's model information. The removed
+`preferred_auth_method` and
 `model_supports_reasoning_summaries` settings are invalid in Codex 0.163.0.
 
 ## Runtime package and retention
