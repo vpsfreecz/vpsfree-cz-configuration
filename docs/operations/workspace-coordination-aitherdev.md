@@ -72,6 +72,19 @@ path. Preserve private journals and roots. A threadless owner uses explicit
 `--bootstrap-owner UUID` maintenance of the same active incarnation. There is no
 general force release, implicit reboot, session closure or merge authorization.
 
+## Agent handoff
+
+Background integration verifies that its caller is the retained managed lead.
+An external conversation must supervise foreground continuation or explicitly
+hand responsibility to that lead. Confirm the recipient before ending the
+initiating conversation; a native delivery receipt does not prove agent pickup.
+The runtime's [agent pickup contract](https://github.com/aither64/dev-workspace/blob/master/docs/integration.md#agent-pickup)
+owns acknowledgement, reminder and preparation-only cancellation semantics.
+
+The Operations page shows pending agent response separately from operation and
+reservation status. Unacknowledged notices never waive integration or live-state
+proofs, and do not hold otherwise completed operations or machine release.
+
 ## Integration driver
 
 After the matching runtime is selected, the workspace integration driver can
