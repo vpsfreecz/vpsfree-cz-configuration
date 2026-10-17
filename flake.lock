@@ -1118,11 +1118,11 @@
         "ruby-lxc": "ruby-lxc_2"
       },
       "locked": {
-        "lastModified": 1792135562,
-        "narHash": "sha256-8SPqrkFrFYjH/Nw9gpEHKQnnPQKONPXVriJd5owjI+U=",
+        "lastModified": 1792183632,
+        "narHash": "sha256-DVWr55jJxx5S9dNV2c1XiNo28n79OCTGDwAOu3Iobnc=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "0ffcc1da559c6d76e593e691e113d1e9349eebf1",
+        "rev": "0081fc01f13236a098380094ddbd00539a9c8dae",
         "type": "github"
       },
       "original": {
@@ -1170,11 +1170,11 @@
         "ruby-lxc": "ruby-lxc_4"
       },
       "locked": {
-        "lastModified": 1792135562,
-        "narHash": "sha256-8SPqrkFrFYjH/Nw9gpEHKQnnPQKONPXVriJd5owjI+U=",
+        "lastModified": 1792183632,
+        "narHash": "sha256-DVWr55jJxx5S9dNV2c1XiNo28n79OCTGDwAOu3Iobnc=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "0ffcc1da559c6d76e593e691e113d1e9349eebf1",
+        "rev": "0081fc01f13236a098380094ddbd00539a9c8dae",
         "type": "github"
       },
       "original": {
