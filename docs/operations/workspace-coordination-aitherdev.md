@@ -54,7 +54,8 @@ Review the deployed interface while the machine stays reserved. Normal managed
 sessions can iterate under the same reservation and applicable approval scope.
 Other sessions prepare independently and wait for activation ownership. Release
 requires exact final integration of every owned feature, integrated deployed
-dependencies, settled jobs/deliveries and explicit deployment/review completion.
+dependencies, settled jobs and explicit deployment/review completion. Internal
+Codex status messages retry independently and do not hold the machine reservation.
 Deployment authorization does not authorize configuration or application master
 integration. Keep development pins on their feature branches until that direction.
 
