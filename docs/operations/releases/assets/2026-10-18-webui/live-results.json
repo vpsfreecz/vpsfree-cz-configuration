@@ -1,0 +1,83 @@
+[
+  {
+    "check": "member own real VPS",
+    "user": 29,
+    "vps": 62,
+    "pass": true
+  },
+  {
+    "device": "desktop",
+    "check": "real VPS list ownership and filter chip layout",
+    "pass": true
+  },
+  {
+    "device": "desktop",
+    "check": "VPS detail opens on first activation",
+    "pass": true
+  },
+  {
+    "device": "desktop",
+    "check": "centered editor creates real owned template with one activation",
+    "pass": true
+  },
+  {
+    "device": "desktop",
+    "check": "member status footer links respond on first activation",
+    "pass": true
+  },
+  {
+    "device": "desktop",
+    "check": "no browser JavaScript exceptions",
+    "pass": true
+  },
+  {
+    "device": "android",
+    "check": "real VPS list ownership and filter chip layout",
+    "pass": true
+  },
+  {
+    "device": "android",
+    "check": "VPS detail opens on first activation",
+    "pass": true
+  },
+  {
+    "device": "android",
+    "check": "centered editor creates real owned template with one activation",
+    "pass": true
+  },
+  {
+    "device": "android",
+    "check": "member status footer links respond on first activation",
+    "pass": true
+  },
+  {
+    "device": "android",
+    "check": "no browser JavaScript exceptions",
+    "pass": true
+  },
+  {
+    "device": "iphone",
+    "check": "real VPS list ownership and filter chip layout",
+    "pass": true
+  },
+  {
+    "device": "iphone",
+    "check": "VPS detail opens on first activation",
+    "pass": true
+  },
+  {
+    "device": "iphone",
+    "check": "centered editor creates real owned template with one activation",
+    "pass": true
+  },
+  {
+    "device": "iphone",
+    "check": "member status footer links respond on first activation",
+    "pass": true
+  },
+  {
+    "device": "iphone",
+    "check": "no browser JavaScript exceptions",
+    "pass": true
+  }
+]
