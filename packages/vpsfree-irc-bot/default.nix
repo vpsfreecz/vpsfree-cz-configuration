@@ -7,8 +7,8 @@ let
   vpsfbot = fetchFromGitHub {
     owner = "vpsfreecz";
     repo = "vpsfree-irc-bot";
-    rev = "e9c60b0b95d3cc0dad6f012d8127c2bc078cfa7d";
-    sha256 = "sha256-jONz5RyWIzH2/h9oALb31Ms1pQlbwP3MNRUe1vwzp5A=";
+    rev = "94ac4eb5a7caf0456fff7df86a44cae198463276";
+    sha256 = "sha256-v7m4mhpYs/P23cjiPm6XESAG5jIkoMBq5P1nTs0Lr6g=";
   };
 in
 bundlerEnv {
