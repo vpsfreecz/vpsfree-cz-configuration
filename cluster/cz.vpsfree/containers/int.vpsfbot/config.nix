@@ -168,6 +168,8 @@ in
         };
 
         security_advisories = {
+          mode = "summary";
+          summary_interval = 3600;
           channels = [
             "#vpsfree"
           ];
