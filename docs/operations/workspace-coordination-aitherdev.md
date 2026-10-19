@@ -53,9 +53,15 @@ acceptance evidence in the initiating session's rollout record.
 Review the deployed interface while the machine stays reserved. Normal managed
 sessions can iterate under the same reservation and applicable approval scope.
 Other sessions prepare independently and wait for activation ownership. Release
-requires exact final integration of every owned feature, integrated deployed
+through normal completion requires exact final integration of every owned feature, integrated deployed
 dependencies, settled jobs and explicit deployment/review completion. Internal
 Codex status messages retry independently and do not hold the machine reservation.
+A successful session archive also releases its machine reservations after local
+cleanup. Failed archives retain deployed holds until recovery completes. Running
+or uncertain deployments must settle first; revival does not reacquire machines
+or resume canceled jobs. The runtime coordination guide owns these lifecycle
+rules.
+
 Deployment authorization does not authorize configuration or application master
 integration. Keep development pins on their feature branches until that direction.
 
