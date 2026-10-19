@@ -134,12 +134,3 @@ After activation, inspect the HTML response's `img-src` and verify that both
 CZK/EUR images decode in the browser. A 200 response from the generator alone
 is insufficient: CSP can block an otherwise valid image. Use synthetic payment
 parameters for diagnostics and never record members' payment URLs or screenshots.
-
-The [2026-10-04 QR release receipt](releases/2026-10-04-newadmin-payment-qr.md)
-records the deployed source, generation, checks and rollback target.
-
-## Latest reviewed joint release
-
-The [2026-10-18 release receipt](releases/2026-10-18-reviewed-webui-release.md)
-records generation 15, the eight approved PRs, exact provenance, real dev
-workflow verification, public browser checks and retained rollback paths.

@@ -50,7 +50,13 @@
   messages in their generated form unless they need a concise changelog edit.
   Do not amend or rewrap generated `confctl --commit` messages only to satisfy
   generic commit-message line length rules.
-  Add screenshots/logs only when clarifying behavior.
+- Do not commit deployment receipts, per-release test reports, screenshots,
+  browser traces, or generated test output to this configuration repository.
+  Do not recreate `docs/operations/releases/` or move those artifacts to
+  another tracked directory. Keep verification details in the relevant PR or
+  chat and generated artifacts outside the repository (or in CI artifacts).
+- Keep repository documentation focused on reusable operational procedures and
+  configuration. Routine channel updates need no separate documentation commit.
 
 ## Security & Configuration Tips
 - Do not commit secrets; reference keys from `data/` or GPG-managed content under `gpg/`.
