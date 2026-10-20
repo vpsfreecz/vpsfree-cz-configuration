@@ -2,14 +2,15 @@
 
 Aitherdev is `cz.vpsfree/machines/aitherdev`, canonically reserved as
 `vpsfree:aitherdev` in the consuming workspace catalog. System activation and
-workspace application profile selection share that reservation. Keep it during
-UI review, feedback, idle periods and repeated deployment.
+workspace application profile selection share this physical machine. Keep its
+reservation during UI review, feedback, idle periods and repeated deployment.
 
-The generic runtime's
-[coordination contract](https://github.com/aither64/dev-workspace/blob/master/docs/coordination.md)
-owns admission, approvals, workers, completion and recovery. Its
-[operations guide](https://github.com/aither64/dev-workspace/blob/master/docs/coordination-operations.md)
-owns request formats and first-installation bootstrap. Read both before activation.
+Read the selected runtime's installed guides with
+`workspace-host coordination guide`. Its
+[resource claim contract](https://github.com/aither64/dev-workspace/blob/master/docs/coordination.md)
+and [operations guide](https://github.com/aither64/dev-workspace/blob/master/docs/coordination-operations.md)
+own request formats, ownership, notifications and recovery. A predecessor without
+resource claims retains its installed snapshot-based workflow.
 
 ## Preparation
 
@@ -26,82 +27,108 @@ Preserve the workspace's direct nested runtime override, extension selection and
 unrelated inputs. Select the same runtime in the composed workspace lock and run
 `bin/check-dev-workspace-deployment --workspace-root PATH --configuration-root PATH`.
 
-Complete source commits, quick checks, independent final review and applicable
-longer verification before activation. Preparation builds/copies the exact named
-generation outside claims. The confctl adapter performs dry activation under
-machine ownership immediately before the no-reboot switch. Agent sessions use
-approved `machine_activate` and `profile_activate` jobs with explicit ordering;
-they do not run direct confctl deploy around a held reservation.
+Complete source commits, quick checks, independent review and applicable longer
+verification before activation. Build and copy the exact named configuration and
+application generations outside execution locks when the tools support that
+separation. Retain their source revisions, prepared artifacts and recovery roots.
+Confctl embeds the configuration revision, so prepare the final committed source
+even when its Git tree matches an earlier tested tree.
+
+## Deployments under resource claims
+
+Sessions own commands, hooks, environments, logs and effect verification. The
+coordinator records exclusive ownership and notifies waiting sessions. Acquire
+`vpsfree:aitherdev` near the first prepared activation using `coordination acquire`
+with an empty repositories list and the configured machine in its machines list.
+Use the generic claim guide for the exact request format. Wait for `held`; a
+queued request owns no resources. Read authoritative status on notification.
+
+Run ordinary confctl dry activation and a no-reboot switch of the prepared system
+generation while holding that claim. Verify both `/run/current-system` and
+`/nix/var/nix/profiles/system`; a live switch can precede failed profile publication.
+Preserve configured confctl auto-rollback and retained generation metadata.
+
+After successful system activation, run ordinary `workspace-host switch --source`
+for the composed workspace feature checkout. Pass `DEV_WORKSPACE_CLAIM_ID` with
+the held claim UUID and the exact `DEV_SESSION_SLUG`/`DEV_SESSION_WORKSPACE`
+identity. Keep the same physical machine claim. Workspace-host checks ownership
+and retains package compatibility, activation journals and forward recovery.
+System activation precedes application selection. Deployment approval grants no
+reboot authorization.
+
+Verify system/profile identities, runtime composition, portal/router/coordinator
+health and Codex/tmux continuity. Read tool diagnostics and verify effects; zero
+exit alone does not prove every required hook or intended effect succeeded.
+Keep ownership through human review, feedback and repeated deployment. Claims do
+not expire during idle periods or disconnects. After interruption, inspect the
+original operation and stop remaining local/remote work before release.
+
+Use `coordination release` with the exact claim ID when machine work finishes.
+Release needs no integration proofs and grants no merge approval. Held claims
+block lifecycle cleanup until explicitly released. The initiative remains active
+until its final feature heads are integrated and all work is complete.
+
+## Predecessor and retained operations
+
+Before selecting a claims runtime, a snapshot-based predecessor admits approved
+`machine_activate` and `profile_activate` jobs with explicit ordering under its
+own machine reservation. Build/copy preparation stays outside claims; the confctl
+adapter dry-activates immediately before the no-reboot switch. Use that supported
+predecessor workflow for a transition, with system activation before profile
+selection. Ordinary admission and bootstrap ownership restrictions still apply.
+
+Existing jobs, snapshots, integrations, deployment history and reservations remain
+legacy operations after package selection. Continue their original IDs and recovery
+interfaces. New resource claims cannot release legacy reservations or replace
+uncertain jobs. The selected claims runtime refuses new independent automatic
+integration runs and prepare/approve/submit workflows; retained runs can resume,
+and retained jobs can prepare and approve replacement snapshots for refresh.
+
+Legacy release still requires exact final integration of every owned feature,
+integrated deployed dependencies, settled jobs and explicit deployment/review
+completion. Keep its original reservation during review and recovery. Informational
+notification delivery does not hold otherwise completed work. Successful archival
+releases legacy reservations after cleanup; failed archives retain recovery holds.
+Revival does not reacquire released machines or resume canceled jobs.
+
+For interrupted legacy execution, reconcile the exact original attempt. Verify
+both live-system and system-profile identities, retain confctl auto-rollback and
+preserve its generation metadata. Unknown effects keep the claim and reservation.
+Do not activate a different generation or release ownership merely because SSH
+or a worker exited. Application selection remains forward-only: recover the
+original admitted candidate or a reviewed compatible successor through the
+supported recovery path. Never edit receipts or manufacture an owner to clear a
+refusal. There is no force release or implicit integration authorization.
 
 ## Initial installation
 
-For a selected pre-contract runtime, build the reviewed candidate independently
-and use its private synchronous bootstrap. Record the exact predecessor profile
-token, workspace/session incarnation, user deployment direction and prepared
-source/artifacts. Refuse unexplained existing coordination state. The candidate
-worker activates the prepared system, then selects the application user profile.
-Keep the threadless bootstrap owner/reservation and exact original jobs for retry.
-It has no automatic notification destination and creates no agent conversation.
+For a selected pre-contract runtime, the reviewed candidate's bounded initial
+bootstrap binds the predecessor profile token, workspace/session incarnation,
+user deployment direction and prepared source/artifacts. It refuses unexplained
+existing coordination owners. It is not a general deployment route around an
+existing ledger or ordinary owner admission.
 
-After selection, verify both system/profile identities, runtime composition,
-coordinator adoption, portal/router access and Codex/tmux continuity. Confirm
-the original reservation still owns aitherdev. Keep rollout revisions, logs and
-acceptance evidence in the initiating session's rollout record.
+The bootstrap activates the prepared system, then selects the application user
+profile. It creates no agent conversation. Keep its exact original jobs and
+threadless owner/reservation for retry. Retained maintenance uses explicit
+`--bootstrap-owner UUID` selection for the same active incarnation. Its original
+recovery and legacy completion requirements remain in force.
 
-## Review, completion and recovery
+## Agent continuation
 
-Review the deployed interface while the machine stays reserved. Normal managed
-sessions can iterate under the same reservation and applicable approval scope.
-Other sessions prepare independently and wait for activation ownership. Release
-through normal completion requires exact final integration of every owned feature, integrated deployed
-dependencies, settled jobs and explicit deployment/review completion. Internal
-Codex status messages retry independently and do not hold the machine reservation.
-A successful session archive also releases its machine reservations after local
-cleanup. Failed archives retain deployed holds until recovery completes. Running
-or uncertain deployments must settle first; revival does not reacquire machines
-or resume canceled jobs. The runtime coordination guide owns these lifecycle
-rules.
+A waiting resource request returns immediately. Continue independent work or end
+the turn while waiting. The coordinator grants the request and notifies its retained
+conversation without running commands. Read claim-status before acting on a notice;
+old notices do not restore released ownership or supply deployment/merge approval.
+
+For retained integration runs, background continuation verifies the retained
+managed lead. An external conversation supervises foreground continuation or
+explicitly hands responsibility to that lead. The
+[agent pickup contract](https://github.com/aither64/dev-workspace/blob/master/docs/integration.md#agent-pickup)
+owns acknowledgement and reminders. A delivered notice alone does not establish
+pickup, waive live-state proof or release machine ownership.
 
 Deployment authorization does not authorize configuration or application master
 integration. Keep development pins on their feature branches until that direction.
-
-For interruption, reconcile the exact original attempt. Check both
-`/run/current-system` and `/nix/var/nix/profiles/system`; a successful live switch
-can precede failed profile publication. Preserve configured confctl auto-rollback
-and retained generation metadata. Unknown effects keep the claim and reservation;
-do not activate a different generation or release ownership merely because SSH
-or a worker exited.
-
-Application selection is forward-only. Recover the original admitted candidate
-or a reviewed compatible successor through the runtime's supported recovery
-path. Preserve private journals and roots. A threadless owner uses explicit
-`--bootstrap-owner UUID` maintenance of the same active incarnation. There is no
-general force release, implicit reboot, session closure or merge authorization.
-
-## Agent handoff
-
-Background integration verifies that its caller is the retained managed lead.
-An external conversation must supervise foreground continuation or explicitly
-hand responsibility to that lead. Confirm the recipient before ending the
-initiating conversation; a native delivery receipt does not prove agent pickup.
-The runtime's [agent pickup contract](https://github.com/aither64/dev-workspace/blob/master/docs/integration.md#agent-pickup)
-owns acknowledgement, reminder and preparation-only cancellation semantics.
-
-The Operations page shows pending agent response separately from operation and
-reservation status. Unacknowledged notices never waive integration or live-state
-proofs, and do not hold otherwise completed operations or machine release.
-
-## Integration driver
-
-After the matching runtime is selected, the workspace integration driver can
-prepare dependent merges and system/profile activation from their separate
-approvals. The workspace recipe maps channel `dev-workspace`, role `devWorkspace`,
-to input `devWorkspace`; it uses `confctl inputs channel set --commit` for exact
-feature revisions. Builds and copies stay outside execution claims.
-
-A mechanically refreshed configuration can reuse unchanged runtime checks, but
-confctl embeds `self.rev`. Prepare and inspect the artifact from the exact final
-configuration commit, even when its Git tree matches an earlier tested tree.
-Keep system switch before profile activation and preserve the same reservation.
-Use existing reconciliation for uncertain effects; a driver resume does not
-authorize replay, rollback, reboot or forced release.
+Keep exact rollout revisions, logs and acceptance evidence in the initiative's
+rollout record, outside this configuration repository.
