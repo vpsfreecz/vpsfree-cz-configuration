@@ -19,7 +19,6 @@ let
     ./services/sachet.nix
     ./services/vpsfree-irc-bot.nix
     ./services/vpsfree-web.nix
-    ./system/php-upload-progress.nix
     ./system/phpfpm-session-cleanup.nix
     ./system/logging/nixos.nix
   ];

@@ -270,8 +270,6 @@ in
         '';
       in
       {
-        imports = [ ../../../../modules/system/php-upload-progress.nix ];
-
         networking = {
           useHostResolvConf = lib.mkForce false;
           nameservers = [ hostAddress ];
