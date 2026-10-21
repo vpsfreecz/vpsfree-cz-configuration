@@ -77,5 +77,9 @@ See [API configuration and abuse notice processing](configs/vpsadmin/api/README.
 
 ## Aitherdev operations
 
+See [log reader access](docs/operations/log-reader-access.md) for SSH access to
+central logs and [Prometheus query access](docs/operations/prometheus-query-access.md)
+for the dedicated HTTPS API credential and its provisioning procedure.
+
 See [disk cleanup and retention](docs/operations/aitherdev-disk-retention.md) for
 Nix profile/test retention, coordination collection, and rollout/recovery.

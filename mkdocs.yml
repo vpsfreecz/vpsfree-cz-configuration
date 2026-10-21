@@ -3,6 +3,8 @@ theme: readthedocs
 extra_css: ['extra.css']
 nav:
 - Operations:
+  - Log reader access: 'operations/log-reader-access.md'
+  - Prometheus query access: 'operations/prometheus-query-access.md'
   - New vpsAdmin WebUI service: 'operations/newadmin-webui.md'
   - DeepSeek Codex on aitherdev: 'operations/codex-deepseek-aitherdev.md'
   - Codex providers on aitherdev: 'operations/codex-providers-aitherdev.md'

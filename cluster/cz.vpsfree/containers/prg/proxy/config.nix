@@ -1,10 +1,12 @@
 {
   pkgs,
+  lib,
   config,
   confLib,
   ...
 }:
 let
+  prometheusQuery = import ./prometheus-query.nix { inherit lib; };
   alerts1Prg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/int.alerts1";
@@ -135,7 +137,10 @@ in
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
 
-    commonHttpConfig = "access_log /var/log/nginx/access.log combined;";
+    commonHttpConfig = ''
+      access_log /var/log/nginx/access.log combined;
+      ${prometheusQuery.httpConfig}
+    '';
 
     virtualHosts = {
       "newadmin.vpsfree.cz" = {
@@ -201,16 +206,24 @@ in
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/private/nginx/mon.htpasswd";
-        locations."/".proxyPass =
-          "http://${mon1Prg.services.prometheus.address}:${toString mon1Prg.services.prometheus.port}";
+        locations =
+          prometheusQuery.locations "http://${mon1Prg.services.prometheus.address}:${toString mon1Prg.services.prometheus.port}"
+          // {
+            "/".proxyPass =
+              "http://${mon1Prg.services.prometheus.address}:${toString mon1Prg.services.prometheus.port}";
+          };
       };
 
       "mon2.prg.vpsfree.cz" = {
         enableACME = true;
         forceSSL = true;
         basicAuthFile = "/private/nginx/mon.htpasswd";
-        locations."/".proxyPass =
-          "http://${mon2Prg.services.prometheus.address}:${toString mon2Prg.services.prometheus.port}";
+        locations =
+          prometheusQuery.locations "http://${mon2Prg.services.prometheus.address}:${toString mon2Prg.services.prometheus.port}"
+          // {
+            "/".proxyPass =
+              "http://${mon2Prg.services.prometheus.address}:${toString mon2Prg.services.prometheus.port}";
+          };
       };
 
       "grafana.prg.vpsfree.cz" = {
