@@ -171,6 +171,14 @@
         ];
       };
       checks.${system} = {
+        log-reader-access = import ./tests/log-reader-access.nix {
+          pkgs = devPkgs;
+          machines = confctlOutputs.machines;
+        };
+        prometheus-query-access = import ./tests/prometheus-query-access.nix {
+          pkgs = devPkgs;
+          machines = confctlOutputs.machines;
+        };
         nix-store-cleanup =
           devPkgs.runCommand "aitherdev-nix-store-cleanup-tests"
             {
