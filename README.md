@@ -88,3 +88,7 @@ confctl deploy "cz.vpsfree/nodes/stg/*" dry-activate
 - [Operations index](docs/operations/README.md): mx2 relay checks and queue
   recovery, Aitherdev disk retention, vpsAdmin abuse notices and API documentation
   OAuth setup and recovery.
+
+See [log reader access](docs/operations/log-reader-access.md) for SSH access to
+central logs and [Prometheus query access](docs/operations/prometheus-query-access.md)
+for the dedicated HTTPS API credential and its provisioning procedure.
