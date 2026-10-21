@@ -17,14 +17,9 @@ Enter the development environment:
 nix develop
 ```
 
-This provides `confctl` from the **pinned flake input** (see `flake.lock`), installs Ruby gems into `./.gems`,
-and generates man pages into `./.man` so `man confctl` works.
-
-If you prefer `nix-shell`, `shell.nix` is a compatibility shim:
-
-```bash
-nix-shell
-```
+The shell provides `confctl` from the pinned flake input (see `flake.lock`) and
+installs the repository's Ruby gems into `./.gems`. It adds confctl's packaged
+manuals to `MANPATH`, so `man confctl` works.
 
 ## Common tasks
 
@@ -51,6 +46,9 @@ confctl inputs channel update --commit '{production,staging}' vpsadminos
 Hosts can be built and deployed using `confctl`, see
 [confctl](https://github.com/vpsfreecz/confctl) or `man confctl` for more
 information.
+
+See [confctl site migration](docs/operations/confctl-site-migration.md) for the
+runtime-kernel and netboot settings, compatible tool pin and rollback procedure.
 
 ## Examples
 
