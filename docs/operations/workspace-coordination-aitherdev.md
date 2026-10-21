@@ -62,14 +62,31 @@ reboot authorization.
 Verify system/profile identities, runtime composition, portal/router/coordinator
 health and Codex/tmux continuity. Read tool diagnostics and verify effects; zero
 exit alone does not prove every required hook or intended effect succeeded.
-Keep ownership through human review, feedback and repeated deployment. Claims do
-not expire during idle periods or disconnects. After interruption, inspect the
-original operation and stop remaining local/remote work before release.
+Follow the generic [machine retention rule](https://github.com/aither64/dev-workspace/blob/master/docs/coordination.md#machine-retention)
+for every deployed physical machine. Keep aitherdev ownership until its deployed
+feature lineage is integrated into approved remote defaults, the user accepts
+the resulting UI/behavior on aitherdev and explicitly directs its release.
+Review, CI, idle periods, feedback, disconnects, repeated deployment and turn
+completion do not authorize release or establish user acceptance.
 
-Use `coordination release` with the exact claim ID when machine work finishes.
-Release needs no integration proofs and grants no merge approval. Held claims
-block lifecycle cleanup until explicitly released. The initiative remains active
-until its final feature heads are integrated and all work is complete.
+Keep exact resolved store paths for `/run/current-system`,
+`/nix/var/nix/profiles/system`, the selected workspace user profile and package
+generation in the initiative's rollout receipt. Bind them to the complete source
+and input graph, canonical repository/target and machine aliases, exact deployed
+and final feature heads, fresh remote ancestry proofs, and the user's accepted
+environment/result and release direction. Refreshed history also needs reviewed
+old/new base/head ranges, equivalence and migration evidence. A substantive
+successor requires redeployment and renewed user acceptance; a nonancestor
+deployed commit must not be described as literally merged.
+
+Before release, inspect authoritative status for the exact claim owned by this
+session, reconcile the original local/remote operation and verify all retention
+conditions. Then use `coordination release` with that claim ID and verify the
+resulting state.
+The cooperative API does not enforce acceptance or integration evidence. Release
+grants no merge approval. Held claims block lifecycle cleanup until explicitly
+released. The initiative remains active until its final feature heads are
+integrated and all work is complete.
 
 ## Predecessor and retained operations
 
@@ -90,8 +107,10 @@ and retained jobs can prepare and approve replacement snapshots for refresh.
 Legacy release still requires exact final integration of every owned feature,
 integrated deployed dependencies, settled jobs and explicit deployment/review
 completion. Keep its original reservation during review and recovery. Informational
-notification delivery does not hold otherwise completed work. Successful archival
-releases legacy reservations after cleanup; failed archives retain recovery holds.
+notification delivery does not hold otherwise completed work. Legacy archival
+automatically releases reservations after cleanup; this implementation behavior
+does not authorize archival or bypass the machine retention rule. Failed archives
+retain recovery holds.
 Revival does not reacquire released machines or resume canceled jobs.
 
 For interrupted legacy execution, reconcile the exact original attempt. Verify
