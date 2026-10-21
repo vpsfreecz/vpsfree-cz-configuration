@@ -51,7 +51,10 @@ Preserve configured confctl auto-rollback and retained generation metadata.
 After successful system activation, run ordinary `workspace-host switch --source`
 for the composed workspace feature checkout. Pass `DEV_WORKSPACE_CLAIM_ID` with
 the held claim UUID and the exact `DEV_SESSION_SLUG`/`DEV_SESSION_WORKSPACE`
-identity. Keep the same physical machine claim. Workspace-host checks ownership
+identity. Keep the same physical machine claim, without repository claims. Development,
+feature publication, build preparation and tests need no repository ownership.
+Shared-branch merges use separate brief claims after preparation and approval.
+Workspace-host checks ownership
 and retains package compatibility, activation journals and forward recovery.
 System activation precedes application selection. Deployment approval grants no
 reboot authorization.
