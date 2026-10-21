@@ -53,6 +53,7 @@ in
   imports = [
     ../../../../../environments/base.nix
     ../../../../../profiles/ct.nix
+    ./log-reader.nix
   ];
 
   networking.firewall = {
@@ -91,10 +92,23 @@ in
   services.rsyslogd = {
     enable = true;
     defaultConfig = mkForce ''
+      # Legacy defaults apply to the local messages selector. The RainerScript
+      # omfile action below needs its own creation properties. The exporter pipe
+      # retains its separately managed ownership and permissions.
+      $FileOwner root
+      $FileGroup log-readers
+      $FileCreateMode 0640
+      $DirOwner root
+      $DirGroup log-readers
+      $DirCreateMode 0750
+      $Umask 0027
+
       template(name="remote-log-file" type="string" string="/var/log/remote/%HOSTNAME%/log")
 
       ruleset(name="remote-file"){
-        action(type="omfile" dynaFile="remote-log-file")
+        action(type="omfile" dynaFile="remote-log-file"
+          fileOwner="root" fileGroup="log-readers" fileCreateMode="0640"
+          dirOwner="root" dirGroup="log-readers" dirCreateMode="0750")
         call remote-pipe
       }
 
@@ -137,6 +151,7 @@ in
         dateext = true;
         notifempty = true;
         nocompress = true;
+        create = "0640 root log-readers";
         postrotate = reloadRsyslog;
       };
 
@@ -150,6 +165,7 @@ in
         dateext = true;
         notifempty = true;
         nocompress = true;
+        create = "0640 root log-readers";
         postrotate = reloadRsyslog;
       };
 
@@ -165,6 +181,7 @@ in
         dateext = true;
         notifempty = true;
         nocompress = true;
+        create = "0640 root log-readers";
         postrotate = reloadRsyslog;
       };
 
@@ -178,6 +195,7 @@ in
         dateext = true;
         notifempty = true;
         nocompress = true;
+        create = "0640 root log-readers";
         maxsize = "512M";
         postrotate = reloadRsyslog;
       };
