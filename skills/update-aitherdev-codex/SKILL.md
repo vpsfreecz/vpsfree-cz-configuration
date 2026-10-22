@@ -5,10 +5,12 @@ description: Update aitherdev's Codex and matching dev-workspace host module thr
 
 # Update aitherdev Codex
 
-Read AGENTS.md, docs/operations/codex-deepseek-aitherdev.md and
-docs/operations/workspace-coordination-aitherdev.md. The consuming coordination
-workspace owns session identity, cross-project orchestration and application
-profile selection. Building or deploying never supplies master merge approval.
+Read AGENTS.md and docs/operations/codex-deepseek-aitherdev.md. Follow the
+[generic coordination guide](https://github.com/aither64/dev-workspace/blob/master/docs/coordination.md)
+and [operations and recovery guide](https://github.com/aither64/dev-workspace/blob/master/docs/coordination-operations.md).
+The consuming coordination workspace owns session identity, cross-project
+orchestration and application profile selection. Building or deploying never
+supplies master merge approval.
 
 Read skills/update-dev-workspace-codex/SKILL.md from the explicit runtime
 checkout or selected devWorkspace source. Its canonical repository is
