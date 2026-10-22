@@ -3,7 +3,7 @@
 Aitherdev is `cz.vpsfree/machines/aitherdev`, canonically reserved as
 `vpsfree:aitherdev` in the consuming workspace catalog. System activation and
 workspace application profile selection share this physical machine. Keep its
-reservation during UI review, feedback, idle periods and repeated deployment.
+claim until deployment and integration are verified as described below.
 
 Read the selected runtime's installed guides with
 `workspace-host coordination guide`. Its
@@ -63,30 +63,33 @@ Verify system/profile identities, runtime composition, portal/router/coordinator
 health and Codex/tmux continuity. Read tool diagnostics and verify effects; zero
 exit alone does not prove every required hook or intended effect succeeded.
 Follow the generic [machine retention rule](https://github.com/aither64/dev-workspace/blob/master/docs/coordination.md#machine-retention)
-for every deployed physical machine. Keep aitherdev ownership until its deployed
-feature lineage is integrated into approved remote defaults, the user accepts
-the resulting UI/behavior on aitherdev and explicitly directs its release.
-Review, CI, idle periods, feedback, disconnects, repeated deployment and turn
-completion do not authorize release or establish user acceptance.
+for every deployed physical machine. Once deployment and effect verification
+succeeds and the complete deployed feature lineage is integrated into approved
+remote defaults, promptly release the exact claim owned by this session
+and verify its released status, without another user confirmation. No separate
+UI acceptance or release direction is required. Missing proof or uncertain
+effects keep ownership; idle time and turn completion do not replace either
+proof.
 
 Keep exact resolved store paths for `/run/current-system`,
 `/nix/var/nix/profiles/system`, the selected workspace user profile and package
 generation in the initiative's rollout receipt. Bind them to the complete source
 and input graph, canonical repository/target and machine aliases, exact deployed
-and final feature heads, fresh remote ancestry proofs, and the user's accepted
-environment/result and release direction. Refreshed history also needs reviewed
-old/new base/head ranges, equivalence and migration evidence. A substantive
-successor requires redeployment and renewed user acceptance; a nonancestor
-deployed commit must not be described as literally merged.
+and final feature heads, fresh remote ancestry proofs and verified deployment
+effects. Refreshed history also needs reviewed old/new base/head ranges,
+equivalence and migration evidence. A substantive successor requires its own
+verified deployment; a nonancestor deployed commit must not be described as
+literally merged.
 
 Before release, inspect authoritative status for the exact claim owned by this
 session, reconcile the original local/remote operation and verify all retention
-conditions. Then use `coordination release` with that claim ID and verify the
-resulting state.
-The cooperative API does not enforce acceptance or integration evidence. Release
-grants no merge approval. Held claims block lifecycle cleanup until explicitly
-released. The initiative remains active until its final feature heads are
-integrated and all work is complete.
+conditions. Then promptly use `coordination release` with that claim ID and
+verify the resulting state.
+The cooperative API does not enforce deployment or integration evidence. Release
+grants no merge approval or session lifecycle authorization. A later deployment
+requires a fresh machine claim. Held claims block lifecycle cleanup until
+explicitly released. The initiative remains active until its final feature
+heads are integrated and all work is complete.
 
 ## Predecessor and retained operations
 
