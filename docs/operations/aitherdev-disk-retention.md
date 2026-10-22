@@ -30,6 +30,33 @@ Workspace package history, clusters, confctl deployments and other live roots
 remain under their owning tool's policy. Older removed generations cease to be
 rollback choices; ordinary system rebuilds refresh boot entries.
 
+## Local syslog rotation
+
+Rsyslog's local `messages`, `warn`, `mail`, and `dhcpd` files under `/var/log`
+rotate daily or when they exceed 100 MiB. The existing logrotate timer checks
+hourly, so a burst can take a file beyond that threshold between checks.
+Missing and empty files are skipped.
+
+Each file retains 14 numbered archives. Size-triggered rotations can occur
+several times a day, so this is an archive count rather than a 14-day guarantee.
+Older archives are compressed; the newest remains uncompressed until the next
+rotation. Rotation renames the old file, recreates it with its existing owner
+and permissions, and sends HUP to the main process of `syslog.service` so rsyslog
+reopens its files without a restart.
+
+Inspect the timer, generated configuration path, and service logs with:
+
+```sh
+systemctl status logrotate.timer logrotate.service syslog.service
+systemctl cat logrotate.service
+journalctl -u logrotate.service -u syslog.service
+```
+
+An existing oversized file rotates on the next hourly run after activation.
+Renaming it preserves its disk usage until a later rotation compresses it or
+expires the archive. Activation does not force rotation or truncate logs.
+Restoring an older configuration does not restore expired archives.
+
 ## Temporary tests
 
 Recognized `/tmp/**/os-test-*` runs are eligible after seven inactive days only

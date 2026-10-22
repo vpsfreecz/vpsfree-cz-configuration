@@ -232,6 +232,31 @@ in
 
   services.postfix.enable = true;
 
+  services.logrotate = {
+    enable = true;
+    settings.rsyslog = {
+      files = [
+        "/var/log/messages"
+        "/var/log/warn"
+        "/var/log/mail"
+        "/var/log/dhcpd"
+      ];
+      frequency = "daily";
+      maxsize = "100M";
+      rotate = 14;
+      dateext = false;
+      compress = true;
+      delaycompress = true;
+      create = true;
+      missingok = true;
+      notifempty = true;
+      sharedscripts = true;
+      postrotate = ''
+        ${pkgs.systemd}/bin/systemctl kill --kill-whom=main --signal=HUP syslog.service
+      '';
+    };
+  };
+
   services.samba = {
     enable = true;
     openFirewall = false;
