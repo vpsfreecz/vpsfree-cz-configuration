@@ -3,6 +3,7 @@ theme: readthedocs
 extra_css: ['extra.css']
 nav:
 - Operations:
+  - VPS boot auto-start monitoring: 'operations/vps-boot-autostart-monitoring.md'
   - New vpsAdmin WebUI service: 'operations/newadmin-webui.md'
   - DeepSeek Codex on aitherdev: 'operations/codex-deepseek-aitherdev.md'
   - Codex providers on aitherdev: 'operations/codex-providers-aitherdev.md'

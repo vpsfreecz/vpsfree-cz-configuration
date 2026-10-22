@@ -101,6 +101,12 @@ The relaxed alerts retain their actual location. Their names keep the
 across CPU cores. Raw load-average, I/O-wait, storage CPU, filesystem and ZFS
 rules keep their existing policies.
 
+## VPS auto-start alerts
+
+See [VPS boot auto-start monitoring](../operations/vps-boot-autostart-monitoring.md)
+for boot-only alert behavior, node readiness before rule rollout, coverage gaps
+and diagnosis.
+
 ## Configuration changes
 
 Update both monitors with the labels and critical rule together. No exporter,
