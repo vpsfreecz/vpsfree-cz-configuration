@@ -23,13 +23,15 @@
       {
         alert = "VpsAutostartNotRunning";
         expr = ''
-          (
-            nodectld_vps_autostart_unsatisfied{role="hypervisor"} == 1
-            and on(fqdn)
-              nodectld_vps_autostart_check_success{role="hypervisor"} == 1
-            and on(fqdn)
-              time() - nodectld_vps_autostart_check_last_success_timestamp_seconds{role="hypervisor"} < 300
-          )
+          nodectld_vps_boot_autostart_unsatisfied{role="hypervisor"} == 1
+          and on(fqdn)
+            nodectld_vps_boot_autostart_supported{role="hypervisor"} == 1
+          and on(fqdn)
+            nodectld_vps_boot_autostart_state{role="hypervisor",state="active"} == 1
+          and on(fqdn)
+            nodectld_vps_boot_autostart_check_success{role="hypervisor"} == 1
+          and on(fqdn)
+            time() - nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{role="hypervisor"} < 300
           and on(fqdn)
             vpsfree_hypervisor_booting == 0
         '';
@@ -39,10 +41,10 @@
           frequency = "10m";
         };
         annotations = {
-          summary = "VPS {{ $labels.vps_id }} should be running on {{ $labels.fqdn }} in pool {{ $labels.pool }}";
+          summary = "VPS {{ $labels.vps_id }} has an unmet auto-start expectation on {{ $labels.fqdn }} in pool {{ $labels.pool }}";
           description = ''
-            vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
-            find it in the running state.
+            osctld has not observed this VPS running since node boot. Its boot
+            auto-start obligation remains pending.
           '';
         };
       }
@@ -50,10 +52,20 @@
       {
         alert = "VpsAutostartCheckFailed";
         expr = ''
+          nodectld_vps_boot_autostart_supported{role="hypervisor"} == 1
+          and on(fqdn)
           (
-            nodectld_vps_autostart_check_success{role="hypervisor"} == 0
+            nodectld_vps_boot_autostart_state{role="hypervisor",state="unavailable"} == 1
             or
-              time() - nodectld_vps_autostart_check_last_success_timestamp_seconds{role="hypervisor"} > 300
+            (
+              nodectld_vps_boot_autostart_state{role="hypervisor",state="active"} == 1
+              and on(fqdn)
+              (
+                nodectld_vps_boot_autostart_check_success{role="hypervisor"} == 0
+                or
+                  time() - nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{role="hypervisor"} >= 300
+              )
+            )
           )
           and on(fqdn)
             vpsfree_hypervisor_booting == 0
@@ -66,8 +78,27 @@
         annotations = {
           summary = "VPS auto-start status check is failing on {{ $labels.fqdn }}";
           description = ''
-            nodectld has not completed a recent comparison of the vpsAdmin
-            auto-start settings with the containers in osctld.
+            nodectld cannot provide a recent VPS boot auto-start check. Check the
+            exported state and reason for missing boot state or an unavailable
+            dependency.
+          '';
+        };
+      }
+
+      {
+        alert = "VpsAutostartAwaitingReboot";
+        expr = ''
+          nodectld_vps_boot_autostart_supported{role="hypervisor"} == 1
+          and on(fqdn)
+            nodectld_vps_boot_autostart_state{role="hypervisor",state="awaiting_reboot"} == 1
+        '';
+        labels.severity = "none";
+        annotations = {
+          summary = "VPS boot auto-start tracking awaits reboot on {{ $labels.fqdn }}";
+          description = ''
+            This node was upgraded during the current boot. Boot auto-start
+            tracking begins after its next reboot. A reboot is not required for
+            ordinary VPS operations.
           '';
         };
       }

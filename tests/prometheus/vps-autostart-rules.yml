@@ -1,200 +1,630 @@
 rule_files:
-  - @ruleFile@
-
+- @ruleFile@
 evaluation_interval: 1m
-
 tests:
-  - name: The shared boot signal lasts for 30 minutes
-    interval: 1m
-    input_series:
-      - series: 'node_boot_time_seconds{alias="node1",fqdn="node1.example",role="hypervisor"}'
-        values: '0+0x31'
-    promql_expr_test:
-      - expr: 'vpsfree_hypervisor_booting{fqdn="node1.example"}'
-        eval_time: 29m40s
-        exp_samples:
-          - labels: 'vpsfree_hypervisor_booting{alias="node1",fqdn="node1.example",role="hypervisor"}'
-            value: 1
-      - expr: 'vpsfree_hypervisor_booting{fqdn="node1.example"}'
-        eval_time: 30m
-        exp_samples:
-          - labels: 'vpsfree_hypervisor_booting{alias="node1",fqdn="node1.example",role="hypervisor"}'
-            value: 0
-      - expr: 'vpsfree_hypervisor_booting{fqdn="old-node.example"}'
-        eval_time: 30m
-        exp_samples: []
-
-  - name: Unsatisfied VPS alerts retain identity and converge independently
-    interval: 1m
-    input_series:
-      - series: 'node_boot_time_seconds{alias="node1",fqdn="node1.example",role="hypervisor"}'
-        values: '0+0x60'
-      - series: 'nodectld_vps_autostart_check_success{alias="node1",fqdn="node1.example",role="hypervisor"}'
-        values: '1+0x60'
-      - series: 'nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="node1",fqdn="node1.example",role="hypervisor"}'
-        values: '0+60x60'
-      - series: 'nodectld_vps_autostart_unsatisfied{alias="node1",fqdn="node1.example",pool="tank",role="hypervisor",vps_id="101"}'
-        values: '1+0x44 stale _x15'
-      - series: 'nodectld_vps_autostart_unsatisfied{alias="node1",fqdn="node1.example",pool="tank",role="hypervisor",vps_id="102"}'
-        values: '_x45 1+0x15'
-      - series: 'nodectld_vps_autostart_unsatisfied{alias="node1",fqdn="node1.example",pool="fast",role="hypervisor",vps_id="103"}'
-        values: '1+0x60'
-      - series: 'nodectld_vps_autostart_unsatisfied_reason{alias="node1",fqdn="node1.example",pool="tank",reason="missing",role="hypervisor",vps_id="101"}'
-        values: '1+0x34 stale _x25'
-      - series: 'nodectld_vps_autostart_unsatisfied_reason{alias="node1",fqdn="node1.example",pool="tank",reason="not_running",role="hypervisor",vps_id="101"}'
-        values: '_x35 1+0x25'
-    alert_rule_test:
-      - eval_time: 39m
-        alertname: VpsAutostartNotRunning
-        exp_alerts: []
-      - eval_time: 41m
-        alertname: VpsAutostartNotRunning
-        exp_alerts:
-          - exp_labels:
-              alias: node1
-              fqdn: node1.example
-              frequency: 10m
-              pool: tank
-              role: hypervisor
-              severity: critical
-              vps_id: 101
-            exp_annotations:
-              summary: VPS 101 should be running on node1.example in pool tank
-              description: |
-                vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
-                find it in the running state.
-          - exp_labels:
-              alias: node1
-              fqdn: node1.example
-              frequency: 10m
-              pool: fast
-              role: hypervisor
-              severity: critical
-              vps_id: 103
-            exp_annotations:
-              summary: VPS 103 should be running on node1.example in pool fast
-              description: |
-                vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
-                find it in the running state.
-      - eval_time: 46m
-        alertname: VpsAutostartNotRunning
-        exp_alerts:
-          - exp_labels:
-              alias: node1
-              fqdn: node1.example
-              frequency: 10m
-              pool: fast
-              role: hypervisor
-              severity: critical
-              vps_id: 103
-            exp_annotations:
-              summary: VPS 103 should be running on node1.example in pool fast
-              description: |
-                vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
-                find it in the running state.
-      - eval_time: 54m
-        alertname: VpsAutostartNotRunning
-        exp_alerts:
-          - exp_labels:
-              alias: node1
-              fqdn: node1.example
-              frequency: 10m
-              pool: fast
-              role: hypervisor
-              severity: critical
-              vps_id: 103
-            exp_annotations:
-              summary: VPS 103 should be running on node1.example in pool fast
-              description: |
-                vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
-                find it in the running state.
-      - eval_time: 55m
-        alertname: VpsAutostartNotRunning
-        exp_alerts:
-          - exp_labels:
-              alias: node1
-              fqdn: node1.example
-              frequency: 10m
-              pool: tank
-              role: hypervisor
-              severity: critical
-              vps_id: 102
-            exp_annotations:
-              summary: VPS 102 should be running on node1.example in pool tank
-              description: |
-                vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
-                find it in the running state.
-          - exp_labels:
-              alias: node1
-              fqdn: node1.example
-              frequency: 10m
-              pool: fast
-              role: hypervisor
-              severity: critical
-              vps_id: 103
-            exp_annotations:
-              summary: VPS 103 should be running on node1.example in pool fast
-              description: |
-                vpsAdmin has auto-start enabled for this VPS, but nodectld cannot
-                find it in the running state.
-
-  - name: Failed and stale checks alert only after boot
-    interval: 1m
-    input_series:
-      - series: 'node_boot_time_seconds{alias="failed",fqdn="failed.example",role="hypervisor"}'
-        values: '0+0x45'
-      - series: 'nodectld_vps_autostart_check_success{alias="failed",fqdn="failed.example",role="hypervisor"}'
-        values: '0+0x45'
-      - series: 'nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="failed",fqdn="failed.example",role="hypervisor"}'
-        values: '0+60x45'
-      - series: 'nodectld_vps_autostart_unsatisfied{alias="failed",fqdn="failed.example",pool="tank",role="hypervisor",vps_id="201"}'
-        values: '1+0x45'
-      - series: 'node_boot_time_seconds{alias="stale",fqdn="stale.example",role="hypervisor"}'
-        values: '0+0x45'
-      - series: 'nodectld_vps_autostart_check_success{alias="stale",fqdn="stale.example",role="hypervisor"}'
-        values: '1+0x45'
-      - series: 'nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="stale",fqdn="stale.example",role="hypervisor"}'
-        values: '0+0x45'
-      - series: 'nodectld_vps_autostart_unsatisfied{alias="stale",fqdn="stale.example",pool="tank",role="hypervisor",vps_id="202"}'
-        values: '1+0x45'
-      - series: 'node_boot_time_seconds{alias="old",fqdn="old.example",role="hypervisor"}'
-        values: '0+0x45'
-      - series: 'nodectld_vps_autostart_check_success{alias="no-boot",fqdn="no-boot.example",role="hypervisor"}'
-        values: '0+0x45'
-      - series: 'nodectld_vps_autostart_unsatisfied{alias="no-boot",fqdn="no-boot.example",pool="tank",role="hypervisor",vps_id="104"}'
-        values: '1+0x45'
-    alert_rule_test:
-      - eval_time: 29m
-        alertname: VpsAutostartCheckFailed
-        exp_alerts: []
-      - eval_time: 39m
-        alertname: VpsAutostartCheckFailed
-        exp_alerts: []
-      - eval_time: 41m
-        alertname: VpsAutostartCheckFailed
-        exp_alerts:
-          - exp_labels:
-              alias: failed
-              fqdn: failed.example
-              frequency: 10m
-              role: hypervisor
-              severity: warning
-            exp_annotations:
-              summary: VPS auto-start status check is failing on failed.example
-              description: |
-                nodectld has not completed a recent comparison of the vpsAdmin
-                auto-start settings with the containers in osctld.
-          - exp_labels:
-              alias: stale
-              fqdn: stale.example
-              frequency: 10m
-              role: hypervisor
-              severity: warning
-            exp_annotations:
-              summary: VPS auto-start status check is failing on stale.example
-              description: |
-                nodectld has not completed a recent comparison of the vpsAdmin
-                auto-start settings with the containers in osctld.
-      - eval_time: 41m
-        alertname: VpsAutostartNotRunning
-        exp_alerts: []
+- name: The shared boot signal lasts for 30 minutes
+  interval: 1m
+  input_series:
+  - series: node_boot_time_seconds{alias="node1",fqdn="node1.example",role="hypervisor"}
+    values: 0+0x31
+  promql_expr_test:
+  - expr: vpsfree_hypervisor_booting{fqdn="node1.example"}
+    eval_time: 29m40s
+    exp_samples:
+    - labels: vpsfree_hypervisor_booting{alias="node1",fqdn="node1.example",role="hypervisor"}
+      value: 1
+  - expr: vpsfree_hypervisor_booting{fqdn="node1.example"}
+    eval_time: 30m
+    exp_samples:
+    - labels: vpsfree_hypervisor_booting{alias="node1",fqdn="node1.example",role="hypervisor"}
+      value: 0
+  - expr: vpsfree_hypervisor_booting{fqdn="old-node.example"}
+    eval_time: 30m
+    exp_samples: []
+- name: Unsatisfied VPS alerts retain identity and converge independently
+  interval: 1m
+  input_series:
+  - series: node_boot_time_seconds{alias="node1",fqdn="node1.example",role="hypervisor"}
+    values: 0+0x60
+  - series: nodectld_vps_boot_autostart_check_success{alias="node1",fqdn="node1.example",role="hypervisor"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{alias="node1",fqdn="node1.example",role="hypervisor"}
+    values: 0+60x60
+  - series: nodectld_vps_boot_autostart_unsatisfied{alias="node1",fqdn="node1.example",pool="tank",role="hypervisor",vps_id="101"}
+    values: 1+0x44 stale _x15
+  - series: nodectld_vps_boot_autostart_unsatisfied{alias="node1",fqdn="node1.example",pool="tank",role="hypervisor",vps_id="102"}
+    values: _x45 1+0x15
+  - series: nodectld_vps_boot_autostart_unsatisfied{alias="node1",fqdn="node1.example",pool="fast",role="hypervisor",vps_id="103"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_unsatisfied_reason{alias="node1",fqdn="node1.example",pool="tank",reason="missing",role="hypervisor",vps_id="101"}
+    values: 1+0x34 stale _x25
+  - series: >-
+      nodectld_vps_boot_autostart_unsatisfied_reason{alias="node1",fqdn="node1.example",pool="tank",reason="not_running",role="hypervisor",vps_id="101"}
+    values: _x35 1+0x25
+  - series: nodectld_vps_boot_autostart_supported{alias="node1",fqdn="node1.example",role="hypervisor"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_state{alias="node1",fqdn="node1.example",role="hypervisor",state="active",reason="none"}
+    values: 1+0x60
+  alert_rule_test:
+  - eval_time: 39m
+    alertname: VpsAutostartNotRunning
+    exp_alerts: []
+  - eval_time: 41m
+    alertname: VpsAutostartNotRunning
+    exp_alerts:
+    - exp_labels:
+        alias: node1
+        fqdn: node1.example
+        frequency: 10m
+        pool: tank
+        role: hypervisor
+        severity: critical
+        vps_id: 101
+      exp_annotations:
+        summary: VPS 101 has an unmet auto-start expectation on node1.example in pool tank
+        description: |
+          osctld has not observed this VPS running since node boot. Its boot
+          auto-start obligation remains pending.
+    - exp_labels:
+        alias: node1
+        fqdn: node1.example
+        frequency: 10m
+        pool: fast
+        role: hypervisor
+        severity: critical
+        vps_id: 103
+      exp_annotations:
+        summary: VPS 103 has an unmet auto-start expectation on node1.example in pool fast
+        description: |
+          osctld has not observed this VPS running since node boot. Its boot
+          auto-start obligation remains pending.
+  - eval_time: 46m
+    alertname: VpsAutostartNotRunning
+    exp_alerts:
+    - exp_labels:
+        alias: node1
+        fqdn: node1.example
+        frequency: 10m
+        pool: fast
+        role: hypervisor
+        severity: critical
+        vps_id: 103
+      exp_annotations:
+        summary: VPS 103 has an unmet auto-start expectation on node1.example in pool fast
+        description: |
+          osctld has not observed this VPS running since node boot. Its boot
+          auto-start obligation remains pending.
+  - eval_time: 54m
+    alertname: VpsAutostartNotRunning
+    exp_alerts:
+    - exp_labels:
+        alias: node1
+        fqdn: node1.example
+        frequency: 10m
+        pool: fast
+        role: hypervisor
+        severity: critical
+        vps_id: 103
+      exp_annotations:
+        summary: VPS 103 has an unmet auto-start expectation on node1.example in pool fast
+        description: |
+          osctld has not observed this VPS running since node boot. Its boot
+          auto-start obligation remains pending.
+  - eval_time: 55m
+    alertname: VpsAutostartNotRunning
+    exp_alerts:
+    - exp_labels:
+        alias: node1
+        fqdn: node1.example
+        frequency: 10m
+        pool: tank
+        role: hypervisor
+        severity: critical
+        vps_id: 102
+      exp_annotations:
+        summary: VPS 102 has an unmet auto-start expectation on node1.example in pool tank
+        description: |
+          osctld has not observed this VPS running since node boot. Its boot
+          auto-start obligation remains pending.
+    - exp_labels:
+        alias: node1
+        fqdn: node1.example
+        frequency: 10m
+        pool: fast
+        role: hypervisor
+        severity: critical
+        vps_id: 103
+      exp_annotations:
+        summary: VPS 103 has an unmet auto-start expectation on node1.example in pool fast
+        description: |
+          osctld has not observed this VPS running since node boot. Its boot
+          auto-start obligation remains pending.
+- name: Failed and stale checks alert only after boot
+  interval: 1m
+  input_series:
+  - series: node_boot_time_seconds{alias="failed",fqdn="failed.example",role="hypervisor"}
+    values: 0+0x45
+  - series: nodectld_vps_boot_autostart_check_success{alias="failed",fqdn="failed.example",role="hypervisor"}
+    values: 0+0x45
+  - series: nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{alias="failed",fqdn="failed.example",role="hypervisor"}
+    values: 0+60x45
+  - series: nodectld_vps_boot_autostart_unsatisfied{alias="failed",fqdn="failed.example",pool="tank",role="hypervisor",vps_id="201"}
+    values: 1+0x45
+  - series: node_boot_time_seconds{alias="stale",fqdn="stale.example",role="hypervisor"}
+    values: 0+0x45
+  - series: nodectld_vps_boot_autostart_check_success{alias="stale",fqdn="stale.example",role="hypervisor"}
+    values: 1+0x45
+  - series: nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{alias="stale",fqdn="stale.example",role="hypervisor"}
+    values: 0+0x45
+  - series: nodectld_vps_boot_autostart_unsatisfied{alias="stale",fqdn="stale.example",pool="tank",role="hypervisor",vps_id="202"}
+    values: 1+0x45
+  - series: node_boot_time_seconds{alias="old",fqdn="old.example",role="hypervisor"}
+    values: 0+0x45
+  - series: nodectld_vps_boot_autostart_check_success{alias="no-boot",fqdn="no-boot.example",role="hypervisor"}
+    values: 0+0x45
+  - series: >-
+      nodectld_vps_boot_autostart_unsatisfied{alias="no-boot",fqdn="no-boot.example",pool="tank",role="hypervisor",vps_id="104"}
+    values: 1+0x45
+  - series: nodectld_vps_boot_autostart_supported{alias="failed",fqdn="failed.example",role="hypervisor"}
+    values: 1+0x45
+  - series: nodectld_vps_boot_autostart_state{alias="failed",fqdn="failed.example",role="hypervisor",state="active",reason="none"}
+    values: 1+0x45
+  - series: nodectld_vps_boot_autostart_supported{alias="stale",fqdn="stale.example",role="hypervisor"}
+    values: 1+0x45
+  - series: nodectld_vps_boot_autostart_state{alias="stale",fqdn="stale.example",role="hypervisor",state="active",reason="none"}
+    values: 1+0x45
+  - series: nodectld_vps_boot_autostart_supported{alias="no-boot",fqdn="no-boot.example",role="hypervisor"}
+    values: 1+0x45
+  - series: nodectld_vps_boot_autostart_state{alias="no-boot",fqdn="no-boot.example",role="hypervisor",state="active",reason="none"}
+    values: 1+0x45
+  alert_rule_test:
+  - eval_time: 29m
+    alertname: VpsAutostartCheckFailed
+    exp_alerts: []
+  - eval_time: 39m
+    alertname: VpsAutostartCheckFailed
+    exp_alerts: []
+  - eval_time: 41m
+    alertname: VpsAutostartCheckFailed
+    exp_alerts:
+    - exp_labels:
+        alias: failed
+        fqdn: failed.example
+        frequency: 10m
+        role: hypervisor
+        severity: warning
+      exp_annotations:
+        summary: VPS auto-start status check is failing on failed.example
+        description: |
+          nodectld cannot provide a recent VPS boot auto-start check. Check the
+          exported state and reason for missing boot state or an unavailable
+          dependency.
+    - exp_labels:
+        alias: stale
+        fqdn: stale.example
+        frequency: 10m
+        role: hypervisor
+        severity: warning
+      exp_annotations:
+        summary: VPS auto-start status check is failing on stale.example
+        description: |
+          nodectld cannot provide a recent VPS boot auto-start check. Check the
+          exported state and reason for missing boot state or an unavailable
+          dependency.
+  - eval_time: 41m
+    alertname: VpsAutostartNotRunning
+    exp_alerts: []
+- name: Only boot obligations alert and genuine failures remain hours later
+  interval: 1m
+  input_series:
+  - series: node_boot_time_seconds{alias="new",fqdn="new.example",role="hypervisor"}
+    values: 0+0x240
+  - series: nodectld_vps_autostart_check_success{alias="new",fqdn="new.example",role="hypervisor"}
+    values: 0+0x240
+  - series: nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="new",fqdn="new.example",role="hypervisor"}
+    values: 0+60x240
+  - series: nodectld_vps_autostart_unsatisfied{alias="new",fqdn="new.example",pool="tank",role="hypervisor",vps_id="302"}
+    values: 1+0x240
+  - series: nodectld_vps_boot_autostart_supported{alias="new",fqdn="new.example",role="hypervisor"}
+    values: 1+0x240
+  - series: nodectld_vps_boot_autostart_state{alias="new",fqdn="new.example",reason="none",role="hypervisor",state="active"}
+    values: 1+0x240
+  - series: nodectld_vps_boot_autostart_check_success{alias="new",fqdn="new.example",role="hypervisor"}
+    values: 1+0x240
+  - series: nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{alias="new",fqdn="new.example",role="hypervisor"}
+    values: 0+60x240
+  - series: nodectld_vps_boot_autostart_unsatisfied{alias="new",fqdn="new.example",pool="tank",role="hypervisor",vps_id="301"}
+    values: 1+0x240
+  - series: >-
+      nodectld_vps_boot_autostart_unsatisfied_reason{alias="new",fqdn="new.example",pool="tank",reason="missing",role="hypervisor",vps_id="301"}
+    values: 1+0x34 stale _x205
+  - series: >-
+      nodectld_vps_boot_autostart_unsatisfied_reason{alias="new",fqdn="new.example",pool="tank",reason="not_running",role="hypervisor",vps_id="301"}
+    values: _x35 1+0x205
+  - series: node_boot_time_seconds{alias="legacy",fqdn="legacy.example",role="hypervisor"}
+    values: 0+0x240
+  - series: nodectld_vps_autostart_check_success{alias="legacy",fqdn="legacy.example",role="hypervisor"}
+    values: 1+0x240
+  - series: nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="legacy",fqdn="legacy.example",role="hypervisor"}
+    values: 0+60x240
+  - series: nodectld_vps_autostart_unsatisfied{alias="legacy",fqdn="legacy.example",pool="tank",role="hypervisor",vps_id="201"}
+    values: 1+0x240
+  alert_rule_test:
+  - eval_time: 39m
+    alertname: VpsAutostartNotRunning
+    exp_alerts: []
+  - eval_time: 40m
+    alertname: VpsAutostartNotRunning
+    exp_alerts:
+    - exp_labels:
+        alias: new
+        fqdn: new.example
+        role: hypervisor
+        severity: critical
+        frequency: 10m
+        pool: tank
+        vps_id: '301'
+      exp_annotations:
+        summary: VPS 301 has an unmet auto-start expectation on new.example in pool tank
+        description: |
+          osctld has not observed this VPS running since node boot. Its boot
+          auto-start obligation remains pending.
+  - eval_time: 4h
+    alertname: VpsAutostartNotRunning
+    exp_alerts:
+    - exp_labels:
+        alias: new
+        fqdn: new.example
+        role: hypervisor
+        severity: critical
+        frequency: 10m
+        pool: tank
+        vps_id: '301'
+      exp_annotations:
+        summary: VPS 301 has an unmet auto-start expectation on new.example in pool tank
+        description: |
+          osctld has not observed this VPS running since node boot. Its boot
+          auto-start obligation remains pending.
+  - eval_time: 4h
+    alertname: VpsAutostartCheckFailed
+    exp_alerts: []
+- name: Unavailable and failed checks warn without legacy fallback or reason churn
+  interval: 1m
+  input_series:
+  - series: node_boot_time_seconds{alias="unavailable",fqdn="unavailable.example",role="hypervisor"}
+    values: 0+0x60
+  - series: nodectld_vps_autostart_check_success{alias="unavailable",fqdn="unavailable.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="unavailable",fqdn="unavailable.example",role="hypervisor"}
+    values: 0+60x60
+  - series: >-
+      nodectld_vps_autostart_unsatisfied{alias="unavailable",fqdn="unavailable.example",pool="tank",role="hypervisor",vps_id="999"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_supported{alias="unavailable",fqdn="unavailable.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_state{alias="unavailable",fqdn="unavailable.example",reason="state_missing",role="hypervisor",state="unavailable"}
+    values: 1+0x34 stale _x25
+  - series: nodectld_vps_boot_autostart_check_success{alias="unavailable",fqdn="unavailable.example",role="hypervisor"}
+    values: 0+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{alias="unavailable",fqdn="unavailable.example",role="hypervisor"}
+    values: 0+60x60
+  - series: >-
+      nodectld_vps_boot_autostart_state{alias="unavailable",fqdn="unavailable.example",reason="rpc_failed",role="hypervisor",state="unavailable"}
+    values: _x35 1+0x25
+  - series: node_boot_time_seconds{alias="failed-new",fqdn="failed-new.example",role="hypervisor"}
+    values: 0+0x60
+  - series: nodectld_vps_autostart_check_success{alias="failed-new",fqdn="failed-new.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="failed-new",fqdn="failed-new.example",role="hypervisor"}
+    values: 0+60x60
+  - series: >-
+      nodectld_vps_autostart_unsatisfied{alias="failed-new",fqdn="failed-new.example",pool="tank",role="hypervisor",vps_id="999"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_supported{alias="failed-new",fqdn="failed-new.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_state{alias="failed-new",fqdn="failed-new.example",reason="none",role="hypervisor",state="active"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_check_success{alias="failed-new",fqdn="failed-new.example",role="hypervisor"}
+    values: 0+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{alias="failed-new",fqdn="failed-new.example",role="hypervisor"}
+    values: 0+60x60
+  - series: node_boot_time_seconds{alias="stale-new",fqdn="stale-new.example",role="hypervisor"}
+    values: 0+0x60
+  - series: nodectld_vps_autostart_check_success{alias="stale-new",fqdn="stale-new.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="stale-new",fqdn="stale-new.example",role="hypervisor"}
+    values: 0+60x60
+  - series: >-
+      nodectld_vps_autostart_unsatisfied{alias="stale-new",fqdn="stale-new.example",pool="tank",role="hypervisor",vps_id="999"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_supported{alias="stale-new",fqdn="stale-new.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_state{alias="stale-new",fqdn="stale-new.example",reason="none",role="hypervisor",state="active"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_check_success{alias="stale-new",fqdn="stale-new.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{alias="stale-new",fqdn="stale-new.example",role="hypervisor"}
+    values: 0+0x60
+  - series: node_boot_time_seconds{alias="awaiting",fqdn="awaiting.example",role="hypervisor"}
+    values: 0+0x60
+  - series: nodectld_vps_autostart_check_success{alias="awaiting",fqdn="awaiting.example",role="hypervisor"}
+    values: 1+0x60
+  - series: nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="awaiting",fqdn="awaiting.example",role="hypervisor"}
+    values: 0+60x60
+  - series: nodectld_vps_autostart_unsatisfied{alias="awaiting",fqdn="awaiting.example",pool="tank",role="hypervisor",vps_id="999"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_supported{alias="awaiting",fqdn="awaiting.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_state{alias="awaiting",fqdn="awaiting.example",reason="not_enrolled",role="hypervisor",state="awaiting_reboot"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_check_success{alias="awaiting",fqdn="awaiting.example",role="hypervisor"}
+    values: 0+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{alias="awaiting",fqdn="awaiting.example",role="hypervisor"}
+    values: 0+60x60
+  - series: node_boot_time_seconds{alias="enrolling",fqdn="enrolling.example",role="hypervisor"}
+    values: 0+0x60
+  - series: nodectld_vps_autostart_check_success{alias="enrolling",fqdn="enrolling.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="enrolling",fqdn="enrolling.example",role="hypervisor"}
+    values: 0+60x60
+  - series: >-
+      nodectld_vps_autostart_unsatisfied{alias="enrolling",fqdn="enrolling.example",pool="tank",role="hypervisor",vps_id="999"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_supported{alias="enrolling",fqdn="enrolling.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_state{alias="enrolling",fqdn="enrolling.example",reason="none",role="hypervisor",state="enrolling"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_check_success{alias="enrolling",fqdn="enrolling.example",role="hypervisor"}
+    values: 0+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{alias="enrolling",fqdn="enrolling.example",role="hypervisor"}
+    values: 0+60x60
+  alert_rule_test:
+  - eval_time: 39m
+    alertname: VpsAutostartCheckFailed
+    exp_alerts: []
+  - eval_time: 40m
+    alertname: VpsAutostartCheckFailed
+    exp_alerts:
+    - exp_labels:
+        alias: unavailable
+        fqdn: unavailable.example
+        role: hypervisor
+        severity: warning
+        frequency: 10m
+      exp_annotations:
+        summary: VPS auto-start status check is failing on unavailable.example
+        description: |
+          nodectld cannot provide a recent VPS boot auto-start check. Check the
+          exported state and reason for missing boot state or an unavailable
+          dependency.
+    - exp_labels:
+        alias: failed-new
+        fqdn: failed-new.example
+        role: hypervisor
+        severity: warning
+        frequency: 10m
+      exp_annotations:
+        summary: VPS auto-start status check is failing on failed-new.example
+        description: |
+          nodectld cannot provide a recent VPS boot auto-start check. Check the
+          exported state and reason for missing boot state or an unavailable
+          dependency.
+    - exp_labels:
+        alias: stale-new
+        fqdn: stale-new.example
+        role: hypervisor
+        severity: warning
+        frequency: 10m
+      exp_annotations:
+        summary: VPS auto-start status check is failing on stale-new.example
+        description: |
+          nodectld cannot provide a recent VPS boot auto-start check. Check the
+          exported state and reason for missing boot state or an unavailable
+          dependency.
+  - eval_time: 41m
+    alertname: VpsAutostartNotRunning
+    exp_alerts: []
+  - eval_time: 41m
+    alertname: VpsAutostartAwaitingReboot
+    exp_alerts:
+    - exp_labels:
+        alias: awaiting
+        fqdn: awaiting.example
+        role: hypervisor
+        severity: none
+      exp_annotations:
+        summary: VPS boot auto-start tracking awaits reboot on awaiting.example
+        description: |
+          This node was upgraded during the current boot. Boot auto-start
+          tracking begins after its next reboot. A reboot is not required for
+          ordinary VPS operations.
+- name: Boot evidence becomes stale at exactly 300 seconds
+  interval: 1m
+  input_series:
+  - series: node_boot_time_seconds{alias="freshness",fqdn="freshness.example",role="hypervisor"}
+    values: "-3600+0x40"
+  - series: nodectld_vps_autostart_check_success{alias="freshness",fqdn="freshness.example",role="hypervisor"}
+    values: 1+0x40
+  - series: >-
+      nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="freshness",fqdn="freshness.example",role="hypervisor"}
+    values: 0+60x40
+  - series: >-
+      nodectld_vps_autostart_unsatisfied{alias="freshness",fqdn="freshness.example",pool="tank",role="hypervisor",vps_id="999"}
+    values: 1+0x40
+  - series: nodectld_vps_boot_autostart_supported{alias="freshness",fqdn="freshness.example",role="hypervisor"}
+    values: 1+0x40
+  - series: >-
+      nodectld_vps_boot_autostart_state{alias="freshness",fqdn="freshness.example",reason="none",role="hypervisor",state="active"}
+    values: 1+0x40
+  - series: nodectld_vps_boot_autostart_check_success{alias="freshness",fqdn="freshness.example",role="hypervisor"}
+    values: 1+0x40
+  - series: >-
+      nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{alias="freshness",fqdn="freshness.example",role="hypervisor"}
+    values: 0+60x10 600+0x29
+  - series: >-
+      nodectld_vps_boot_autostart_unsatisfied{alias="freshness",fqdn="freshness.example",pool="tank",role="hypervisor",vps_id="401"}
+    values: 1+0x40
+  alert_rule_test:
+  - eval_time: 14m
+    alertname: VpsAutostartNotRunning
+    exp_alerts:
+    - exp_labels:
+        alias: freshness
+        fqdn: freshness.example
+        role: hypervisor
+        severity: critical
+        frequency: 10m
+        pool: tank
+        vps_id: '401'
+      exp_annotations:
+        summary: VPS 401 has an unmet auto-start expectation on freshness.example in pool tank
+        description: |
+          osctld has not observed this VPS running since node boot. Its boot
+          auto-start obligation remains pending.
+  - eval_time: 15m
+    alertname: VpsAutostartNotRunning
+    exp_alerts: []
+  - eval_time: 24m
+    alertname: VpsAutostartCheckFailed
+    exp_alerts: []
+  - eval_time: 25m
+    alertname: VpsAutostartCheckFailed
+    exp_alerts:
+    - exp_labels:
+        alias: freshness
+        fqdn: freshness.example
+        role: hypervisor
+        severity: warning
+        frequency: 10m
+      exp_annotations:
+        summary: VPS auto-start status check is failing on freshness.example
+        description: |
+          nodectld cannot provide a recent VPS boot auto-start check. Check the
+          exported state and reason for missing boot state or an unavailable
+          dependency.
+- name: Fulfilled and empty cohorts stay clear during long intentional stops
+  interval: 1m
+  input_series:
+  - series: node_boot_time_seconds{alias="fulfilled",fqdn="fulfilled.example",role="hypervisor"}
+    values: 0+0x60
+  - series: nodectld_vps_autostart_check_success{alias="fulfilled",fqdn="fulfilled.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="fulfilled",fqdn="fulfilled.example",role="hypervisor"}
+    values: 0+60x60
+  - series: >-
+      nodectld_vps_autostart_unsatisfied{alias="fulfilled",fqdn="fulfilled.example",pool="tank",role="hypervisor",vps_id="999"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_supported{alias="fulfilled",fqdn="fulfilled.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_state{alias="fulfilled",fqdn="fulfilled.example",reason="none",role="hypervisor",state="active"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_check_success{alias="fulfilled",fqdn="fulfilled.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{alias="fulfilled",fqdn="fulfilled.example",role="hypervisor"}
+    values: 0+60x60
+  - series: nodectld_vps_boot_autostart_expected{alias="fulfilled",fqdn="fulfilled.example",pool="tank",role="hypervisor"}
+    values: 2+0x60
+  - series: node_boot_time_seconds{alias="empty",fqdn="empty.example",role="hypervisor"}
+    values: 0+0x60
+  - series: nodectld_vps_autostart_check_success{alias="empty",fqdn="empty.example",role="hypervisor"}
+    values: 1+0x60
+  - series: nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="empty",fqdn="empty.example",role="hypervisor"}
+    values: 0+60x60
+  - series: nodectld_vps_autostart_unsatisfied{alias="empty",fqdn="empty.example",pool="tank",role="hypervisor",vps_id="999"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_supported{alias="empty",fqdn="empty.example",role="hypervisor"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_state{alias="empty",fqdn="empty.example",reason="none",role="hypervisor",state="active"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_check_success{alias="empty",fqdn="empty.example",role="hypervisor"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_check_last_success_timestamp_seconds{alias="empty",fqdn="empty.example",role="hypervisor"}
+    values: 0+60x60
+  - series: nodectld_vps_boot_autostart_expected{alias="empty",fqdn="empty.example",pool="tank",role="hypervisor"}
+    values: 0+0x60
+  alert_rule_test:
+  - eval_time: 1h
+    alertname: VpsAutostartNotRunning
+    exp_alerts: []
+  - eval_time: 1h
+    alertname: VpsAutostartCheckFailed
+    exp_alerts: []
+  - eval_time: 1h
+    alertname: VpsAutostartAwaitingReboot
+    exp_alerts: []
+- name: Legacy-only and unsupported inputs have no boot auto-start coverage
+  interval: 1m
+  input_series:
+  - series: node_boot_time_seconds{alias="unsupported",fqdn="unsupported.example",role="hypervisor"}
+    values: 0+0x60
+  - series: nodectld_vps_autostart_check_success{alias="unsupported",fqdn="unsupported.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="unsupported",fqdn="unsupported.example",role="hypervisor"}
+    values: 0+60x60
+  - series: >-
+      nodectld_vps_autostart_unsatisfied{alias="unsupported",fqdn="unsupported.example",pool="tank",role="hypervisor",vps_id="501"}
+    values: 1+0x60
+  - series: nodectld_vps_boot_autostart_supported{alias="unsupported",fqdn="unsupported.example",role="hypervisor"}
+    values: 0+0x60
+  - series: nodectld_vps_boot_autostart_check_success{alias="unsupported",fqdn="unsupported.example",role="hypervisor"}
+    values: 0+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_state{alias="unsupported",fqdn="unsupported.example",role="hypervisor",state="unavailable",reason="state_missing"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_boot_autostart_unsatisfied{alias="unsupported",fqdn="unsupported.example",pool="tank",role="hypervisor",vps_id="502"}
+    values: 1+0x60
+  - series: node_boot_time_seconds{alias="legacy-failed",fqdn="legacy-failed.example",role="hypervisor"}
+    values: 0+0x60
+  - series: nodectld_vps_autostart_check_success{alias="legacy-failed",fqdn="legacy-failed.example",role="hypervisor"}
+    values: 0+0x60
+  - series: >-
+      nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="legacy-failed",fqdn="legacy-failed.example",role="hypervisor"}
+    values: 0+0x60
+  - series: >-
+      nodectld_vps_autostart_unsatisfied{alias="legacy-failed",fqdn="legacy-failed.example",role="hypervisor",pool="tank",vps_id="503"}
+    values: 1+0x60
+  - series: node_boot_time_seconds{alias="legacy-stale",fqdn="legacy-stale.example",role="hypervisor"}
+    values: 0+0x60
+  - series: nodectld_vps_autostart_check_success{alias="legacy-stale",fqdn="legacy-stale.example",role="hypervisor"}
+    values: 1+0x60
+  - series: >-
+      nodectld_vps_autostart_check_last_success_timestamp_seconds{alias="legacy-stale",fqdn="legacy-stale.example",role="hypervisor"}
+    values: 0+0x60
+  - series: >-
+      nodectld_vps_autostart_unsatisfied{alias="legacy-stale",fqdn="legacy-stale.example",role="hypervisor",pool="tank",vps_id="503"}
+    values: 1+0x60
+  - series: node_boot_time_seconds{alias="missing",fqdn="missing.example",role="hypervisor"}
+    values: 0+0x60
+  alert_rule_test:
+  - eval_time: 40m
+    alertname: VpsAutostartNotRunning
+    exp_alerts: []
+  - eval_time: 1h
+    alertname: VpsAutostartNotRunning
+    exp_alerts: []
+  - eval_time: 1h
+    alertname: VpsAutostartCheckFailed
+    exp_alerts: []
+  - eval_time: 1h
+    alertname: VpsAutostartAwaitingReboot
+    exp_alerts: []
