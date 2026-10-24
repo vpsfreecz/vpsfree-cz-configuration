@@ -7,6 +7,10 @@ on:
 permissions:
   contents: write
 
+env:
+  CONFCTL_FLAKE: 'github:vpsfreecz/confctl/822c0e35dbe2549111912f539116b4225dfd3035#confctl'
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -14,6 +18,10 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          ref: master
+
+      - name: Save input baseline
+        run: cp flake.lock "$RUNNER_TEMP/flake-update-baseline.lock"
 
       - uses: cachix/install-nix-action@v31
         with:
@@ -39,41 +47,51 @@ jobs:
 
       - name: Update inputs
         run: |
-          sudo mkdir "/nix/var/nix/gcroots/per-user/$USER"
-          sudo chown "$USER" "/nix/var/nix/gcroots/per-user/$USER"
+          set -euo pipefail
 
-          nix develop -c confctl inputs channel update --commit --no-changelog \
-                              '{nixos-stable,production,staging}' nixpkgs
-          nix develop -c confctl inputs channel update --commit --no-changelog nixos-unstable
-          nix develop -c confctl inputs channel update --commit '{staging,os-staging}' vpsadminos
+          nix develop -c bash <<'EOF'
+            set -euo pipefail
+
+            sudo mkdir "/nix/var/nix/gcroots/per-user/$USER"
+            sudo chown "$USER" "/nix/var/nix/gcroots/per-user/$USER"
+
+            nix shell "$CONFCTL_FLAKE" -c confctl inputs channel update --forward-only --commit --no-changelog \
+                                '{nixos-stable,production,staging}' nixpkgs
+            nix shell "$CONFCTL_FLAKE" -c confctl inputs channel update --forward-only --commit --no-changelog nixos-unstable
+            nix shell "$CONFCTL_FLAKE" -c confctl inputs channel update --forward-only --commit '{staging,os-staging}' vpsadminos
+          EOF
 
       - name: Update llm-agents when Codex changes
         run: |
           set -euo pipefail
 
-          codex_version_expr='let flake = builtins.getFlake (toString ./.); in flake.inputs.llm-agents.packages.x86_64-linux.codex.version'
+          nix develop -c bash <<'EOF'
+            set -euo pipefail
 
-          current_codex_version=$(nix eval --accept-flake-config --impure --raw \
-                                      --expr "$codex_version_expr")
-          upstream_codex_version=$(nix eval --accept-flake-config --raw \
-                                       github:numtide/llm-agents.nix#packages.x86_64-linux.codex.version)
+            codex_version_expr='let flake = builtins.getFlake (toString ./.); in flake.inputs.llm-agents.packages.x86_64-linux.codex.version'
 
-          if [ "$current_codex_version" = "$upstream_codex_version" ]; then
-            echo "Codex is already up to date at $current_codex_version, skipping llm-agents"
-            exit 0
-          fi
+            current_codex_version=$(nix eval --accept-flake-config --impure --raw \
+                                        --expr "$codex_version_expr")
+            upstream_codex_version=$(nix eval --accept-flake-config --raw \
+                                         github:numtide/llm-agents.nix#packages.x86_64-linux.codex.version)
 
-          echo "Updating llm-agents for Codex $current_codex_version -> $upstream_codex_version"
-          nix develop --accept-flake-config -c confctl inputs channel update \
-              --commit --no-changelog llm-agents
+            if [ "$current_codex_version" = "$upstream_codex_version" ]; then
+              echo "Codex is already up to date at $current_codex_version, skipping llm-agents"
+              exit 0
+            fi
 
-          updated_codex_version=$(nix eval --accept-flake-config --impure --raw \
-                                      --expr "$codex_version_expr")
+            echo "Updating llm-agents for Codex $current_codex_version -> $upstream_codex_version"
+            nix shell "$CONFCTL_FLAKE" --accept-flake-config -c confctl inputs channel update --forward-only \
+                --commit --no-changelog llm-agents
 
-          if [ "$updated_codex_version" != "$upstream_codex_version" ]; then
-            echo "Updated llm-agents contains Codex $updated_codex_version, expected $upstream_codex_version" >&2
-            exit 1
-          fi
+            updated_codex_version=$(nix eval --accept-flake-config --impure --raw \
+                                        --expr "$codex_version_expr")
+
+            if [ "$updated_codex_version" != "$upstream_codex_version" ]; then
+              echo "Updated llm-agents contains Codex $updated_codex_version, expected $upstream_codex_version" >&2
+              exit 1
+            fi
+          EOF
 
       - name: Update package dependencies
         run: |
@@ -156,11 +174,21 @@ jobs:
             done
           EOF
 
-      - name: Push updates
+      - name: Check and push updates
         run: |
-          nix develop -c git push origin master
+          set -euo pipefail
+
+          nix develop -c bash <<'EOF'
+            set -euo pipefail
+            git show HEAD:flake.lock > "$RUNNER_TEMP/flake-update-final.lock"
+            nix shell "$CONFCTL_FLAKE" -c confctl inputs check-update \
+              --old-lock "$RUNNER_TEMP/flake-update-baseline.lock" \
+              --new-lock "$RUNNER_TEMP/flake-update-final.lock"
+            git push origin master
+          EOF
 
       - name: Save confctl cache
+        if: ${{ !cancelled() }}
         uses: actions/cache/save@v6
         with:
           path: ~/.cache/confctl
