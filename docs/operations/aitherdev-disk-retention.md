@@ -78,13 +78,15 @@ ordinary stop/reset before manual retirement.
 The user-profile workspace runtime owns its collection policy and command:
 
 ```sh
-workspace-host coordination gc --dry-run --json
+workspace-host coordination gc --dry-run --json --sizes
 workspace-host coordination gc --apply --json
+# Explicit one-time expiration of legacy unused leases:
+workspace-host coordination gc --dry-run --json --expire-unused
 ```
 
 It releases finished disposable source/target checkouts and dedicated roots when
-their final required reference ends, and expires unused preparations after seven
-days. It preserves compact receipts/history and live deployment recovery. Use the
+their final required reference ends, and expires unused preparations after 24
+hours. It preserves compact receipts/history and live deployment recovery. Use the
 installed `workspace-host coordination guide` for the authoritative contract.
 The application is selected through its user profile, independently of system
 configuration; configuration only selects the matching host module contract.
@@ -100,3 +102,12 @@ For a policy fault, stop `nix-store-cleanup.timer` and restore a reviewed
 configuration. A software rollback cannot restore deleted test disks or removed
 profile generations. Active runs, explicit holds and uncertain recovery data
 must survive every sweep. Never remove store directories manually.
+
+The workspace also provides explicit archive maintenance in its source repository
+at `bin/compact-session-storage`. Deploy a runtime with archiveRecoveryPolicy 3
+before applying it. Use `--recovery-only` to compact completed private checkout
+backups without changing tracked archive records. Preview first and retain the
+reported reasons for skipped sessions. The script's workspace operations guide
+owns arguments, locks and interruption recovery. New archives discard checkout
+changes and raw tracking artifacts; committed Git heads and Markdown summaries
+remain available.
