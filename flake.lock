@@ -119,11 +119,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1793047906,
-        "narHash": "sha256-6MXV0ja7B6zFzE9fq7qGhD6FTTpf2gmXiQMRw8EpMFE=",
+        "lastModified": 1793053683,
+        "narHash": "sha256-U6S6vktVX5exr2/cfo/EjoXM0Fo4JKsU188JeubOTzg=",
         "owner": "aither64",
         "repo": "dev-workspace",
-        "rev": "deed45f04fc0698b2f2f408b2816ac124913d582",
+        "rev": "fffbd0d59fffc09667cb39878d9f7da8bdcd3806",
         "type": "github"
       },
       "original": {
