@@ -7,10 +7,10 @@ and Snajpa's `codex-lb` instance. The catalog is declared in
 `codex-lb`, matching the existing managed threads.
 
 The load balancer uses `http://172.16.106.12:2455/v1` and reads its key from
-`/home/aither/.codex/aither-on-snajpa-codex-lb.token`. Keep that file private
+`/home/aither/.local/state/dev-workspaces/codex-homes/vpsfree-cz/aither-on-snajpa-codex-lb.token`. Keep that file private
 and readable by `aither`. Store only its path in configuration. The subscription
-uses the retained Codex login. Global config and authentication backups remain
-available for unmanaged Codex use.
+uses the independent login in the same portal home. Stock CLI configuration and
+authentication remain under `/home/aither/.codex`.
 
 The [generic provider contract](https://github.com/aither64/dev-workspace/blob/master/docs/codex-providers.md)
 owns selection, limits, transition safety and recovery. The portal's info popup

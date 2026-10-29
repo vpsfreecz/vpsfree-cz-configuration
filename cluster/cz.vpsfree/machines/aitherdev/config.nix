@@ -114,7 +114,7 @@ in
         id = "codex-lb";
         label = "Snajpa codex-lb";
         baseURL = "http://172.16.106.12:2455/v1";
-        tokenFile = "/home/aither/.codex/aither-on-snajpa-codex-lb.token";
+        tokenFile = "/home/aither/.local/state/dev-workspaces/codex-homes/vpsfree-cz/aither-on-snajpa-codex-lb.token";
       }
     ];
     owner = "aither";
