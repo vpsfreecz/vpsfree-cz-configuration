@@ -63,6 +63,42 @@ let
 
   varnishExporterPort = confMachine.services.varnish-exporter.port;
 
+  oauthClientLogs = import ../../../../configs/nginx/oauth-client-logs.nix;
+
+  phpClientVirtualHosts = listToAttrs (
+    concatMap (
+      frontend:
+      let
+        tls = config.services.nginx.virtualHosts.${frontend.virtualHost};
+      in
+      [
+        {
+          name = frontend.virtualHost;
+          value = {
+            forceSSL = mkForce false;
+            onlySSL = true;
+            extraConfig = mkForce (
+              oauthClientLogs.serverConfig + oauthClientLogs.referrerConfig + "error_page 503 @maintenance;\n"
+            );
+          };
+        }
+        {
+          name = "${frontend.virtualHost}-http-redirect";
+          value = {
+            serverName = tls.serverName;
+            serverAliases = tls.serverAliases;
+            listenAddresses = tls.listenAddresses;
+            enableACME = false;
+            useACMEHost = if tls.useACMEHost != null then tls.useACMEHost else tls.serverName;
+            acmeRoot = tls.acmeRoot;
+            extraConfig = oauthClientLogs.serverConfig + oauthClientLogs.referrerConfig;
+            locations."/".return = "${toString tls.redirectCode} https://$host$request_uri";
+          };
+        }
+      ]
+    ) (attrValues config.vpsadmin.frontend.webui)
+  );
+
   documentationFrontends = [
     {
       frontend = config.vpsadmin.frontend.api.production;
@@ -206,6 +242,7 @@ in
 
     webui = {
       prod = {
+        logRequests = false;
         frontend.bind = [ "unix@/run/haproxy/vpsadmin-webui-prod.sock mode 0666" ];
         backends = map (m: {
           host = m.addresses.primary.address;
@@ -214,6 +251,7 @@ in
       };
 
       dev = {
+        logRequests = false;
         frontend.bind = [ "unix@/run/haproxy/vpsadmin-webui-dev.sock mode 0666" ];
         backends = [
           {
@@ -344,10 +382,18 @@ in
   services.nginx = {
     commonHttpConfig = ''
       log_format vpsadmin_no_query '$remote_addr - [$time_local] "$request_method $uri $server_protocol" $status $body_bytes_sent';
-    '';
-    virtualHosts = documentationVirtualHosts // {
-      ${config.vpsadmin.frontend.webui.dev.virtualHost}.basicAuthFile = "/private/nginx/mon.htpasswd";
-    };
+    ''
+    + oauthClientLogs.httpConfig;
+    virtualHosts =
+      documentationVirtualHosts
+      // phpClientVirtualHosts
+      // {
+        ${config.vpsadmin.frontend.webui.dev.virtualHost} =
+          phpClientVirtualHosts.${config.vpsadmin.frontend.webui.dev.virtualHost}
+          // {
+            basicAuthFile = "/private/nginx/mon.htpasswd";
+          };
+      };
   };
 
   services.network-graphs = {
