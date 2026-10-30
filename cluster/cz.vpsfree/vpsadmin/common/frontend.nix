@@ -62,6 +62,96 @@ let
   haproxyExporterPort = confMachine.services.haproxy-exporter.port;
 
   varnishExporterPort = confMachine.services.varnish-exporter.port;
+
+  documentationFrontends = [
+    {
+      frontend = config.vpsadmin.frontend.api.production;
+      locations = [ "/" ];
+    }
+    {
+      frontend = config.vpsadmin.frontend.api.maintenance;
+      locations = [ "/" ];
+    }
+    {
+      frontend = config.vpsadmin.frontend.auth.production;
+      locations = [
+        "/_auth"
+        "/webauthn"
+        "/oauth2/password-reset"
+      ];
+    }
+    {
+      frontend = config.vpsadmin.frontend.auth.maintenance;
+      locations = [
+        "/_auth"
+        "/webauthn"
+        "/oauth2/password-reset"
+      ];
+    }
+  ];
+
+  documentationLogs = ''
+    access_log /var/log/nginx/vpsadmin-no-query.log vpsadmin_no_query;
+    error_log /dev/null crit;
+  '';
+
+  documentationProxyHeaders = {
+    recommendedProxySettings = false;
+    extraConfig = ''
+      proxy_set_header Host $host;
+      proxy_set_header X-Forwarded-Host $host;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Port $server_port;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $remote_addr;
+      proxy_set_header Forwarded "";
+      proxy_set_header X-Forwarded-Ssl "";
+      proxy_set_header X-Forwarded-Scheme "";
+      proxy_set_header X-Forwarded-Server "";
+      proxy_set_header X-Forwarded-Prefix "";
+      proxy_set_header X-Original-URL "";
+      proxy_set_header X-Rewrite-URL "";
+      proxy_set_header Connection "";
+    '';
+  };
+
+  documentationVirtualHosts = listToAttrs (
+    concatMap (
+      item:
+      let
+        inherit (item) frontend;
+        tls = config.services.nginx.virtualHosts.${frontend.virtualHost};
+      in
+      [
+        {
+          name = frontend.virtualHost;
+          value = {
+            # Automatic forceSSL redirects cannot carry these scoped logs.
+            forceSSL = mkForce false;
+            onlySSL = true;
+            extraConfig = mkForce (documentationLogs + "error_page 503 @maintenance;\n");
+            locations = genAttrs item.locations (_: documentationProxyHeaders);
+          };
+        }
+        {
+          name = "${frontend.virtualHost}-http-redirect";
+          value = {
+            serverName = frontend.domain;
+            serverAliases = frontend.aliases;
+            listenAddresses = tls.listenAddresses;
+            forceSSL = false;
+            onlySSL = false;
+            addSSL = false;
+            enableACME = false;
+            useACMEHost = if tls.useACMEHost != null then tls.useACMEHost else tls.serverName;
+            acmeRoot = tls.acmeRoot;
+            extraConfig = documentationLogs;
+            locations."/".return = "${toString tls.redirectCode} https://$host$request_uri";
+          };
+        }
+      ]
+    ) documentationFrontends
+  );
 in
 {
   networking.firewall.extraCommands =
@@ -95,6 +185,7 @@ in
     exporter.port = haproxyExporterPort;
 
     api.prod = {
+      logRequests = false;
       frontend.bind = [
         "unix@/run/haproxy/vpsadmin-api.sock mode 0666"
         "*:5000"
@@ -172,14 +263,14 @@ in
           "ipv6.ddns.vpsfree.cz"
         ];
         backend = {
-          address = "unix:/run/varnish/vpsadmin-varnish.sock";
+          address = "unix:/run/haproxy/vpsadmin-api.sock";
         };
       };
 
       maintenance = {
         domain = "api-admin.vpsfree.cz";
         backend = {
-          address = "unix:/run/varnish/vpsadmin-varnish.sock";
+          address = "unix:/run/haproxy/vpsadmin-api.sock";
         };
       };
     };
@@ -188,14 +279,14 @@ in
       production = {
         domain = "auth.vpsfree.cz";
         backend = {
-          address = "unix:/run/varnish/vpsadmin-varnish.sock";
+          address = "unix:/run/haproxy/vpsadmin-api.sock";
         };
       };
 
       maintenance = {
         domain = "auth-admin.vpsfree.cz";
         backend = {
-          address = "unix:/run/varnish/vpsadmin-varnish.sock";
+          address = "unix:/run/haproxy/vpsadmin-api.sock";
         };
       };
     };
@@ -250,8 +341,13 @@ in
     };
   };
 
-  services.nginx.virtualHosts.${config.vpsadmin.frontend.webui.dev.virtualHost} = {
-    basicAuthFile = "/private/nginx/mon.htpasswd";
+  services.nginx = {
+    commonHttpConfig = ''
+      log_format vpsadmin_no_query '$remote_addr - [$time_local] "$request_method $uri $server_protocol" $status $body_bytes_sent';
+    '';
+    virtualHosts = documentationVirtualHosts // {
+      ${config.vpsadmin.frontend.webui.dev.virtualHost}.basicAuthFile = "/private/nginx/mon.htpasswd";
+    };
   };
 
   services.network-graphs = {

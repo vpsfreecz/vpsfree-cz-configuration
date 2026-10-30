@@ -4,6 +4,7 @@ extra_css: ['extra.css']
 nav:
 - Operations:
   - New vpsAdmin WebUI service: 'operations/newadmin-webui.md'
+  - API documentation OAuth: 'operations/vpsadmin-documentation-oauth.md'
   - DeepSeek Codex on aitherdev: 'operations/codex-deepseek-aitherdev.md'
   - Codex providers on aitherdev: 'operations/codex-providers-aitherdev.md'
   - vpsAdmin livepatch history deployment: 'operations/vpsadmin-livepatch-history-deployment.md'

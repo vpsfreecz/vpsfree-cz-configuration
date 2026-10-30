@@ -1,5 +1,8 @@
 # Configs for vpsAdmin-api used by vpsFree.cz
 
+For the optional documentation sign-in hook, client registration and private
+file provisioning, see [API documentation OAuth](../../../docs/operations/vpsadmin-documentation-oauth.md).
+
 ## `dataset_plans.rb`
 
 A set of dataset plans available for user or admins. Plans are used to schedule
