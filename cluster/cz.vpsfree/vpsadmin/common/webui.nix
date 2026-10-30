@@ -6,6 +6,8 @@
   ...
 }:
 let
+  oauthClientLogs = import ../../../../configs/nginx/oauth-client-logs.nix;
+
   proxyPrg = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/containers/prg/proxy";
@@ -34,5 +36,13 @@ in
     allowedIPv4Ranges = [
       "${proxyPrg.addresses.primary.address}/32"
     ];
+  };
+
+  services.phpfpm.pools.vpsadmin-webui.settings."php_admin_value[error_log]" = lib.mkForce "syslog";
+
+  services.nginx = {
+    commonHttpConfig = oauthClientLogs.httpConfig;
+    virtualHosts.${config.vpsadmin.webui.domain}.extraConfig =
+      oauthClientLogs.serverConfig + oauthClientLogs.referrerConfig;
   };
 }
