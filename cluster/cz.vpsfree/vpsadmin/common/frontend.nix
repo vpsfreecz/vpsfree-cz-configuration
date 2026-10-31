@@ -62,6 +62,49 @@ let
   haproxyExporterPort = confMachine.services.haproxy-exporter.port;
 
   varnishExporterPort = confMachine.services.varnish-exporter.port;
+
+  documentationFrontends = [
+    {
+      frontend = config.vpsadmin.frontend.api.production;
+      locations = [ "/" ];
+    }
+    {
+      frontend = config.vpsadmin.frontend.api.maintenance;
+      locations = [ "/" ];
+    }
+    {
+      frontend = config.vpsadmin.frontend.auth.production;
+      locations = [
+        "/_auth"
+        "/webauthn"
+        "/oauth2/password-reset"
+      ];
+    }
+    {
+      frontend = config.vpsadmin.frontend.auth.maintenance;
+      locations = [
+        "/_auth"
+        "/webauthn"
+        "/oauth2/password-reset"
+      ];
+    }
+  ];
+
+  documentationProxyHeaders = {
+    extraConfig = ''
+      proxy_set_header X-Forwarded-Prefix "";
+      proxy_set_header X-Original-URL "";
+      proxy_set_header X-Rewrite-URL "";
+      proxy_set_header Connection "";
+    '';
+  };
+
+  documentationVirtualHosts = listToAttrs (
+    map (item: {
+      name = item.frontend.virtualHost;
+      value.locations = genAttrs item.locations (_: documentationProxyHeaders);
+    }) documentationFrontends
+  );
 in
 {
   networking.firewall.extraCommands =
@@ -250,8 +293,8 @@ in
     };
   };
 
-  services.nginx.virtualHosts.${config.vpsadmin.frontend.webui.dev.virtualHost} = {
-    basicAuthFile = "/private/nginx/mon.htpasswd";
+  services.nginx.virtualHosts = documentationVirtualHosts // {
+    ${config.vpsadmin.frontend.webui.dev.virtualHost}.basicAuthFile = "/private/nginx/mon.htpasswd";
   };
 
   services.network-graphs = {
