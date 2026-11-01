@@ -25,7 +25,8 @@ VpsAdmin::API.configure do |server|
       session_secret: File.binread(File.join(VpsAdmin::API.root, 'config', 'documentation-session.key')),
       scope: ['all'],
       session_lifetime: 3600,
-      switch_user: settings.fetch('switch_user', false)
+      switch_user: settings.fetch('switch_user', false),
+      switch_user_revoke_params: { 'close_sso' => '1' }
     )
   rescue JSON::ParserError, KeyError, ArgumentError, TypeError, SystemCallError
     raise ArgumentError, 'Invalid documentation OAuth configuration', cause: nil

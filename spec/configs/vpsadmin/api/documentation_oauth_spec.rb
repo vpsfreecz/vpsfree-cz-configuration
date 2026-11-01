@@ -82,7 +82,8 @@ RSpec.describe VpsAdmin::API do
     expect(server).to have_received(:documentation_oauth).with(
       client_id: settings.fetch('client_id'), client_secret: settings.fetch('client_secret'),
       redirect_uri: settings.fetch('redirect_uri'), session_secret: session_key,
-      scope: ['all'], session_lifetime: 3600, switch_user: false
+      scope: ['all'], session_lifetime: 3600, switch_user: false,
+      switch_user_revoke_params: { 'close_sso' => '1' }
     )
 
     expect(server.extensions).to eq([mailer])
@@ -93,7 +94,9 @@ RSpec.describe VpsAdmin::API do
     write_key
     load_hook
 
-    expect(server).to have_received(:documentation_oauth).with(hash_including(switch_user: true))
+    expect(server).to have_received(:documentation_oauth).with(
+      hash_including(switch_user: true, switch_user_revoke_params: { 'close_sso' => '1' })
+    )
   end
 
   it 'sanitizes malformed JSON without preserving a secret-bearing cause' do
