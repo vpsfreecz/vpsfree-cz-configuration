@@ -75,6 +75,11 @@ confctl deploy "cz.vpsfree/nodes/stg/*" dry-activate
 
 See [API configuration and abuse notice processing](configs/vpsadmin/api/README.md).
 
+## Mail operations
+
+See [mx2 relay verification and deployment prerequisites](docs/operations/mx2.md)
+for the isolated SMTP check and queue recovery constraints.
+
 ## Aitherdev operations
 
 See [disk cleanup and retention](docs/operations/aitherdev-disk-retention.md) for
