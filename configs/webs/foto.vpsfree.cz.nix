@@ -1,8 +1,8 @@
 { ... }:
 let
   source = builtins.fetchTarball {
-    url = "https://github.com/vpsfreecz/vpsfree-foto/archive/27f72f12b6bdf5ffff2b13afa23bc47930281e63.tar.gz";
-    sha256 = "sha256-i9giqvxb5OfYx3ucbRwRMdkEm2rfxbZF4FwzINn9VIY=";
+    url = "https://github.com/vpsfreecz/vpsfree-foto/archive/4f604c583ebaa994b818028e26a03dac565a063a.tar.gz";
+    sha256 = "sha256-dSfhAHbHUKo2SR0JLmHmY9ot1aGbaseIui3JUOq8AAY=";
   };
 in
 {
