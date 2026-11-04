@@ -1071,11 +1071,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793554541,
-        "narHash": "sha256-LN2Z6e+sY9t8V9Lt+iTNsXaqFz5PzkByH5r7qmwgV1U=",
+        "lastModified": 1793750160,
+        "narHash": "sha256-bItN12Wrd6I/PoJOvTOJh1BVq3f9tGVQ+Q/uMQKeRtA=",
         "owner": "vpsfreecz",
         "repo": "vpsadmin-webui",
-        "rev": "70bd11d983e7dfd11f99604791ad68562807ee2e",
+        "rev": "babe51421bd1df61a548e7b2f047053df14ff3eb",
         "type": "github"
       },
       "original": {
