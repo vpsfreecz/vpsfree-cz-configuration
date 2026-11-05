@@ -52,16 +52,20 @@ DNS propagation or primary-side acceptance of the candidate. Verify those with
 the built container under a separate deployment plan. Internal DNS records must
 reach every configured resolver before relying on the primary transport name.
 
-Inbound TLS has no configured certificate and currently advertises no STARTTLS.
-Provision and verify the intended certificate policy before production use.
-Outbound TLS remains opportunistic, so a self-signed primary is compatible.
+The container advertises `mx2.vpsfree.cz` and offers opportunistic inbound TLS
+with a native ACME certificate. HTTP-01 issuance and renewal require public TCP80
+to reach the container. Postfix waits for the local ACME bootstrap unit, which
+can create a provisional self-signed certificate; it does not wait for the
+separate order/renew unit. Verify a trusted certificate for `mx2.vpsfree.cz`
+before opening public SMTP ingress. Renewal reloads Postfix. Outbound TLS remains
+opportunistic, so a self-signed primary is compatible.
 The localhost milter is absent and mail proceeds when it is unavailable; this
 configuration does not provide milter scanning.
 
 There is no primary recipient directory on the backup. Unknown recipients in
 the three relay domains can be accepted and later bounced, creating a
-backscatter risk. Agree on recipient handling with the primary operator before
-cutover; online primary verification alone cannot provide outage queueing.
+backscatter risk. Recipient synchronization is separate follow-up work; online
+primary verification alone cannot provide outage queueing.
 
 Postfix keeps its queue and data under `/var/lib/postfix`; Postgrey keeps its
 database under `/var/postgrey`. Retain `system.stateVersion = "25.05"` for the
