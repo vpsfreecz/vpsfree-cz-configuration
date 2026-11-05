@@ -15,14 +15,18 @@
     addresses = {
       v4 = [
         {
-          address = "172.19.9.22";
+          address = "37.205.11.114";
           prefix = 32;
         }
       ];
-      v6 = [ ];
+      v6 = [
+        {
+          address = "2a03:3b40:100::1:95";
+          prefix = 128;
+        }
+      ];
     };
-    monitoring.enable = false;
-    logging.enable = false;
+    services.node-exporter = { };
     tags = [ "mx" ];
   };
 }
