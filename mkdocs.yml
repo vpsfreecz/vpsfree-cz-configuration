@@ -3,6 +3,7 @@ theme: readthedocs
 extra_css: ['extra.css']
 nav:
 - Operations:
+  - Development image repository on aitherdev: 'operations/aitherdev-osctl-repo-demo.md'
   - New vpsAdmin WebUI service: 'operations/newadmin-webui.md'
   - API documentation OAuth: 'operations/vpsadmin-documentation-oauth.md'
   - PHP WebUI OAuth logging: 'operations/oauth-client-log-protection.md'
