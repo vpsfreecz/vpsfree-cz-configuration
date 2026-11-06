@@ -46,7 +46,6 @@
 
   users.users.root.openssh.authorizedKeys.keys = with confData.sshKeys; [
     toms
-    aither.aitherdev
   ];
 
   system.stateVersion = "25.05";
