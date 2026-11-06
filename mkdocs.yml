@@ -5,6 +5,7 @@ nav:
 - Operations:
   - Log reader access: 'operations/log-reader-access.md'
   - Prometheus query access: 'operations/prometheus-query-access.md'
+  - Development image repository on aitherdev: 'operations/aitherdev-osctl-repo-demo.md'
   - Overview: 'operations/README.md'
   - mx2 backup mail relay: 'operations/mx2.md'
   - Aitherdev disk retention: 'operations/aitherdev-disk-retention.md'

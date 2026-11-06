@@ -241,6 +241,7 @@ turn.test-meet             300 IN   CNAME   test-jvb01.vpsfree.cz.
 
 ; aitherdev
 aitherdev.int                  IN   A       172.16.106.40
+osctl-repo.aitherdev.int        IN   CNAME   aitherdev.int.vpsfree.cz.
 codex-lb.aitherdev.int         IN   CNAME   aitherdev.int.vpsfree.cz.
 kb-cs.aitherdev.int            IN   CNAME   aitherdev.int.vpsfree.cz.
 kb-en.aitherdev.int            IN   CNAME   aitherdev.int.vpsfree.cz.

@@ -102,6 +102,7 @@ in
     ./hardware.nix
     ./disk-cleanup.nix
     ./kb-staging.nix
+    ./osctl-repo-dev.nix
     flakeInputs.${homeManagerInput}.nixosModules.home-manager
     flakeInputs.${devWorkspaceInput}.nixosModules.host
   ];
@@ -134,6 +135,8 @@ in
       ports = [ 443 ];
     };
   };
+
+  services.osctl-repo-dev.enable = true;
 
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/vda";
