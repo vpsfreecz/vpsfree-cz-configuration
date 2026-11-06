@@ -171,6 +171,7 @@
         ];
       };
       checks.${system} = {
+        mx2 = import ./tests/mx2.nix { pkgs = devPkgs; };
         nix-store-cleanup =
           devPkgs.runCommand "aitherdev-nix-store-cleanup-tests"
             {
