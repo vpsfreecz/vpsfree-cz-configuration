@@ -1,19 +1,21 @@
 { ... }:
+let
+  source = builtins.fetchTarball {
+    url = "https://github.com/vpsfreecz/vpsfree-foto/archive/4f604c583ebaa994b818028e26a03dac565a063a.tar.gz";
+    sha256 = "sha256-dSfhAHbHUKo2SR0JLmHmY9ot1aGbaseIui3JUOq8AAY=";
+  };
+in
 {
-  services.nginx.virtualHosts."foto.vpsfree.cz" = {
-    enableACME = false;
-    forceSSL = false;
-    # Keep the gallery unavailable until its PHP runtime can be patched.
-    extraConfig = "return 503;";
+  imports = [ "${source}/nixos/gallery.nix" ];
+
+  services.vpsfreePhotoShow = {
+    enable = true;
+    # Existing TLS proxy; preserve the backend and original gallery paths.
+    trustedProxyAddresses = [ "172.16.9.140" ];
   };
 
-  users = {
-    users.foto = {
-      isSystemUser = true;
-      group = "vpsfree";
-      description = "vpsfree photogallery";
-    };
-
-    groups.foto = { };
+  users.users.foto = {
+    group = "vpsfree";
+    description = "vpsfree photogallery";
   };
 }
