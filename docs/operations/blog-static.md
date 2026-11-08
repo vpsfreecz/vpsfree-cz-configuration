@@ -136,15 +136,16 @@ workflow; recreating it requires explicit operator reinitialization. GitHub
 concurrency controls load but does not establish dispatch order. The target
 cannot know about a newer main commit that has not arrived successfully.
 
-Body receipt stays outside the content lock. Immutable staging flushes payload,
-archive and directory hierarchy. Commit validates retained content, preserves
-fingerprinted CSS and immutable legacy media, then rechecks policy/system and
-maintenance under the stable lock. A durable pending transaction carries the
+Body receipt stays outside the content locks. Immutable staging flushes payload,
+archive and directory hierarchy, retaining its staging lock through commit.
+Commit validates retained content, preserves fingerprinted CSS and immutable
+legacy media, then rechecks policy/system and maintenance under the stable lock.
+A durable pending transaction carries the
 ordering floor before atomic pointer replacement. Current receipt, floor and
 history are flushed before acknowledgment; reconciliation completes an
 interruption after replacement or preserves the old selection before it.
-Unknown pointers or corrupt content fail closed. No archive/release cleanup is
-included.
+Unknown pointers or corrupt content fail closed. Release retention runs
+separately from uploads.
 
 Root maintenance and rollback delegate content work to a child that
 irreversibly drops to the fixed service UID/GID/groups with no retained
@@ -172,8 +173,9 @@ persists pause, then validates/selects the retained release as a separate
 transaction. It preserves the greatest upload order. Publication stays paused;
 after explicit resume, an old retry still cannot undo rollback. A newer
 authorized upload is required. Use `status` for the selected release, current
-receipt digest and committed floor. Retain all archives and receipts. With no
-previous release, recover through retained WordPress.
+receipt digest and committed floor. Rollback requires a complete retained
+release; a pruned payload is no longer a rollback target. All receipts remain.
+With no retained prior release, recover through WordPress.
 
 Policy/control schema 2 is the upload authority boundary. P21 can roll back
 retained schema-1 release content and restore WordPress routing with
@@ -182,6 +184,52 @@ maintenance check requires the older control schema and rejects schema-2 state.
 Retain old systems for recovery, but verify their activation and control-state
 compatibility before attempting a switch. Do not run old publication writers
 against the new state. There is no state conversion or WordPress/forum migration.
+
+## Release retention
+
+`services.vpsfree-static-blog.retention.keepReleases` is a positive integer,
+defaulting to 5. When storage and publication are enabled, the daily
+`blog-release-prune.timer` runs the selected helper as `blog-release`, without
+credentials or network access. It keeps the configured number of newest distinct
+available releases by successful selection time, plus the current release, its
+immediate previous release and the release named by the ordering floor. These
+protected references can retain more payloads than the configured count.
+
+Only old, successfully selected release directories and their matching archives
+are candidates. Stage-only releases, incoming directories and unknown orphans
+remain untouched. All release and transaction receipts, ordering state, control
+records and both locks are retained. Shared immutable CSS remains cumulative;
+the selected and retained trees preserve their legacy media. This bounds old
+completed payload copies, not total disk usage. Keep independent WordPress,
+configuration, secret and system-generation backups outside this retention.
+
+```sh
+blog-static-release prune --dry-run
+blog-static-release prune
+```
+
+Root invocations delegate content work to the same `blog-release` account.
+Dry-run reports the keep and candidate sets without changing content or trash;
+it may run while publication is paused. Actual pruning skips while paused or
+disabled, when either existing lock is busy, or while a transaction is pending.
+Missing protected content and conflicting references refuse retirement.
+
+Uploads, maintenance and rollback continue to wait for their existing locks.
+Prune alone tries publication and then staging without waiting, releasing
+publication immediately if staging is busy. It never causes an upload failure
+solely through lock contention. Under both locks it inspects only metadata and
+renames eligible payloads into private `releases/.trash`. Recursive deletion
+uses directory descriptors and rejects links or filesystem boundaries after
+both locks have been released. Slow or failed deletion therefore does not hold
+up an upload commit. Existing finite network timeouts still apply; stalled
+storage can still exhaust them.
+
+The helper reports kept, candidate, retired and deleted release keys, skips and
+cleanup failures. An interrupted retirement or deletion can be retried by the
+next pass using the retained receipts and trash entries. It does not restore
+retired payloads automatically or reset ordering. Cleanup failure cannot undo a
+successful publication. Schema-1 release content remains supported while its
+complete payload is retained; receipts alone do not promise rollback access.
 
 ## Checks and operator transition
 
@@ -224,7 +272,8 @@ throughout the transition.
 Route recovery sets `serveStatic=false` and restores WordPress/English 503
 without a proxy change. Keep prior systems, inputs,
 database/uploads/fonts/secret-key backups and account owners. Retain newer
-static articles and forum replies for reconciliation; no recursive ownership
-change, data deletion or garbage collection is authorized. Content rollback is
-separate from system rollback, public cutover, default-branch integration and
+static articles and forum replies for reconciliation. Scheduled retention applies
+only to eligible blog release payloads; it does not remove WordPress data,
+backups, Nix roots or Git refs, or change ownership recursively. Content rollback
+is separate from system rollback, public cutover, default-branch integration and
 session lifecycle.

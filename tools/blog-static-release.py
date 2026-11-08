@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validated blog artifacts and operator-installed content publication policy."""
 import argparse
-from contextlib import contextmanager, nullcontext
+from contextlib import contextmanager, nullcontext, ExitStack
 from datetime import datetime, timezone
 import fcntl
 import ctypes
@@ -250,51 +250,55 @@ def serialized(root):
 
 
 def stage(root, archive, receipt, files, authority):
+    with serialized(root):
+        return stage_locked(root, archive, receipt, files, authority)
+
+
+def stage_locked(root, archive, receipt, files, authority):
     key = receipt['source_sha'] + '-' + receipt['archive_sha256'][:16]
     for name in ('releases', 'receipts', 'assets'):
         (root / name).mkdir(parents=True, exist_ok=True)
     release = root / 'releases' / key
     archive_path = root / 'releases' / (key + '.tar.gz')
-    with serialized(root):
-        if release.exists():
-            require(not release.is_symlink(), 'Release path is a symlink')
-            require(archive_path.exists() and digest(archive_path.read_bytes()) == receipt['archive_sha256'], 'Retained release/archive conflict')
-            check_tree(release, files)
-            release_barrier(root, key)
-            retained = root / 'receipts' / (key + '.json')
-            if not retained.exists():
-                atomic_json(retained, {**receipt, 'authority': authority, 'release': key})
-            else:
-                record, _ = retained_release(root, key)
-                require(all(record.get(k) == v for k, v in receipt.items()), 'Retained receipt conflict')
-            return key
-        with tempfile.TemporaryDirectory(prefix='.incoming-', dir=root / 'releases') as temporary:
-            staging = Path(temporary) / 'tree'
-            staging.mkdir()
-            for name, value in files.items():
-                p = staging / name
-                p.parent.mkdir(parents=True, exist_ok=True)
-                durable_file(p, value)
-            for p in staging.rglob('*'):
-                if p.is_dir():
-                    p.chmod(0o755)
-            if archive_path.exists():
-                require(digest(archive_path.read_bytes()) == receipt['archive_sha256'], 'Retained archive conflict')
-            else:
-                durable_file(archive_path, archive)
-            staging.chmod(0o755)
-            sync_tree(staging)
-            # An existing archive may come from an older stage-only helper.
-            fd = os.open(archive_path, os.O_RDONLY | os.O_NOFOLLOW)
-            try:
-                os.fsync(fd)
-            finally:
-                os.close(fd)
-            os.replace(staging, release)
-            sync_directory(root / 'releases')
-            sync_directory(root)
-        atomic_json(root / 'receipts' / (key + '.json'), {**receipt, 'authority': authority, 'release': key})
+    if release.exists():
+        require(not release.is_symlink(), 'Release path is a symlink')
+        require(archive_path.exists() and digest(archive_path.read_bytes()) == receipt['archive_sha256'], 'Retained release/archive conflict')
+        check_tree(release, files)
+        release_barrier(root, key)
+        retained = root / 'receipts' / (key + '.json')
+        if not retained.exists():
+            atomic_json(retained, {**receipt, 'authority': authority, 'release': key})
+        else:
+            record, _ = retained_release(root, key)
+            require(all(record.get(k) == v for k, v in receipt.items()), 'Retained receipt conflict')
+        return key
+    with tempfile.TemporaryDirectory(prefix='.incoming-', dir=root / 'releases') as temporary:
+        staging = Path(temporary) / 'tree'
+        staging.mkdir()
+        for name, value in files.items():
+            p = staging / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            durable_file(p, value)
+        for p in staging.rglob('*'):
+            if p.is_dir():
+                p.chmod(0o755)
+        if archive_path.exists():
+            require(digest(archive_path.read_bytes()) == receipt['archive_sha256'], 'Retained archive conflict')
+        else:
+            durable_file(archive_path, archive)
+        staging.chmod(0o755)
+        sync_tree(staging)
+        # An existing archive may come from an older stage-only helper.
+        fd = os.open(archive_path, os.O_RDONLY | os.O_NOFOLLOW)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+        os.replace(staging, release)
         sync_directory(root / 'releases')
+        sync_directory(root)
+    atomic_json(root / 'receipts' / (key + '.json'), {**receipt, 'authority': authority, 'release': key})
+    sync_directory(root / 'releases')
     return key
 
 
@@ -317,6 +321,8 @@ def retained_release(root, key):
     receipt_path = root / 'receipts' / (key + '.json')
     archive_path = root / 'releases' / (key + '.tar.gz')
     require(not receipt_path.is_symlink() and not archive_path.is_symlink(), 'Retained metadata symlink')
+    require(receipt_path.is_file() and archive_path.is_file() and (root / 'releases' / key).is_dir(),
+            'Release payload is no longer retained')
     record = json.loads(receipt_path.read_text())
     require(record.get('release') == key and key == record['source_sha'] + '-' + record['archive_sha256'][:16], 'Retained identity mismatch')
     archive = archive_path.read_bytes()
@@ -335,6 +341,268 @@ def current_state(root):
     data = json.loads(path.read_text()) if path.exists() else None
     require((current is None and data is None) or (data is not None and current == 'releases/' + data['release']), 'Pointer/receipt need reconciliation')
     return current, data, digest(path.read_bytes()) if path.exists() else None
+
+
+@contextmanager
+def retention_directory(name, parent=None, device=None):
+    fd = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=parent)
+    try:
+        info = os.fstat(fd)
+        require(info.st_uid == os.geteuid() and not info.st_mode & 0o022,
+                'Unsafe retention directory owner or mode')
+        require(device is None or info.st_dev == device, 'Retention crosses a filesystem')
+        yield fd
+    finally:
+        os.close(fd)
+
+
+def retention_entry(directory, name, directory_type=False):
+    try:
+        info = os.stat(name, dir_fd=directory, follow_symlinks=False)
+    except FileNotFoundError:
+        return None
+    require((stat.S_ISDIR if directory_type else stat.S_ISREG)(info.st_mode),
+            'Nonregular retention entry')
+    require(info.st_dev == os.fstat(directory).st_dev and info.st_uid == os.geteuid(),
+            'Retention entry owner or filesystem changed')
+    return info
+
+
+def retention_json(directory, name):
+    if retention_entry(directory, name) is None:
+        return None
+    fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=directory)
+    with os.fdopen(fd, 'rb') as stream:
+        info = os.fstat(stream.fileno())
+        require(stat.S_ISREG(info.st_mode) and info.st_uid == os.geteuid()
+                and info.st_dev == os.fstat(directory).st_dev, 'Unsafe retention receipt')
+        require(info.st_size <= 1024 * 1024, 'Retention receipt too large')
+        raw = stream.read(1024 * 1024 + 1)
+        require(len(raw) <= 1024 * 1024, 'Retention receipt too large')
+        data = json.loads(raw)
+    require(type(data) is dict, 'Invalid retention receipt')
+    return data
+
+
+def retention_key(key):
+    require(type(key) is str and re.fullmatch(RELEASE_KEY, key), 'Invalid retention release key')
+    return key
+
+
+def retention_plan(root, releases, receipts, keep):
+    """Inspect small receipts and direct entries only; never read payload trees."""
+    require(retention_entry(receipts, 'pending.json') is None, 'Pending transaction; retention refused')
+    current = retention_json(receipts, 'current.json')
+    try:
+        pointer = os.readlink('current', dir_fd=root)
+    except FileNotFoundError:
+        pointer = None
+    require((pointer is None) == (current is None), 'Uncertain current pointer or receipt')
+    protected = set()
+    if current:
+        key = retention_key(current.get('release'))
+        require(pointer == 'releases/' + key, 'Current pointer conflicts with its receipt')
+        protected.add(key)
+        previous = current.get('previous_release')
+        old = current.get('old_pointer')
+        if old is not None:
+            require(type(old) is str and old.startswith('releases/'), 'Invalid prior pointer')
+            old_key = retention_key(old[len('releases/'):])
+            require(previous is None or previous == old_key, 'Conflicting prior release references')
+            previous = old_key
+        if previous is not None:
+            protected.add(retention_key(previous))
+    floor = retention_json(receipts, 'upload-order.json')
+    if floor:
+        require(floor.get('schema') == 2 and all(type(floor.get(k)) is int and floor[k] > 0
+                for k in ('run_number', 'run_attempt', 'run_id')), 'Invalid retention ordering state')
+        key = retention_key(floor.get('release'))
+        require(floor.get('source_sha') == key[:40] and type(floor.get('body_sha256')) is str
+                and re.fullmatch(r'[0-9a-f]{64}', floor['body_sha256']), 'Invalid retention order binding')
+        protected.add(key)
+    latest = {}
+    transactions = [current] if current else []
+    for name in os.listdir(receipts):
+        if re.fullmatch(r'[0-9a-f-]{36}\.json', name):
+            require(str(uuid.UUID(name[:-5])) == name[:-5], 'Invalid transaction receipt name')
+            transactions.append(retention_json(receipts, name))
+    for record in transactions:
+        require(type(record) is dict, 'Missing selection receipt')
+        if record.get('outcome') not in ('activated', 'rollback', 'reconciled-activated'):
+            continue
+        key = retention_key(record.get('release'))
+        require(record.get('source_sha') == key[:40]
+                and type(record.get('archive_sha256')) is str
+                and re.fullmatch(r'[0-9a-f]{64}', record['archive_sha256'])
+                and record['archive_sha256'][:16] == key[41:], 'Invalid successful selection identity')
+        at = datetime.fromisoformat(record['at'])
+        require(at.tzinfo is not None, 'Selection timestamp requires a timezone')
+        latest[key] = max(latest.get(key, at), at)
+    available, ignored = set(), []
+    for name in os.listdir(releases):
+        if re.fullmatch(RELEASE_KEY, name):
+            retention_entry(releases, name, True)
+            archive = retention_entry(releases, name + '.tar.gz')
+            record = retention_json(receipts, name + '.json')
+            if archive is not None and record is not None:
+                require(record.get('release') == name and record.get('source_sha') == name[:40]
+                        and type(record.get('archive_sha256')) is str
+                        and re.fullmatch(r'[0-9a-f]{64}', record['archive_sha256'])
+                        and record['archive_sha256'][:16] == name[41:], 'Invalid retained receipt identity')
+                if name in latest:
+                    available.add(name)
+                else:
+                    ignored.append(name)
+            else:
+                ignored.append(name)
+        elif name != '.trash':
+            ignored.append(name)
+    require(protected <= available, 'Protected release payload is missing or incomplete')
+    newest = sorted(available, key=lambda key: (latest[key], key), reverse=True)[:keep]
+    kept = protected | set(newest)
+    return {'kept': sorted(kept), 'candidates': sorted(available - kept),
+            'protected': sorted(protected), 'ignored': sorted(ignored), '_selected': sorted(latest)}
+
+
+def retention_trash(releases, receipts, protected, selected):
+    """Plan interrupted renames using existing keys/receipts, without a journal."""
+    if retention_entry(releases, '.trash', True) is None:
+        return [], []
+    repairs, passes = [], []
+    with retention_directory('.trash', releases, os.fstat(releases).st_dev) as trash:
+        for name in os.listdir(trash):
+            require(str(uuid.UUID(name)) == name, 'Invalid retention pass directory')
+            with retention_directory(name, trash, os.fstat(trash).st_dev) as directory:
+                entries = set(os.listdir(directory))
+                keys = set()
+                for entry in entries:
+                    key = entry[:-7] if entry.endswith('.tar.gz') else entry
+                    retention_key(key)
+                    require(key in selected, 'Retired release has no successful selection')
+                    retention_entry(directory, entry, not entry.endswith('.tar.gz'))
+                    record = retention_json(receipts, key + '.json')
+                    require(record is not None and record.get('release') == key
+                            and record.get('source_sha') == key[:40]
+                            and type(record.get('archive_sha256')) is str
+                            and re.fullmatch(r'[0-9a-f]{64}', record['archive_sha256'])
+                            and record['archive_sha256'][:16] == key[41:], 'Unidentified retired release')
+                    keys.add(key)
+                for key in keys - set(protected):
+                    active_tree = retention_entry(releases, key, True)
+                    active_archive = retention_entry(releases, key + '.tar.gz')
+                    # A new complete copy is independent of the retired one.
+                    if active_tree is not None and active_archive is not None:
+                        continue
+                    for entry in (key, key + '.tar.gz'):
+                        source = active_archive if entry.endswith('.tar.gz') else active_tree
+                        if entry not in entries and source is not None:
+                            repairs.append((name, entry))
+                passes.append((name, sorted(keys)))
+    return repairs, passes
+
+
+def remove_retired(directory, device):
+    """Directory-fd traversal rejects symlinks/devices and tolerates other cleaners."""
+    for name in os.listdir(directory):
+        try:
+            info = os.stat(name, dir_fd=directory, follow_symlinks=False)
+            require(info.st_dev == device and info.st_uid == os.geteuid(), 'Unsafe retired filesystem or owner')
+            if stat.S_ISDIR(info.st_mode):
+                with retention_directory(name, directory, device) as child:
+                    require(os.fstat(child).st_ino == info.st_ino, 'Retired directory changed')
+                    remove_retired(child, device)
+                os.rmdir(name, dir_fd=directory)
+            else:
+                require(stat.S_ISREG(info.st_mode), 'Unsafe retired entry type')
+                os.unlink(name, dir_fd=directory)
+        except FileNotFoundError:
+            pass
+
+
+def prune_releases(publication, dry_run):
+    report = {'dry_run': dry_run, 'kept': [], 'candidates': [], 'retired': [], 'deleted': [],
+              'cleanup_failures': []}
+    policy = publication.policy(enabled=False)
+    if not policy['enabled']:
+        return {**report, 'skipped': 'publication disabled'}
+    keep = policy['keep_releases']
+    require(type(keep) is int and keep > 0, 'Invalid release retention count')
+    passes = []
+    try:
+        with publication.lock(blocking=False), ExitStack() as stack:
+            if not dry_run:
+                publication.allowed()
+            else:
+                publication.identity()
+            root = stack.enter_context(retention_directory(publication.root))
+            device = os.fstat(root).st_dev
+            releases = stack.enter_context(retention_directory('releases', root, device))
+            receipts = stack.enter_context(retention_directory('receipts', root, device))
+            fd = os.open('transaction.lock', os.O_RDWR | os.O_NOFOLLOW, dir_fd=root)
+            stage_lock = stack.enter_context(os.fdopen(fd, 'r+'))
+            require(stat.S_ISREG(os.fstat(fd).st_mode) and os.fstat(fd).st_uid == os.geteuid(), 'Unsafe staging lock')
+            # Upload holds stage through commit and may wait for publication.
+            # Never wait or spin here with publication held: release and skip.
+            fcntl.flock(stage_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            if retention_entry(receipts, 'pending.json') is not None:
+                return {**report, 'skipped': 'pending transaction'}
+            plan = retention_plan(root, releases, receipts, keep)
+            report.update({k: v for k, v in plan.items() if not k.startswith('_')})
+            repairs, passes = retention_trash(releases, receipts, plan['protected'], plan['_selected'])
+            if dry_run:
+                return report
+            publication.allowed()
+            require(retention_plan(root, releases, receipts, keep) == plan, 'Retention state changed')
+            if plan['candidates'] or repairs:
+                if retention_entry(releases, '.trash', True) is None:
+                    os.mkdir('.trash', mode=0o700, dir_fd=releases)
+                with retention_directory('.trash', releases, device) as trash:
+                    new_pass = str(uuid.uuid4())
+                    if plan['candidates']:
+                        os.mkdir(new_pass, mode=0o700, dir_fd=trash)
+                    moves = repairs + [(new_pass, name) for key in plan['candidates']
+                                       for name in (key, key + '.tar.gz')]
+                    try:
+                        for directory, name in moves:
+                            require(retention_entry(releases, name, not name.endswith('.tar.gz')) is not None,
+                                    'Retirement source disappeared')
+                            with retention_directory(directory, trash, device) as destination:
+                                require(name not in os.listdir(destination), 'Retired destination already exists')
+                                os.rename(name, name, src_dir_fd=releases, dst_dir_fd=destination)
+                                os.fsync(destination)
+                            os.fsync(releases)
+                            os.fsync(trash)
+                            key = name[:-7] if name.endswith('.tar.gz') else name
+                            if key not in report['retired']:
+                                report['retired'].append(key)
+                    except OSError as error:
+                        return {**report, 'retirement_failure': type(error).__name__}
+                    if plan['candidates']:
+                        passes.append((new_pass, plan['candidates']))
+    except BlockingIOError:
+        return {**report, 'skipped': 'publication or staging lock busy'}
+    except Paused:
+        return {**report, 'skipped': 'publication paused or selected policy changed'}
+    except FileNotFoundError:
+        return {**report, 'skipped': 'storage or staging lock unavailable'}
+    # No publication/staging lock is held during slow or failed bulk deletion.
+    if passes:
+        with retention_directory(publication.root) as root:
+            device = os.fstat(root).st_dev
+            with retention_directory('releases', root, device) as releases:
+                with retention_directory('.trash', releases, device) as trash:
+                    for name, keys in passes:
+                        try:
+                            with retention_directory(name, trash, device) as directory:
+                                remove_retired(directory, device)
+                            os.rmdir(name, dir_fd=trash)
+                            os.fsync(trash)
+                            report['deleted'].extend(keys)
+                        except FileNotFoundError:
+                            pass
+                        except (OSError, Rejected) as error:
+                            report['cleanup_failures'].append({'releases': keys, 'reason': type(error).__name__})
+    return report
 
 
 def upload_floor(root):
@@ -511,7 +779,7 @@ class Publication:
         return {'policy_sha256': digest(self.compiled.read_bytes()), 'system': str(selected)}
 
     @contextmanager
-    def lock(self):
+    def lock(self, blocking=True):
         info = self.control.lstat()
         require(stat.S_ISDIR(info.st_mode) and info.st_uid == self.owner and not info.st_mode & 0o022,
                 'Unsafe root-owned publication control directory')
@@ -520,7 +788,7 @@ class Publication:
             info = os.fstat(stream.fileno())
             require(stat.S_ISREG(info.st_mode) and info.st_uid == self.owner and not info.st_mode & 0o007,
                     'Unsafe stable publication lock')
-            fcntl.flock(stream, fcntl.LOCK_EX)
+            fcntl.flock(stream, fcntl.LOCK_EX | (0 if blocking else fcntl.LOCK_NB))
             yield
 
     def control_state(self):
@@ -554,6 +822,9 @@ class Publication:
         except (Paused, Rejected, OSError, ValueError) as error:
             reason = str(error) if isinstance(error, (Paused, Rejected)) else 'Unreadable publication/control state'
             return {'mode': 'paused', 'reason': reason, **result}
+
+    def prune(self, dry_run=False):
+        return content_as_release(lambda: prune_releases(self, dry_run))
 
     def pause_locked(self):
         require(os.geteuid() == 0, 'Maintenance and rollback require root')
@@ -623,20 +894,23 @@ class Publication:
             self.allowed()
             reconcile(self.root)
             duplicate = check_order()
-        if not duplicate:
-            stage(self.root, archive, receipt, files, {'kind': 'hmac-upload-v1'})
-        with self.lock():
-            self.allowed()
-            reconcile(self.root)
-            if not check_order():
-                previous = current_state(self.root)[2]
-                _switch(self.root, key, self.allowed, previous,
-                        lock=nullcontext, policy_identity=self.identity, upload=binding, interrupt=interrupt)
-            _, current, current_hash = current_state(self.root)
-            require(current.get('upload') == binding, 'Upload selection changed')
-            return {'selected': True, 'source_sha': receipt['source_sha'], 'release': key,
-                    'receipt_sha256': current_hash, 'body_sha256': body_sha256,
-                    'run_number': run_number, 'run_id': receipt['run_id'], 'run_attempt': receipt['run_attempt']}
+        # Keep staging serialized until commit. Prune must never wait for this
+        # lock while holding publication: its two acquisitions are try-locks.
+        with (serialized(self.root) if not duplicate else nullcontext()):
+            if not duplicate:
+                stage_locked(self.root, archive, receipt, files, {'kind': 'hmac-upload-v1'})
+            with self.lock():
+                self.allowed()
+                reconcile(self.root)
+                if not check_order():
+                    previous = current_state(self.root)[2]
+                    _switch(self.root, key, self.allowed, previous,
+                            lock=nullcontext, policy_identity=self.identity, upload=binding, interrupt=interrupt)
+                _, current, current_hash = current_state(self.root)
+                require(current.get('upload') == binding, 'Upload selection changed')
+                return {'selected': True, 'source_sha': receipt['source_sha'], 'release': key,
+                        'receipt_sha256': current_hash, 'body_sha256': body_sha256,
+                        'run_number': run_number, 'run_id': receipt['run_id'], 'run_attempt': receipt['run_attempt']}
 
 
 def content_status(root):
@@ -668,10 +942,12 @@ def check_maintenance():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=['rollback', 'maintenance-enter', 'maintenance-exit', 'status', 'check-maintenance'])
+    parser.add_argument('command', choices=['rollback', 'maintenance-enter', 'maintenance-exit', 'status', 'check-maintenance', 'prune'])
+    parser.add_argument('--dry-run', action='store_true', help='Report retention candidates without changing files')
     parser.add_argument('--release')
     parser.add_argument('--expected-current', help='Exact current receipt SHA256, or none for first activation')
     options = parser.parse_args()
+    require(not options.dry_run or options.command == 'prune', '--dry-run applies only to prune')
     publication = Publication()
     if options.command == 'check-maintenance':
         check_maintenance()
@@ -684,8 +960,11 @@ def main():
     else:
         result = {'maintenance-enter': publication.enter,
                   'maintenance-exit': lambda: publication.exit(STATE),
+                  'prune': lambda: publication.prune(options.dry_run),
                   'status': publication.status}[options.command]()
     print(json.dumps(result))
+    if options.command == 'prune' and (result.get('retirement_failure') or result.get('cleanup_failures')):
+        raise SystemExit(1)
 
 
 if __name__ == '__main__':

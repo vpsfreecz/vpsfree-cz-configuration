@@ -195,12 +195,12 @@ class Publication(unittest.TestCase):
         self.assertEqual(first['release'], second['release'])
         self.assertNotEqual(first['receipt_sha256'], second['receipt_sha256'])
         self.assertEqual(release.upload_floor(self.root)['run_number'], 2)
-        stage = release.stage
+        stage = release.stage_locked
         def pausing(*args):
             key = stage(*args)
             with patch.object(release.os, 'geteuid', return_value=0): self.pub.enter()
             return key
-        with patch.object(release, 'stage', pausing), self.assertRaises(release.Paused):
+        with patch.object(release, 'stage_locked', pausing), self.assertRaises(release.Paused):
             self.upload(package('b' * 40, 8), 3)
         self.assertEqual(release.current_state(self.root)[2], second['receipt_sha256'])
         self.assertEqual(release.upload_floor(self.root)['run_number'], 2)

@@ -30,6 +30,7 @@ let
       workflow_path = ".github/workflows/build.yml";
       state_dir = state;
       enabled = cfg.enable && publication.enable;
+      keep_releases = cfg.retention.keepReleases;
     }
   );
   source = pkgs.runCommand "blog-publication-source" { } ''
@@ -72,6 +73,11 @@ in
 {
   options.services.vpsfree-static-blog = {
     enable = lib.mkEnableOption "the isolated static blog listener and storage";
+    retention.keepReleases = lib.mkOption {
+      type = lib.types.ints.positive;
+      default = 5;
+      description = "Newest successfully selected release payloads to retain, in addition to protected recovery references.";
+    };
     sourcePackage = lib.mkOption {
       type = lib.types.package;
       internal = true;
@@ -138,6 +144,33 @@ in
         "f /var/lib/blog-control/transaction.lock 0660 root blog-release -"
       ];
       environment.systemPackages = [ helper ];
+      systemd.services.blog-release-prune = lib.mkIf publication.enable {
+        description = "Retire old completed blog release payloads";
+        serviceConfig = {
+          Type = "oneshot";
+          User = "blog-release";
+          Group = "blog-release";
+          UMask = "0077";
+          ExecStart = "${helper}/bin/blog-static-release prune";
+          NoNewPrivileges = true;
+          PrivateTmp = true;
+          PrivateNetwork = true;
+          ProtectHome = true;
+          ProtectSystem = "strict";
+          ReadWritePaths = [
+            state
+            "/var/lib/blog-control/transaction.lock"
+          ];
+          RestrictAddressFamilies = [ "AF_UNIX" ];
+        };
+      };
+      systemd.timers.blog-release-prune = lib.mkIf publication.enable {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = "daily";
+          Persistent = true;
+        };
+      };
       services.nginx.virtualHosts = {
         "static-blog-cs" = (vhost "cs") // {
           serverName = "blog.vpsfree.cz";
