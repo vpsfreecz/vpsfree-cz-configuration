@@ -3,7 +3,7 @@ let
   lib = nixpkgs.lib;
   site = ../cluster/cz.vpsfree/containers/int.blog;
   wordpress = site + /wordpress.nix;
-  # Exercise the site's actual imports/settings without unrelated base profiles.
+  # Exercise the site's imports without base profiles or machine publication opt-in.
   composition =
     { config, ... }:
     let
@@ -11,6 +11,8 @@ let
     in
     module
     // {
+      # Exercise reusable module defaults/modes; machine opt-in is checked separately.
+      services = builtins.removeAttrs (module.services or { }) [ "vpsfree-static-blog" ];
       imports = builtins.filter (
         path:
         !(lib.elem path [

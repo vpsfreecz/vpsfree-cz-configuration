@@ -9,6 +9,8 @@ let
     in
     base
     // {
+      # Exercise reusable module defaults/modes; machine opt-in is checked separately.
+      services = builtins.removeAttrs (base.services or { }) [ "vpsfree-static-blog" ];
       imports = builtins.filter (
         path:
         !(lib.elem path [

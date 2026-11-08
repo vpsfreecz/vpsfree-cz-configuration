@@ -10,5 +10,14 @@
     ./legacy-routes.nix
   ];
 
+  services.vpsfree-static-blog = {
+    enable = true;
+    serveStatic = false;
+    publication = {
+      enable = true;
+      secretFile = "/private/blog/deployment-key";
+    };
+  };
+
   system.stateVersion = "26.05";
 }
