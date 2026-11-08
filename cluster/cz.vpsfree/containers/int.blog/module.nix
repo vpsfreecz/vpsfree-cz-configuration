@@ -70,7 +70,7 @@
 
       machineCommands = [
         {
-          description = "Check blog.vpsfree.cz locally";
+          description = "Check the selected Czech blog frontend locally";
           command = [
             "curl"
             "--fail"
@@ -85,6 +85,25 @@
             "--header"
             "X-Forwarded-Proto: https"
             "http://localhost/"
+          ];
+          standardOutput.match = "";
+        }
+        {
+          description = "Check retained WordPress independently of the selected frontend";
+          command = [
+            "curl"
+            "--fail"
+            "--silent"
+            "--show-error"
+            "--max-time"
+            "10"
+            "--output"
+            "/dev/null"
+            "--header"
+            "Host: blog.vpsfree.cz"
+            "--header"
+            "X-Forwarded-Proto: https"
+            "http://127.0.0.1:8081/"
           ];
           standardOutput.match = "";
         }

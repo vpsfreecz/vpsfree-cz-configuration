@@ -1,0 +1,2706 @@
+{
+  "schema": 1,
+  "source_manifest_sha256": "42a9eccfdff8d5e76b986dc243642af867795f5a76947ef2e5cad13cdc600468",
+  "aliases": [
+    {
+      "kind": "post-query",
+      "source": "/?p=8",
+      "target": "/centos-7-template-jsme-prohlasili-za-stable/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=15",
+      "target": "/jak-vytvarime-sablony-systemu-pro-vps/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=24",
+      "target": "/zalohy-ve-vpsfree-aneb-na-ceste-od-rsync-k-zfs-snapshotum/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=37",
+      "target": "/byli-jsme-na-konferenci-installfest-2015/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=51",
+      "target": "/podporili-jsme-studenty-cvut/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=61",
+      "target": "/distribuce-provozovane-na-vpsfree-cz/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=69",
+      "target": "/odkud-vlastne-jsme-zdaleka-nejen-z-prahy/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=74",
+      "target": "/prednasky-pro-fanousky-dockeru/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=82",
+      "target": "/setrvacnost-konferencniho-efektu/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=84",
+      "target": "/podporili-jsme-dobrovolne-hasice-hostujeme-portal-dh-cz/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=94",
+      "target": "/mame-tri-nove-servery-v-prazskem-racku/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=100",
+      "target": "/prednaseli-jsme-na-konferenci-cryptofest-video/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=107",
+      "target": "/nominujte-vpsfree-cz-do-kristalove-lupy/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=112",
+      "target": "/jak-si-opravit-rozbity-vps/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=114",
+      "target": "/jsme-v-ankete-kristalova-lupa-hlasujte-pro-nas/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=119",
+      "target": "/jedeme-na-linuxdays-2015-prijdte-se-podivat/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=123",
+      "target": "/byli-jsme-na-linuxdays-2015-foto-a-video/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=133",
+      "target": "/stale-rosteme-cisla-za-tri-roky/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=137",
+      "target": "/dostupnost-99-986-procent/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=139",
+      "target": "/vpsadmin-zmeny-v-mountech-vzdalena-konzole/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=151",
+      "target": "/jedeme-na-openalt-prijdte-na-kavu/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=156",
+      "target": "/menime-zakladni-desku-v-serveru/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=174",
+      "target": "/propojte-si-servery-pomoci-gre-tunelu/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=191",
+      "target": "/openalt-jsme-provoneli-kavou-a-polepili-logy/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=205",
+      "target": "/kristalovou-lupu-jsme-nevyhrali-zatim/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=210",
+      "target": "/zbyva-nam-asi-tisic-volnych-ipv4-adres/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=215",
+      "target": "/spoustime-podporu-virtualizace-s-kvm/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=229",
+      "target": "/vanocni-darek-zdvojnasobili-jsme-kapacitu-disku-na-120-gb/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=244",
+      "target": "/jak-vyuzit-256-gb-ram-na-serveru/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=249",
+      "target": "/napsala-o-nas-lupa-cz-jsme-pry-unikat/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=253",
+      "target": "/vpsadmin-2-1-0-konzole-vps-v-terminalu/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=264",
+      "target": "/vpsadmin-v2-2-0-nastaveni-casu-pro-planovane-vypadky-vps/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=269",
+      "target": "/prijdte-za-nami-na-installfest-5-a-6-brezna/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=275",
+      "target": "/nejvic-clenu-prichazi-na-osobni-doporuceni/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=279",
+      "target": "/installfest-se-rozhodne-vydaril-podivejte-se/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=284",
+      "target": "/stahnete-si-zalohy-v-prikazove-radce/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=291",
+      "target": "/nejnovejsi-docker-1-10-uz-nam-bezi-vsude/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=299",
+      "target": "/zacatky-vpsfree-cz-jak-jsem-dal-server-neznamemu-cloveku/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=308",
+      "target": "/haveapi-fs-pripojte-si-api-jako-souborovy-system/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=316",
+      "target": "/ddos-utoky-jdou-nejcasteji-na-teamspeak/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=326",
+      "target": "/migrace-vps-mezi-poskytovateli/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=333",
+      "target": "/mame-nove-distribuce-devuan-fedora-23-a-opensuse-13-2/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=343",
+      "target": "/proc-nemame-na-vps-zapnuty-swap/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=347",
+      "target": "/podporujeme-internet-bez-urednicke-cenzury/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=358",
+      "target": "/pridali-jsme-alpine-linux-3-3-a-slackware-14-1/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=362",
+      "target": "/aktualizace-arch-linux-a-void-linux/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=367",
+      "target": "/distribuce-po-roce-vedou-debian-ubuntu-a-centos/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=378",
+      "target": "/vpsadmin-se-naucil-anglicky/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=381",
+      "target": "/1000-clenu/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=387",
+      "target": "/1000-clenu-znamena-ze-jsme-nic-nepokazili/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=390",
+      "target": "/prijdte-za-nami-na-irc-freenode-net-vpsfree/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=397",
+      "target": "/sluzba-pro-sdileni-uryvku-kodu-paste-vpsfree-cz/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=403",
+      "target": "/kdyz-se-rozbiji-disky-aneb-jak-nas-pozlobil-nas/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=406",
+      "target": "/mame-prvni-server-s-ssd-a-512-gb-ram/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=408",
+      "target": "/proc-chceme-mit-20gigabitovou-sit/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=433",
+      "target": "/20-gigabitu-bude-uz-letos/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=443",
+      "target": "/jedeme-na-linuxdays-prijdte-tam-za-nami/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=448",
+      "target": "/haveapi-ma-nove-webove-rozhrani/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=450",
+      "target": "/chyba-dirty-cow-pod-openvz/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=455",
+      "target": "/vpsadmin-v2-5-0-podpora-pro-privatni-ip-adresy-vylepseny-prehled-datovych-prenosu/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=460",
+      "target": "/vypadky-a-nestartujici-sluzby-v-systemd/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=465",
+      "target": "/prvni-vpsfree-hackaton-pojdte-s-nami-sitovat/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=470",
+      "target": "/haveapi-v0-7-blokujici-akce/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=474",
+      "target": "/vpsadmin-umi-nahravani-ssh-klicu-do-vps/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=481",
+      "target": "/jak-probehl-nas-prvni-vpsfree-hackaton/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=490",
+      "target": "/vpsadmin-v2-7-0-zpracovani-plateb-e-maily-dve-pgnd-vps/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=493",
+      "target": "/poprve-v-cizine-aneb-jak-jsme-byli-na-linux-tage-v-saske-kamenici/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=500",
+      "target": "/vpsadmin-2-8-0-vylepsuje-hlaseni-vypadku/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=506",
+      "target": "/podporujeme-alpine-linux-ma-u-nas-hlavni-mirror/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=516",
+      "target": "/linuxove-distribuce-vede-debian-a-ubuntu-nahoru-se-dere-alpine/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=521",
+      "target": "/co-je-to-reverzni-zaznam-ptr-a-jak-ho-nastavit/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=529",
+      "target": "/hlasujte-pro-nase-prednasky-na-linuxdays/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=536",
+      "target": "/vpsadmin-v2-9-prinasi-jednoduchy-monitoring-vps/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=539",
+      "target": "/predstavili-jsme-vpsadminos-system-pro-provoz-kontejneru/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=547",
+      "target": "/prechazime-z-openvz-na-vpsadminos-spoustime-testovaci-prostredi/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=552",
+      "target": "/vpsadminos-status-report-na-cem-pracujeme/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=557",
+      "target": "/vpsadminos-instalace-aktualizace-nasazeni-a-sitovani/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=560",
+      "target": "/prijdte-o-vikendu-na-linuxdays-my-tam-budeme/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=564",
+      "target": "/mame-nove-servery-jsou-plne-zaplatovane-proti-znamym-chybam-cpu/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=573",
+      "target": "/vpsadminos-zmeny-v-sitovani-iso-ke-stazeni-zalohovani-a-cgroupy/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=576",
+      "target": "/vyzkousejte-si-klonovani-produkcnich-vps-na-testovaci-prostredi-s-vpsadminos/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=580",
+      "target": "/prvnich-10-let-je-za-nami-chystame-spoustu-novinek/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=588",
+      "target": "/shrnuti-ze-sobotni-vyrocni-schuze-todo/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=592",
+      "target": "/vyrazime-na-installfest-prijdte-na-kafe-a-novy-switch/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=597",
+      "target": "/terraform-provider-pro-vpsadmin-spravujte-infrastrukturu-automatizovane/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=601",
+      "target": "/mame-dvoufaktorove-prihlasovani-do-vpsadmin-kvuli-vyssi-bezpecnosti/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=606",
+      "target": "/pul-roku-vyvoje-vpsadminos-blizime-se-spusteni-produkcniho-serveru/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=610",
+      "target": "/revize-sablon-distribuci-na-stagingu-nove-opensuse-slackware-a-void-linux/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=615",
+      "target": "/vyvoj-vpsadminos-nfs-na-stagingu-overlay2-driver-pro-docker-a-dalsi/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=621",
+      "target": "/vpsadminos-v-produkci-v-praze/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=625",
+      "target": "/migrace-nasi-infrastruktury-na-20-gigabitu/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=629",
+      "target": "/lets-encrypt-revokuje-tri-miliony-certifikatu-zkontrolujte-ty-sve/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=636",
+      "target": "/mate-kvuli-koronaviru-problem-s-it-nabizime-pomoc-ozvete-se/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=639",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=646",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=651",
+      "target": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=653",
+      "target": "/posilujeme-meet-vpsfree-cz-mame-dva-nove-servery/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=662",
+      "target": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=667",
+      "target": "/aktuality-ze-serverovny-co-delame-ted-a-co-chystame-dal/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=678",
+      "target": "/sprava-pameti-na-vpsadminos/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=681",
+      "target": "/datacentrum-vybirejte-dobre-muze-z-nej-byt-partner-na-cely-zivot/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=692",
+      "target": "/novinky-ve-vpsadminu-vychozi-vlastnosti-vps-a-oom-reporty/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=695",
+      "target": "/vyzkousejte-si-podporu-novych-certifikatu-od-lets-encrypt-na-test-vpsfree-cz/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=702",
+      "target": "/linuxove-distribuce-ubuntu-roste-rychleji-nez-debian-stoupa-popularita-nixos/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=709",
+      "target": "/nouzovy-rezim-vps-nastartujte-si-zachranny-operacni-system/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=713",
+      "target": "/jsme-v-pulce-migrace-na-vpsadminos-ted-prijde-na-radu-brno/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=717",
+      "target": "/umime-pridelit-kazdemu-serveru-vlastni-blok-64-adres-z-ipv6/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=722",
+      "target": "/prvni-server-s-vpsadminos-v-brne/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=730",
+      "target": "/migrujte-na-vpsadminos-uz-je-cas-na-aktualni-virtualizaci-s-novym-jadrem/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=738",
+      "target": "/vps-start-menu-nahrada-za-zavadec-grub/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=746",
+      "target": "/post-mortem-par-slov-k-vypadku/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=759",
+      "target": "/stav-nasi-infrastruktury-na-status-vpsf-cz/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=762",
+      "target": "/vykonnejsi-servery-jako-lek-na-zvysovani-cen-energii/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=773",
+      "target": "/inovujeme-skoro-vsechen-hardware-chceme-byt-energeticky-uspornejsi/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=792",
+      "target": "/linuxove-distribuce-rocky-linux-rychle-roste-slackware-uplne-zmizel/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=805",
+      "target": "/novinky-ve-vpsadminu-hostitelske-klice-ssh-upravy-v-sablonach-a-cgroups/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=807",
+      "target": "/devcgprog-utilita-pro-nastaveni-devices-cgroupv2-controlleru/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=811",
+      "target": "/automaticke-rozsirovani-disku-vps/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=815",
+      "target": "/mame-discourse-pojdte-si-tam-povidat-mailing-listy-jsou-prezite/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=821",
+      "target": "/single-sign-on-ve-vpsadminu/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=824",
+      "target": "/nahradili-jsme-lxcfs-virtualizaci-v-kernelu/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=828",
+      "target": "/metriky-pro-prometheus-a-heatmapy-zatizeni-nodu/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=835",
+      "target": "/primarni-dns-servery/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=841",
+      "target": "/dvoufaktorove-prihlasovani-s-passkey/"
+    },
+    {
+      "kind": "post-query",
+      "source": "/?p=847",
+      "target": "/linuxove-distribuce-uzivatele-prechazeji-nejcasteji-na-rocky-linux-a-nixos/"
+    },
+    {
+      "kind": "old-slug",
+      "source": "/jak-vytvarime-sablony-systemu-pro-vase-vps/",
+      "target": "/jak-vytvarime-sablony-systemu-pro-vps/"
+    },
+    {
+      "kind": "old-slug",
+      "source": "/397-2/",
+      "target": "/sluzba-pro-sdileni-uryvku-kodu-paste-vpsfree-cz/"
+    },
+    {
+      "kind": "old-slug",
+      "source": "/podporujeme-alpine-linux-bezi-u-nas-hlavni-zrcadlo/",
+      "target": "/podporujeme-alpine-linux-ma-u-nas-hlavni-mirror/"
+    },
+    {
+      "kind": "old-slug",
+      "source": "/pridelujeme-kazdemu-serveru-vlastni-blok-64-adres-z-ipv6/",
+      "target": "/umime-pridelit-kazdemu-serveru-vlastni-blok-64-adres-z-ipv6/"
+    },
+    {
+      "kind": "old-slug",
+      "source": "/vypadek-se-jednou-za-cas-stane-at-se-snazite-sebevic/",
+      "target": "/post-mortem-par-slov-k-vypadku/"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=4",
+      "target": "/wp-content/uploads/2014/11/vpsFree-bile.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vpsfree-bile/",
+      "target": "/wp-content/uploads/2014/11/vpsFree-bile.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=5",
+      "target": "/wp-content/uploads/2014/11/vpsFree-bile1.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vpsfree-bile-2/",
+      "target": "/wp-content/uploads/2014/11/vpsFree-bile1.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=6",
+      "target": "/wp-content/uploads/2014/11/foto5.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/foto5/",
+      "target": "/wp-content/uploads/2014/11/foto5.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=10",
+      "target": "/wp-content/uploads/2014/11/CentOS7_template.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/centos-7-template-jsme-prohlasili-za-stable/centos7_template/",
+      "target": "/wp-content/uploads/2014/11/CentOS7_template.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=11",
+      "target": "/wp-content/uploads/2014/11/CentOS7_install.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/centos-7-template-jsme-prohlasili-za-stable/centos7_install/",
+      "target": "/wp-content/uploads/2014/11/CentOS7_install.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=60",
+      "target": "/wp-content/uploads/2015/05/Distribuce.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/distribuce-provozovane-na-vpsfree-cz/distribuce/",
+      "target": "/wp-content/uploads/2015/05/Distribuce.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=75",
+      "target": "/wp-content/uploads/2015/05/Docker_Brno_tweet.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/prednasky-pro-fanousky-dockeru/docker_brno_tweet/",
+      "target": "/wp-content/uploads/2015/05/Docker_Brno_tweet.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=89",
+      "target": "/wp-content/uploads/2015/06/DH_cz.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/podporili-jsme-dobrovolne-hasice-hostujeme-portal-dh-cz/dh_cz/",
+      "target": "/wp-content/uploads/2015/06/DH_cz.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=95",
+      "target": "/wp-content/uploads/2015/06/IMG_4114.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-tri-nove-servery-v-prazskem-racku/img_4114/",
+      "target": "/wp-content/uploads/2015/06/IMG_4114.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=96",
+      "target": "/wp-content/uploads/2015/06/IMG_4086.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-tri-nove-servery-v-prazskem-racku/img_4086/",
+      "target": "/wp-content/uploads/2015/06/IMG_4086.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=97",
+      "target": "/wp-content/uploads/2015/06/Nove_servery.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-tri-nove-servery-v-prazskem-racku/nove_servery/",
+      "target": "/wp-content/uploads/2015/06/Nove_servery.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=98",
+      "target": "/wp-content/uploads/2015/06/IMG_4133.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-tri-nove-servery-v-prazskem-racku/img_4133/",
+      "target": "/wp-content/uploads/2015/06/IMG_4133.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=108",
+      "target": "/wp-content/uploads/2015/08/KL_nominace.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/nominujte-vpsfree-cz-do-kristalove-lupy/kl_nominace/",
+      "target": "/wp-content/uploads/2015/08/KL_nominace.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=115",
+      "target": "/wp-content/uploads/2015/09/kl-hlasovani-button-200x200-static-1.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/jsme-v-ankete-kristalova-lupa-hlasujte-pro-nas/kl-hlasovani-button-200x200-static-1/",
+      "target": "/wp-content/uploads/2015/09/kl-hlasovani-button-200x200-static-1.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=117",
+      "target": "/wp-content/uploads/2015/09/KL_2015_vpsFree.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/jsme-v-ankete-kristalova-lupa-hlasujte-pro-nas/kl_2015_vpsfree/",
+      "target": "/wp-content/uploads/2015/09/KL_2015_vpsFree.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=120",
+      "target": "/wp-content/uploads/2015/09/LinuxDays_2014.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/jedeme-na-linuxdays-2015-prijdte-se-podivat/linuxdays_2014/",
+      "target": "/wp-content/uploads/2015/09/LinuxDays_2014.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=124",
+      "target": "/wp-content/uploads/2015/10/vpsFree_stanek.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/byli-jsme-na-linuxdays-2015-foto-a-video/vpsfree_stanek/",
+      "target": "/wp-content/uploads/2015/10/vpsFree_stanek.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=140",
+      "target": "/wp-content/uploads/2015/10/vpsAdmin_konzole.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vpsadmin-zmeny-v-mountech-vzdalena-konzole/vpsadmin_konzole/",
+      "target": "/wp-content/uploads/2015/10/vpsAdmin_konzole.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=143",
+      "target": "/wp-content/uploads/2015/10/vpsAdmin_mounts.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vpsadmin-zmeny-v-mountech-vzdalena-konzole/vpsadmin_mounts/",
+      "target": "/wp-content/uploads/2015/10/vpsAdmin_mounts.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=152",
+      "target": "/wp-content/uploads/2015/10/OpenAlt_stanek.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/jedeme-na-openalt-prijdte-na-kavu/openalt_stanek/",
+      "target": "/wp-content/uploads/2015/10/OpenAlt_stanek.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=153",
+      "target": "/wp-content/uploads/2015/10/kava.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/jedeme-na-openalt-prijdte-na-kavu/kava/",
+      "target": "/wp-content/uploads/2015/10/kava.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=160",
+      "target": "/wp-content/uploads/2015/10/WP_20151025_01_09_50_Pro.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/menime-zakladni-desku-v-serveru/wp_20151025_01_09_50_pro/",
+      "target": "/wp-content/uploads/2015/10/WP_20151025_01_09_50_Pro.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=162",
+      "target": "/wp-content/uploads/2015/10/WP_20151025_01_30_35_Pro.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/menime-zakladni-desku-v-serveru/wp_20151025_01_30_35_pro/",
+      "target": "/wp-content/uploads/2015/10/WP_20151025_01_30_35_Pro.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=163",
+      "target": "/wp-content/uploads/2015/10/WP_20151025_02_25_06_Pro.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/menime-zakladni-desku-v-serveru/wp_20151025_02_25_06_pro/",
+      "target": "/wp-content/uploads/2015/10/WP_20151025_02_25_06_Pro.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=170",
+      "target": "/wp-content/uploads/2015/11/dostupnost_ns1.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/dostupnost-99-986-procent/dostupnost_ns1/",
+      "target": "/wp-content/uploads/2015/11/dostupnost_ns1.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=172",
+      "target": "/wp-content/uploads/2015/10/vyvoj_clenu1.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/stale-rosteme-cisla-za-tri-roky/vyvoj_clenu-2/",
+      "target": "/wp-content/uploads/2015/10/vyvoj_clenu1.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=175",
+      "target": "/wp-content/uploads/2015/11/GRE_scheme.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/propojte-si-servery-pomoci-gre-tunelu/gre_scheme/",
+      "target": "/wp-content/uploads/2015/11/GRE_scheme.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=192",
+      "target": "/wp-content/uploads/2015/11/Stanek.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/openalt-jsme-provoneli-kavou-a-polepili-logy/stanek/",
+      "target": "/wp-content/uploads/2015/11/Stanek.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=193",
+      "target": "/wp-content/uploads/2015/11/Kava.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/openalt-jsme-provoneli-kavou-a-polepili-logy/kava-2/",
+      "target": "/wp-content/uploads/2015/11/Kava.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=194",
+      "target": "/wp-content/uploads/2015/11/Viktor.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/openalt-jsme-provoneli-kavou-a-polepili-logy/viktor/",
+      "target": "/wp-content/uploads/2015/11/Viktor.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=195",
+      "target": "/wp-content/uploads/2015/11/Workshop.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/openalt-jsme-provoneli-kavou-a-polepili-logy/workshop/",
+      "target": "/wp-content/uploads/2015/11/Workshop.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=196",
+      "target": "/wp-content/uploads/2015/11/Workshop2.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/openalt-jsme-provoneli-kavou-a-polepili-logy/workshop2/",
+      "target": "/wp-content/uploads/2015/11/Workshop2.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=200",
+      "target": "/wp-content/uploads/2015/11/mapacr.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/odkud-vlastne-jsme-zdaleka-nejen-z-prahy/mapacr/",
+      "target": "/wp-content/uploads/2015/11/mapacr.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=201",
+      "target": "/wp-content/uploads/2015/11/mapask.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/odkud-vlastne-jsme-zdaleka-nejen-z-prahy/mapask/",
+      "target": "/wp-content/uploads/2015/11/mapask.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=206",
+      "target": "/wp-content/uploads/2015/11/Kristalova_Lupa_2015.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/kristalovou-lupu-jsme-nevyhrali-zatim/kristalova_lupa_2015/",
+      "target": "/wp-content/uploads/2015/11/Kristalova_Lupa_2015.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=211",
+      "target": "/wp-content/uploads/2015/11/IP_adresa.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/zbyva-nam-asi-tisic-volnych-ipv4-adres/ip_adresa/",
+      "target": "/wp-content/uploads/2015/11/IP_adresa.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=212",
+      "target": "/wp-content/uploads/2015/11/IPv4_na_clena.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/zbyva-nam-asi-tisic-volnych-ipv4-adres/ipv4_na_clena/",
+      "target": "/wp-content/uploads/2015/11/IPv4_na_clena.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=217",
+      "target": "/wp-content/uploads/2015/11/KVM_logo.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/spoustime-podporu-virtualizace-s-kvm/kvm_logo/",
+      "target": "/wp-content/uploads/2015/11/KVM_logo.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=218",
+      "target": "/wp-content/uploads/2015/11/KVM.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/spoustime-podporu-virtualizace-s-kvm/kvm/",
+      "target": "/wp-content/uploads/2015/11/KVM.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=224",
+      "target": "/wp-content/uploads/2015/11/OpenAlt_workshop.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/openalt_workshop/",
+      "target": "/wp-content/uploads/2015/11/OpenAlt_workshop.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=230",
+      "target": "/wp-content/uploads/2015/12/HDD.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vanocni-darek-zdvojnasobili-jsme-kapacitu-disku-na-120-gb/hdd/",
+      "target": "/wp-content/uploads/2015/12/HDD.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=231",
+      "target": "/wp-content/uploads/2015/12/Vyuziti_disku.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vanocni-darek-zdvojnasobili-jsme-kapacitu-disku-na-120-gb/vyuziti_disku/",
+      "target": "/wp-content/uploads/2015/12/Vyuziti_disku.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=232",
+      "target": "/wp-content/uploads/2015/12/Advent.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vanocni-darek-zdvojnasobili-jsme-kapacitu-disku-na-120-gb/advent/",
+      "target": "/wp-content/uploads/2015/12/Advent.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=239",
+      "target": "/wp-content/uploads/2015/12/Produkce_120_GB.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vanocni-darek-zdvojnasobili-jsme-kapacitu-disku-na-120-gb/produkce_120_gb/",
+      "target": "/wp-content/uploads/2015/12/Produkce_120_GB.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=245",
+      "target": "/wp-content/uploads/2016/01/RAM.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/jak-vyuzit-256-gb-ram-na-serveru/ram/",
+      "target": "/wp-content/uploads/2016/01/RAM.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=246",
+      "target": "/wp-content/uploads/2016/01/ram.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/jak-vyuzit-256-gb-ram-na-serveru/ram-2/",
+      "target": "/wp-content/uploads/2016/01/ram.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=250",
+      "target": "/wp-content/uploads/2016/01/pavel-snajdr-predseda-vpsfree-cz-1.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/napsala-o-nas-lupa-cz-jsme-pry-unikat/pavel-snajdr-predseda-vpsfree-cz-1/",
+      "target": "/wp-content/uploads/2016/01/pavel-snajdr-predseda-vpsfree-cz-1.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=251",
+      "target": "/wp-content/uploads/2016/01/pavel-snajdr-predseda-vpsfree-cz-11.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/napsala-o-nas-lupa-cz-jsme-pry-unikat/pavel-snajdr-predseda-vpsfree-cz-1-2/",
+      "target": "/wp-content/uploads/2016/01/pavel-snajdr-predseda-vpsfree-cz-11.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=254",
+      "target": "/wp-content/uploads/2016/01/vpsAdmin_2_1.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vpsadmin-2-1-0-konzole-vps-v-terminalu/vpsadmin_2_1/",
+      "target": "/wp-content/uploads/2016/01/vpsAdmin_2_1.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=265",
+      "target": "/wp-content/uploads/2016/02/Outage_windows.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vpsadmin-v2-2-0-nastaveni-casu-pro-planovane-vypadky-vps/outage_windows/",
+      "target": "/wp-content/uploads/2016/02/Outage_windows.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=267",
+      "target": "/wp-content/uploads/2016/02/Clock.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vpsadmin-v2-2-0-nastaveni-casu-pro-planovane-vypadky-vps/clock/",
+      "target": "/wp-content/uploads/2016/02/Clock.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=270",
+      "target": "/wp-content/uploads/2016/02/InstallFest.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/prijdte-za-nami-na-installfest-5-a-6-brezna/installfest/",
+      "target": "/wp-content/uploads/2016/02/InstallFest.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=276",
+      "target": "/wp-content/uploads/2016/02/Shake_hands.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/nejvic-clenu-prichazi-na-osobni-doporuceni/shake_hands/",
+      "target": "/wp-content/uploads/2016/02/Shake_hands.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=280",
+      "target": "/wp-content/uploads/2016/03/IMG_4967.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/installfest-se-rozhodne-vydaril-podivejte-se/img_4967/",
+      "target": "/wp-content/uploads/2016/03/IMG_4967.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=285",
+      "target": "/wp-content/uploads/2016/03/vpsAdmin.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/stahnete-si-zalohy-v-prikazove-radce/vpsadmin/",
+      "target": "/wp-content/uploads/2016/03/vpsAdmin.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=292",
+      "target": "/wp-content/uploads/2016/03/Docker_vpsFree.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/nejnovejsi-docker-1-10-uz-nam-bezi-vsude/docker_vpsfree/",
+      "target": "/wp-content/uploads/2016/03/Docker_vpsFree.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=293",
+      "target": "/wp-content/uploads/2016/03/Docker_vpsFree_male.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/nejnovejsi-docker-1-10-uz-nam-bezi-vsude/docker_vpsfree_male/",
+      "target": "/wp-content/uploads/2016/03/Docker_vpsFree_male.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=294",
+      "target": "/wp-content/uploads/2016/03/VPS_jadra.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/nejnovejsi-docker-1-10-uz-nam-bezi-vsude/vps_jadra/",
+      "target": "/wp-content/uploads/2016/03/VPS_jadra.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=300",
+      "target": "/wp-content/uploads/2016/04/Toms_server.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/zacatky-vpsfree-cz-jak-jsem-dal-server-neznamemu-cloveku/toms_server/",
+      "target": "/wp-content/uploads/2016/04/Toms_server.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=309",
+      "target": "/wp-content/uploads/2016/04/puzzle.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/haveapi-fs-pripojte-si-api-jako-souborovy-system/puzzle/",
+      "target": "/wp-content/uploads/2016/04/puzzle.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=317",
+      "target": "/wp-content/uploads/2016/04/DDoS_attacks.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/ddos-utoky-jdou-nejcasteji-na-teamspeak/ddos_attacks/",
+      "target": "/wp-content/uploads/2016/04/DDoS_attacks.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=318",
+      "target": "/wp-content/uploads/2016/04/DoS_utok.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/ddos-utoky-jdou-nejcasteji-na-teamspeak/dos_utok/",
+      "target": "/wp-content/uploads/2016/04/DoS_utok.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=319",
+      "target": "/wp-content/uploads/2016/04/MikroTik_CCR1072.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/ddos-utoky-jdou-nejcasteji-na-teamspeak/mikrotik_ccr1072/",
+      "target": "/wp-content/uploads/2016/04/MikroTik_CCR1072.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=327",
+      "target": "/wp-content/uploads/2016/05/mounts_dataset.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/migrace-vps-mezi-poskytovateli/mounts_dataset/",
+      "target": "/wp-content/uploads/2016/05/mounts_dataset.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=334",
+      "target": "/wp-content/uploads/2016/05/fedora_23.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-nove-distribuce-devuan-fedora-23-a-opensuse-13-2/fedora_23/",
+      "target": "/wp-content/uploads/2016/05/fedora_23.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=348",
+      "target": "/wp-content/uploads/2016/05/cenzor.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/podporujeme-internet-bez-urednicke-cenzury/cenzor/",
+      "target": "/wp-content/uploads/2016/05/cenzor.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=359",
+      "target": "/wp-content/uploads/2016/05/Slackware.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/pridali-jsme-alpine-linux-3-3-a-slackware-14-1/slackware/",
+      "target": "/wp-content/uploads/2016/05/Slackware.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=363",
+      "target": "/wp-content/uploads/2016/06/Void_Linux.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/aktualizace-arch-linux-a-void-linux/void_linux/",
+      "target": "/wp-content/uploads/2016/06/Void_Linux.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=368",
+      "target": "/wp-content/uploads/2016/06/Ubuntu.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/distribuce-po-roce-vedou-debian-ubuntu-a-centos/ubuntu/",
+      "target": "/wp-content/uploads/2016/06/Ubuntu.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=369",
+      "target": "/wp-content/uploads/2016/06/vpsFree_distribuce.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/distribuce-po-roce-vedou-debian-ubuntu-a-centos/vpsfree_distribuce/",
+      "target": "/wp-content/uploads/2016/06/vpsFree_distribuce.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=375",
+      "target": "/wp-content/uploads/2016/06/CentOS-Ubuntu-Debian.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/distribuce-po-roce-vedou-debian-ubuntu-a-centos/centos-ubuntu-debian/",
+      "target": "/wp-content/uploads/2016/06/CentOS-Ubuntu-Debian.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=380",
+      "target": "/wp-content/uploads/2016/06/English_language.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vpsadmin-se-naucil-anglicky/english_language/",
+      "target": "/wp-content/uploads/2016/06/English_language.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=382",
+      "target": "/wp-content/uploads/2016/06/1000.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/1000-clenu/1000/",
+      "target": "/wp-content/uploads/2016/06/1000.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=383",
+      "target": "/wp-content/uploads/2016/06/pocet_clenu.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/1000-clenu/pocet_clenu/",
+      "target": "/wp-content/uploads/2016/06/pocet_clenu.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=394",
+      "target": "/wp-content/uploads/2016/08/IRC.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/prijdte-za-nami-na-irc-freenode-net-vpsfree/irc/",
+      "target": "/wp-content/uploads/2016/08/IRC.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=398",
+      "target": "/wp-content/uploads/2016/08/paste.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/sluzba-pro-sdileni-uryvku-kodu-paste-vpsfree-cz/paste/",
+      "target": "/wp-content/uploads/2016/08/paste.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=404",
+      "target": "/wp-content/uploads/2016/08/NAS_box.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/kdyz-se-rozbiji-disky-aneb-jak-nas-pozlobil-nas/nas_box/",
+      "target": "/wp-content/uploads/2016/08/NAS_box.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=414",
+      "target": "/wp-content/uploads/2016/09/SSD_node_01.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-prvni-server-s-ssd-a-512-gb-ram/ssd_node_01/",
+      "target": "/wp-content/uploads/2016/09/SSD_node_01.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=415",
+      "target": "/wp-content/uploads/2016/09/SSD_node_02.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-prvni-server-s-ssd-a-512-gb-ram/ssd_node_02/",
+      "target": "/wp-content/uploads/2016/09/SSD_node_02.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=418",
+      "target": "/wp-content/uploads/2016/09/SSD_node_03.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-prvni-server-s-ssd-a-512-gb-ram/ssd_node_03/",
+      "target": "/wp-content/uploads/2016/09/SSD_node_03.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=420",
+      "target": "/wp-content/uploads/2016/09/Cisco_SG550XG-24F.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/proc-chceme-mit-20gigabitovou-sit/cisco_sg550xg-24f/",
+      "target": "/wp-content/uploads/2016/09/Cisco_SG550XG-24F.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=421",
+      "target": "/wp-content/uploads/2016/09/Cisco_SG550XG-24F-1.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/proc-chceme-mit-20gigabitovou-sit/cisco_sg550xg-24f-2/",
+      "target": "/wp-content/uploads/2016/09/Cisco_SG550XG-24F-1.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=423",
+      "target": "/wp-content/uploads/2016/09/Intel_x520_da2.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/proc-chceme-mit-20gigabitovou-sit/intel-ethernet-converged-network-adapter-x520-da2/",
+      "target": "/wp-content/uploads/2016/09/Intel_x520_da2.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=434",
+      "target": "/wp-content/uploads/2016/09/Gnodal_GS4008.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/20-gigabitu-bude-uz-letos/gnodal_gs4008/",
+      "target": "/wp-content/uploads/2016/09/Gnodal_GS4008.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=444",
+      "target": "/wp-content/uploads/2016/10/LD_stanek.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/jedeme-na-linuxdays-prijdte-tam-za-nami/ld_stanek/",
+      "target": "/wp-content/uploads/2016/10/LD_stanek.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=445",
+      "target": "/wp-content/uploads/2016/10/linuxdays_2016.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/jedeme-na-linuxdays-prijdte-tam-za-nami/linuxdays_2016/",
+      "target": "/wp-content/uploads/2016/10/linuxdays_2016.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=451",
+      "target": "/wp-content/uploads/2016/10/Dirty_cow.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/chyba-dirty-cow-pod-openvz/dirty_cow/",
+      "target": "/wp-content/uploads/2016/10/Dirty_cow.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=457",
+      "target": "/wp-content/uploads/2016/10/net_monitor_cli.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vpsadmin-v2-5-0-podpora-pro-privatni-ip-adresy-vylepseny-prehled-datovych-prenosu/net_monitor_cli/",
+      "target": "/wp-content/uploads/2016/10/net_monitor_cli.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=461",
+      "target": "/wp-content/uploads/2016/11/systemd.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vypadky-a-nestartujici-sluzby-v-systemd/systemd/",
+      "target": "/wp-content/uploads/2016/11/systemd.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=471",
+      "target": "/wp-content/uploads/2016/11/haveapi_cli_block.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/haveapi-v0-7-blokujici-akce/haveapi_cli_block/",
+      "target": "/wp-content/uploads/2016/11/haveapi_cli_block.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=472",
+      "target": "/wp-content/uploads/2016/11/haveapi_client_example.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/haveapi-v0-7-blokujici-akce/haveapi_client_example/",
+      "target": "/wp-content/uploads/2016/11/haveapi_client_example.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=475",
+      "target": "/wp-content/uploads/2016/11/Add_SSH_key.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vpsadmin-umi-nahravani-ssh-klicu-do-vps/add_ssh_key/",
+      "target": "/wp-content/uploads/2016/11/Add_SSH_key.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=476",
+      "target": "/wp-content/uploads/2016/11/Deploy_SSH_key.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vpsadmin-umi-nahravani-ssh-klicu-do-vps/deploy_ssh_key/",
+      "target": "/wp-content/uploads/2016/11/Deploy_SSH_key.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=477",
+      "target": "/wp-content/uploads/2016/11/Deploy_SSH_key-1.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vpsadmin-umi-nahravani-ssh-klicu-do-vps/deploy_ssh_key-2/",
+      "target": "/wp-content/uploads/2016/11/Deploy_SSH_key-1.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=482",
+      "target": "/wp-content/uploads/2016/12/vpsFree_hackaton.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/jak-probehl-nas-prvni-vpsfree-hackaton/vpsfree_hackaton/",
+      "target": "/wp-content/uploads/2016/12/vpsFree_hackaton.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=484",
+      "target": "/wp-content/uploads/2016/12/hackaton-snajpa.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/jak-probehl-nas-prvni-vpsfree-hackaton/hackaton-snajpa/",
+      "target": "/wp-content/uploads/2016/12/hackaton-snajpa.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=494",
+      "target": "/wp-content/uploads/2017/03/vpsFree_Chemnitzer_perex.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/poprve-v-cizine-aneb-jak-jsme-byli-na-linux-tage-v-saske-kamenici/vpsfree_chemnitzer_perex/",
+      "target": "/wp-content/uploads/2017/03/vpsFree_Chemnitzer_perex.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=495",
+      "target": "/wp-content/uploads/2017/03/vpsFree_Chemnitzer.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/poprve-v-cizine-aneb-jak-jsme-byli-na-linux-tage-v-saske-kamenici/vpsfree_chemnitzer/",
+      "target": "/wp-content/uploads/2017/03/vpsFree_Chemnitzer.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=496",
+      "target": "/wp-content/uploads/2017/03/vpsFree_Chemnitzer_02.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/poprve-v-cizine-aneb-jak-jsme-byli-na-linux-tage-v-saske-kamenici/vpsfree_chemnitzer_02/",
+      "target": "/wp-content/uploads/2017/03/vpsFree_Chemnitzer_02.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=507",
+      "target": "/wp-content/uploads/2017/05/Alpine.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/podporujeme-alpine-linux-ma-u-nas-hlavni-mirror/alpine/",
+      "target": "/wp-content/uploads/2017/05/Alpine.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=508",
+      "target": "/wp-content/uploads/2017/05/Alpine_infra.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/podporujeme-alpine-linux-ma-u-nas-hlavni-mirror/alpine_infra/",
+      "target": "/wp-content/uploads/2017/05/Alpine_infra.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=513",
+      "target": "/wp-content/uploads/2017/05/Alpine_infra-1.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/podporujeme-alpine-linux-ma-u-nas-hlavni-mirror/alpine_infra-2/",
+      "target": "/wp-content/uploads/2017/05/Alpine_infra-1.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=517",
+      "target": "/wp-content/uploads/2017/05/Distribuce_2017.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/linuxove-distribuce-vede-debian-a-ubuntu-nahoru-se-dere-alpine/distribuce_2017/",
+      "target": "/wp-content/uploads/2017/05/Distribuce_2017.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=522",
+      "target": "/wp-content/uploads/2017/06/DNS.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/co-je-to-reverzni-zaznam-ptr-a-jak-ho-nastavit/dns/",
+      "target": "/wp-content/uploads/2017/06/DNS.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=540",
+      "target": "/wp-content/uploads/2018/03/Snajpa.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/predstavili-jsme-vpsadminos-system-pro-provoz-kontejneru/snajpa/",
+      "target": "/wp-content/uploads/2018/03/Snajpa.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=543",
+      "target": "/wp-content/uploads/2018/03/IF18-vpsadminos.pdf"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/predstavili-jsme-vpsadminos-system-pro-provoz-kontejneru/if18-vpsadminos/",
+      "target": "/wp-content/uploads/2018/03/IF18-vpsadminos.pdf"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=548",
+      "target": "/wp-content/uploads/2018/05/vpsAdminOS.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/prechazime-z-openvz-na-vpsadminos-spoustime-testovaci-prostredi/vpsadminos/",
+      "target": "/wp-content/uploads/2018/05/vpsAdminOS.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=561",
+      "target": "/wp-content/uploads/2018/10/Nalepky.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/prijdte-o-vikendu-na-linuxdays-my-tam-budeme/nalepky/",
+      "target": "/wp-content/uploads/2018/10/Nalepky.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=565",
+      "target": "/wp-content/uploads/2018/10/Server.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-nove-servery-jsou-plne-zaplatovane-proti-znamym-chybam-cpu/server/",
+      "target": "/wp-content/uploads/2018/10/Server.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=566",
+      "target": "/wp-content/uploads/2018/10/Server_na_stole.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-nove-servery-jsou-plne-zaplatovane-proti-znamym-chybam-cpu/server_na_stole/",
+      "target": "/wp-content/uploads/2018/10/Server_na_stole.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=569",
+      "target": "/wp-content/uploads/2018/10/Dell.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-nove-servery-jsou-plne-zaplatovane-proti-znamym-chybam-cpu/dell/",
+      "target": "/wp-content/uploads/2018/10/Dell.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=581",
+      "target": "/wp-content/uploads/2019/01/10.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/prvnich-10-let-je-za-nami-chystame-spoustu-novinek/10/",
+      "target": "/wp-content/uploads/2019/01/10.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=589",
+      "target": "/wp-content/uploads/2019/02/vpsFree_schuze_2019.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/shrnuti-ze-sobotni-vyrocni-schuze-todo/vpsfree_schuze_2019/",
+      "target": "/wp-content/uploads/2019/02/vpsFree_schuze_2019.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=593",
+      "target": "/wp-content/uploads/2019/02/InstallFest.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vyrazime-na-installfest-prijdte-na-kafe-a-novy-switch/installfest-2/",
+      "target": "/wp-content/uploads/2019/02/InstallFest.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=598",
+      "target": "/wp-content/uploads/2019/05/Terraform.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/terraform-provider-pro-vpsadmin-spravujte-infrastrukturu-automatizovane/terraform/",
+      "target": "/wp-content/uploads/2019/05/Terraform.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=602",
+      "target": "/wp-content/uploads/2019/05/Google_authenticator.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-dvoufaktorove-prihlasovani-do-vpsadmin-kvuli-vyssi-bezpecnosti/google_authenticator/",
+      "target": "/wp-content/uploads/2019/05/Google_authenticator.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=628",
+      "target": "/wp-content/uploads/2020/03/Lets_Encrypt.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/lets_encrypt/",
+      "target": "/wp-content/uploads/2020/03/Lets_Encrypt.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=635",
+      "target": "/wp-content/uploads/2020/03/Koronavirus_maska.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mate-kvuli-koronaviru-problem-s-it-nabizime-pomoc-ozvete-se/koronavirus_maska/",
+      "target": "/wp-content/uploads/2020/03/Koronavirus_maska.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=638",
+      "target": "/wp-content/uploads/2020/03/Video_konference.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/video_konference/",
+      "target": "/wp-content/uploads/2020/03/Video_konference.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=640",
+      "target": "/wp-content/uploads/2020/03/jitsi_meet.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/jitsi_meet/",
+      "target": "/wp-content/uploads/2020/03/jitsi_meet.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=641",
+      "target": "/wp-content/uploads/2020/03/Jitsi_mobil.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/jitsi_mobil/",
+      "target": "/wp-content/uploads/2020/03/Jitsi_mobil.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=643",
+      "target": "/wp-content/uploads/2020/03/master.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/master/",
+      "target": "/wp-content/uploads/2020/03/master.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=645",
+      "target": "/wp-content/uploads/2020/03/Video_hovor.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/video_hovor/",
+      "target": "/wp-content/uploads/2020/03/Video_hovor.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=663",
+      "target": "/wp-content/uploads/2020/06/IPv6_ready.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/ipv6_ready/",
+      "target": "/wp-content/uploads/2020/06/IPv6_ready.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=668",
+      "target": "/wp-content/uploads/2020/06/Storage.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/aktuality-ze-serverovny-co-delame-ted-a-co-chystame-dal/storage/",
+      "target": "/wp-content/uploads/2020/06/Storage.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=670",
+      "target": "/wp-content/uploads/2020/06/Clenska_schuze.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/aktuality-ze-serverovny-co-delame-ted-a-co-chystame-dal/clenska_schuze/",
+      "target": "/wp-content/uploads/2020/06/Clenska_schuze.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=685",
+      "target": "/wp-content/uploads/2020/09/Master_towery.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/datacentrum-vybirejte-dobre-muze-z-nej-byt-partner-na-cely-zivot/master_towery/",
+      "target": "/wp-content/uploads/2020/09/Master_towery.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=686",
+      "target": "/wp-content/uploads/2020/09/Master_storage.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/datacentrum-vybirejte-dobre-muze-z-nej-byt-partner-na-cely-zivot/master_storage/",
+      "target": "/wp-content/uploads/2020/09/Master_storage.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=696",
+      "target": "/wp-content/uploads/2020/11/testvpsfree.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vyzkousejte-si-podporu-novych-certifikatu-od-lets-encrypt-na-test-vpsfree-cz/testvpsfree/",
+      "target": "/wp-content/uploads/2020/11/testvpsfree.png"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=697",
+      "target": "/wp-content/uploads/2020/11/Lets_Encrypt.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vyzkousejte-si-podporu-novych-certifikatu-od-lets-encrypt-na-test-vpsfree-cz/lets_encrypt-2/",
+      "target": "/wp-content/uploads/2020/11/Lets_Encrypt.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=703",
+      "target": "/wp-content/uploads/2020/12/Distribuce.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/linuxove-distribuce-ubuntu-roste-rychleji-nez-debian-stoupa-popularita-nixos/distribuce-2/",
+      "target": "/wp-content/uploads/2020/12/Distribuce.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=718",
+      "target": "/wp-content/uploads/2021/03/Ethernet.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/umime-pridelit-kazdemu-serveru-vlastni-blok-64-adres-z-ipv6/ethernet/",
+      "target": "/wp-content/uploads/2021/03/Ethernet.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=723",
+      "target": "/wp-content/uploads/2021/09/Brno.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/prvni-server-s-vpsadminos-v-brne/brno/",
+      "target": "/wp-content/uploads/2021/09/Brno.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=742",
+      "target": "/wp-content/uploads/2022/02/start_menu.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vps-start-menu-nahrada-za-zavadec-grub/start_menu/",
+      "target": "/wp-content/uploads/2022/02/start_menu.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=743",
+      "target": "/wp-content/uploads/2022/02/vpsadminos_start_menu.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vps-start-menu-nahrada-za-zavadec-grub/vpsadminos_start_menu/",
+      "target": "/wp-content/uploads/2022/02/vpsadminos_start_menu.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=747",
+      "target": "/wp-content/uploads/2022/06/zarovka.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/post-mortem-par-slov-k-vypadku/zarovka/",
+      "target": "/wp-content/uploads/2022/06/zarovka.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=763",
+      "target": "/wp-content/uploads/2022/07/Elektricky_sloup_vedeni.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/vykonnejsi-servery-jako-lek-na-zvysovani-cen-energii/elektricky_sloup_vedeni/",
+      "target": "/wp-content/uploads/2022/07/Elektricky_sloup_vedeni.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=774",
+      "target": "/wp-content/uploads/2022/10/node22.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/inovujeme-skoro-vsechen-hardware-chceme-byt-energeticky-uspornejsi/node22/",
+      "target": "/wp-content/uploads/2022/10/node22.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=816",
+      "target": "/wp-content/uploads/2023/12/Discourse.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/mame-discourse-pojdte-si-tam-povidat-mailing-listy-jsou-prezite/discourse/",
+      "target": "/wp-content/uploads/2023/12/Discourse.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=822",
+      "target": "/wp-content/uploads/2023/12/zamek_klavesnice.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/single-sign-on-ve-vpsadminu/zamek_klavesnice/",
+      "target": "/wp-content/uploads/2023/12/zamek_klavesnice.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=825",
+      "target": "/wp-content/uploads/2024/01/Hard_disk.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/nahradili-jsme-lxcfs-virtualizaci-v-kernelu/hard_disk/",
+      "target": "/wp-content/uploads/2024/01/Hard_disk.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=829",
+      "target": "/wp-content/uploads/2024/07/heat.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/metriky-pro-prometheus-a-heatmapy-zatizeni-nodu/heat/",
+      "target": "/wp-content/uploads/2024/07/heat.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=842",
+      "target": "/wp-content/uploads/2025/03/Passkey.jpg"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/dvoufaktorove-prihlasovani-s-passkey/passkey/",
+      "target": "/wp-content/uploads/2025/03/Passkey.jpg"
+    },
+    {
+      "kind": "attachment-query",
+      "source": "/?attachment_id=843",
+      "target": "/wp-content/uploads/2025/03/vpsAdmin_passkey.png"
+    },
+    {
+      "kind": "attachment-permalink",
+      "source": "/dvoufaktorove-prihlasovani-s-passkey/vpsadmin_passkey/",
+      "target": "/wp-content/uploads/2025/03/vpsAdmin_passkey.png"
+    },
+    {
+      "kind": "author-query",
+      "source": "/?author=1",
+      "target": "/author/krcmar/"
+    },
+    {
+      "kind": "author-query",
+      "source": "/?author=2",
+      "target": "/author/medved/"
+    },
+    {
+      "kind": "author-query",
+      "source": "/?author=3",
+      "target": "/author/snajpa/"
+    },
+    {
+      "kind": "author-query",
+      "source": "/?author=6",
+      "target": "/author/aither/"
+    },
+    {
+      "kind": "author-query",
+      "source": "/?author=8",
+      "target": "/author/jirutka/"
+    },
+    {
+      "kind": "author-query",
+      "source": "/?author=9",
+      "target": "/author/myska/"
+    },
+    {
+      "kind": "category-query",
+      "source": "/?cat=1",
+      "target": "/category/nezarazene/"
+    },
+    {
+      "kind": "category-query",
+      "source": "/?cat=2",
+      "target": "/category/distribuce/"
+    },
+    {
+      "kind": "category-query",
+      "source": "/?cat=4",
+      "target": "/category/technologie/"
+    },
+    {
+      "kind": "category-query",
+      "source": "/?cat=5",
+      "target": "/category/akce/"
+    },
+    {
+      "kind": "category-query",
+      "source": "/?cat=7",
+      "target": "/category/skoly/"
+    },
+    {
+      "kind": "category-query",
+      "source": "/?cat=8",
+      "target": "/category/podpora/"
+    },
+    {
+      "kind": "category-query",
+      "source": "/?cat=9",
+      "target": "/category/server/"
+    },
+    {
+      "kind": "category-query",
+      "source": "/?cat=11",
+      "target": "/category/vpsfree-cz/"
+    },
+    {
+      "kind": "category-query",
+      "source": "/?cat=30",
+      "target": "/category/bezpecnost/"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/centos-7-template-jsme-prohlasili-za-stable/?replytocom=3",
+      "target": "/centos-7-template-jsme-prohlasili-za-stable/#comment-3"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/zalohy-ve-vpsfree-aneb-na-ceste-od-rsync-k-zfs-snapshotum/?replytocom=16",
+      "target": "/zalohy-ve-vpsfree-aneb-na-ceste-od-rsync-k-zfs-snapshotum/#comment-16"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/zalohy-ve-vpsfree-aneb-na-ceste-od-rsync-k-zfs-snapshotum/?replytocom=17",
+      "target": "/zalohy-ve-vpsfree-aneb-na-ceste-od-rsync-k-zfs-snapshotum/#comment-17"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/centos-7-template-jsme-prohlasili-za-stable/?replytocom=20",
+      "target": "/centos-7-template-jsme-prohlasili-za-stable/#comment-20"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/centos-7-template-jsme-prohlasili-za-stable/?replytocom=21",
+      "target": "/centos-7-template-jsme-prohlasili-za-stable/#comment-21"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/centos-7-template-jsme-prohlasili-za-stable/?replytocom=22",
+      "target": "/centos-7-template-jsme-prohlasili-za-stable/#comment-22"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/setrvacnost-konferencniho-efektu/?replytocom=24",
+      "target": "/setrvacnost-konferencniho-efektu/#comment-24"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/stale-rosteme-cisla-za-tri-roky/?replytocom=182",
+      "target": "/stale-rosteme-cisla-za-tri-roky/#comment-182"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/dostupnost-99-986-procent/?replytocom=210",
+      "target": "/dostupnost-99-986-procent/#comment-210"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/dostupnost-99-986-procent/?replytocom=211",
+      "target": "/dostupnost-99-986-procent/#comment-211"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/stale-rosteme-cisla-za-tri-roky/?replytocom=212",
+      "target": "/stale-rosteme-cisla-za-tri-roky/#comment-212"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/vanocni-darek-zdvojnasobili-jsme-kapacitu-disku-na-120-gb/?replytocom=319",
+      "target": "/vanocni-darek-zdvojnasobili-jsme-kapacitu-disku-na-120-gb/#comment-319"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/vanocni-darek-zdvojnasobili-jsme-kapacitu-disku-na-120-gb/?replytocom=323",
+      "target": "/vanocni-darek-zdvojnasobili-jsme-kapacitu-disku-na-120-gb/#comment-323"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/nejvic-clenu-prichazi-na-osobni-doporuceni/?replytocom=396",
+      "target": "/nejvic-clenu-prichazi-na-osobni-doporuceni/#comment-396"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/1000-clenu/?replytocom=432",
+      "target": "/1000-clenu/#comment-432"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/mame-prvni-server-s-ssd-a-512-gb-ram/?replytocom=455",
+      "target": "/mame-prvni-server-s-ssd-a-512-gb-ram/#comment-455"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/mame-prvni-server-s-ssd-a-512-gb-ram/?replytocom=456",
+      "target": "/mame-prvni-server-s-ssd-a-512-gb-ram/#comment-456"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/mame-prvni-server-s-ssd-a-512-gb-ram/?replytocom=457",
+      "target": "/mame-prvni-server-s-ssd-a-512-gb-ram/#comment-457"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/mame-prvni-server-s-ssd-a-512-gb-ram/?replytocom=458",
+      "target": "/mame-prvni-server-s-ssd-a-512-gb-ram/#comment-458"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/chyba-dirty-cow-pod-openvz/?replytocom=474",
+      "target": "/chyba-dirty-cow-pod-openvz/#comment-474"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/chyba-dirty-cow-pod-openvz/?replytocom=475",
+      "target": "/chyba-dirty-cow-pod-openvz/#comment-475"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/chyba-dirty-cow-pod-openvz/?replytocom=476",
+      "target": "/chyba-dirty-cow-pod-openvz/#comment-476"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/linuxove-distribuce-vede-debian-a-ubuntu-nahoru-se-dere-alpine/?replytocom=1000",
+      "target": "/linuxove-distribuce-vede-debian-a-ubuntu-nahoru-se-dere-alpine/#comment-1000"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/linuxove-distribuce-vede-debian-a-ubuntu-nahoru-se-dere-alpine/?replytocom=1003",
+      "target": "/linuxove-distribuce-vede-debian-a-ubuntu-nahoru-se-dere-alpine/#comment-1003"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/vpsadmin-v2-9-prinasi-jednoduchy-monitoring-vps/?replytocom=1136",
+      "target": "/vpsadmin-v2-9-prinasi-jednoduchy-monitoring-vps/#comment-1136"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/vpsadmin-v2-9-prinasi-jednoduchy-monitoring-vps/?replytocom=1137",
+      "target": "/vpsadmin-v2-9-prinasi-jednoduchy-monitoring-vps/#comment-1137"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prijdte-o-vikendu-na-linuxdays-my-tam-budeme/?replytocom=1690",
+      "target": "/prijdte-o-vikendu-na-linuxdays-my-tam-budeme/#comment-1690"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prijdte-o-vikendu-na-linuxdays-my-tam-budeme/?replytocom=1691",
+      "target": "/prijdte-o-vikendu-na-linuxdays-my-tam-budeme/#comment-1691"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prijdte-o-vikendu-na-linuxdays-my-tam-budeme/?replytocom=1693",
+      "target": "/prijdte-o-vikendu-na-linuxdays-my-tam-budeme/#comment-1693"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/mame-nove-servery-jsou-plne-zaplatovane-proti-znamym-chybam-cpu/?replytocom=1856",
+      "target": "/mame-nove-servery-jsou-plne-zaplatovane-proti-znamym-chybam-cpu/#comment-1856"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/mame-dvoufaktorove-prihlasovani-do-vpsadmin-kvuli-vyssi-bezpecnosti/?replytocom=2537",
+      "target": "/mame-dvoufaktorove-prihlasovani-do-vpsadmin-kvuli-vyssi-bezpecnosti/#comment-2537"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/vyvoj-vpsadminos-nfs-na-stagingu-overlay2-driver-pro-docker-a-dalsi/?replytocom=2957",
+      "target": "/vyvoj-vpsadminos-nfs-na-stagingu-overlay2-driver-pro-docker-a-dalsi/#comment-2957"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/vyvoj-vpsadminos-nfs-na-stagingu-overlay2-driver-pro-docker-a-dalsi/?replytocom=2972",
+      "target": "/vyvoj-vpsadminos-nfs-na-stagingu-overlay2-driver-pro-docker-a-dalsi/#comment-2972"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/lets-encrypt-revokuje-tri-miliony-certifikatu-zkontrolujte-ty-sve/?replytocom=3415",
+      "target": "/lets-encrypt-revokuje-tri-miliony-certifikatu-zkontrolujte-ty-sve/#comment-3415"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/mate-kvuli-koronaviru-problem-s-it-nabizime-pomoc-ozvete-se/?replytocom=3441",
+      "target": "/mate-kvuli-koronaviru-problem-s-it-nabizime-pomoc-ozvete-se/#comment-3441"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/mate-kvuli-koronaviru-problem-s-it-nabizime-pomoc-ozvete-se/?replytocom=3443",
+      "target": "/mate-kvuli-koronaviru-problem-s-it-nabizime-pomoc-ozvete-se/#comment-3443"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=3445",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-3445"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=3446",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-3446"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=3449",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-3449"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=3453",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-3453"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=3454",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-3454"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=3455",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-3455"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=3462",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-3462"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=3465",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-3465"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3468",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3468"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3475",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3475"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3488",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3488"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=3489",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-3489"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3491",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3491"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3496",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3496"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3497",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3497"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3498",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3498"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3499",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3499"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3500",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3500"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3507",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3507"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3508",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3508"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3509",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3509"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3515",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3515"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=3520",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-3520"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=3521",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-3521"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3524",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3524"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3546",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3546"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3547",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3547"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3550",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3550"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3551",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3551"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/?replytocom=3553",
+      "target": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/#comment-3553"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3556",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3556"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/?replytocom=3558",
+      "target": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/#comment-3558"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3559",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3559"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3560",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3560"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3576",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3576"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/?replytocom=3580",
+      "target": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/#comment-3580"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3619",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3619"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/?replytocom=3620",
+      "target": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/#comment-3620"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/?replytocom=3621",
+      "target": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/#comment-3621"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=3663",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-3663"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/?replytocom=3680",
+      "target": "/kam-dal-s-meet-vpsfree-cz-aneb-novy-software-i-hardware/#comment-3680"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3681",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3681"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3682",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3682"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3683",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3683"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3711",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3711"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3739",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3739"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3740",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3740"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/migrace-nasi-infrastruktury-na-20-gigabitu/?replytocom=3765",
+      "target": "/migrace-nasi-infrastruktury-na-20-gigabitu/#comment-3765"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3804",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3804"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/posilujeme-meet-vpsfree-cz-mame-dva-nove-servery/?replytocom=3806",
+      "target": "/posilujeme-meet-vpsfree-cz-mame-dva-nove-servery/#comment-3806"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/posilujeme-meet-vpsfree-cz-mame-dva-nove-servery/?replytocom=3807",
+      "target": "/posilujeme-meet-vpsfree-cz-mame-dva-nove-servery/#comment-3807"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3808",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3808"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=3870",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-3870"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/?replytocom=3969",
+      "target": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/#comment-3969"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/?replytocom=3970",
+      "target": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/#comment-3970"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/?replytocom=3976",
+      "target": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/#comment-3976"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/?replytocom=3978",
+      "target": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/#comment-3978"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/?replytocom=3980",
+      "target": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/#comment-3980"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/?replytocom=4051",
+      "target": "/prejdeme-na-ipv6-spolecne-potrebujeme-to/#comment-4051"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/sprava-pameti-na-vpsadminos/?replytocom=4638",
+      "target": "/sprava-pameti-na-vpsadminos/#comment-4638"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/sprava-pameti-na-vpsadminos/?replytocom=4639",
+      "target": "/sprava-pameti-na-vpsadminos/#comment-4639"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/posilujeme-meet-vpsfree-cz-mame-dva-nove-servery/?replytocom=4715",
+      "target": "/posilujeme-meet-vpsfree-cz-mame-dva-nove-servery/#comment-4715"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/posilujeme-meet-vpsfree-cz-mame-dva-nove-servery/?replytocom=4716",
+      "target": "/posilujeme-meet-vpsfree-cz-mame-dva-nove-servery/#comment-4716"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/posilujeme-meet-vpsfree-cz-mame-dva-nove-servery/?replytocom=4717",
+      "target": "/posilujeme-meet-vpsfree-cz-mame-dva-nove-servery/#comment-4717"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/?replytocom=4915",
+      "target": "/prvni-den-s-video-horovy-na-meet-vpsfree-cz/#comment-4915"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/?replytocom=5062",
+      "target": "/spoustime-video-hovory-na-meet-vpsfree-cz-zdarma-a-bez-registrace/#comment-5062"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/jsme-v-pulce-migrace-na-vpsadminos-ted-prijde-na-radu-brno/?replytocom=6664",
+      "target": "/jsme-v-pulce-migrace-na-vpsadminos-ted-prijde-na-radu-brno/#comment-6664"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/vykonnejsi-servery-jako-lek-na-zvysovani-cen-energii/?replytocom=8763",
+      "target": "/vykonnejsi-servery-jako-lek-na-zvysovani-cen-energii/#comment-8763"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/linuxove-distribuce-rocky-linux-rychle-roste-slackware-uplne-zmizel/?replytocom=10045",
+      "target": "/linuxove-distribuce-rocky-linux-rychle-roste-slackware-uplne-zmizel/#comment-10045"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/automaticke-rozsirovani-disku-vps/?replytocom=10675",
+      "target": "/automaticke-rozsirovani-disku-vps/#comment-10675"
+    },
+    {
+      "kind": "comment-reply-query",
+      "source": "/automaticke-rozsirovani-disku-vps/?replytocom=10684",
+      "target": "/automaticke-rozsirovani-disku-vps/#comment-10684"
+    }
+  ]
+}
