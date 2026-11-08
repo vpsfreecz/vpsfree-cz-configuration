@@ -29,7 +29,9 @@ let
       real_ip_recursive off;
     '';
     locations = {
-      "= /_deploy/blog".return = "404";
+      "= /_deploy/blog" = lib.mkIf (!cfg.publication.enable || host != "blog.vpsfree.cz") {
+        return = "404";
+      };
       "^~ /_deploy/".return = "404";
       "^~ /_hooks/".return = "404";
     };
