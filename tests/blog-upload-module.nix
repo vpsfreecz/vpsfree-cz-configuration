@@ -87,6 +87,11 @@ let
   };
 in
 assert !(disabled.systemd.services ? blog-upload);
+assert !(disabled.systemd.services ? blog-release-prune);
+assert enabled.systemd.services.blog-release-prune.serviceConfig.User == "blog-release";
+assert !(enabled.systemd.services.blog-release-prune.serviceConfig ? LoadCredential);
+assert !(lib.elem "blog-release-prune.service" enabled.systemd.services.blog-upload.after);
+assert enabled.systemd.timers.blog-release-prune.timerConfig.OnCalendar == "daily";
 assert
   disabled.services.nginx.virtualHosts.blog-front-cs.locations."= /_deploy/blog".return == "404";
 assert rejects missing && rejects storeSecret;

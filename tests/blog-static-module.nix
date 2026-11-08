@@ -185,6 +185,9 @@ assert
 assert !(disabled.services.nginx.virtualHosts ? static-blog-cs);
 assert !(disabled.systemd.services ? blog-static-pull);
 assert !(disabled.systemd.services ? blog-upload);
+assert !(disabled.systemd.services ? blog-release-prune);
+assert !(enabled.systemd.services ? blog-release-prune);
+assert !(disabled.systemd.timers ? blog-release-prune);
 assert lib.all
   (
     c:
@@ -345,7 +348,26 @@ assert
     workflow_path = ".github/workflows/build.yml";
     enabled = true;
     state_dir = "/var/lib/blog";
+    keep_releases = 5;
   };
+assert published.services.vpsfree-static-blog.retention.keepReleases == 5;
+assert
+  !(builtins.tryEval
+    (evaluate [
+      composition
+      { services.vpsfree-static-blog.retention.keepReleases = 0; }
+    ]).services.vpsfree-static-blog.retention.keepReleases
+  ).success;
+assert published.systemd.services.blog-release-prune.serviceConfig.User == "blog-release";
+assert published.systemd.services.blog-release-prune.serviceConfig.Group == "blog-release";
+assert published.systemd.services.blog-release-prune.serviceConfig.PrivateNetwork;
+assert published.systemd.services.blog-release-prune.serviceConfig.NoNewPrivileges;
+assert published.systemd.services.blog-release-prune.serviceConfig.ProtectSystem == "strict";
+assert lib.hasSuffix "bin/blog-static-release prune"
+  published.systemd.services.blog-release-prune.serviceConfig.ExecStart;
+assert published.systemd.timers.blog-release-prune.timerConfig.OnCalendar == "daily";
+assert published.systemd.timers.blog-release-prune.timerConfig.Persistent;
+assert published.systemd.timers.blog-release-prune.wantedBy == [ "timers.target" ];
 assert lib.all (rule: lib.elem rule published.systemd.tmpfiles.rules) [
   "d /var/lib/blog-control 0750 root blog-release -"
   "f /var/lib/blog-control/transaction.lock 0660 root blog-release -"

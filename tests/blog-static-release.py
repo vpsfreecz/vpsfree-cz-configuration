@@ -5,6 +5,7 @@ import gzip
 import importlib.util
 import io
 import json
+import multiprocessing
 import os
 from pathlib import Path
 import subprocess
@@ -12,6 +13,7 @@ import sys
 import tarfile
 import tempfile
 import threading
+import time
 import stat
 from types import SimpleNamespace
 import unittest
@@ -68,7 +70,7 @@ def publication_fixture(base, module=release):
     (control / 'transaction.lock').touch(mode=0o660)
     policy = base / 'policy.json'
     policy.write_bytes(module.encode({'schema': 2, 'authority': 'hmac-upload-v1', 'repository': module.REPOSITORY,
-        'workflow_path': module.WORKFLOW_PATH, 'enabled': True, 'state_dir': str(module.STATE)}))
+        'workflow_path': module.WORKFLOW_PATH, 'enabled': True, 'state_dir': str(module.STATE), 'keep_releases': 5}))
     policy.chmod(0o444)
     active = base / 'active-policy'
     active.symlink_to(policy)
@@ -176,6 +178,245 @@ class Transaction(unittest.TestCase):
             result = subprocess.run([sys.executable, str(Path(release.__file__)), command], capture_output=True, text=True)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn('invalid choice', result.stderr)
+
+
+class Retention(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.pub, self.root = publication_fixture(self.temporary.name)
+        release.atomic_json(self.pub.control / 'state.json', {'schema': 2, 'paused': False, **self.pub.identity()})
+        self.processes = multiprocessing.get_context('fork')
+
+    def upload(self, number, sha=None):
+        archive, receipt, _ = fixture(sha or format(number, '040x'))
+        body = io.BytesIO()
+        with zipfile.ZipFile(body, 'w') as bundle:
+            bundle.writestr('payload.tar.gz', archive)
+            bundle.writestr('receipt.json', release.encode(receipt))
+        data = body.getvalue()
+        return self.pub.upload(io.BytesIO(data), number, release.digest(data))
+
+    def populate(self, count=8):
+        return [self.upload(i)['release'] for i in range(1, count + 1)]
+
+    def preserved(self):
+        paths = [self.pub.control, self.root / 'receipts', self.root / 'assets']
+        return {str(p): p.read_bytes() for base in paths for p in base.rglob('*') if p.is_file()}
+
+    def test_newest_five_and_current_previous_floor_pins_preserve_audit_and_staging(self):
+        keys = self.populate(9)
+        first = next(json.loads(p.read_text()) for p in (self.root / 'receipts').glob('*.json')
+                     if p.name.count('-') == 4 and json.loads(p.read_text()).get('release') == keys[0])
+        first.update(previous_release=keys[2], old_pointer='releases/' + keys[2])
+        release.atomic_json(self.root / 'receipts/current.json', first)
+        (self.root / 'current').unlink()
+        (self.root / 'current').symlink_to('releases/' + keys[0])
+        floor = release.upload_floor(self.root)
+        floor.update(release=keys[1], source_sha=keys[1][:40])
+        release.atomic_json(self.root / 'receipts/upload-order.json', floor)
+        stage_only = Transaction().prepare(self.root, 'f' * 40)
+        incoming = self.root / 'releases/.incoming-uncommitted'
+        incoming.mkdir(); (incoming / 'payload').write_bytes(b'not committed')
+        before = self.preserved()
+        plan = self.pub.prune(dry_run=True)
+        self.assertEqual(set(plan['kept']), set(keys[4:]) | set(keys[:3]))
+        self.assertEqual(plan['candidates'], [keys[3]])
+        self.assertFalse((self.root / 'releases/.trash').exists())
+        result = self.pub.prune()
+        self.assertEqual(result['deleted'], [keys[3]])
+        self.assertFalse((self.root / 'releases' / keys[3]).exists())
+        self.assertFalse((self.root / 'releases' / (keys[3] + '.tar.gz')).exists())
+        self.assertTrue((self.root / 'releases' / stage_only).is_dir())
+        self.assertEqual((incoming / 'payload').read_bytes(), b'not committed')
+        self.assertEqual(self.preserved(), before)
+        with self.assertRaises(release.Rejected):
+            release._switch(self.root, keys[3], lambda: True, release.current_state(self.root)[2], rollback=True)
+        rolled = release._switch(self.root, keys[2], lambda: True, release.current_state(self.root)[2], rollback=True)
+        self.assertEqual(rolled['outcome'], 'rollback')
+        self.assertEqual(release.upload_floor(self.root)['run_number'], 9)
+        with self.assertRaisesRegex(release.Rejected, 'Superseded'):
+            self.upload(1)
+
+    def test_duplicate_selection_and_equal_timestamp_ranking_is_deterministic(self):
+        keys = self.populate(7)
+        records = list((self.root / 'receipts').glob('*.json'))
+        for path in records:
+            data = json.loads(path.read_text())
+            if data.get('outcome'):
+                data['at'] = '2025-01-01T00:00:00+00:00'
+                path.write_bytes(release.encode(data))
+        duplicate = dict(json.loads((self.root / 'receipts/current.json').read_text()))
+        duplicate.update(release=keys[0], source_sha=keys[0][:40],
+                         archive_sha256=json.loads((self.root / 'receipts' / (keys[0] + '.json')).read_text())['archive_sha256'],
+                         at='2025-01-02T00:00:00+00:00')
+        release.atomic_json(self.root / 'receipts' / (str(release.uuid.uuid4()) + '.json'), duplicate)
+        plan = self.pub.prune(dry_run=True)
+        self.assertEqual(set(plan['kept']), {keys[0], *keys[3:]})
+        self.assertEqual(set(plan['candidates']), set(keys[1:3]))
+
+    def test_pause_pending_and_malformed_protected_references_make_no_retirement(self):
+        self.populate()
+        release.atomic_json(self.pub.control / 'state.json', {'schema': 2, 'paused': True})
+        self.assertIn('paused', self.pub.prune()['skipped'])
+        self.assertTrue(self.pub.prune(dry_run=True)['candidates'])
+        self.assertFalse((self.root / 'releases/.trash').exists())
+        release.atomic_json(self.pub.control / 'state.json', {'schema': 2, 'paused': False, **self.pub.identity()})
+        pending = self.root / 'receipts/pending.json'; pending.write_bytes(b'{}')
+        self.assertEqual(self.pub.prune()['skipped'], 'pending transaction')
+        pending.unlink()
+        current = release.current_state(self.root)[1]
+        current['old_pointer'] = 'releases/' + 'e' * 40 + '-' + 'f' * 16
+        release.atomic_json(self.root / 'receipts/current.json', current)
+        with self.assertRaisesRegex(release.Rejected, 'Conflicting'):
+            self.pub.prune()
+        self.assertFalse((self.root / 'releases/.trash').exists())
+
+    def test_interrupted_tree_archive_retirement_is_retried_without_receipt_rewrites(self):
+        keys = self.populate()
+        before = self.preserved()
+        rename = release.os.rename
+        def interrupted(source, destination, **options):
+            if source.endswith('.tar.gz'):
+                raise OSError('fixture archive retirement failure')
+            return rename(source, destination, **options)
+        with patch.object(release.os, 'rename', interrupted):
+            self.assertIn('retirement_failure', self.pub.prune())
+        self.assertFalse((self.root / 'releases' / keys[0]).exists())
+        self.assertTrue((self.root / 'releases' / (keys[0] + '.tar.gz')).is_file())
+        retried = self.pub.prune()
+        self.assertIn(keys[0], retried['deleted'])
+        self.assertFalse((self.root / 'releases' / (keys[0] + '.tar.gz')).exists())
+        self.assertEqual(self.preserved(), before)
+
+    def test_symlink_outside_sentinel_and_failed_deletion_remain_isolated(self):
+        keys = self.populate()
+        outside = Path(self.temporary.name) / 'outside'
+        outside.write_bytes(b'outside sentinel')
+        (self.root / 'releases' / keys[0] / 'escape').symlink_to(outside)
+        failed = self.pub.prune()
+        self.assertTrue(failed['cleanup_failures'])
+        self.assertEqual(outside.read_bytes(), b'outside sentinel')
+        link = next((self.root / 'releases/.trash').glob('*/' + keys[0] + '/escape'))
+        link.unlink()
+        self.assertIn(keys[0], self.pub.prune()['deleted'])
+        self.assertEqual(outside.read_bytes(), b'outside sentinel')
+
+    def test_prune_skips_real_busy_publication_and_staging_locks(self):
+        self.populate()
+        for lock_path in (self.pub.control / 'transaction.lock', self.root / 'transaction.lock'):
+            ready, finish = self.processes.Event(), self.processes.Event()
+            def hold():
+                with lock_path.open('r+') as lock:
+                    release.fcntl.flock(lock, release.fcntl.LOCK_EX)
+                    ready.set(); finish.wait(10)
+            process = self.processes.Process(target=hold); process.start()
+            try:
+                self.assertTrue(ready.wait(5))
+                self.assertIn('lock busy', self.pub.prune()['skipped'])
+            finally:
+                finish.set(); process.join(5)
+            self.assertEqual(process.exitcode, 0)
+
+    def test_directory_symlink_and_missing_protected_payload_refuse_retirement(self):
+        keys = self.populate()
+        directory = self.root / 'releases'
+        saved = self.root / 'saved-releases'
+        directory.rename(saved)
+        directory.symlink_to(saved)
+        with self.assertRaises((OSError, release.Rejected)):
+            self.pub.prune()
+        directory.unlink(); saved.rename(directory)
+        current_archive = directory / (keys[-1] + '.tar.gz')
+        current_archive.rename(directory / 'orphan-preserved')
+        with self.assertRaisesRegex(release.Rejected, 'Protected'):
+            self.pub.prune()
+        self.assertFalse((directory / '.trash').exists())
+
+    def test_partial_bulk_deletion_and_overlapping_cleanup_are_idempotent(self):
+        self.populate()
+        unlink = release.os.unlink
+        removed = []
+        def interrupted(name, **options):
+            if removed:
+                raise OSError('fixture deletion interruption')
+            removed.append(name)
+            return unlink(name, **options)
+        with patch.object(release.os, 'unlink', interrupted):
+            self.assertTrue(self.pub.prune()['cleanup_failures'])
+        self.assertTrue(removed)
+        self.assertTrue(self.pub.prune()['deleted'])
+        self.assertFalse(self.pub.prune()['cleanup_failures'])
+
+    def test_upload_waits_for_prune_metadata_lock_then_commits_first_attempt(self):
+        self.populate()
+        held, finish, uploaded = self.processes.Event(), self.processes.Event(), self.processes.Queue()
+        def metadata():
+            plan = release.retention_plan
+            def held_plan(*args):
+                held.set(); finish.wait(10)
+                return plan(*args)
+            with patch.object(release, 'retention_plan', held_plan):
+                self.pub.prune()
+        def upload():
+            try: uploaded.put(self.upload(9)['selected'])
+            except BaseException as error: uploaded.put(type(error).__name__)
+        pruner = self.processes.Process(target=metadata); pruner.start()
+        self.assertTrue(held.wait(5))
+        uploader = self.processes.Process(target=upload); uploader.start()
+        try:
+            time.sleep(0.1)
+            self.assertTrue(uploader.is_alive())
+        finally:
+            finish.set(); pruner.join(5); uploader.join(5)
+        self.assertEqual(pruner.exitcode, 0); self.assertEqual(uploader.exitcode, 0)
+        self.assertIs(uploaded.get(timeout=2), True)
+        self.assertEqual(release.upload_floor(self.root)['run_number'], 9)
+
+    def test_slow_failed_bulk_deletion_holds_neither_lock_and_upload_succeeds(self):
+        self.populate()
+        deleting, finish, answer = self.processes.Event(), self.processes.Event(), self.processes.Queue()
+        def prune():
+            def slow(*args):
+                deleting.set(); finish.wait(10)
+                raise OSError('fixture deletion failure')
+            with patch.object(release, 'remove_retired', slow):
+                answer.put(self.pub.prune())
+        process = self.processes.Process(target=prune); process.start()
+        try:
+            self.assertTrue(deleting.wait(5))
+            uploaded = self.upload(9)
+            self.assertTrue(uploaded['selected'])
+        finally:
+            finish.set(); process.join(5)
+        self.assertEqual(process.exitcode, 0)
+        self.assertTrue(answer.get(timeout=2)['cleanup_failures'])
+        self.assertEqual(release.upload_floor(self.root)['run_number'], 9)
+        self.assertTrue(self.pub.prune()['deleted'])
+
+    def test_historical_restage_keeps_stage_lock_until_publication_commit(self):
+        keys = self.populate()
+        self.pub.prune()
+        self.assertFalse((self.root / 'releases' / keys[0]).exists())
+        staged, finish, answer = self.processes.Event(), self.processes.Event(), self.processes.Queue()
+        def upload():
+            stage = release.stage_locked
+            def held(*args):
+                key = stage(*args); staged.set(); finish.wait(10); return key
+            with patch.object(release, 'stage_locked', held):
+                try: answer.put(self.upload(9, format(1, '040x'))['selected'])
+                except BaseException as error: answer.put(type(error).__name__)
+        process = self.processes.Process(target=upload); process.start()
+        try:
+            self.assertTrue(staged.wait(5))
+            self.assertIn('lock busy', self.pub.prune()['skipped'])
+            with self.pub.lock(blocking=False):
+                pass
+        finally:
+            finish.set(); process.join(5)
+        self.assertEqual(process.exitcode, 0)
+        self.assertIs(answer.get(timeout=2), True)
+        self.assertEqual(release.current_state(self.root)[1]['release'], keys[0])
 
 
 class Durability(unittest.TestCase):
@@ -306,6 +547,26 @@ class RealPrivilegeBoundary(unittest.TestCase):
         self.assertTrue(self.publication.control_state()['paused'])
         self.publication.exit(self.root)
         self.assertEqual(self.publication.status()['mode'], 'resumed')
+
+    def test_prune_inspection_and_recursive_deletion_run_only_as_fixed_content_uid(self):
+        self.publication.exit(self.root)
+        def prepare():
+            for number in range(1, 8):
+                archive, receipt, trusted = fixture(format(number, '040x'))
+                key = release.stage(self.root, archive, receipt, release.validate(archive, receipt, trusted), {})
+                release._switch(self.root, key, lambda: True, release.current_state(self.root)[2])
+            return True
+        self.assertTrue(release.content_as_release(prepare))
+        remove = release.remove_retired
+        def unprivileged(*args):
+            self.assertEqual(os.getresuid(), (1, 1, 1))
+            self.assertEqual(os.getresgid(), (1, 1, 1))
+            return remove(*args)
+        with patch.object(release, 'remove_retired', unprivileged):
+            result = self.publication.prune()
+        self.assertTrue(result['deleted'])
+        self.assertFalse(result['cleanup_failures'])
+        self.assert_sentinel()
 
     def test_ancestor_and_dangling_final_css_symlinks_cannot_write_or_chmod_root_files(self):
         css = self.root / 'assets/css'
