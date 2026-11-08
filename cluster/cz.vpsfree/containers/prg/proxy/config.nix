@@ -65,11 +65,6 @@ let
     name = "cz.vpsfree/containers/int.web";
   };
 
-  blog = confLib.findMetaConfig {
-    cluster = config.cluster;
-    name = "cz.vpsfree/containers/int.blog";
-  };
-
   newadmin = confLib.findMetaConfig {
     cluster = config.cluster;
     name = "cz.vpsfree/vpsadmin/int.vpsadmin-webui1";
@@ -107,6 +102,7 @@ let
 in
 {
   imports = [
+    ./blog.nix
     ../../../../../environments/base.nix
     ../../../../../profiles/ct.nix
     ../../../../../configs/goresheat-proxy.nix
@@ -282,12 +278,6 @@ in
         enableACME = true;
         forceSSL = true;
         locations."/".proxyPass = "http://37.205.15.53:80";
-      };
-
-      "blog.vpsfree.cz" = {
-        enableACME = true;
-        forceSSL = true;
-        locations."/".proxyPass = "http://${blog.addresses.primary.address}:80";
       };
 
       "foto.vpsfree.cz" = {

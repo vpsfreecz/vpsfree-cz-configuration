@@ -238,12 +238,12 @@ in
     enableReload = true;
 
     virtualHosts.${siteName} = {
-      # The public proxy terminates TLS; this backend has one IPv4 HTTP
-      # listener and no ACME, TLS, or IPv6 HTTP listener.
+      # The port-80 frontend selects this retained WordPress vhost through
+      # loopback; TLS remains on the public proxy.
       listen = [
         {
-          addr = "0.0.0.0";
-          port = 80;
+          addr = "127.0.0.1";
+          port = 8081;
         }
       ];
       enableACME = false;
@@ -251,11 +251,9 @@ in
       forceSSL = false;
 
       extraConfig = ''
-        # The production proxy overwrites X-Real-IP with its directly
-        # observed client. Trust that single header only on connections
-        # from the metadata-resolved proxy /32; never consume an
-        # arbitrary X-Forwarded-For chain.
-        set_real_ip_from ${proxyPrg.addresses.primary.address}/32;
+        absolute_redirect off;
+        # Only the local frontend may supply the resolved client address.
+        set_real_ip_from 127.0.0.1/32;
         real_ip_header X-Real-IP;
         real_ip_recursive off;
       '';
