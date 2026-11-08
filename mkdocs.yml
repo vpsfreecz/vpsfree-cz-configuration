@@ -11,6 +11,7 @@ nav:
   - vpsAdmin livepatch history deployment: 'operations/vpsadmin-livepatch-history-deployment.md'
   - vpsAdmin password recovery deployment: 'operations/vpsadmin-password-recovery-deployment.md'
   - vpsAdmin security evidence deployment: 'operations/vpsadmin-security-evidence-deployment.md'
+  - DNS primary readiness: 'operations/dns-primary-readiness.md'
 - Services:
   - Monitoring: 'services/monitoring.md'
   - Grafana: 'services/grafana.md'

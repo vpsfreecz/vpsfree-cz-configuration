@@ -1,3 +1,5 @@
+require_relative 'dns_transfer_monitor'
+
 MailTemplate.register :alert_role_event_state,
                       name: 'alert_%{role}_%{event}_%{state}', params: {
                         role: 'user or admin',
@@ -96,6 +98,20 @@ VpsAdmin::API::Plugins::Monitoring.config do
     opts[:message_id] = msg_id
 
     mail(:alert_role_event_state, opts)
+  end
+
+  action :alert_user_dns_primary_transfer do |event|
+    next unless VpsAdmin::Configuration::DnsTransferMonitor.send_alert?(event)
+
+    VpsAdmin::Configuration::DnsTransferMonitor.snapshot_resolution!(event)
+    instance_exec(event, &VpsAdmin::API::Plugins::Monitoring.actions.fetch(:alert_user))
+  end
+
+  action :alert_user_dns_missing_primary do |event|
+    VpsAdmin::Configuration::DnsTransferMonitor.snapshot_resolution!(
+      event, key: 'dns_secondary_missing_primary_closure_reason'
+    )
+    instance_exec(event, &VpsAdmin::API::Plugins::Monitoring.actions.fetch(:alert_user))
   end
 
   action :alert_user_diskspace do |event|
@@ -544,52 +560,42 @@ VpsAdmin::API::Plugins::Monitoring.config do
     action :alert_user_vps_in_rescue
   end
 
-  monitor :dns_secondary_transfer_failure do
-    label 'DNS secondary transfer failure'
-    desc 'DNS secondary zone transfer has failed'
-    period 30 * 60
+  monitor :dns_primary_transfer_failure do
+    label 'DNS primary transfer checks failed'
+    desc 'A configured primary cannot provide a valid transfer to a managed secondary'
+    check_count 1
     repeat 24 * 60 * 60
     cooldown 60 * 60
 
     query do
-      DnsServerZone
-        .joins(dns_zone: :user)
-        .includes(
-          :dns_server,
-          dns_zone: [:user, { dns_zone_transfers: :host_ip_address }]
-        )
-        .where(
-          zone_type: DnsServerZone.zone_types[:secondary_type],
-          dns_zones: {
-            zone_source: DnsZone.zone_sources[:external_source],
-            enabled: true
-          },
-          users: { object_state: User.object_states[:active] }
-        )
+      VpsAdmin::Configuration::DnsTransferMonitor.zones.with_alert_eligible_primary_transfer_state_counts
     end
 
-    value do |server_zone|
-      server_zone.last_transfer_status.to_s
+    value { |zone| VpsAdmin::Configuration::DnsTransferMonitor.value(zone) }
+
+    check do |zone, value|
+      VpsAdmin::Configuration::DnsTransferMonitor.passed?(zone, value)
     end
 
-    check do |server_zone, transfer_status|
-      next true if transfer_status != 'failed'
-
-      primary_addr = server_zone.last_transfer_primary_addr.to_s
-      next true if primary_addr.empty?
-
-      server_zone.dns_zone.dns_zone_transfers.none? do |transfer|
-        transfer.primary_type? &&
-          %i[confirm_create confirmed].include?(transfer.confirmed) &&
-          transfer.ip_addr == primary_addr
-      end
+    user do |zone, _real|
+      zone.user
     end
 
-    user do |server_zone, _real|
-      server_zone.dns_zone.user
-    end
+    action :alert_user_dns_primary_transfer
+  end
 
-    action :alert_user
+  monitor :dns_secondary_missing_primary do
+    label 'DNS secondary zone has no primary'
+    desc 'An enabled secondary DNS zone has no configured user primary'
+    period 30 * 60
+    repeat 24 * 60 * 60
+    cooldown 60 * 60
+
+    query { VpsAdmin::Configuration::DnsTransferMonitor.zones }
+    value { |zone| VpsAdmin::Configuration::DnsTransferMonitor.missing_value(zone) }
+    check { |_zone, value| !value['missing'] }
+    user { |zone, _real| zone.user }
+    action :alert_user_dns_missing_primary
   end
 
   monitor :vps_dataset_expansions do
