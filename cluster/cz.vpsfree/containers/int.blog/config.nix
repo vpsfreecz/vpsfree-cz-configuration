@@ -12,7 +12,7 @@
 
   services.vpsfree-static-blog = {
     enable = true;
-    serveStatic = false;
+    serveStatic = true;
     publication = {
       enable = true;
       secretFile = "/private/blog/deployment-key";
