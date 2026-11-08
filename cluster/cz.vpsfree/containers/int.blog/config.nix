@@ -6,6 +6,7 @@
     ./wordpress.nix
     ./blog-routing.nix
     ./static-blog.nix
+    ./blog-upload.nix
     ./legacy-routes.nix
   ];
 

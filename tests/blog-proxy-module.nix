@@ -82,7 +82,16 @@ let
     in
     v.enableACME
     && v.forceSSL
-    && builtins.attrNames v.locations == [ "/" ]
+    &&
+      builtins.attrNames v.locations == (
+        if host == "blog.vpsfree.cz" then
+          [
+            "/"
+            "= /_deploy/blog"
+          ]
+        else
+          [ "/" ]
+      )
     && location.proxyPass == "http://192.0.2.44:80"
     && !location.recommendedProxySettings
     && lib.hasInfix "proxy_set_header Host ${host};" location.extraConfig
@@ -93,6 +102,20 @@ in
 assert fixed configured "blog.vpsfree.cz" && fixed configured "blog.vpsfree.org";
 assert configured.security.acme.certs ? "blog.vpsfree.cz";
 assert configured.security.acme.certs ? "blog.vpsfree.org";
+assert lib.all
+  (
+    directive:
+    lib.hasInfix directive
+      configured.services.nginx.virtualHosts."blog.vpsfree.cz".locations."= /_deploy/blog".extraConfig
+  )
+  [
+    "client_max_body_size 512m;"
+    "proxy_read_timeout 180s;"
+    "proxy_send_timeout 180s;"
+    "proxy_set_header Host blog.vpsfree.cz;"
+    "access_log off;"
+  ];
+assert !(configured.services.nginx.virtualHosts."blog.vpsfree.org".locations ? "= /_deploy/blog");
 assert unrelated full == unrelated withoutBlog;
 assert full.services.nginx.enableReload;
 assert full.systemd.units."nginx.service".text == withoutBlog.systemd.units."nginx.service".text;
@@ -100,7 +123,7 @@ assert generated configured && generated full;
 {
   fixedBackend80BothHosts = true;
   bothLanguageTLSUnconditional = true;
-  noSpecialProxyHookOrMode = true;
+  exactUploadLimitExceptionOnly = true;
   unrelatedProxyVhostsAndMainUnitPreserved = true;
   nginxGenerated = true;
 }
