@@ -12,7 +12,7 @@ sys.dont_write_bytecode = True
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 import zipfile
 
 
@@ -76,21 +76,135 @@ class Protocol(unittest.TestCase):
             with self.assertRaises(receiver.UploadError): receiver.authenticate(method, path, headers, KEY)
         with self.assertRaises(receiver.UploadError): receiver.authenticate('POST', receiver.PATH, headers, b'wrong')
 
-    def handler(self, body, headers=None, publisher=None, busy=False):
+    def handler(self, body, headers=None, publisher=None, busy=False, server=None, stream=None):
         from types import SimpleNamespace
         import threading
         handler = object.__new__(receiver.Handler)
         handler.path = receiver.PATH
         handler.headers = headers or self.headers(body)
-        handler.rfile = io.BytesIO(body)
+        handler.rfile = stream if stream is not None else io.BytesIO(body)
         handler.connection = SimpleNamespace(settimeout=lambda timeout: None)
         lock = threading.Lock()
         if busy: lock.acquire()
-        handler.server = SimpleNamespace(key=KEY, busy=lock, publication=publisher)
+        handler.server = server or SimpleNamespace(key=KEY, busy=lock, publication=publisher)
         responses = []
         handler.reply = lambda status, value: responses.append((status, value))
         handler.do_POST()
         return responses
+
+    def publication_server(self):
+        from types import SimpleNamespace
+        import threading
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        pub, root = fixtures.publication_fixture(temporary.name, module=receiver.release)
+        server = SimpleNamespace(key=KEY, busy=threading.Lock(), publication=pub)
+        with patch.object(receiver.release.os, 'geteuid', return_value=0), patch.object(receiver.release, 'content_as_release', side_effect=lambda action: action()):
+            pub.exit(root)
+        return pub, server
+
+    def switch_and_resume(self, pub, resume=True):
+        generation = pub.system.parent / 'generation-2'
+        with patch.object(receiver.release.os, 'geteuid', return_value=0), patch.object(receiver.release, 'content_as_release', side_effect=lambda action: action()):
+            pub.enter()
+            generation.mkdir()
+            pub.system.unlink()
+            pub.system.symlink_to(generation)
+            if resume:
+                selected = receiver.release.Publication(pub.compiled, pub.active, pub.system, pub.control, pub.owner, pub.root)
+                selected.exit(pub.root)
+        return generation
+
+    def test_authentication_and_busy_refusals_do_not_publish_or_read(self):
+        publisher = Mock()
+        publisher.allowed.side_effect = AssertionError('Refused request checked publication')
+        publisher.upload.side_effect = AssertionError('Refused request published content')
+        stream = Mock()
+        stream.read.side_effect = AssertionError('Refused request read a body')
+        bad = self.headers(b'body')
+        bad.replace_header('X-Blog-Signature', 'sha256=' + '0' * 64)
+        self.assertEqual(self.handler(b'body', bad, publisher=publisher, stream=stream)[0][0], 401)
+        self.assertEqual(self.handler(b'body', busy=True, publisher=publisher, stream=stream)[0][0], 503)
+        publisher.allowed.assert_not_called()
+        publisher.upload.assert_not_called()
+        stream.read.assert_not_called()
+
+    def test_new_upload_on_same_server_after_same_policy_system_change(self):
+        pub, server = self.publication_server()
+        first = package()
+        self.assertEqual(self.handler(first, self.headers(first, '1'), server=server)[0][0], 200)
+        policy = pub.compiled.read_bytes()
+        old_control = pub.control_state()
+        generation = self.switch_and_resume(pub, resume=False)
+        second = package('b' * 40, 8)
+        self.assertEqual(self.handler(second, self.headers(second, '2'), server=server)[0][0], 503)
+        receiver.release.atomic_json(pub.control / 'state.json', old_control)
+        self.assertEqual(self.handler(second, self.headers(second, '2'), server=server)[0][0], 503)
+        selected = receiver.release.Publication(pub.compiled, pub.active, pub.system, pub.control, pub.owner, pub.root)
+        with patch.object(receiver.release.os, 'geteuid', return_value=0), patch.object(receiver.release, 'content_as_release', side_effect=lambda action: action()):
+            selected.exit(pub.root)
+        self.assertEqual(self.handler(second, self.headers(second, '2'), server=server)[0][0], 200)
+        self.assertIs(server.publication, pub)
+        self.assertEqual(pub.compiled.read_bytes(), policy)
+        self.assertEqual(receiver.release.current_state(pub.root)[1]['publication']['system'], str(generation))
+        self.assertEqual(receiver.release.upload_floor(pub.root)['run_number'], 2)
+
+    def test_upload_crossing_body_or_staging_succeeds_after_explicit_resume(self):
+        for phase in ('body', 'staging'):
+            with self.subTest(phase=phase):
+                pub, server = self.publication_server()
+                first = package()
+                self.assertEqual(self.handler(first, self.headers(first, '1'), server=server)[0][0], 200)
+                second = package('b' * 40, 8)
+                if phase == 'body':
+                    stream = io.BytesIO(second)
+                    read = stream.read
+                    def crossing_read(size):
+                        self.switch_and_resume(pub)
+                        return read(size)
+                    with patch.object(stream, 'read', side_effect=crossing_read):
+                        response = self.handler(second, self.headers(second, '2'), server=server, stream=stream)
+                else:
+                    stage = receiver.release.stage_locked
+                    def crossing_stage(*args):
+                        key = stage(*args)
+                        self.switch_and_resume(pub)
+                        return key
+                    with patch.object(receiver.release, 'stage_locked', side_effect=crossing_stage):
+                        response = self.handler(second, self.headers(second, '2'), server=server)
+                self.assertEqual(response[0][0], 200)
+                self.assertIs(server.publication, pub)
+                current = receiver.release.current_state(pub.root)[1]
+                self.assertEqual(current['source_sha'], 'b' * 40)
+                self.assertEqual((pub.root / 'current').readlink(), Path('releases') / current['release'])
+                self.assertEqual(current['publication']['system'], str(pub.system.resolve()))
+                self.assertEqual(receiver.release.upload_floor(pub.root)['run_number'], 2)
+                self.assertFalse((pub.root / 'receipts/pending.json').exists())
+                paths = [pub.root / 'receipts' / name for name in ('current.json', 'upload-order.json')]
+                committed = [path.read_bytes() for path in paths]
+                self.assertEqual(self.handler(second, self.headers(second, '2'), server=server)[0][0], 200)
+                self.assertEqual(self.handler(first, self.headers(first, '1'), server=server)[0][0], 409)
+                conflict = package('b' * 40, 9)
+                self.assertEqual(self.handler(conflict, self.headers(conflict, '2'), server=server)[0][0], 409)
+                self.assertEqual([path.read_bytes() for path in paths], committed)
+
+    def test_fresh_upload_still_refuses_paused_mismatched_control_and_changed_policy(self):
+        pub, server = self.publication_server()
+        body = package()
+        stream = Mock()
+        stream.read.side_effect = AssertionError('Disallowed publication read a body')
+        for control in ({'schema': 2, 'paused': True}, {'schema': 2, 'paused': False, **pub.identity(), 'system': '/wrong-generation'}):
+            receiver.release.atomic_json(pub.control / 'state.json', control)
+            self.assertEqual(self.handler(body, server=server, stream=stream)[0][0], 503)
+        replacement = pub.compiled.with_name('replacement-policy.json')
+        data = json.loads(pub.compiled.read_text()); data['keep_releases'] += 1
+        replacement.write_bytes(receiver.release.encode(data)); replacement.chmod(0o444)
+        pub.active.unlink(); pub.active.symlink_to(replacement)
+        selected = receiver.release.Publication(replacement, pub.active, pub.system, pub.control, pub.owner, pub.root)
+        with patch.object(receiver.release.os, 'geteuid', return_value=0), patch.object(receiver.release, 'content_as_release', side_effect=lambda action: action()):
+            selected.exit(pub.root)
+        self.assertEqual(self.handler(body, server=server, stream=stream)[0][0], 409)
+        stream.read.assert_not_called()
 
     def test_actual_body_tamper_short_busy_and_durable_response(self):
         from types import SimpleNamespace

@@ -127,7 +127,11 @@ key mode.
 group-accessible to `blog-release`, which can lock but cannot replace it or
 change control state. The immutable policy fixes authority version, repository,
 workflow path and state root, and binds the helper implementation. The active
-policy reference and exact starting system must still match at commit.
+policy reference must match the compiled helper. Before committing an upload,
+the helper checks the current system and policy against the root-owned resume
+record. A receiver can survive a system switch and accept uploads after the
+operator verifies and explicitly resumes the new system, provided its compiled
+policy is still selected. A changed policy requires the normal service update.
 
 ## Ordering, durability and maintenance
 
@@ -165,11 +169,13 @@ blog-static-release status
 blog-static-release maintenance-exit
 ```
 
-Enter waits for an in-flight pointer transaction and persists pause. A request
-already receiving/staging content cannot commit afterward. Exit reconciles
-receipts and resumes only the selected policy/system; it enqueues nothing. The
-native pre-switch check requires pause when prior publication exists, including
-when the candidate disables publication. A failed switch never resumes
+Enter waits for an in-flight pointer transaction and blocks further commits
+while publication is paused. A request already receiving or staging content may
+finish after an explicit resume if the selected policy, control state and upload
+ordering permit it. Exit reconciles receipts and resumes only the selected
+policy/system; it enqueues nothing. The native pre-switch check requires pause
+when prior publication exists, including when the candidate disables
+publication. A failed switch never resumes
 automatically; switching to older software also requires compatible target
 activation and control-state checks.
 

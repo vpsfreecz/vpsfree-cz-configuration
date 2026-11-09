@@ -751,7 +751,6 @@ class Publication:
         self.compiled = Path(compiled)
         self.active = Path(active)
         self.system = Path(system)
-        self.started_system = str(self.system.resolve())
         self.control = Path(control)
         self.owner = owner
         self.root = Path(state)
@@ -774,8 +773,6 @@ class Publication:
         self.policy()
         selected = self.system.resolve(strict=True)
         require(selected.is_dir(), 'Unknown selected system')
-        if str(selected) != self.started_system:
-            raise Paused('Selected system changed; use the new selected helper')
         return {'policy_sha256': digest(self.compiled.read_bytes()), 'system': str(selected)}
 
     @contextmanager
