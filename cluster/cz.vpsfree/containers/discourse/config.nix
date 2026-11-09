@@ -69,6 +69,22 @@ in
         allow_user_locale = true;
       };
 
+      posting = {
+        allowed_embed_selectors = ".entry-content";
+        embed_any_origin = false;
+        embed_set_canonical_url = false;
+        embed_unlisted = false;
+        import_embed_unlisted = true;
+        embed_truncate = true;
+        embed_support_markdown = false;
+      };
+
+      embedding = {
+        blocked_embed_selectors = "";
+        embed_full_app = true;
+        embed_by_username = config.services.discourse.admin.username;
+      };
+
       chat = {
         chat_enabled = false;
       };
@@ -96,6 +112,11 @@ in
         oauth2_email_verified = true;
         oauth2_button_title = "with vpsAdmin";
         oauth2_allow_association_change = true;
+      };
+
+      security = {
+        content_security_policy_frame_ancestors = true;
+        same_site_cookies = "None";
       };
     };
   };
