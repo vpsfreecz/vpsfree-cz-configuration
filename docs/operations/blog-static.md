@@ -7,24 +7,28 @@ and forwards to backend port 80. Its only upload exception is the exact Czech
 `/_deploy/blog` location; unrelated vhosts, limits and the nginx main unit
 remain unchanged.
 
-`services.vpsfree-static-blog.enable`, `publication.enable` and `serveStatic`
-default false. They install loopback static serving, authorize signed uploads
-after explicit resume, and select static content for public traffic separately.
-The default frontend sends Czech traffic to the retained generated WordPress
-vhost on `127.0.0.1:8081` and returns English 503. `serveStatic=true` requires
-`enable=true` and sends both Hosts to `127.0.0.1:8080`, without fallback to
-WordPress for missing content. Unknown Hosts return 444. Ports 8080, 8081 and
-8091 stay private.
+`services.vpsfree-static-blog.enable` and `publication.enable` default false.
+When static storage is enabled, the frontend sends both fixed language Hosts
+to the loopback static server on `127.0.0.1:8080`. When disabled, both return
+503. Missing content while enabled returns 404 without a fallback. Unknown Hosts return 444. The former
+`serveStatic` option is removed. Ports 8080 and 8091 stay private; the retired
+WordPress and MySQL ports 8081 and 3306 have no listeners or firewall openings.
 
 Each hop fixes Host. The proxy overwrites X-Real-IP and HTTPS protocol headers;
 the frontend trusts only that proxy /32 and passes its resolved client address
-and fixed HTTPS scheme. WordPress trusts loopback X-Real-IP only, with
-recursion off. Its generated PHP protections, accounts, data, MariaDB and cron
-remain intact. Health checks exercise the selected Czech frontend and retained
-WordPress on port 8081. Internal content vhosts use relative directory
-redirects; explicit legacy 301 redirects retain fixed HTTPS targets. Static
-feeds internally select `/feed/index.xml` with RSS MIME type. Metadata and
-receipts stay outside web roots.
+and fixed HTTPS scheme. The backend owns nginx enablement, graceful reload and
+the exact proxy IPv4 TCP/80 firewall rule. Health checks exercise both fixed
+language Hosts through the local frontend. Internal content vhosts use relative
+directory redirects; explicit legacy 301 redirects retain fixed HTTPS targets.
+Static feeds internally select `/feed/index.xml` with RSS MIME type. Metadata
+and receipts stay outside web roots.
+
+The current configuration installs no WordPress application, PHP-FPM, WordPress
+init/cron/timer or local MySQL service. It retains dormant `wordpress` and
+`mysql` accounts and the `mysql` group with their previous UID, group and home
+settings. Existing database/site files, uploads/fonts, secret keys, backups,
+UID/GID maps and old system roots remain recovery data. Their ownership and
+permissions must not change during source retirement; no data purge is implied.
 
 ## Publication authority and package
 
@@ -49,11 +53,12 @@ repository's `docs/deployment.md` describes packaging and workflow behavior.
 
 ## Fixed upload protocol
 
-The endpoint is `POST https://blog.vpsfree.cz/_deploy/blog`, through the public
-proxy and backend port 80 to `127.0.0.1:8091` in either backend route mode.
-English, disabled publication and other `/_deploy/` paths return 404 at the
-backend; `/_hooks/` also returns 404. These reserved paths never reach
-WordPress.
+The endpoint is `POST https://blog.vpsfree.cz/_deploy/blog`. When publication is
+enabled, the public proxy and backend port 80 forward it to `127.0.0.1:8091`.
+Publication requires static storage. With publication or storage disabled, the
+endpoint returns 404. English and other `/_deploy/` paths also return 404 at the
+backend; `/_hooks/` returns 404. These reserved paths never reach the content
+server.
 
 Use one `Content-Type: application/zip`, one positive `Content-Length` and
 exactly one of each identity header:
@@ -175,15 +180,24 @@ after explicit resume, an old retry still cannot undo rollback. A newer
 authorized upload is required. Use `status` for the selected release, current
 receipt digest and committed floor. Rollback requires a complete retained
 release; a pruned payload is no longer a rollback target. All receipts remain.
-With no retained prior release, recover through WordPress.
+If no complete retained static release is available, keep serving unavailable
+and restore a backed-up static payload through the normal publication authority.
+There is no WordPress fallback in the current configuration.
 
-Policy/control schema 2 is the upload authority boundary. P21 can roll back
-retained schema-1 release content and restore WordPress routing with
-`serveStatic=false`. This does not establish a system rollback to P20: its
+Policy/control schema 2 is the upload authority boundary. Compatible schema-2
+systems can roll back complete retained schema-1 **release content**. That does
+not establish compatibility with an older schema-1 **control system**: its
 maintenance check requires the older control schema and rejects schema-2 state.
-Retain old systems for recovery, but verify their activation and control-state
-compatibility before attempting a switch. Do not run old publication writers
-against the new state. There is no state conversion or WordPress/forum migration.
+Do not run old publication writers against the newer state.
+
+A retained schema-2 system from the WordPress coexistence period may still
+support WordPress recovery through its own routing selector. Recovery requires
+its rooted generation, original inputs, database/site backups and account
+owners. The retained generation determines routing; the current configuration
+has no WordPress route. Before restoring an older system, inspect its
+MySQL/tmpfiles rules: the generic data-directory rule is 0755 and must not widen
+retained `/var/lib/mysql` permissions of 0700. Content recovery includes no
+database or forum rollback, reimport or deletion.
 
 ## Release retention
 
@@ -242,38 +256,47 @@ nix eval --impure --json --expr 'import ./tests/blog-upload-module.nix { nixpkgs
 
 Focused fixtures cover validation, authentication, body/header bounds,
 ordering, exact retries, interrupted commits, rollback/pause, policy/system
-changes, credential isolation, module modes and generated routes. The proxy
-fixture checks unrelated vhosts and main-unit parity. Exact native builds and a
-registered full-size proxy/frontend/receiver measurement follow final committed
-review. Synthetic tests do not prove live TLS, branch/environment restrictions,
-systemd credentials, production UIDs or real GitHub delivery.
+changes, credential isolation, module modes and generated routes. Module
+fixtures also check absent WordPress/MySQL runtime, retained account metadata,
+private ports and both disabled 503 frontends. The unchanged proxy fixture
+checks unrelated vhosts and main-unit parity. Final committed independent review
+precedes the affected backend native build. This retirement does not change
+the publisher or proxy and does not require repeating their full-size upload
+measurement. Synthetic tests do not prove live TLS, branch/environment
+restrictions, systemd credentials, production UIDs or real GitHub delivery.
 
-Before deployment, verify live Czech proxy forwarding still targets backend
-port 80; stop and reconcile any different predecessor. Preserve old rooted
-systems and inputs. On the shared proxy compare live/candidate binary, unit and
-config and inspect native dry activation separately. Any stop/restart, shared
-dependency disruption or uncertain effect blocks deployment; use only a
-validated graceful reload. Provision both language TLS and the exact upload
-exception in the single proxy transition. No certificate issuance is implied by
-source configuration.
+Before retiring a coexistent backend, preserve old rooted systems and inputs,
+independent database/site/secret-key backups, UID/GID maps, current receipt and
+upload floor. Verify a complete retained static recovery payload and actual
+account ownership and data permissions. Confirm live Czech and English proxy
+forwarding still targets backend port 80; reconcile any different predecessor.
+The proxy configuration and its TLS/upload exception need no deployment for
+this backend-only transition.
 
-Provision the target key and configure the restricted Actions environment
-before enabling publication. Deploy backend coexistence with
-`serveStatic=false`, verify the Czech frontend, WordPress on port 8081 and
-English 503, then explicitly resume publication. Confirm a protected-main
-upload and durable identity while WordPress stays public. Verify both private
-static roots on 127.0.0.1:8080 with fixed Hosts, feeds/search/media and the
-finite 540 Czech legacy aliases. Unknown literal identity/feed combinations
-return 404; encoded keys are not inferred. English has no Czech aliases. Check
-for changed articles/comments before backend `serveStatic=true`; maintenance
-surrounds each backend generation change. Keep WordPress available for recovery
-throughout the transition.
+Build and copy the reviewed backend, inspect the system diff and dry activation,
+and confirm that retirement is limited to WordPress init/cron/PHP-FPM and local
+MySQL. Enter publication maintenance before switching. Activate the static-only
+backend with graceful nginx reload and unchanged proxy trust. The new firewall
+configuration retains only the exact idempotent teardown of the two old
+WordPress SMTP OUTPUT chains; it does not create them or flush unrelated rules.
+Check that no remaining WordPress worker needs those restrictions.
 
-Route recovery sets `serveStatic=false` and restores WordPress/English 503
-without a proxy change. Keep prior systems, inputs,
-database/uploads/fonts/secret-key backups and account owners. Retain newer
-static articles and forum replies for reconciliation. Scheduled retention applies
-only to eligible blog release payloads; it does not remove WordPress data,
-backups, Nix roots or Git refs, or change ownership recursively. Content rollback
-is separate from system rollback, public cutover, default-branch integration and
-session lifecycle.
+Verify retired units and absent 8081/3306 listeners, both fixed frontend Hosts,
+static hashes, feed/search/media, PHP denial and the finite 540 Czech legacy
+aliases. Unknown literal identity/feed combinations return 404; encoded keys
+are not inferred. English has no Czech aliases. Check dormant account metadata,
+retained data ownership and permissions, receiver health, current receipt,
+floor, control state, timer and policy. Use raw HTTP checks without executing
+article scripts or creating forum topics. Explicitly leave maintenance against
+the new selected system even when the helper and policy bytes are unchanged;
+resume changes no content or ordering.
+
+Recover content first with a complete retained static release through guarded
+rollback, preserving the maximum floor, followed by explicit resume. If a system
+recovery is needed, use the compatible rooted generation and its own versioned
+recovery rules above. Retain newer static articles and forum replies for
+reconciliation. Scheduled retention removes only eligible static release
+payloads, not WordPress data, backups, Nix roots or Git refs. Any later purge of
+old data or dormant accounts needs separate approval and a decision to retire
+that recovery path. Content rollback remains separate from system rollback,
+default-branch integration and session lifecycle.

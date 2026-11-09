@@ -20,3 +20,8 @@
   entries, reprocessing and rollback limits.
 - [API documentation OAuth](vpsadmin-documentation-oauth.md): optional sign-in
   hook, first setup, ordinary upgrades, private files and rollback.
+
+## Blog
+
+- [Static blog hosting and signed delivery](blog-static.md): routing, publication,
+  WordPress retirement, maintenance and recovery.

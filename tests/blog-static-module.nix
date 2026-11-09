@@ -2,7 +2,6 @@
 let
   lib = nixpkgs.lib;
   site = ../cluster/cz.vpsfree/containers/int.blog;
-  wordpress = site + /wordpress.nix;
   # Exercise the site's imports without base profiles or machine publication opt-in.
   composition =
     { config, ... }:
@@ -21,12 +20,12 @@ let
         ])
       ) module.imports;
     };
-  evaluate =
-    modules:
+  evaluateAt =
+    address: modules:
     (import "${nixpkgs}/nixos/lib/eval-config.nix" {
       system = "x86_64-linux";
       specialArgs.confLib.findMetaConfig = _: {
-        addresses.primary.address = "127.0.0.1";
+        addresses.primary.address = address;
       };
       modules = [
         ({ lib, ... }: {
@@ -42,27 +41,27 @@ let
       ]
       ++ modules;
     }).config;
-  original = evaluate [ wordpress ];
+  evaluate = evaluateAt "127.0.0.1";
   disabled = evaluate [ composition ];
   enabled = evaluate [
     composition
-    {
-      services.vpsfree-static-blog.enable = true;
-      services.nginx.enableReload = true;
-    }
+    { services.vpsfree-static-blog.enable = true; }
   ];
-  selected = evaluate [
+  invalidProxy = evaluateAt "::1" [ composition ];
+  broadHTTP = evaluate [
+    composition
+    { networking.firewall.allowedTCPPorts = [ 80 ]; }
+  ];
+  broadPrivate = evaluate [
     composition
     {
-      services.vpsfree-static-blog = {
-        enable = true;
-        serveStatic = true;
-      };
+      networking.firewall.interfaces.eth0.allowedTCPPortRanges = [
+        {
+          from = 8080;
+          to = 8091;
+        }
+      ];
     }
-  ];
-  invalidRoute = evaluate [
-    composition
-    { services.vpsfree-static-blog.serveStatic = true; }
   ];
   published = evaluate [
     composition
@@ -106,45 +105,33 @@ let
       mysql = c.users.groups.mysql.gid;
     };
   };
-  wordpressState = c: {
-    settings = c.services.wordpress.sites."blog.vpsfree.cz".settings;
-    root = c.services.nginx.virtualHosts."blog.vpsfree.cz".root;
-    listen = c.services.nginx.virtualHosts."blog.vpsfree.cz".listen;
-    phpPools = builtins.attrNames c.services.phpfpm.pools;
-    mysql = c.services.mysql.enable;
-    inherit (c.services.mysql) dataDir;
-    uploadsDir = c.services.wordpress.sites."blog.vpsfree.cz".uploadsDir;
-    fontsDir = c.services.wordpress.sites."blog.vpsfree.cz".fontsDir;
-    identities = identities c;
-  };
-  effective = c: {
-    wordpress = wordpressState c;
-    nginx = c.services.nginx.enable;
-    virtualHostNames = builtins.attrNames c.services.nginx.virtualHosts;
-    tcpPorts = c.networking.firewall.allowedTCPPorts;
-    firewall = c.networking.firewall.extraCommands;
-    units = builtins.attrNames c.systemd.services;
-    timers = builtins.attrNames c.systemd.timers;
-    users = builtins.attrNames c.users.users;
-    tmpfiles = c.systemd.tmpfiles.rules;
-  };
-  activeWordpress =
+  noWordpressRuntime =
     c:
-    c.services.nginx.enable
-    && c.services.mysql.enable
-    && c.services.phpfpm.pools ? "wordpress-blog.vpsfree.cz"
-    && lib.all (unit: builtins.hasAttr unit c.systemd.services) [
-      "nginx"
+    c.services.wordpress.sites == { }
+    && !c.services.mysql.enable
+    && c.services.phpfpm.pools == { }
+    && lib.all (unit: !(builtins.hasAttr unit c.systemd.services)) [
       "mysql"
       "phpfpm-wordpress-blog.vpsfree.cz"
       "wordpress-init-blog.vpsfree.cz"
       "wordpress-cron-blog.vpsfree.cz"
     ]
-    && c.systemd.timers ? "wordpress-cron-blog.vpsfree.cz"
-    && lib.all (name: lib.any (package: lib.getName package == name) c.environment.systemPackages) [
-      "wp-blog"
-      "wp-blog-core-update-db"
-    ];
+    && !(c.systemd.timers ? "wordpress-cron-blog.vpsfree.cz")
+    && !lib.any (
+      package:
+      lib.elem (lib.getName package) [
+        "wp-blog"
+        "wp-blog-core-update-db"
+      ]
+    ) c.environment.systemPackages
+    && lib.all (host: lib.all (entry: entry.port != 8081) host.listen) (
+      lib.attrValues c.services.nginx.virtualHosts
+    )
+    && !lib.any (
+      rule: lib.hasInfix "/var/lib/mysql" rule || lib.hasInfix "/var/lib/wordpress" rule
+    ) c.systemd.tmpfiles.rules
+    && !lib.hasInfix "/var/lib/mysql" c.system.activationScripts.script
+    && !lib.hasInfix "/var/lib/wordpress" c.system.activationScripts.script;
   generated =
     c:
     builtins.stringLength c.systemd.units."nginx.service".text > 0
@@ -161,27 +148,38 @@ let
   cs = enabled.services.nginx.virtualHosts.static-blog-cs;
   en = enabled.services.nginx.virtualHosts.static-blog-en;
   generatedNginx = enabled.environment.etc."nginx/nginx.conf".source.text;
-  disabledSame = wordpressState original == wordpressState disabled;
-  wpPreserved = wordpressState original == wordpressState enabled;
   cluster = (import (site + /module.nix) { }).cluster."cz.vpsfree/containers/int.blog";
 in
-assert disabledSame && wpPreserved;
-assert activeWordpress disabled && activeWordpress enabled;
+assert lib.all noWordpressRuntime [
+  disabled
+  enabled
+  published
+];
 assert generated disabled && generated enabled;
-assert identities disabled == identities original && identities enabled == identities original;
+assert identities disabled == identities enabled && identities enabled == identities published;
 assert disabled.users.users.wordpress.uid == null;
+assert
+  disabled.users.users.wordpress.group == "nginx" && disabled.users.users.wordpress.isSystemUser;
 assert disabled.users.users.nginx.uid == 60 && disabled.users.groups.nginx.gid == 60;
 assert disabled.users.users.mysql.uid == 84 && disabled.users.groups.mysql.gid == 84;
+assert disabled.users.users.mysql.group == "mysql";
+assert disabled.users.users.mysql.description == "MySQL server user";
 assert !disabled.users.users.mysql.isSystemUser;
-assert disabled.services.mysql.dataDir == "/var/lib/mysql";
-assert
-  disabled.services.wordpress.sites."blog.vpsfree.cz".uploadsDir
-  == "/var/lib/wordpress/blog.vpsfree.cz/uploads";
-assert
-  disabled.services.wordpress.sites."blog.vpsfree.cz".fontsDir
-  == "/var/lib/wordpress/blog.vpsfree.cz/uploads/fonts";
-assert
-  map (listen: listen.port) disabled.services.nginx.virtualHosts."blog.vpsfree.cz".listen == [ 8081 ];
+assert lib.all
+  (
+    name:
+    let
+      user = disabled.users.users.${name};
+    in
+    user.home == "/var/empty"
+    && !user.createHome
+    && !user.isNormalUser
+    && user.shell == disabled.users.users.nginx.shell
+  )
+  [
+    "wordpress"
+    "mysql"
+  ];
 assert !(disabled.services.nginx.virtualHosts ? static-blog-cs);
 assert !(disabled.systemd.services ? blog-static-pull);
 assert !(disabled.systemd.services ? blog-upload);
@@ -204,34 +202,44 @@ assert lib.all
     disabled
     enabled
   ];
-assert lib.hasInfix original.networking.firewall.extraCommands
-  enabled.networking.firewall.extraCommands;
+assert enabled.networking.firewall.backend == "iptables" && !enabled.networking.nftables.enable;
+assert enabled.services.nginx.enableReload && disabled.services.nginx.enableReload;
 assert enabled.networking.firewall.extraCommands == disabled.networking.firewall.extraCommands;
+assert lib.hasInfix "-s 127.0.0.1/32 --dport 80" enabled.networking.firewall.extraCommands;
 assert !(lib.hasInfix "--dport 8080" enabled.networking.firewall.extraCommands);
-assert lib.any (
-  a: !a.assertion && lib.hasInfix "routing requires" a.message
-) invalidRoute.assertions;
-assert !disabled.services.vpsfree-static-blog.serveStatic;
+assert !(lib.hasInfix "vpsf-blog-smtp" enabled.networking.firewall.extraCommands);
+assert !(lib.hasInfix "--uid-owner" enabled.networking.firewall.extraCommands);
 assert
-  disabled.services.nginx.virtualHosts.blog-front-cs.locations."/".proxyPass
-  == "http://127.0.0.1:8081";
-assert disabled.services.nginx.virtualHosts.blog-front-en.locations."/".return == "503";
+  enabled.networking.firewall.extraStopCommands == ''
+    while iptables -w -D OUTPUT -j vpsf-blog-smtp4 2>/dev/null; do :; done
+    iptables -w -F vpsf-blog-smtp4 2>/dev/null || true
+    iptables -w -X vpsf-blog-smtp4 2>/dev/null || true
+    while ip6tables -w -D OUTPUT -j vpsf-blog-smtp6 2>/dev/null; do :; done
+    ip6tables -w -F vpsf-blog-smtp6 2>/dev/null || true
+    ip6tables -w -X vpsf-blog-smtp6 2>/dev/null || true
+  '';
+assert lib.any (a: !a.assertion && lib.hasInfix "IPv4 primary" a.message) invalidProxy.assertions;
+assert lib.any (a: !a.assertion && lib.hasInfix "TCP/80" a.message) broadHTTP.assertions;
+assert lib.any (
+  a: !a.assertion && lib.hasInfix "Private and retired" a.message
+) broadPrivate.assertions;
+assert lib.all (name: disabled.services.nginx.virtualHosts.${name}.locations."/".return == "503") [
+  "blog-front-cs"
+  "blog-front-en"
+];
 assert lib.all
   (
-    name:
-    selected.services.nginx.virtualHosts.${name}.locations."/".proxyPass == "http://127.0.0.1:8080"
+    name: enabled.services.nginx.virtualHosts.${name}.locations."/".proxyPass == "http://127.0.0.1:8080"
   )
   [
     "blog-front-cs"
     "blog-front-en"
   ];
-assert generated selected;
 assert lib.all
   (
     c:
     lib.all (name: c.services.nginx.virtualHosts.${name}.locations."/".return == "444") [
       "blog-front-unknown-host"
-      "blog-wordpress-unknown-host"
     ]
     &&
       lib.all
@@ -249,18 +257,12 @@ assert lib.all
   [
     disabled
     enabled
-    selected
   ];
 assert lib.all (host: lib.all (entry: entry.addr == "127.0.0.1" && entry.port == 8080) host.listen)
   [
     cs
     en
   ];
-assert lib.all (
-  entry: entry.addr == "127.0.0.1" && entry.port == 8081
-) disabled.services.nginx.virtualHosts."blog.vpsfree.cz".listen;
-assert lib.hasInfix "set_real_ip_from 127.0.0.1/32;"
-  disabled.services.nginx.virtualHosts."blog.vpsfree.cz".extraConfig;
 assert lib.all
   (
     name:
@@ -275,7 +277,7 @@ assert lib.all
   (
     pair:
     let
-      location = selected.services.nginx.virtualHosts.${pair.name}.locations."/";
+      location = enabled.services.nginx.virtualHosts.${pair.name}.locations."/";
     in
     !location.recommendedProxySettings
     && lib.hasInfix "proxy_set_header Host ${pair.host};" location.extraConfig
@@ -316,11 +318,10 @@ assert !(lib.hasInfix "alias /var/lib/blog/current/" generatedNginx);
 assert lib.all (vhost: lib.hasInfix "absolute_redirect off;" vhost.extraConfig) [
   cs
   en
-  enabled.services.nginx.virtualHosts."blog.vpsfree.cz"
 ];
 assert
   lib.count (line: lib.hasInfix "absolute_redirect off;" line) (lib.splitString "\n" generatedNginx)
-  == 3;
+  == 2;
 
 assert cs.locations."~* \\.php(?:/|$)".return == "404";
 assert enabled.services.nginx.virtualHosts.static-blog-unknown-host.default;
@@ -374,32 +375,29 @@ assert lib.all (rule: lib.elem rule published.systemd.tmpfiles.rules) [
 ];
 assert !(published.systemd.timers ? blog-static-pull);
 
-assert lib.all (unit: builtins.hasAttr unit cluster.healthChecks.systemd.unitProperties) [
-  "nginx.service"
-  "mysql.service"
-  "phpfpm-wordpress-blog.vpsfree.cz.service"
-  "wordpress-init-blog.vpsfree.cz.service"
-];
-assert lib.any (
-  check: lib.elem "http://localhost/" check.command
-) cluster.healthChecks.machineCommands;
-assert lib.any (
-  check: lib.elem "http://127.0.0.1:8081/" check.command
-) cluster.healthChecks.machineCommands;
+assert builtins.attrNames cluster.healthChecks.systemd.unitProperties == [ "nginx.service" ];
+assert builtins.length cluster.healthChecks.machineCommands == 2;
+assert lib.all
+  (
+    host:
+    lib.any (
+      check: lib.elem "Host: ${host}" check.command && lib.elem "http://localhost/" check.command
+    ) cluster.healthChecks.machineCommands
+  )
+  [
+    "blog.vpsfree.cz"
+    "blog.vpsfree.org"
+  ];
 assert cluster.container.id == 29942 && cluster.host.target == "172.16.8.4";
 {
-  disabledWordpressStatePreserved = disabledSame;
-  backendSelectedModesAndInternalPorts = true;
-  existingWordpressPreserved = wpPreserved;
-  activeWordpressBothStates = activeWordpress disabled && activeWordpress enabled;
+  noWordpressRuntimeOrDataActivation = true;
+  backendEnabledAndUnavailableModes = true;
   nginxConfigurationGenerated = generated disabled && generated enabled;
   retainedIdentities = identities disabled;
-  wordpressHealthChecksPreserved = true;
+  bothFrontendHealthChecks = true;
+  exactProxyFirewallAndOldSMTPTeardown = true;
   obsoletePullRemoved = true;
   operatorPolicyAndMaintenanceGate = true;
-  wordpressListenerPorts = map (
-    listen: listen.port
-  ) enabled.services.nginx.virtualHosts."blog.vpsfree.cz".listen;
   newListenerPorts = map (listen: listen.port) cs.listen;
   staticRoots = [
     cs.root

@@ -42,30 +42,6 @@
           }
         ];
 
-        "mysql.service" = [
-          {
-            property = "ActiveState";
-            value = "active";
-          }
-        ];
-
-        "phpfpm-wordpress-blog.vpsfree.cz.service" = [
-          {
-            property = "ActiveState";
-            value = "active";
-          }
-        ];
-
-        "wordpress-init-blog.vpsfree.cz.service" = [
-          {
-            property = "Result";
-            value = "success";
-          }
-          {
-            property = "ExecMainStatus";
-            value = "0";
-          }
-        ];
       };
 
       machineCommands = [
@@ -89,7 +65,7 @@
           standardOutput.match = "";
         }
         {
-          description = "Check retained WordPress independently of the selected frontend";
+          description = "Check the selected English blog frontend locally";
           command = [
             "curl"
             "--fail"
@@ -100,10 +76,10 @@
             "--output"
             "/dev/null"
             "--header"
-            "Host: blog.vpsfree.cz"
+            "Host: blog.vpsfree.org"
             "--header"
             "X-Forwarded-Proto: https"
-            "http://127.0.0.1:8081/"
+            "http://localhost/"
           ];
           standardOutput.match = "";
         }

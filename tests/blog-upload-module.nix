@@ -46,16 +46,7 @@ let
       };
     };
   };
-  selected = evaluate {
-    services.vpsfree-static-blog = {
-      enable = true;
-      serveStatic = true;
-      publication = {
-        enable = true;
-        secretFile = "/run/secrets/blog-deployment";
-      };
-    };
-  };
+  storageOnly = evaluate { services.vpsfree-static-blog.enable = true; };
   missing = evaluate {
     services.vpsfree-static-blog = {
       enable = true;
@@ -80,11 +71,25 @@ let
     c:
     builtins.stringLength c.systemd.units."nginx.service".text > 0
     && builtins.stringLength c.system.activationScripts.script > 0;
-  wp = c: {
-    inherit (c.services.wordpress.sites."blog.vpsfree.cz") settings uploadsDir fontsDir;
-    inherit (c.services.mysql) dataDir enable;
-    pools = builtins.attrNames c.services.phpfpm.pools;
-  };
+  retiredRuntimeAbsent =
+    c:
+    c.services.wordpress.sites == { }
+    && !c.services.mysql.enable
+    && c.services.phpfpm.pools == { }
+    && !(c.systemd.services ? "wordpress-cron-blog.vpsfree.cz")
+    && !(c.systemd.services ? mysql);
+  identities =
+    c:
+    lib.genAttrs [ "wordpress" "mysql" "nginx" ] (name: {
+      inherit (c.users.users.${name})
+        uid
+        group
+        home
+        createHome
+        isSystemUser
+        ;
+    });
+
 in
 assert !(disabled.systemd.services ? blog-upload);
 assert !(disabled.systemd.services ? blog-release-prune);
@@ -95,8 +100,15 @@ assert enabled.systemd.timers.blog-release-prune.timerConfig.OnCalendar == "dail
 assert
   disabled.services.nginx.virtualHosts.blog-front-cs.locations."= /_deploy/blog".return == "404";
 assert rejects missing && rejects storeSecret;
-assert generated disabled && generated enabled && generated selected;
-assert wp enabled == wp disabled;
+assert generated disabled && generated enabled && generated storageOnly;
+assert lib.all retiredRuntimeAbsent [
+  disabled
+  storageOnly
+  enabled
+];
+assert identities enabled == identities disabled && identities storageOnly == identities disabled;
+assert !(storageOnly.systemd.services ? blog-upload);
+assert (route storageOnly).return == "404";
 assert enabled.networking.firewall.extraCommands == disabled.networking.firewall.extraCommands;
 assert enabled.networking.firewall.allowedTCPPorts == disabled.networking.firewall.allowedTCPPorts;
 assert service.User == "blog-release" && service.Group == "blog-release";
@@ -141,13 +153,12 @@ assert lib.all
   )
   [
     enabled
-    selected
   ];
 {
   defaultOffAndRuntimeKey = true;
   oneSynchronousNonrootService = true;
   obsoleteWorkerQueuePullRemoved = true;
-  exactCzechUploadBothModes = true;
-  privatePortsAndWordpressPreserved = true;
+  exactCzechUploadWhenAuthorized = true;
+  retiredRuntimeAbsentAndIdentitiesRetained = true;
   generatedConfiguration = true;
 }

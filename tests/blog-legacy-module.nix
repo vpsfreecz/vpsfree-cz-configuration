@@ -8,7 +8,8 @@ let
       system = "x86_64-linux";
       specialArgs.confLib.findMetaConfig = _: { addresses.primary.address = "192.0.2.44"; };
       modules = [
-        (site + /wordpress.nix)
+        (site + /blog-routing.nix)
+        (site + /blog-upload.nix)
         (site + /static-blog.nix)
         (site + /legacy-routes.nix)
         ({ lib, ... }: {
@@ -48,17 +49,28 @@ assert lib.all (host: lib.all (entry: entry.addr == "127.0.0.1" && entry.port ==
     en
   ];
 assert cs.locations."~* \\.php(?:/|$)".return == "404";
+assert lib.all
+  (
+    c:
+    c.services.wordpress.sites == { }
+    && !c.services.mysql.enable
+    && c.services.phpfpm.pools == { }
+    && !(c.systemd.services ? "wordpress-cron-blog.vpsfree.cz")
+  )
+  [
+    disabled
+    enabled
+  ];
+assert disabled.services.nginx.virtualHosts.blog-front-cs.locations."/".return == "503";
 assert
-  enabled.services.nginx.virtualHosts."blog.vpsfree.cz".listen
-  == disabled.services.nginx.virtualHosts."blog.vpsfree.cz".listen;
-assert enabled.services.mysql.enable && disabled.services.mysql.enable;
-assert enabled.systemd.services ? "wordpress-cron-blog.vpsfree.cz";
+  enabled.services.nginx.virtualHosts.blog-front-cs.locations."/".proxyPass
+  == "http://127.0.0.1:8080";
 assert generated disabled && generated enabled;
 assert builtins.length projection.aliases == 540;
 {
-  disabledUnchanged = true;
+  disabledHasNoLegacyMaps = true;
   nginxGenerated = true;
-  wordpressLoopbackPreserved = true;
+  retiredRuntimeAbsent = true;
   feedAndPHPProtectionRetained = true;
   englishHasNoCzechAliases = true;
   projection = projection;
