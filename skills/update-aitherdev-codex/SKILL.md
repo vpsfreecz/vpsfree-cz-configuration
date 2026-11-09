@@ -23,9 +23,9 @@ before updating this configuration. Do not repeat completed lower-level work.
 
 Enter nix develop and inspect the current channel-to-input mapping. The
 dev-workspace channel's devWorkspace role owns the runtime input; the llm-agents
-channel's llm-agents role owns the system Codex input. For a normal published
-upstream update use confctl inputs channel update --commit. For exact feature or
-frozen revisions use:
+channel's llm-agents role keeps the matching frozen recipe input. For a normal
+published upstream update use confctl inputs channel update --commit. For exact
+feature or frozen revisions use:
 
 ```sh
 confctl inputs channel set --commit --no-changelog llm-agents llm-agents LLM_REV
@@ -34,8 +34,16 @@ confctl inputs channel set --commit dev-workspace devWorkspace RUNTIME_REV
 
 Keep generated messages. Inspect effective versions and semantic lock identities,
 including expected transitive changes. Preserve unrelated channels. Do not edit
-flake.lock manually. System Codex and codex-ds use the same assembled package;
-the workspace application remains a separate user-profile installation.
+flake.lock manually. Configuration passes the runtime's
+`packages.${system}.codex-native` export to its existing `mkCodexPackage` with
+configuration `pkgs`. Do not select the stock same-version llm-agents output or
+add a separate fork pin/Rust recipe here. Prove the raw native derivation/source
+and executable hash match the runtime receipt; CLI version text alone cannot
+identify the downstream build. System Codex and codex-ds use the same assembled
+package; the workspace application uses the same raw native derivation in its
+separate user-profile assembly, whose helper closure may differ. Only its managed
+shared App Server enables the host provider-switching flag. Keep standalone
+system/DeepSeek invocations and private source probes on their strict defaults.
 
 Return the final configuration commit and input identities so the workspace can
 select the same runtime and run its composed deployment-contract check. Keep
@@ -57,9 +65,12 @@ another owner's reservation, reboot implicitly or integrate master to deploy.
 
 After activation verify /run/current-system, the system profile, the system Codex
 version, actual native daemon selection and codex-ds strict-config startup.
-Validate the complete managed DeepSeek profile against the selected config schema
-before building. After activation use the operations guide's one small ephemeral
-provider request with --strict-config; --help exits before loading configuration.
+Validate the complete managed DeepSeek profile against the exact custom source's
+config schema before building. Reuse older schema/catalog evidence only after
+proving unchanged bytes and its applicable scope; generate native receipts from
+the measured custom executable. After activation use the operations guide's
+one small ephemeral provider request with --strict-config; --help exits before
+loading configuration.
 Keep custom-provider authentication in its provider env_key. Do not force the
 shared OpenAI login method for DeepSeek; Codex may log out a conflicting ChatGPT
 credential before it selects provider authentication. For source/provider probes,
