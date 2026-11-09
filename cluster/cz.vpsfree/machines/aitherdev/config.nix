@@ -12,13 +12,11 @@
 }:
 let
   homeManagerInput = inputsInfo."home-manager".input;
-  llmAgentsInput = inputsInfo."llm-agents".input;
   devWorkspaceInput = inputsInfo.devWorkspace.input;
   devWorkspaceSite = import ./dev-workspace-site.nix;
-  llmAgentsPkgs = flakeInputs.${llmAgentsInput}.packages.${pkgs.stdenv.hostPlatform.system};
   codexPackage = flakeInputs.${devWorkspaceInput}.lib.mkCodexPackage {
     inherit pkgs;
-    codex = llmAgentsPkgs.codex;
+    codex = flakeInputs.${devWorkspaceInput}.packages.${pkgs.stdenv.hostPlatform.system}.codex-native;
   };
 
   ns1IntPrg = confLib.findMetaConfig {
