@@ -39,15 +39,25 @@ Reasoning capabilities use Codex's model information. The removed
 
 ## Runtime package and retention
 
-Aitherdev uses `dev-workspace.lib.mkCodexPackage` to assemble its selected
-llm-agents Codex output. The system `codex` command and `codex-ds` share that
-assembled package. The wrapper uses the DeepSeek key and profile described
-above. The workspace application has a separate user-profile installation.
+Aitherdev passes the selected runtime's `packages.x86_64-linux.codex-native`
+export to `dev-workspace.lib.mkCodexPackage`, retaining the configuration's
+`pkgs` for helper assembly. The system `codex` command and `codex-ds` share
+that assembled package. The workspace application has a separate user-profile
+installation using the same raw native derivation; its helper closure can differ.
+The wrapper uses the DeepSeek key and profile described above.
+
+The runtime owns the release-based provider-switching patch and source receipt.
+Keep fork/source pins and the Rust recipe there. Record the exported native
+derivation, fork revision, source hash and executable hash when verifying an
+update: the downstream build retains the upstream CLI version. Only the managed
+shared App Server enables `--allow-host-provider-switching`. Standalone system
+Codex and `codex-ds` retain strict provider-selection behavior without that flag.
 
 The [generic Codex package contract](https://github.com/aither64/dev-workspace/blob/master/docs/codex-package.md)
-owns the runtime layout and dependency rules. The selected llm-agents package
-patches fresh daemon installation to execute its immutable Nix-store runtime and
-attempts a native GC root. Retained older daemon copies under `CODEX_HOME` still
+owns the runtime layout and dependency rules. The raw native export reuses the
+frozen llm-agents recipe, including its fresh daemon installation patch to execute
+the immutable Nix-store runtime and attempt a native GC root.
+Retained older daemon copies under `CODEX_HOME` still
 depend on Nix-store closures and are not themselves GC roots. Retained system
 generations protect the system package closure; retained workspace Codex roots
 protect the workspace package closure. Keep both while a daemon may need them.
