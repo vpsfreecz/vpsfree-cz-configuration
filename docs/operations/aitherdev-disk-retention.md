@@ -6,9 +6,9 @@ pressure timer runs Nix GC above 75% filesystem usage. Both paths share
 `/run/lock/nix-store-cleanup.lock`; pressure GC skips a busy cleanup.
 
 The configuration packages `nix-store-cleanup` with its Python/Nix dependencies.
-Home Manager links `~/bin/nix-store-cleanup` to that package. Initial activation
-moves the old regular executable to `nix-store-cleanup.pre-declarative`, retaining
-numbered older backups instead of overwriting them.
+Home Manager links `~/bin/nix-store-cleanup` to that package. For initial
+activation with a legacy regular executable, follow
+[declarative cleanup adoption](upgrades/aitherdev-declarative-cleanup.md).
 
 ## Inspect and apply
 
@@ -91,19 +91,26 @@ installed `workspace-host coordination guide` for the authoritative contract.
 The application is selected through its user profile, independently of system
 configuration; configuration only selects the matching host module contract.
 
-## Rollout and recovery
+<a id="rollout-and-recovery"></a>
 
-Build the aitherdev configuration, review the helper preview and activate through
-the workspace coordinator's exact machine reservation. Verify the compatibility
-link, both timers and an applied cleanup result. Measure `df` before/after ordinary
-Nix GC; root removal alone does not reclaim store paths.
+## Maintenance and recovery
+
+For configuration changes, build the aitherdev configuration, review the helper
+preview and activate through the workspace coordinator's exact machine
+reservation. Verify the compatibility link, both timers and an applied cleanup
+result. Measure `df` before/after ordinary Nix GC; root removal alone does not
+reclaim store paths. Initial adoption also requires the
+[legacy executable backup checks](upgrades/aitherdev-declarative-cleanup.md).
 
 For a policy fault, stop `nix-store-cleanup.timer` and restore a reviewed
 configuration. A software rollback cannot restore deleted test disks or removed
 profile generations. Active runs, explicit holds and uncertain recovery data
 must survive every sweep. Never remove store directories manually.
 
-The workspace also provides explicit archive maintenance in its source repository
+## Archive maintenance
+
+Archive compaction is a separately invoked maintenance procedure. The workspace
+provides it in its source repository
 at `bin/compact-session-storage`. Deploy a runtime with archiveRecoveryPolicy 3
 before applying it. Use `--recovery-only` to compact completed private checkout
 backups without changing tracked archive records. Preview first and retain the

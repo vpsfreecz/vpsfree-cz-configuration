@@ -71,16 +71,20 @@ confctl deploy
 confctl deploy "cz.vpsfree/nodes/stg/*" dry-activate
 ```
 
-## vpsAdmin configuration
+## Documentation
 
-See [API configuration and abuse notice processing](configs/vpsadmin/api/README.md).
+### Configuration
 
-## Mail operations
+<a id="vpsadmin-configuration"></a>
 
-See [mx2 relay verification and deployment prerequisites](docs/operations/mx2.md)
-for the isolated SMTP check and queue recovery constraints.
+- [vpsAdmin API configuration](configs/vpsadmin/api/README.md), including abuse
+  notice processing and the documentation sign-in hook.
 
-## Aitherdev operations
+### Operations
 
-See [disk cleanup and retention](docs/operations/aitherdev-disk-retention.md) for
-Nix profile/test retention, coordination collection, and rollout/recovery.
+<a id="mail-operations"></a>
+<a id="aitherdev-operations"></a>
+
+- [Operations index](docs/operations/README.md): mx2 relay checks and queue
+  recovery, Aitherdev disk retention, vpsAdmin abuse notices and API documentation
+  OAuth setup and recovery.

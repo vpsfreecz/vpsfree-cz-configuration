@@ -67,10 +67,13 @@ the three relay domains can be accepted and later bounced, creating a
 backscatter risk. Recipient synchronization is separate follow-up work; online
 primary verification alone cannot provide outage queueing.
 
+## Persistent state and queue recovery
+
 Postfix keeps its queue and data under `/var/lib/postfix`; Postgrey keeps its
 database under `/var/postgrey`. Retain `system.stateVersion = "25.05"` for the
-imported container. Do not copy a CentOS queue or database into these paths
-without a separately verified migration. Drain the old host through SMTP and
-retain its disk for recovery. If ingress is reverted after NixOS accepts mail,
-keep and drain that queue too; a NixOS generation rollback does not restore the
-old CentOS system. SMTP retries can duplicate mail after an ambiguous reply.
+imported container. SMTP retries can duplicate mail after an ambiguous reply.
+
+For a CentOS-to-NixOS transition, including restored CentOS state or recovery
+that still depends on the old host, follow the
+[transition and queue recovery requirements](upgrades/mx2-centos-to-nixos.md).
+Keep and drain every queue that has accepted mail if ingress is reverted.

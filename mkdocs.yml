@@ -3,6 +3,13 @@ theme: readthedocs
 extra_css: ['extra.css']
 nav:
 - Operations:
+  - Overview: 'operations/README.md'
+  - mx2 backup mail relay: 'operations/mx2.md'
+  - Aitherdev disk retention: 'operations/aitherdev-disk-retention.md'
+  - vpsAdmin abuse notices: 'operations/vpsadmin-abuse-notices.md'
+  - Supported transitions:
+    - mx2 CentOS to NixOS: 'operations/upgrades/mx2-centos-to-nixos.md'
+    - Aitherdev declarative cleanup: 'operations/upgrades/aitherdev-declarative-cleanup.md'
   - New vpsAdmin WebUI service: 'operations/newadmin-webui.md'
   - API documentation OAuth: 'operations/vpsadmin-documentation-oauth.md'
   - PHP WebUI OAuth logging: 'operations/oauth-client-log-protection.md'
