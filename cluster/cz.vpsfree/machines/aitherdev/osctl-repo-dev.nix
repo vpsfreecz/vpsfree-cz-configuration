@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.services.osctl-repo-dev;
-  host = "osctl-repo.aitherdev.int.vpsfree.cz";
+  host = "images.aitherdev.int.vpsfree.cz";
   tlsDirectory = "/var/lib/osctl-repo-dev/tls";
   reconcile = pkgs.writeShellApplication {
     name = "osctl-repo-dev-certificate";

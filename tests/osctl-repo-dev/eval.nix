@@ -2,7 +2,7 @@
 let
   pkgs = import nixpkgs { system = "x86_64-linux"; };
   inherit (pkgs) lib;
-  host = "osctl-repo.aitherdev.int.vpsfree.cz";
+  host = "images.aitherdev.int.vpsfree.cz";
   evaluate =
     enabled:
     import "${pkgs.path}/nixos/lib/eval-config.nix" {

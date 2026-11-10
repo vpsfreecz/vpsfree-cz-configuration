@@ -1,6 +1,6 @@
 # Development image repository on aitherdev
 
-`https://osctl-repo.aitherdev.int.vpsfree.cz/` serves the optional image repository
+`https://images.aitherdev.int.vpsfree.cz/` serves the optional image repository
 demo on one explicitly selected, session-owned development-cluster node. The
 dashboard and `/v1/` and `/runs/<key>/v1/` paths share the same origin. Demo data
 is synthetic; its verification states do not prove that real image builds passed.
@@ -59,7 +59,7 @@ Browser trust continues to use the normal public development-CA mechanism.
 
 Only the new leaf state is owned by this module:
 `/var/lib/osctl-repo-dev/tls/pairs/` and its `current` symlink. Each pair has the
-single exact DNS SAN `osctl-repo.aitherdev.int.vpsfree.cz`, server-auth usage and
+single exact DNS SAN `images.aitherdev.int.vpsfree.cz`, server-auth usage and
 CA:FALSE. Chain, hostname/SAN, key correspondence, expiry and file permissions
 are checked before selection. A complete pair is selected through one atomic
 symlink replacement; existing portal certificates and credentials are untouched.

@@ -10,7 +10,7 @@ import unittest
 
 
 SOURCE = Path(__file__).resolve().parents[2] / "cluster/cz.vpsfree/machines/aitherdev/osctl-repo-dev-certificate.bash"
-HOST = "osctl-repo.aitherdev.int.vpsfree.cz"
+HOST = "images.aitherdev.int.vpsfree.cz"
 
 
 class CertificateTest(unittest.TestCase):
