@@ -157,7 +157,22 @@ let
         project = "vpsfree";
         machine_type = "vps";
       };
-    } groups;
+    } groups
+    &&
+      (getJob jobs "meet-master").static_configs == [
+        {
+          targets = [
+            "37.205.14.113:9100"
+            "37.205.14.113:9888"
+          ];
+          labels = {
+            alias = "meet-master";
+            type = "meet-master";
+            project = "vpsfree";
+            machine_type = "vps";
+          };
+        }
+      ];
 
   checkMonitor =
     monitorName:
