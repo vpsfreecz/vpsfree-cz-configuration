@@ -171,6 +171,9 @@
         ];
       };
       checks.${system} = {
+        syslog-exporter-config = import ./tests/syslog-exporter.nix {
+          pkgs = devPkgs;
+        };
         log-reader-access = import ./tests/log-reader-access.nix {
           pkgs = devPkgs;
           machines = confctlOutputs.machines;

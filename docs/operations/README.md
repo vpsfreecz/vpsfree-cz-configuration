@@ -1,5 +1,12 @@
 # Operations
 
+## Logging
+
+- [Central syslog exporter](syslog-exporter.md): package preparation, FIFO
+  delivery limits, service replacement and rollback.
+- [Log-reader access](log-reader-access.md): restricted access to archived logs,
+  ownership and recovery.
+
 ## Mail
 
 - [mx2 backup mail relay](mx2.md): mail policy, isolated checks, deployment

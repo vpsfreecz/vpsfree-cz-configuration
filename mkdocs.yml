@@ -3,6 +3,7 @@ theme: readthedocs
 extra_css: ['extra.css']
 nav:
 - Operations:
+  - Central syslog exporter: 'operations/syslog-exporter.md'
   - Log reader access: 'operations/log-reader-access.md'
   - Prometheus query access: 'operations/prometheus-query-access.md'
   - Overview: 'operations/README.md'

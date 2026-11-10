@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  utils,
   ...
 }:
 with lib;
@@ -14,18 +15,11 @@ let
 
   configurationJson = settingsFormat.generate "syslog-exporter.json" cfg.settings;
 
-  rackupConfig = pkgs.writeText "syslog-exporter.ru" ''
-    require 'syslog-exporter/rackup'
-
-    run SyslogExporter::Rackup.app('${configurationJson}')
-  '';
-
-  pumaConfig = pkgs.writeText "syslog-exporter.rb" ''
-    bind 'tcp://${cfg.listenAddress}:${toString cfg.port}'
-    rackup '${rackupConfig}'
-    environment 'production'
-    tag 'syslog-exporter'
-  '';
+  listenAddress =
+    if hasInfix ":" cfg.listenAddress && !hasPrefix "[" cfg.listenAddress then
+      "[${cfg.listenAddress}]"
+    else
+      cfg.listenAddress;
 in
 {
   options = {
@@ -91,16 +85,20 @@ in
     systemd.services.prometheus-syslog-exporter = {
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
-      environment.RACK_ENV = "production";
       serviceConfig = {
-        Type = "notify";
+        Type = "simple";
         User = cfg.user;
         Group = cfg.group;
         WorkingDirectory = cfg.stateDir;
-        ExecStart = "${cfg.package}/bin/puma -C ${pumaConfig}";
+        ExecStart = utils.escapeSystemdExecArgs [
+          "${cfg.package}/bin/syslog-exporter"
+          "--config"
+          configurationJson
+          "--listen"
+          "${listenAddress}:${toString cfg.port}"
+        ];
         Restart = "on-failure";
         RestartSec = 30;
-        WatchdogSec = 10;
       };
     };
 

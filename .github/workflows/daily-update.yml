@@ -146,7 +146,7 @@ jobs:
             BUNDLE_APP_CONFIG="$bundix_app_config" \
               bundle config set --local path "$RUNNER_TEMP/bundle"
 
-            for pkg in geminabox ssh-exporter syslog-exporter ; do
+            for pkg in geminabox ssh-exporter ; do
               pushd "packages/$pkg"
 
               rm -f gemset.nix Gemfile.lock
