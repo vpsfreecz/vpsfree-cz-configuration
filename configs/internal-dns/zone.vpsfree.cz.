@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2026110600 ; serial number of this zone file
+              2026111000 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -206,10 +206,10 @@ jicofo.meet                    IN   A       37.205.14.91
 jicofo.meet                    IN   AAAA    2a03:3b40:fe:40::1
 jvb1.meet                      IN   A       37.205.14.146
 jvb1.meet                      IN   AAAA    2a03:3b40:fe:59::1
-turn.meet                      IN   A       37.205.14.152
-turn.meet                      IN   AAAA    2a03:3b40:fe:76::1
+turn.meet                  300 IN   CNAME   jvb1.vpsfree.cz.
 meet-dev                       IN   A       37.205.14.113
 meet                           IN   CNAME   meet-dev.vpsfree.cz.
+auth.meet                  300 IN   CNAME   meet.vpsfree.cz.
 jitsi-videobridge.meet         IN   A       37.205.14.168
 jitsi-videobridge1.meet        IN   CNAME   jitsi-videobridge.meet.vpsfree.cz.
 jitsi-videobridge2.meet        IN   A       37.205.14.153
@@ -233,6 +233,11 @@ jvb8                           IN   A       37.205.14.219
 jvb9                           IN   A       37.205.14.231
 jvb10                          IN   A       37.205.14.250
 jvb11                          IN   A       37.205.13.90
+test-meet-nixos            300 IN   A       37.205.13.90
+test-meet                  300 IN   CNAME   test-meet-nixos.vpsfree.cz.
+test-jvb01                 300 IN   A       37.205.14.250
+auth.test-meet             300 IN   CNAME   test-meet.vpsfree.cz.
+turn.test-meet             300 IN   CNAME   test-jvb01.vpsfree.cz.
 
 ; aitherdev
 aitherdev.int                  IN   A       172.16.106.40
