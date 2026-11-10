@@ -1,0 +1,74 @@
+rule_files:
+  - @ruleFile@
+
+evaluation_interval: 1m
+
+tests:
+  # The web probe job is generated per project as meet-web-<project>
+  # (modules/clusterconf/monitor/default.nix), not plain meet-web.
+  - name: Meet web probe failing fires MeetWebDown
+    interval: 1m
+    input_series:
+      - series: 'probe_success{job="meet-web-vpsfree",instance="https://meet.vpsfree.cz",alias="meet.vpsfree.cz",type="meet-web"}'
+        values: '0x10'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: MeetWebDown
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: MeetWebDown
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              frequency: 5m
+              job: meet-web-vpsfree
+              instance: https://meet.vpsfree.cz
+              alias: meet.vpsfree.cz
+              type: meet-web
+            exp_annotations:
+              summary: "Meet web is down (instance https://meet.vpsfree.cz)"
+              description: |
+                https://meet.vpsfree.cz does not respond over HTTP
+
+                LABELS: map[__name__:probe_success alias:meet.vpsfree.cz instance:https://meet.vpsfree.cz job:meet-web-vpsfree type:meet-web]
+
+  - name: Meet web blackbox target down fires MeetWebExporterDown
+    interval: 1m
+    input_series:
+      - series: 'up{job="meet-web-vpsfree",instance="https://meet.vpsfree.cz",alias="meet.vpsfree.cz",type="meet-web"}'
+        values: '0x10'
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: MeetWebExporterDown
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: MeetWebExporterDown
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              frequency: hourly
+              job: meet-web-vpsfree
+              instance: https://meet.vpsfree.cz
+              alias: meet.vpsfree.cz
+              type: meet-web
+            exp_annotations:
+              summary: "Web exporter is down (instance https://meet.vpsfree.cz)"
+              description: |
+                Unable to check web availability
+
+                LABELS: map[__name__:up alias:meet.vpsfree.cz instance:https://meet.vpsfree.cz job:meet-web-vpsfree type:meet-web]
+
+  - name: Healthy Meet web does not alert
+    interval: 1m
+    input_series:
+      - series: 'probe_success{job="meet-web-vpsfree",instance="https://meet.vpsfree.cz",alias="meet.vpsfree.cz",type="meet-web"}'
+        values: '1x10'
+      - series: 'up{job="meet-web-vpsfree",instance="https://meet.vpsfree.cz",alias="meet.vpsfree.cz",type="meet-web"}'
+        values: '1x10'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: MeetWebDown
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: MeetWebExporterDown
+        exp_alerts: []

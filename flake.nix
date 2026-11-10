@@ -215,6 +215,9 @@
         newadmin-prometheus-rules = import ./tests/prometheus/newadmin-rules.nix {
           pkgs = devPkgs;
         };
+        meet-prometheus-rules = import ./tests/prometheus/meet-rules.nix {
+          pkgs = devPkgs;
+        };
       };
     };
 }
