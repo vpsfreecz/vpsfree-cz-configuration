@@ -15,7 +15,7 @@ tests:
       - eval_time: 1m
         alertname: MeetWebDown
         exp_alerts: []
-      - eval_time: 3m
+      - eval_time: 2m
         alertname: MeetWebDown
         exp_alerts:
           - exp_labels:
@@ -41,7 +41,7 @@ tests:
       - eval_time: 4m
         alertname: MeetWebExporterDown
         exp_alerts: []
-      - eval_time: 6m
+      - eval_time: 5m
         alertname: MeetWebExporterDown
         exp_alerts:
           - exp_labels:
