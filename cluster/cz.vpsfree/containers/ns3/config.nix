@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  confLib,
   ...
 }:
 {
@@ -23,7 +24,7 @@
   # vpsfree.cz, so provide the zone
   services.bind = {
     zones = import ../../../../configs/public-dns/zones.nix {
-      inherit lib;
+      inherit config lib confLib;
       primary = false;
       filterZones = zone: zone.name == "vpsfree.cz.";
     };

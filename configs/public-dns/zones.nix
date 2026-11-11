@@ -1,10 +1,22 @@
 {
+  config,
   lib,
+  confLib,
   primary,
   filterZones ? null,
 }:
 let
   inherit (lib) concatMapStringsSep filter;
+
+  ns3 = confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/ns3";
+  };
+
+  ns4 = confLib.findMetaConfig {
+    cluster = config.cluster;
+    name = "cz.vpsfree/containers/ns4";
+  };
 
   primaries = [
     "37.205.9.232" # ns1
@@ -23,6 +35,12 @@ let
     {
       name = "vpsfree.cz.";
       file = ./zone.vpsfree.cz.;
+      extraConfig = ''
+        also-notify {
+          ${ns3.addresses.primary.address}; // ns3
+          ${ns4.addresses.primary.address}; // ns4
+        };
+      '';
     }
     "167.8.185.in-addr.arpa."
     {
@@ -63,6 +81,7 @@ let
     master = true;
     slaves = secondaries;
     file = zone.file or "${zoneDir}/zone.${zone.name}";
+    extraConfig = zone.extraConfig or "";
   };
 
   makeSecondaryZone = zone: {
