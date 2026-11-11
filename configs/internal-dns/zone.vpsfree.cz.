@@ -1,7 +1,7 @@
 $ORIGIN vpsfree.cz.
 $TTL 1H                  ; default expiration time of all resource records without their own TTL value
 @  IN  SOA  @fqdn@. podpora.vpsfree.cz. (
-              2026111000 ; serial number of this zone file
+              2026111001 ; serial number of this zone file
               1D         ; slave refresh (1 day)
               2H         ; slave retry time in case of a problem (2 hours)
               4W         ; slave expiration time (4 weeks)
@@ -199,29 +199,10 @@ log.int.prg                    IN   A       172.16.4.1
 ping                           IN   A       37.205.14.208
 
 ; Meet
-pad                            IN   A       37.205.14.208
-conference.meet                IN   A       37.205.14.30
-conference.meet                IN   AAAA    2a03:3b40:fe:1e::1
-jicofo.meet                    IN   A       37.205.14.91
-jicofo.meet                    IN   AAAA    2a03:3b40:fe:40::1
-jvb1.meet                      IN   A       37.205.14.146
-jvb1.meet                      IN   AAAA    2a03:3b40:fe:59::1
-turn.meet                  300 IN   CNAME   jvb1.vpsfree.cz.
-meet-dev                       IN   A       37.205.14.113
-meet                           IN   CNAME   meet-dev.vpsfree.cz.
+meet-nixos                 300 IN   A       37.205.14.113
+meet                       300 IN   CNAME   meet-nixos.vpsfree.cz.
 auth.meet                  300 IN   CNAME   meet.vpsfree.cz.
-jitsi-videobridge.meet         IN   A       37.205.14.168
-jitsi-videobridge1.meet        IN   CNAME   jitsi-videobridge.meet.vpsfree.cz.
-jitsi-videobridge2.meet        IN   A       37.205.14.153
-jitsi-videobridge3.meet        IN   A       37.205.12.167
-jitsi-videobridge4.meet        IN   A       37.205.12.173
-jitsi-videobridge5.meet        IN   A       37.205.12.178
-jitsi-videobridge6.meet        IN   A       37.205.12.180
-jitsi-videobridge7.meet        IN   A       37.205.14.129
-jitsi-videobridge8.meet        IN   A       37.205.14.154
-jitsi-videobridge9.meet        IN   A       37.205.14.3
-jitsi-videobridge12.meet       IN   A       37.205.14.235
-jitsi-videobridge16.meet       IN   A       185.8.164.60
+turn.meet                  300 IN   CNAME   jvb1.vpsfree.cz.
 jvb1                           IN   A       37.205.14.138
 jvb2                           IN   A       37.205.14.150
 jvb3                           IN   A       37.205.14.163
