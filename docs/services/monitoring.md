@@ -17,6 +17,11 @@ bridge's paired node-exporter (9100) and Jitsi exporter (9700) targets with
 `machine_type="vps"`, preserving alias, type and project labels. Reconsider this
 classification when the bridge inventory changes.
 
+The Meet master is scraped by the `meet-master` job: node-exporter (9100) and
+jicofo's `/metrics` (9888, proxied by nginx on the master because jicofo's REST
+port also serves non-metrics APIs), also labelled `machine_type="vps"`, so the
+generic node rules (filesystem, systemd) apply to it like to the bridges.
+
 ## Alert recipients
 
 Set `monitoring.alertRecipients` in a system's cluster metadata to send its
@@ -74,7 +79,8 @@ size metrics must match the available-space metric's labels, including device,
 filesystem type and machine type.
 
 VPS, missing, empty, unknown and lookalike machine types such as `vmx` do not
-produce this critical alert. This includes the VPS monitors and video bridges.
+produce this critical alert. This includes the VPS monitors, video bridges and
+the Meet master.
 Job names do not affect eligibility. Absent critical alerts generate no new
 critical email, Telegram or SMS notifications; active alerts may resolve when
 monitor configuration changes and send their normal resolved notifications.

@@ -599,6 +599,16 @@ let
         ) confData.meet
       );
 
+      masterConfigs = mapAttrsToList (project: conf: {
+        targets = map (port: "${conf.master}:${toString port}") conf.masterExporterPorts;
+        labels = {
+          alias = "meet-master";
+          type = "meet-master";
+          project = project;
+          machine_type = "vps";
+        };
+      }) confData.meet;
+
       webConfigs = mapAttrs (project: conf: {
         targets = [ conf.url ];
         labels = {
@@ -964,6 +974,11 @@ in
             job_name = "meet-jvbs";
             scrape_interval = "30s";
             static_configs = scrapeConfigs.jitsiMeet.jvbConfigs;
+          }
+          {
+            job_name = "meet-master";
+            scrape_interval = "30s";
+            static_configs = scrapeConfigs.jitsiMeet.masterConfigs;
           }
           {
             job_name = "meet-jvbs-ping";

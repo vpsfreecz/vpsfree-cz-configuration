@@ -65,6 +65,47 @@
   }
 
   {
+    name = "meet-master";
+    rules = [
+      {
+        alert = "MeetMasterExporterDown";
+        expr = ''up{job="meet-master"} == 0'';
+        for = "5m";
+        labels = {
+          severity = "warning";
+        };
+        annotations = {
+          summary = "Exporter down (instance {{ $labels.instance }})";
+          description = ''
+            Prometheus exporter down
+
+            VALUE = {{ $value }}
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+
+      {
+        alert = "MeetNoOperationalBridges";
+        expr = ''jitsi_jicofo_bridge_selector_bridge_count_operational{job="meet-master"} == 0'';
+        for = "2m";
+        labels = {
+          severity = "warning";
+          frequency = "5m";
+        };
+        annotations = {
+          summary = "Jicofo has no operational videobridge (project {{ $labels.project }})";
+          description = ''
+            No conference can start until a videobridge joins the brewery
+
+            LABELS: {{ $labels }}
+          '';
+        };
+      }
+    ];
+  }
+
+  {
     name = "meet-web";
     interval = "60s";
     rules = [

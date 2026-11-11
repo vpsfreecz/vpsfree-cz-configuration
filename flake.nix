@@ -206,6 +206,9 @@
         vpsf-status-prometheus-rules = import ./tests/prometheus/vpsf-status-rules.nix {
           pkgs = devPkgs;
         };
+        meet-master-prometheus-rules = import ./tests/prometheus/meet-master-rules.nix {
+          pkgs = devPkgs;
+        };
         vps-autostart-prometheus-rules = import ./tests/prometheus/vps-autostart-rules.nix {
           pkgs = devPkgs;
         };

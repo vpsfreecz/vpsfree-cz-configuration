@@ -3,6 +3,12 @@
     host = "meet.vpsfree.cz";
     url = "https://${host}";
     alias = host;
+    # Prosody, jicofo and nginx; 9888 is jicofo's /metrics behind nginx
+    master = "37.205.14.113";
+    masterExporterPorts = [
+      9100
+      9888
+    ];
     jvbExporterPorts = [
       9100
       9700
