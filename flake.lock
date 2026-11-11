@@ -1220,11 +1220,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794335223,
-        "narHash": "sha256-VE/L1kV4Vef0dKM6vTS9m2kxoY7Ra5Zf4SbhCjvudx8=",
+        "lastModified": 1794399518,
+        "narHash": "sha256-bbvLT5mEG0Aa2BQrBs1nx7jkJQDpc/QiWN1h6XZC5fo=",
         "owner": "vpsfreecz",
         "repo": "vpsf-status",
-        "rev": "9fb102e285a2847427ffc1d25919183298630f3b",
+        "rev": "8e17ccb9728bed308bbe7d67126eb84dfdf8a81c",
         "type": "github"
       },
       "original": {
