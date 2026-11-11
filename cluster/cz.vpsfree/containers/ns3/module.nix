@@ -40,7 +40,7 @@
     ];
     healthChecks = import ../../../../health-checks/public-dns.nix {
       inherit pkgs;
-      ns = "ns1.vpsfree.cz";
+      ns = config.cluster."cz.vpsfree/containers/ns3".host.fqdn;
     };
   };
 }
