@@ -177,6 +177,8 @@ in
     enable = true;
     settings = {
       verbose = true;
+      restart_hits = 4;
+      load_multiplier = 1.5;
     };
   };
 
