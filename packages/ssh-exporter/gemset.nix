@@ -36,20 +36,20 @@
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "1yw6nvkvddriacmva8hm0za0961d6j96dm7zm6748rmyzcfqgvf8";
+      sha256 = "1wx52ksxj7zk2d82lc2ahmz7z0gsrrh3xnakwjr9b51xph5sd0v3";
       type = "gem";
     };
-    version = "8.0.2";
+    version = "8.0.3";
   };
   rack = {
     groups = [ "default" ];
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "1dwgab330lsv4qppw3f52mc4ihr8lagxgll53mkmcdgr4hf3xqck";
+      sha256 = "1isfvhl6r55ddxwq8qsmn6zbljfmzjgq5zszjhm7mg1y8rgciv0z";
       type = "gem";
     };
-    version = "3.2.7";
+    version = "3.2.8";
   };
   ssh-exporter = {
     dependencies = [

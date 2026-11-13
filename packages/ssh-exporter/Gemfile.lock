@@ -15,9 +15,9 @@ GEM
     nio4r (2.7.5)
     prometheus-client (4.2.5)
       base64
-    puma (8.0.2)
+    puma (8.0.3)
       nio4r (~> 2.0)
-    rack (3.2.7)
+    rack (3.2.8)
 
 PLATFORMS
   ruby
