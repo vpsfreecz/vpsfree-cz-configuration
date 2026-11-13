@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 env:
-  CONFCTL_FLAKE: 'github:vpsfreecz/confctl/822c0e35dbe2549111912f539116b4225dfd3035#confctl'
+  CONFCTL_FLAKE: 'github:vpsfreecz/confctl/ff5e017780a35fb97b549db2a51b570193867c3b#confctl'
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
