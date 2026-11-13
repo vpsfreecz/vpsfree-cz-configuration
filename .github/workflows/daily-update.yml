@@ -34,8 +34,10 @@ jobs:
 
       - name: Install git hooks
         run: |
-          nix develop -c bundle exec overcommit --install
-          nix develop -c bundle exec overcommit --sign pre-commit
+          # Input updates can change Ruby; keep native gems and hooks on the
+          # original shell for this entire run.
+          nix develop --profile "$RUNNER_TEMP/daily-update-dev-shell" -c bundle exec overcommit --install
+          nix develop "$RUNNER_TEMP/daily-update-dev-shell" -c bundle exec overcommit --sign pre-commit
 
       - name: Restore confctl cache
         uses: actions/cache/restore@v6
@@ -49,7 +51,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          nix develop -c bash <<'EOF'
+          nix develop "$RUNNER_TEMP/daily-update-dev-shell" -c bash <<'EOF'
             set -euo pipefail
 
             sudo mkdir "/nix/var/nix/gcroots/per-user/$USER"
@@ -65,7 +67,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          nix develop -c bash <<'EOF'
+          nix develop "$RUNNER_TEMP/daily-update-dev-shell" -c bash <<'EOF'
             set -euo pipefail
 
             codex_version_expr='let flake = builtins.getFlake (toString ./.); in flake.inputs.llm-agents.packages.x86_64-linux.codex.version'
@@ -97,7 +99,7 @@ jobs:
         run: |
           set -e
 
-          nix develop -c bash <<'EOF'
+          nix develop "$RUNNER_TEMP/daily-update-dev-shell" -c bash <<'EOF'
             set -euo pipefail
 
             commit_update() {
@@ -178,7 +180,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          nix develop -c bash <<'EOF'
+          nix develop "$RUNNER_TEMP/daily-update-dev-shell" -c bash <<'EOF'
             set -euo pipefail
             git show HEAD:flake.lock > "$RUNNER_TEMP/flake-update-final.lock"
             nix shell "$CONFCTL_FLAKE" -c confctl inputs check-update \
