@@ -8,7 +8,6 @@ permissions:
   contents: write
 
 env:
-  CONFCTL_FLAKE: 'github:vpsfreecz/confctl/ff5e017780a35fb97b549db2a51b570193867c3b#confctl'
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
@@ -57,17 +56,17 @@ jobs:
             sudo mkdir "/nix/var/nix/gcroots/per-user/$USER"
             sudo chown "$USER" "/nix/var/nix/gcroots/per-user/$USER"
 
-            nix shell "$CONFCTL_FLAKE" -c confctl inputs channel update --forward-only --commit --no-changelog \
+            confctl inputs channel update --forward-only --commit --no-changelog \
                                 '{nixos-stable,production,staging}' nixpkgs
-            nix shell "$CONFCTL_FLAKE" -c confctl inputs channel update --forward-only --commit --no-changelog nixos-unstable
-            nix shell "$CONFCTL_FLAKE" -c confctl inputs channel update --forward-only --commit '{staging,os-staging}' vpsadminos
+            confctl inputs channel update --forward-only --commit --no-changelog nixos-unstable
+            confctl inputs channel update --forward-only --commit '{staging,os-staging}' vpsadminos
           EOF
 
       - name: Update llm-agents when Codex changes
         run: |
           set -euo pipefail
 
-          nix develop "$RUNNER_TEMP/daily-update-dev-shell" -c bash <<'EOF'
+          nix develop --accept-flake-config "$RUNNER_TEMP/daily-update-dev-shell" -c bash <<'EOF'
             set -euo pipefail
 
             codex_version_expr='let flake = builtins.getFlake (toString ./.); in flake.inputs.llm-agents.packages.x86_64-linux.codex.version'
@@ -83,7 +82,7 @@ jobs:
             fi
 
             echo "Updating llm-agents for Codex $current_codex_version -> $upstream_codex_version"
-            nix shell "$CONFCTL_FLAKE" --accept-flake-config -c confctl inputs channel update --forward-only \
+            confctl inputs channel update --forward-only \
                 --commit --no-changelog llm-agents
 
             updated_codex_version=$(nix eval --accept-flake-config --impure --raw \
@@ -183,7 +182,7 @@ jobs:
           nix develop "$RUNNER_TEMP/daily-update-dev-shell" -c bash <<'EOF'
             set -euo pipefail
             git show HEAD:flake.lock > "$RUNNER_TEMP/flake-update-final.lock"
-            nix shell "$CONFCTL_FLAKE" -c confctl inputs check-update \
+            confctl inputs check-update \
               --old-lock "$RUNNER_TEMP/flake-update-baseline.lock" \
               --new-lock "$RUNNER_TEMP/flake-update-final.lock"
             git push origin master
