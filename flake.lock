@@ -353,11 +353,11 @@
         "nixpkgs": "nixpkgs_7"
       },
       "locked": {
-        "lastModified": 1769548169,
-        "narHash": "sha256-03+JxvzmfwRu+5JafM0DLbxgHttOQZkUtDWBmeUkN8Y=",
+        "lastModified": 1792739756,
+        "narHash": "sha256-s0TeXWG5Ci75Y/Hzon0Z7NrN/fG773Rc54/z6oPFszQ=",
         "owner": "nix-community",
         "repo": "impermanence",
-        "rev": "7b1d382faf603b6d264f58627330f9faa5cba149",
+        "rev": "fa627f4c8b8e92f58f58a73d99ee4e1304e64eb2",
         "type": "github"
       },
       "original": {
@@ -1145,11 +1145,11 @@
         "ruby-lxc": "ruby-lxc_3"
       },
       "locked": {
-        "lastModified": 1792347366,
-        "narHash": "sha256-jyXAH3nUkocJj+KQKINbJ0UnDCmuln4EvYRw/1KtXFE=",
+        "lastModified": 1794581903,
+        "narHash": "sha256-zO0kjnP8CR2RaBLjK7Nwwl1PqrtohJCSaFflMS4Dc+Y=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "2abbe3cc1c102a4b39022d3f73ef4a432ad4d616",
+        "rev": "c0ad0ad8f970e04099830ff1c2ebfda01e8c9d62",
         "type": "github"
       },
       "original": {
