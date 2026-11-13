@@ -107,6 +107,11 @@
     };
   };
 
+  osctl.oomd.settings = {
+    restart_hits = 4;
+    load_multiplier = 1.5;
+  };
+
   osctl.pools.tank = {
     parallelStart = 10;
     parallelStop = 20;
