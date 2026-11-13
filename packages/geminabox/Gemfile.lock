@@ -22,7 +22,7 @@ GEM
       rss (~> 0.3)
       rubygems-generate_index (~> 1.1)
       sinatra (~> 4.0)
-    httpclient (2.9.0)
+    httpclient (2.10.0)
       mutex_m
     json (3.1.0)
     logger (1.7.0)
@@ -34,7 +34,7 @@ GEM
       uri (>= 0.11.1)
     net-protocol (0.4.0)
       timeout
-    rack (3.2.7)
+    rack (3.2.8)
     rack-protection (4.2.1)
       base64 (>= 0.1.0)
       logger (>= 1.6.0)

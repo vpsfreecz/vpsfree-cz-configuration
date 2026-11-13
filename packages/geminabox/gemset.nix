@@ -102,10 +102,10 @@
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "1j4qwj1nv66v3n9s4xqf64x2galvjm630bwa5xngicllwic5jr2b";
+      sha256 = "1vd447rccs0cjdjpy9a88yvm6jg8r77gr5fw6wf9x2v1brdgc44c";
       type = "gem";
     };
-    version = "2.9.0";
+    version = "2.10.0";
   };
   json = {
     groups = [ "default" ];
@@ -187,10 +187,10 @@
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "1dwgab330lsv4qppw3f52mc4ihr8lagxgll53mkmcdgr4hf3xqck";
+      sha256 = "1isfvhl6r55ddxwq8qsmn6zbljfmzjgq5zszjhm7mg1y8rgciv0z";
       type = "gem";
     };
-    version = "3.2.7";
+    version = "3.2.8";
   };
   rack-protection = {
     dependencies = [
