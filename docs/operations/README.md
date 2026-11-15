@@ -16,6 +16,8 @@
 
 ## Aitherdev
 
+- [Pi runtime](pi-runtime-aitherdev.md): host and workspace prerequisites,
+  trial verification and forward recovery.
 - [Disk cleanup and retention](aitherdev-disk-retention.md): Nix profile and test
   retention, local log rotation, coordination collection and recovery limits.
 - [Declarative cleanup adoption](upgrades/aitherdev-declarative-cleanup.md):
