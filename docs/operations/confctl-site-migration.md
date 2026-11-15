@@ -58,9 +58,16 @@ confctl does not stage files automatically.
 
 Switch the confctl tool/module pin, typed settings and removal of both scripts
 together. Reenter the site's development shell after selecting the matching
-pin so its packaged CLI and manuals agree. The `tools` shell mode continues to
-provide the site's independent Ruby tooling. Changing the operator tool does
-not itself deploy helper packages or require a simultaneous fleet update.
+pin so its packaged CLI and manuals agree. The site's `flake.nix` composes
+confctl's minimal shell with its own Ruby, OpenSSL, Bundix and Bundler audit tools.
+The configuration owns the Gemfile bootstrap and keeps packaged confctl first
+on PATH, with its matching manuals on MANPATH. Keep the site's Gemfile, lock,
+package gemsets and Overcommit hooks. Migrate this shell composition before
+selecting a provider that rejects `mode = "tools"`. Changing the operator tool
+does not itself deploy helper packages or require a simultaneous fleet update.
+
+To roll back the shell migration, restore the previous shell definition and its
+matching confctl pin together. That provider's tools mode supplies the bootstrap.
 
 The confctl input has no site channel mapping. When the exact reviewed Rust
 revision is published and selected for this configuration, use the public root
