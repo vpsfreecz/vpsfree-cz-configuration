@@ -108,6 +108,10 @@ in
 
   services.dev-workspaces = {
     enable = true;
+    piRuntime = {
+      enable = true;
+      stateRoot = "/home/aither/.local/state/dev-workspaces/pi-runtime-host";
+    };
     codexInitialProvider = "codex-lb";
     codexProviders = [
       {
@@ -195,6 +199,15 @@ in
   environment.etc."codex/deepseek-models.json".source =
     ../../../../packages/codex-deepseek-models/models.json;
 
+  systemd.user.units."workspace-portal@vpsfree-cz.service" = {
+    overrideStrategy = "asDropin";
+    text = ''
+      [Service]
+      Environment="DEV_WORKSPACES_PI_HOST_STATE_ROOT=${config.services.dev-workspaces.piRuntime.stateRoot}"
+      Environment="DEV_WORKSPACES_PI_AUTH_DIR=/home/aither/.pi/agent"
+    '';
+  };
+
   nixpkgs.overlays = import ../../../../overlays;
 
   time.timeZone = "Europe/Amsterdam";
@@ -213,6 +226,7 @@ in
 
   users.users.aither = {
     isNormalUser = true;
+    uid = 1000;
     homeMode = "711";
     linger = true;
     extraGroups = [ "wheel" ];
