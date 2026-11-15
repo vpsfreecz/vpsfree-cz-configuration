@@ -61,4 +61,6 @@
   boot.enableUnifiedCgroupHierarchy = true;
 
   system.vpsadminos.enableUnstable = false;
+
+  services.rtnl-watchdog.enable = true;
 }
