@@ -296,7 +296,7 @@ in
 
   security.sudo = {
     enable = true;
-    extraRules = [
+    extraRules = lib.mkOrder 900 [
       {
         groups = [ "wheel" ];
         commands = [ "ALL" ];
