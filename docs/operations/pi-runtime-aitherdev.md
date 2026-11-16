@@ -28,6 +28,23 @@ configuration. A provider catalog and login alone do not configure that route.
 
 ## Installation and trial
 
+Before the portal first starts with Pi enabled, prepare its owner-managed host
+state directory as `aither` (UID 1000, primary group `users`, GID 100). Check
+that `/home/aither/.local/state/dev-workspaces` is an existing directory owned
+by UID 1000, grants its owner read, write and search access, and resolves to
+that exact canonical path. Check the target with `lstat`, which also detects a
+dangling symlink. If `pi-runtime-host` is absent, create it with umask `077` and
+`mkdir -m 0700 -- /home/aither/.local/state/dev-workspaces/pi-runtime-host`,
+without `-p`. Verify that the result is a real directory at that canonical path,
+owned by UID 1000 and GID 100 with mode `0700`, before starting the portal.
+Stop on an existing entry, a race or any metadata mismatch; do not adopt the
+entry or change its owner or permissions as part of this first-use procedure.
+The host module installs the helper and service template but does not create
+this directory. The helper cannot bootstrap a missing host state root. If the
+portal has already refused the missing root during startup, restart only
+`workspace-portal@vpsfree-cz.service` after the directory checks pass, then
+verify portal and existing Codex access before a trial.
+
 Use the repository's declared shell and channel tools to select the reviewed
 runtime. After final review, build the system with
 `confctl build cz.vpsfree/machines/aitherdev` and build the matching workspace
@@ -37,6 +54,13 @@ host helper or activate either configuration.
 Follow the installed coordination guide for the machine reservation. Use the
 normal confctl dry activation and system switch, then select the workspace
 application through `workspace-host switch` under the same reservation.
+
+Check the generated sudo policy in order: the default wheel rule and the site's
+wheel rule must precede the exact helper's `NOPASSWD` grant. Sudo uses the last
+matching specification, so finding the helper grant alone does not prove
+noninteractive access. The site's rule has module order `900`, between the
+default wheel rule at `600` and the helper grant at `1000`. Keep ordinary wheel
+commands password-protected.
 
 Verify the installed host helper, sudo rule and session entry, and the helper
 selected by the newly initialized portal runtime. Check the actual worker's PID,
