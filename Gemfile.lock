@@ -41,7 +41,7 @@ GEM
     racc (1.8.1)
     rainbow (3.1.1)
     rake (13.4.2)
-    regexp_parser (2.13.3)
+    regexp_parser (2.13.4)
     require_all (2.0.0)
     rexml (3.4.4)
     rspec (3.13.2)
@@ -68,9 +68,11 @@ GEM
       rubocop-ast (>= 1.44.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.51.0)
+    rubocop-ast (1.52.0)
+      ast (~> 2.4)
       parser (>= 3.3.7.2)
       prism (>= 1.7)
+      racc
     rubocop-rake (0.7.1)
       lint_roller (~> 1.1)
       rubocop (>= 1.72.1)
@@ -126,7 +128,7 @@ CHECKSUMS
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
-  regexp_parser (2.13.3) sha256=c9833eb62afc9706ebdc61b2b41226c0ae3b45a2783f80174cffcf126453db27
+  regexp_parser (2.13.4) sha256=1d0547814f57e6f00946957bd0ca201bc42f42cfb08eee89df60998aedcd8a3b
   require_all (2.0.0) sha256=68d7b944b0f1c9898a16f9f102b448897c06fd2781d30efec19cbcf6e2164e6a
   rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
   rspec (3.13.2) sha256=206284a08ad798e61f86d7ca3e376718d52c0bc944626b2349266f239f820587
@@ -135,7 +137,7 @@ CHECKSUMS
   rspec-mocks (3.13.9) sha256=ea5c7ff3054a6098ca6039aacef80aec69d5a8a3ef80be8fc88337359b672a30
   rspec-support (3.13.8) sha256=e4160030309b7e3e9d9863dfe720a35dfcc577162f5402cd68fc8c5258a0ffd6
   rubocop (1.75.8) sha256=c80ab4286c5dcfc49d7ad1787cdba5569b63b58c96ee7afde4ec47a9c8a85be9
-  rubocop-ast (1.51.0) sha256=0ec311e36b191b3872d909078a35274e962ae97dbce64be6812d145ca59acfcb
+  rubocop-ast (1.52.0) sha256=18d5c58fe4e59c9a9222172dc5ba4c52642d445ce4e696ed86646beea675fe8d
   rubocop-rake (0.7.1) sha256=3797f2b6810c3e9df7376c26d5f44f3475eda59eb1adc38e6f62ecf027cbae4d
   rubocop-rspec (3.7.0) sha256=b7b214da112034db9c6d00f2d811a354847e870f7b6ed2482b29649c3d42058f
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
