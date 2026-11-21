@@ -91,10 +91,10 @@
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "0kxhh8vnyqb6p4za99fpcpn3j2lskm7b3xnd0cykyx6wqjlqdd3c";
+      sha256 = "0xddqh6fjvjzjlza3z3n0yh2xa7zkkjs5bba2glpjmp2wsbamx6c";
       type = "gem";
     };
-    version = "4.0.1";
+    version = "4.1.1";
   };
   httpclient = {
     dependencies = [ "mutex_m" ];
@@ -187,10 +187,10 @@
     platforms = [ ];
     source = {
       remotes = [ "https://rubygems.org" ];
-      sha256 = "1isfvhl6r55ddxwq8qsmn6zbljfmzjgq5zszjhm7mg1y8rgciv0z";
+      sha256 = "1k0d8vpg160wjnp344wyn3jp70c8paz3nhglrzninihciz8c2dc2";
       type = "gem";
     };
-    version = "3.2.8";
+    version = "3.2.9";
   };
   rack-protection = {
     dependencies = [
