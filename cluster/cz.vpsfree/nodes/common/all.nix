@@ -177,8 +177,18 @@ in
     enable = true;
     settings = {
       verbose = true;
-      restart_hits = 4;
-      load_multiplier = 1.5;
+      interval = 5;
+      load_enable = true;
+      load_multiplier = 2.0;
+      restart_after_seconds = 90;
+      stop_after_seconds = 600;
+      restart_unknown_expiry_seconds = 30;
+      rtnl_watchdog = {
+        enable = false;
+        latency_threshold_ms = 1000;
+        sustain_seconds = 30;
+        pending_seconds = 30;
+      };
     };
   };
 
