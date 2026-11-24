@@ -1224,11 +1224,11 @@
         "ruby-lxc": "ruby-lxc_4"
       },
       "locked": {
-        "lastModified": 1795529377,
-        "narHash": "sha256-P1DRhceBT7aswPgwcQKQ6vYJal5574RsRuQid3pmYWY=",
+        "lastModified": 1795548274,
+        "narHash": "sha256-MokVXrpvE74WSVm+jic7xlHW4W91I9zAFJB87KCLkYs=",
         "owner": "vpsfreecz",
         "repo": "vpsadminos",
-        "rev": "975904f8d9ac1028b747eaf06188cb9f1d95609e",
+        "rev": "5ccfc1b517c70f260ba8e6d8fcb9271188c555b6",
         "type": "github"
       },
       "original": {
