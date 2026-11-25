@@ -22,13 +22,13 @@ before updating this configuration. Do not repeat completed lower-level work.
 ## Update through channels
 
 Enter nix develop and inspect the current channel-to-input mapping. The
-dev-workspace channel's devWorkspace role owns the runtime input; the llm-agents
-channel's llm-agents role owns the system Codex input. For a normal published
-upstream update use confctl inputs channel update --commit. For exact feature or
-frozen revisions use:
+dev-workspace channel's devWorkspace role owns the runtime input. System Codex
+uses that runtime's packages.<system>.codex-native output through mkCodexPackage.
+Update the sibling llm-agents channel only when another consumer needs it.
+For a normal published upstream update use confctl inputs channel update --commit.
+For an exact runtime feature revision use:
 
 ```sh
-confctl inputs channel set --commit --no-changelog llm-agents llm-agents LLM_REV
 confctl inputs channel set --commit dev-workspace devWorkspace RUNTIME_REV
 ```
 
