@@ -5,6 +5,30 @@
 For the optional documentation sign-in hook, client registration and private
 file provisioning, see [API documentation OAuth](../../../docs/operations/vpsadmin-documentation-oauth.md).
 
+## Authentication branding
+
+`cluster/cz.vpsfree/vpsadmin/common/api.nix` sets
+`vpsadmin.authentication.lightLogo` and `darkLogo` to the local PNG file paths
+for both API hosts. The vpsAdmin Nix module validates the files and copies them
+into each API host's immutable store closure. The API serves them at
+`/_auth/appearance/logo/light` and `/_auth/appearance/logo/dark` through the
+existing auth proxy on `auth.vpsfree.cz` and `auth-admin.vpsfree.cz`.
+[Logo provenance](../auth-assets/README.md) records their sources and dimensions.
+
+These nullable path options default to `null`. The API uses the scheme-specific
+file, then the optional common `vpsadmin.authentication.logo`, then its bundled
+vpsAdmin wordmark. A common logo is used in both schemes; supply both variants
+for artwork that needs different colors. The API preserves each aspect ratio.
+Configured paths must identify public PNG, JPEG, WebP or SVG image files. The
+module rejects invalid files during the build and owns the generated deployment
+JSON file keys.
+
+`core.logo_url` no longer controls branding. An installation configured only
+through that old system setting uses the bundled logo until file options
+are set. Dormant setting rows need no migration. Deploy the matching module,
+API package and file configuration to every API worker, then restart all workers;
+see [appearance and branding operations](../../../docs/operations/vpsadmin-documentation-oauth.md#appearance-and-branding).
+
 ## `dataset_plans.rb`
 
 A set of dataset plans available to users or admins. Plans are used to schedule

@@ -29,6 +29,11 @@ let
   proxyCidrs = unique (addressCidrs proxyPrg.addresses);
 in
 {
+  vpsadmin.authentication = {
+    lightLogo = ../../../../configs/vpsadmin/auth-assets/vpsfree.png;
+    darkLogo = ../../../../configs/vpsadmin/auth-assets/vpsfree-dark.png;
+  };
+
   vpsadmin.deploymentConfig = {
     monitoring.download_pool_service_discovery = {
       allowed_networks = monitorCidrs;

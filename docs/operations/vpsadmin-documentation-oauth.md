@@ -10,9 +10,9 @@ anonymous.
 
 ## Before setup
 
-Before enabling this setup, select a published, reviewed HaveAPI release that
-supports `switch_user_revoke_params` and a matching vpsAdmin package and site
-hook. The hook must pass `switch_user_revoke_params: { 'close_sso' => '1' }` to
+For production, select a reviewed released HaveAPI package that supports
+`switch_user_revoke_params` and matches the vpsAdmin package and site hook.
+The hook must pass `switch_user_revoke_params: { 'close_sso' => '1' }` to
 `documentation_oauth`, alongside its client, session and switch settings. Deploy the package and hook together; older HaveAPI packages reject the new
 option.
 
@@ -194,6 +194,65 @@ first OAuth JSON. Rolling instances can temporarily show different
 documentation. Verify the final package, hook and private-file handling on both;
 an anonymous fallback is not proof that credentialed sign-in works.
 
+## Appearance and branding
+
+The [authentication branding configuration](../../configs/vpsadmin/api/README.md#authentication-branding)
+supplies local light and dark logos to OAuth, password recovery and WebAuthn
+registration. Both API hosts set `vpsadmin.authentication.lightLogo` and
+`darkLogo` to the local PNG file paths. The vpsAdmin Nix module validates and
+copies the files into each API store closure. The API serves exact bytes through
+`/_auth/appearance/logo/light` and `/_auth/appearance/logo/dark`; the normal and
+maintenance auth frontends use their existing `/_auth` proxy behavior.
+
+Select a matched vpsAdmin package and Nix module with these file options and
+built-in routes. Pin it through the existing `vpsadmin` channel as above.
+Do not evaluate these options with an older module. Production theme exchange
+requires a released HaveAPI package containing the response hook and
+documentation theme support. Select that release before enabling theme exchange
+in production. An explicit source override can verify unreleased code during
+development; it does not establish production dependency readiness.
+
+For React theme exchange, pin the matching frontend and BFF together:
+
+```shell
+confctl inputs channel set --commit vpsadmin-webui vpsadmin-webui APPROVED_WEBUI_REVISION
+```
+
+This channel maps to `vpsadminWebui`. Inspect the complete input graph and actual
+released HaveAPI dependency in the API bundle; keep unrelated channel revisions
+unchanged. Build both API hosts, `cz.vpsfree/containers/prg/proxy` and
+`cz.vpsfree/vpsadmin/int.vpsadmin-webui1` before activation. Review the shared
+proxy's system-generation diff and retain its preceding generation.
+
+Activate the matching API bundle, module and file configuration on both API
+hosts, then restart all workers, including the password-recovery companion as
+described below. Deployment configuration is cached by running processes.
+All workers must provide the new logo routes before their availability is
+stable: requests reaching an older worker can return missing images during a
+mixed rollout, while authentication remains unchanged. Check both logo routes
+through the HTTPS auth frontends and compare the PNG hashes with
+[the source record](../../configs/vpsadmin/auth-assets/README.md), retaining the
+normal maintenance behavior. Activate the matching React frontend and BFF together.
+
+With a controlled account, verify light, dark and automatic appearance on login
+and recovery, including a scheme change after the page opens. Confirm that both
+logos remain proportional. Check a successful return to React and documentation
+after changing the choice on OAuth; cancellation and errors keep the client's
+initiating preference. PHP does not exchange theme preferences. Verify both API
+instances and the maintenance auth paths without recording callback queries,
+cookies or tokens.
+
+`core.logo_url` does not control branding; installations using only that setting get
+bundled vpsAdmin branding until file options are configured. No setting-row
+deletion or database migration is needed. For rollback, restore the preceding
+matched API/HaveAPI bundle and configuration and the preceding matched React
+frontend/BFF. Older binaries use their old configuration and setting semantics;
+the new file keys do not configure them. Restore the previous matched branding
+arrangement with that generation. Retain OAuth clients, secrets, keys and
+authenticated sessions. An in-flight new
+documentation sign-in may need a fresh attempt after rollback; browser theme
+preferences need no conversion.
+
 ## Install the private files on API1 and API2
 
 Check the effective `vpsadmin.api.stateDirectory`, `user` and `group` in the
@@ -291,7 +350,7 @@ about 900 seconds from sign-in for this client. API activity can renew the acces
 token but does not extend the documentation cookie. Sign in again when that
 cookie expires; this setup uses neither a sliding cookie nor a refresh token.
 
-The JSON enables `switch_user: true`. With the supporting HaveAPI release and
+The JSON enables `switch_user: true`. With the supporting HaveAPI package and
 matching consumer hook, Switch user adds `close_sso=1` to token revocation so
 the provider closes SSO before the next authorization, as in the legacy PHP
 client. Ordinary logout keeps its existing revocation behavior. No `prompt` or
