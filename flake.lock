@@ -120,11 +120,11 @@
         "pi": "pi"
       },
       "locked": {
-        "lastModified": 1795779863,
-        "narHash": "sha256-vBkLOI0cdgmHKOKwzDZ3qq/bY2KQ6CTttfvpeD67rLQ=",
+        "lastModified": 1795789643,
+        "narHash": "sha256-y+CnllHXho2Mva2tptb2JXA5SBcBnWAgYCzfe6baT18=",
         "owner": "aither64",
         "repo": "dev-workspace",
-        "rev": "bbe27c6ffb5f367e7be9a4ce45bffdf34185854f",
+        "rev": "907c14ca67a9f6ad10bf114b084510a3f84ae283",
         "type": "github"
       },
       "original": {
