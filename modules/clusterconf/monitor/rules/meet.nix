@@ -70,7 +70,7 @@
     rules = [
       {
         alert = "MeetWebExporterDown";
-        expr = ''up{job="meet-web"} == 0'';
+        expr = ''up{job=~"meet-web-.+"} == 0'';
         for = "5m";
         labels = {
           severity = "warning";
@@ -88,7 +88,7 @@
 
       {
         alert = "MeetWebDown";
-        expr = ''probe_success{job="meet-web"} == 0'';
+        expr = ''probe_success{job=~"meet-web-.+"} == 0'';
         for = "120s";
         labels = {
           severity = "warning";
