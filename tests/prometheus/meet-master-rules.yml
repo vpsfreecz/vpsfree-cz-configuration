@@ -1,0 +1,71 @@
+rule_files:
+  - @ruleFile@
+
+evaluation_interval: 1m
+
+tests:
+  - name: Losing every videobridge fires MeetNoOperationalBridges
+    interval: 1m
+    input_series:
+      - series: 'jitsi_jicofo_bridge_selector_bridge_count_operational{job="meet-master",instance="37.205.14.113:9888",alias="meet-master",type="meet-master",project="vpsfree",machine_type="vps"}'
+        values: '9 9 0x10'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: MeetNoOperationalBridges
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: MeetNoOperationalBridges
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              frequency: 5m
+              job: meet-master
+              instance: 37.205.14.113:9888
+              alias: meet-master
+              type: meet-master
+              project: vpsfree
+              machine_type: vps
+            exp_annotations:
+              summary: "Jicofo has no operational videobridge (project vpsfree)"
+              description: |
+                No conference can start until a videobridge joins the brewery
+
+                LABELS: map[__name__:jitsi_jicofo_bridge_selector_bridge_count_operational alias:meet-master instance:37.205.14.113:9888 job:meet-master machine_type:vps project:vpsfree type:meet-master]
+
+  - name: Fewer bridges than configured is not an outage
+    interval: 1m
+    input_series:
+      - series: 'jitsi_jicofo_bridge_selector_bridge_count_operational{job="meet-master",instance="37.205.14.113:9888",alias="meet-master",type="meet-master",project="vpsfree",machine_type="vps"}'
+        values: '1x10'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: MeetNoOperationalBridges
+        exp_alerts: []
+
+  - name: Unreachable master exporter fires MeetMasterExporterDown
+    interval: 1m
+    input_series:
+      - series: 'up{job="meet-master",instance="37.205.14.113:9100",alias="meet-master",type="meet-master",project="vpsfree",machine_type="vps"}'
+        values: '0x10'
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: MeetMasterExporterDown
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: MeetMasterExporterDown
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              job: meet-master
+              instance: 37.205.14.113:9100
+              alias: meet-master
+              type: meet-master
+              project: vpsfree
+              machine_type: vps
+            exp_annotations:
+              summary: "Exporter down (instance 37.205.14.113:9100)"
+              description: |
+                Prometheus exporter down
+
+                VALUE = 0
+                LABELS: map[__name__:up alias:meet-master instance:37.205.14.113:9100 job:meet-master machine_type:vps project:vpsfree type:meet-master]

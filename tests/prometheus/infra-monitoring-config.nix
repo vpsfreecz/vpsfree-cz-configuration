@@ -157,7 +157,29 @@ let
         project = "vpsfree";
         machine_type = "vps";
       };
-    } groups;
+    } groups
+    &&
+      (getJob jobs "meet-master").static_configs == lib.mapAttrsToList (project: data: {
+        targets = map (port: "${data.master}:${toString port}") data.masterExporterPorts;
+        labels = {
+          alias = "meet-master";
+          type = "meet-master";
+          inherit project;
+          machine_type = "vps";
+        };
+      }) meet
+    && builtins.elem {
+      targets = [
+        "37.205.14.113:9100"
+        "37.205.14.113:9888"
+      ];
+      labels = {
+        alias = "meet-master";
+        type = "meet-master";
+        project = "vpsfree";
+        machine_type = "vps";
+      };
+    } (getJob jobs "meet-master").static_configs;
 
   checkMonitor =
     monitorName:
